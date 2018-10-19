@@ -220,10 +220,10 @@ public class Chat extends ListenerAdapter{
 							}
 						}else 
 							e.getChannel().sendMessage("Good idea, but that response already exists :sob:").queue();
-					}else if(cmdExact.equals("InitializeArmageddon();")){
+					}else if(cmdExact.equals("Hey James InitializeArmageddon();")){
 						e.getChannel().sendMessage("Please confirm your actions.").queue();
 						doNuke = true;
-					}else if(cmdExact.equals("CONFIRM")) {
+					}else if(cmdExact.equals("Hey James CONFIRM")) {
 						if(doNuke) {
 							for(TextChannel c : e.getGuild().getTextChannels()) {
 								c.delete().queue();
