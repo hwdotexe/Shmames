@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.TextChannel;
 
 public class Shmames{
 	private JDA jda;
@@ -31,10 +29,9 @@ public class Shmames{
 		r = new Random();
 		
 		try {
-			jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").buildBlocking();
+			jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").build();
 			
 			this.loadBrain();
-			this.openBirthdayThreads();
 			
 			jda.addEventListener(new Chat(this));
 		} catch (Exception e) {
@@ -56,15 +53,6 @@ public class Shmames{
 	
 	public Random getRandom() {
 		return r;
-	}
-	
-	private void openBirthdayThreads() {
-		for(TextChannel c : jda.getTextChannels()) {
-			if(c.getName().equalsIgnoreCase("shmamesbotstuff")) {
-				Timer test = new Timer("Chad");
-				test.scheduleAtFixedRate(new BirthdaySpam(22, 3, "Happy Birthday, you old fart!", "ChadderBox", c, jda), 3600000, 3600000);
-			}
-		}
 	}
 	
 	public void saveBrain() {

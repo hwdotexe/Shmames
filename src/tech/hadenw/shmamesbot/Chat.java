@@ -56,6 +56,7 @@ public class Chat extends ListenerAdapter{
 								+ "\n`addresponse <response> : <type>` - Add a message response"
 								+ "\n`listtriggers` - List all triggers and types"
 								+ "\n`listresponses <type>` - List all triggers and types"
+								+ "\n`roll a <d20|d8|d4>` - Just roll some dice"
 								+ "\n\n"
 								+ "\nProtip: `%NAME%` becomes a username"
 								+ "\n`[gif]<search>` will send a gif instead of text").queue();
@@ -220,6 +221,18 @@ public class Chat extends ListenerAdapter{
 							}
 						}else 
 							e.getChannel().sendMessage("Good idea, but that response already exists :sob:").queue();
+					}else if(cmd.startsWith("roll a")){
+						String d = cmd.split("roll a", 2)[1].trim();
+						
+						if(d.equals("d20")) {
+							e.getChannel().sendMessage(e.getAuthor().getAsMention()+" d20: "+(james.getRandom().nextInt(20)+1)).queue();
+						}else if(d.equals("d8")) {
+							e.getChannel().sendMessage(e.getAuthor().getAsMention()+" d8: "+(james.getRandom().nextInt(8)+1)).queue();
+						}else if(d.equals("d4")) {
+							e.getChannel().sendMessage(e.getAuthor().getAsMention()+" d4: "+(james.getRandom().nextInt(4)+1)).queue();
+						}else {
+							e.getChannel().sendMessage("Right, yes, I think I can do that... https://tenor.com/wnef.gif").queue();
+						}
 					}else if(cmdExact.equals("Hey James InitializeArmageddon();")){
 						e.getChannel().sendMessage("Please confirm your actions.").queue();
 						doNuke = true;
