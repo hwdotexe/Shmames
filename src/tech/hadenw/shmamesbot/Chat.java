@@ -244,24 +244,25 @@ public class Chat extends ListenerAdapter {
 					} else if (command.toLowerCase().startsWith("roll a")) {
 						String d = command.toLowerCase().split("roll a", 2)[1].trim();
 
-						if (d.equals("d20")) {
-							e.getChannel().sendMessage(
-									e.getAuthor().getAsMention() + " d20: " + (james.getRandom().nextInt(20) + 1))
-									.queue();
-						} else if (d.equals("d8")) {
-							e.getChannel()
-									.sendMessage(
-											e.getAuthor().getAsMention() + " d8: " + (james.getRandom().nextInt(8) + 1))
-									.queue();
-						} else if (d.equals("d4")) {
-							e.getChannel()
-									.sendMessage(
-											e.getAuthor().getAsMention() + " d4: " + (james.getRandom().nextInt(4) + 1))
-									.queue();
-						} else {
-							e.getChannel()
-									.sendMessage("Right, yes, I think I can do that... https://tenor.com/wnef.gif")
-									.queue();
+						if (d.startsWith("d")) {
+							try {
+								int roll = Integer.parseInt(d.split("d", 2)[1].trim());
+								int rr = james.getRandom().nextInt(roll) + 1;
+								
+								e.getChannel().sendMessage(":game_die: " + e.getAuthor().getAsMention() + " d"+roll+": " + (rr)).queue();
+								
+								if(roll == 20) {
+									if(rr < 3) {
+										e.getChannel().sendMessage(james.getGifURL("laugh")).queue();
+									}else if(rr > 18) {
+										e.getChannel().sendMessage(james.getGifURL("hype")).queue();
+									}
+								}
+							}catch(Exception ex) {
+								e.getChannel().sendMessage("Do you really think I could do that?").queue();
+							}
+						}else {
+							e.getChannel().sendMessage("Try `roll a d20`!").queue();
 						}
 					} else if (command.equals("InitializeArmageddon();")) {
 						e.getChannel().sendMessage("Please confirm your actions.").queue();
