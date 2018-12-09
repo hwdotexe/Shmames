@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class Chat extends ListenerAdapter {
 	private Shmames james;
 	private boolean doNuke;
-
+	
 	public Chat(Shmames c) {
 		doNuke = false;
 		james = c;
@@ -49,7 +49,7 @@ public class Chat extends ListenerAdapter {
 						e.getChannel().sendMessage("PM'd you the deets :punch:").queue();
 
 						e.getAuthor().openPrivateChannel()
-								.queue((c) -> c.sendMessage("How to use Shmames in 42 easy steps:"
+								.queue((c) -> c.sendMessage("**How to use Shmames in 42 easy steps:**"
 										+ "\n`reload` - Reload my brain" + "\n`setgame <game>` - Set my game status"
 										+ "\n`addgame <game>` - Add a game status to the random pool"
 										+ "\n`add a tally to <tally>` - Increment a tally"
@@ -69,7 +69,7 @@ public class Chat extends ListenerAdapter {
 						doNuke = false;
 						e.getChannel().sendMessage("[Your File] => 10010101 => [My Brain]").queue();
 					} else if (command.toLowerCase().startsWith("setgame")) {
-						String game = message.split("setgame", 2)[1].trim();
+						String game = command.substring("setgame".length()).trim();
 
 						if (game.length() > 0) {
 							james.getJDA().getPresence().setGame(Game.of(GameType.DEFAULT, game));
@@ -77,7 +77,7 @@ public class Chat extends ListenerAdapter {
 							e.getChannel().sendMessage("Usage: `setgame <game title>`").queue();
 						}
 					} else if (command.toLowerCase().startsWith("addgame")) {
-						String game = message.split("addgame", 2)[1].trim();
+						String game = command.substring("setgame".length()).trim();
 
 						if (game.length() > 0) {
 							james.getJDA().getPresence().setGame(Game.of(GameType.DEFAULT, game));
@@ -167,7 +167,7 @@ public class Chat extends ListenerAdapter {
 						} else
 							e.getChannel().sendMessage("Good idea, but that trigger already exists :sob:").queue();
 					} else if (command.toLowerCase().startsWith("removetrigger")) {
-						String oldtrigger = sanitize(command.toLowerCase().split("removetrigger", 2)[1].trim());
+						String oldtrigger = sanitize(command.toLowerCase().substring("removetrigger".length()).trim());
 
 						if (!oldtrigger.equalsIgnoreCase("hey james")) {
 							if (james.getBrain().getTriggers().containsKey(oldtrigger)) {
