@@ -281,9 +281,9 @@ public class Chat extends ListenerAdapter {
 								// If rolling a d20, send a GIF if the player rolls an extreme
 								if(base == 20) {
 									if(baseroll <= 3) {
-										e.getChannel().sendMessage(james.getGifURL("laugh"));
+										e.getChannel().sendMessage(james.getGifURL("laugh")).queue();
 									} else if(baseroll >= 19) {
-										e.getChannel().sendMessage(james.getGifURL("hype"));
+										e.getChannel().sendMessage(james.getGifURL("hype")).queue();
 									}
 								}
 								
