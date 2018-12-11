@@ -277,6 +277,16 @@ public class Chat extends ListenerAdapter {
 								}
 								
 								e.getChannel().sendMessage(":game_die: " + e.getAuthor().getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll)).queue();
+								
+								// If rolling a d20, send a GIF if the player rolls an extreme
+								if(base == 20) {
+									if(baseroll <= 3) {
+										e.getChannel().sendMessage(james.getGifURL("laugh"));
+									} else if(baseroll >= 19) {
+										e.getChannel().sendMessage(james.getGifURL("hype"));
+									}
+								}
+								
 							}catch(Exception ex) {
 								e.getChannel().sendMessage("I sense a plot to destroy me.").queue();
 								ex.printStackTrace();
