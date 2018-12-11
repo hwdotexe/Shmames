@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Emote;
@@ -242,26 +243,45 @@ public class Chat extends ListenerAdapter {
 						} else
 							e.getChannel().sendMessage("Good idea, but that response already exists :sob:").queue();
 					} else if (command.toLowerCase().startsWith("roll a")) {
-						String d = command.toLowerCase().split("roll a", 2)[1].trim();
-
-						if (d.startsWith("d")) {
+						String input = command.toLowerCase().split("roll a", 2)[1].replaceAll(" ", "");
+						
+						if(Pattern.compile("^d\\d{1,2}([\\+\\-]\\d{1})?$").matcher(input).matches()) {
+							//matches "d20" and "d2+3"
+							
 							try {
-								int roll = Integer.parseInt(d.split("d", 2)[1].trim());
-								int rr = james.getRandom().nextInt(roll) + 1;
+								input = input.replaceAll("\\+", "p").replaceAll("\\-", "m");
 								
-								e.getChannel().sendMessage(":game_die: " + e.getAuthor().getAsMention() + " d"+roll+": " + (rr)).queue();
+								int base = 0;
+								int mod = 0;
+								boolean subtract = false;
 								
-								if(roll == 20) {
-									if(rr < 3) {
-										e.getChannel().sendMessage(james.getGifURL("laugh")).queue();
-									}else if(rr > 18) {
-										e.getChannel().sendMessage(james.getGifURL("hype")).queue();
-									}
+								if(input.length()>3) {
+									// Has a modifier
+									int mindex = input.contains("p") ? input.indexOf("p") : input.indexOf("m");
+									
+									base = Integer.parseInt(input.substring(1, mindex));
+									mod = Integer.parseInt(input.substring(mindex+1));
+									subtract = input.charAt(mindex) == 'm' ? true : false;
+								} else {
+									// No modifier
+									base = Integer.parseInt(input.substring(1));
 								}
+								
+								int roll = james.getRandom().nextInt(base) + 1;
+								int baseroll = roll;
+								
+								if(subtract) {
+									roll -= mod;
+								}else {
+									roll += mod;
+								}
+								
+								e.getChannel().sendMessage(":game_die: " + e.getAuthor().getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll)).queue();
 							}catch(Exception ex) {
-								e.getChannel().sendMessage("Do you really think I could do that?").queue();
+								e.getChannel().sendMessage("I sense a plot to destroy me.").queue();
+								ex.printStackTrace();
 							}
-						}else {
+						}else{
 							e.getChannel().sendMessage("Try `roll a d20`!").queue();
 						}
 					} else if (command.equals("InitializeArmageddon();")) {
