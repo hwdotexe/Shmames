@@ -62,6 +62,7 @@ public class Chat extends ListenerAdapter {
 										+ "\n`addresponse <response> : <type>` - Add a message response"
 										+ "\n`listtriggers` - List all triggers and types"
 										+ "\n`listresponses <type>` - List all triggers and types"
+										+ "\n`8ball <question>` - Shake a Magic 8 Ball"
 										+ "\n`roll a <d20|d8|d4>` - Just roll some dice" + "\n\n"
 										+ "\nProtip: `%NAME%` becomes a username"
 										+ "\n`[gif]<search>` will send a gif instead of text").queue());
@@ -193,6 +194,13 @@ public class Chat extends ListenerAdapter {
 						}
 
 						e.getChannel().sendMessage(msg).queue();
+					} else if (command.toLowerCase().startsWith("8ball")) {
+						String[] answers = new String[] {"It is certain.", "It is decidedly so.","Without a doubt.","Yes - definitely.",
+								"You may rely on it.","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes.",
+								"Reply hazy, try again.","Ask again later.","Better not tell you now.","Cannot predict now.",
+								"Concentrate and ask again.","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.","Very doubtful."};
+						
+						e.getChannel().sendMessage("It says here: "+answers[james.getRandom().nextInt(answers.length)]).queue();
 					} else if (command.toLowerCase().startsWith("listresponses")) {
 						String type = command.toLowerCase().split("listresponses", 2)[1].trim();
 						String msg = "";
