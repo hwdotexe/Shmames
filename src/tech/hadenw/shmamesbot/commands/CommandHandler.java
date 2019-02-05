@@ -16,6 +16,9 @@ public class CommandHandler {
 		
 		commands.add(new Help());
 		commands.add(new Reload());
+		commands.add(new AddStatus());
+		commands.add(new SetStatus());
+		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());
 		commands.add(new Test());
@@ -32,6 +35,10 @@ public class CommandHandler {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
+					
+					// TODO: "Hey james helpSomeCommandHere"
+					// Using the positions, we might create accidental arguments
+					
 					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 					String args = cmd.substring(position).trim();
 					String r = c.run(args, author, server);
