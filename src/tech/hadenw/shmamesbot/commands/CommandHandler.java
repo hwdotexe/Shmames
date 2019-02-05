@@ -16,6 +16,7 @@ public class CommandHandler {
 		
 		commands.add(new Help());
 		commands.add(new Reload());
+		commands.add(new Roll());
 		commands.add(new Test());
 	}
 	

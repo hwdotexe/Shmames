@@ -19,7 +19,7 @@ public class Help implements ICommand {
 					if(a.equalsIgnoreCase(args)) {
 						StringBuilder sb = new StringBuilder();
 						
-						sb.append("**You want _MORE_ information?**");
+						sb.append("**#TMI if you ask me...**");
 						sb.append("\nCommand: `"+c.getAliases()[0]+"`");
 						
 						// Create list of aliases
