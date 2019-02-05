@@ -44,10 +44,19 @@ public class Roll implements ICommand {
 					roll += mod;
 				}
 				
-				return ":game_die: " + author.getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll);
+				String a = ":game_die: " + author.getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll);
+				
+				if(base == 20) {
+					if(baseroll <= 3) {
+						a = a + "\n" + Shmames.getGIF("laugh");
+					} else if(baseroll >= 19) {
+						a = a + "\n" + Shmames.getGIF("hype");
+					}
+				}
+
+				return a;
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				
 				return "I sense a plot to destroy me.";
 			}
 		}else {
