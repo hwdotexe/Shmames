@@ -16,6 +16,7 @@ public class CommandHandler {
 		
 		commands.add(new Help());
 		commands.add(new Reload());
+		commands.add(new Test());
 	}
 	
 	/**
@@ -26,12 +27,11 @@ public class CommandHandler {
 	 * @param server The server the command is running on.
 	 */
 	public void PerformCommand(String cmd, MessageChannel channel, User author, Guild server) {
-		String base = cmd.contains(" ") ? cmd.substring(0, cmd.indexOf(" ")) : cmd;
-		String args = cmd.length() > base.length() ? cmd.split(base, 2)[1].trim() : "";
-		
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
-				if(a.equalsIgnoreCase(base)) {
+				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
+					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
+					String args = cmd.substring(position).trim();
 					String r = c.run(args, author, server);
 					
 					if(r != null && r.length() > 0) {

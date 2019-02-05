@@ -12,7 +12,8 @@ public class Help implements ICommand {
 	@Override
 	public String run(String args, User author, Guild server) {
 		if(args.length() > 0) {
-			// Wants help on specific command
+			// Wants help on specific command.
+			
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
@@ -40,6 +41,8 @@ public class Help implements ICommand {
 				}
 			}
 		}else {
+			// Wants a list of all commands and brief help.
+			
 			StringBuilder sb = new StringBuilder();
 			
 			sb.append("**How to use Shmames in 42 easy steps:**");
