@@ -1,112 +1,101 @@
 package tech.hadenw.shmamesbot;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Game.GameType;
 
-public class Shmames{
-	private JDA jda;
-	private File brainFile;
-	private Random r;
-	private Brain brain;
+public final class Shmames {
+	private static JDA jda;
+	private static File brainFile;
+	private static Random r;
+	private static Brain brain;
 	
-	public void onEnable() {
+	/**
+	 * The entry point for the bot.
+	 * @param args Program launch arguments.
+	 */
+	public static void main(String[] args) {
+		Init();
+	}
+	
+	/**
+	 * Constructs the bot instance
+	 */
+	private static void Init() {
 		brainFile = new File("brain.json");
 		r = new Random();
 		
 		try {
-			jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").build();
+			// Real James
+			//jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").build();
 			
-			this.loadBrain();
+			// TestBot
+			jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
 			
-			jda.addEventListener(new Chat(this));
+			loadBrain();
+			
+			// Set the bot's status.
+			String action = Shmames.randomItem(brain.getStatuses().keySet());
+			GameType t = brain.getStatuses().get(action);
+			Shmames.getJDA().getPresence().setGame(Game.of(t, action));
+			
+			jda.addEventListener(new Chat());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void onDisable() {
-		this.saveBrain();
-	}
-	
-	public Brain getBrain() {
-		return brain;
-	}
-	
-	public JDA getJDA() {
+	/**
+	 * Returns the current JDA working object.
+	 * @return A JDA object.
+	 */
+	public static JDA getJDA() {
 		return jda;
 	}
 	
-	public Random getRandom() {
-		return r;
+	/**
+	 * Returns the current Brain object.
+	 * @return A Brain object.
+	 */
+	public static Brain getBrain() {
+		return brain;
 	}
 	
-	public void saveBrain() {
-		byte[] bytes = brain.getValuesAsJSON().toString().getBytes();
-		
-		try {
-			FileOutputStream os = new FileOutputStream(brainFile);
-			
-			if(!brainFile.exists()) 
-				brainFile.createNewFile();
-			
-			os.write(bytes);
-			os.flush();
-			os.close();
-		}catch(Exception e) {
-			System.out.println("TOO_MANY_MATCHES: Failed to save my brain to disk.");
-		}
+	/**
+	 * Returns a random number between 0 and the upper bound, exclusive.
+	 * @param bound The ceiling for the random number.
+	 * @return A random number.
+	 */
+	public static int getRandom(int bound) {
+		return r.nextInt(bound);
 	}
 	
-	public String getGifURL(String search) {
-		search = search.replaceAll(" ", "%20");
-		try {
-			URL url = new URL("https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&safesearch=moderate&limit=20");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			
-		    conn.setRequestMethod("GET");
-		    
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
-		    String result = "";
-		    
-		    while ((line = rd.readLine()) != null) {
-		       result += line;
-		    }
-		    
-		    rd.close();
-		    
-		    JSONObject results = new JSONObject(result);
-		    JSONArray arr = results.getJSONArray("results");
-		    List<String> gurls = new ArrayList<String>();
-		    
-		    for(int i=0; i<arr.length(); i++) {
-		    	gurls.add(arr.getJSONObject(i).getString("url"));
-		    }
-		    
-		    String gifurl = gurls.get(r.nextInt(gurls.size()));
-		    
-		    return gifurl;
-		}catch(Exception e) {
-			return "I think they cancelled the Internet... https://tenor.com/vcct.gif";
-		}
+	/**
+	 * Gets a random item from a Set. Taken from StackOverflow.
+	 * @param coll The Set to loop through.
+	 * @return An item from the Set.
+	 */
+	public static <T> T randomItem(Set<T> coll) {
+	    int num = getRandom(coll.size());
+	    for(T t: coll)
+	    	if (--num < 0)
+	    		return t;
+	    throw new AssertionError();
 	}
 	
-	public void loadBrain() {
+	/**
+	 * Loads the data from file into memory.
+	 */
+	private static void loadBrain() {
 		if(brainFile.exists()) {
 			try {
 				int data;
@@ -119,13 +108,13 @@ public class Shmames{
 				
 				is.close();
 				
-				brain = new Brain(new JSONObject(prefs), this);
+				brain = new Brain(new JSONObject(prefs));
 			}catch(Exception e) {
 				System.out.println("NOT_ENOUGH_MATCHES: Failed to load my brain from disk.");
 				e.printStackTrace();
 			}
 		} else {
-			brain = new Brain(null, this);
+			brain = new Brain(null);
 		}
 	}
 }

@@ -5,30 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
 
 public class Brain {
 	private HashMap<String, Integer> tallies;
-	private List<String> games;
+	private HashMap<String, GameType> statuses;
 	private HashMap<String, TriggerType> triggers;
 	private HashMap<String, TriggerType> responses;
 	
-	private Shmames james;
-	
-	public Brain(JSONObject json, Shmames c) {
-		james = c;
+	public Brain(JSONObject json) {
 		tallies = new HashMap<String, Integer>();
-		games = new ArrayList<String>();
+		statuses = new HashMap<String, GameType>();
 		triggers = new HashMap<String, TriggerType>();
 		responses = new HashMap<String, TriggerType>();
 		
 		if(json != null) {
 			JSONObject t = json.getJSONObject("tallies");
-			JSONArray g = json.getJSONArray("games");
+			JSONObject s = json.getJSONObject("statuses");
 			JSONObject tr = json.getJSONObject("triggers");
 			JSONObject r = json.getJSONObject("responses");
 			
@@ -36,12 +31,17 @@ public class Brain {
 				tallies.put(k, t.getInt(k));
 			}
 			
-			for(int i=0; i<g.length(); i++) {
-				games.add(g.getString(i));
+			for(String k : JSONObject.getNames(s)) {
+				GameType type = GameType.valueOf(s.getString(k));
+				
+				if(type != null) {
+					statuses.put(k, type);
+				}
 			}
 			
 			for(String k : JSONObject.getNames(tr)) {
 				TriggerType type = TriggerType.byName(tr.getString(k));
+				
 				if(type != null) {
 					triggers.put(k, type);
 				}
@@ -49,26 +49,24 @@ public class Brain {
 			
 			for(String k : JSONObject.getNames(r)) {
 				TriggerType type = TriggerType.byName(r.getString(k));
+				
 				if(type != null) {
 					responses.put(k, type);
 				}
 			}
 		}else {
-			// Add default values so the bot is actually usable by new users.
+			// Add default values.
 			triggers.put("hey james", TriggerType.COMMAND);
-			games.add("with matches");
+			statuses.put("with matches", GameType.DEFAULT);
 		}
-		
-		String game = games.get(james.getRandom().nextInt(games.size()));
-		james.getJDA().getPresence().setGame(Game.of(GameType.DEFAULT, game));
 	}
 	
 	public HashMap<String, Integer> getTallies(){
 		return tallies;
 	}
 	
-	public List<String> getGames(){
-		return games;
+	public HashMap<String, GameType> getStatuses(){
+		return statuses;
 	}
 	
 	public HashMap<String, TriggerType> getTriggers(){
@@ -116,7 +114,7 @@ public class Brain {
 	
 	public JSONObject getValuesAsJSON() {
 		JSONObject t = new JSONObject();
-		JSONArray g = new JSONArray();
+		JSONObject g = new JSONObject();
 		JSONObject tr = new JSONObject();
 		JSONObject r = new JSONObject();
 		JSONObject root = new JSONObject();
@@ -125,8 +123,8 @@ public class Brain {
 			t.put(k, tallies.get(k));
 		}
 		
-		for(String k : games) {
-			g.put(k);
+		for(String k : statuses.keySet()) {
+			g.put(k, statuses.get(k).toString());
 		}
 		
 		for(String k : triggers.keySet()) {
@@ -138,7 +136,7 @@ public class Brain {
 		}
 		
 		root.put("tallies", t);
-		root.put("games", g);
+		root.put("statuses", g);
 		root.put("triggers", tr);
 		root.put("responses", r);
 		
