@@ -18,6 +18,9 @@ public class CommandHandler {
 		commands.add(new Reload());
 		commands.add(new AddStatus());
 		commands.add(new SetStatus());
+		commands.add(new AddTally());
+		commands.add(new DropTally());
+		commands.add(new ShowTallies());
 		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());

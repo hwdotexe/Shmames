@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -73,6 +74,13 @@ public final class Shmames {
 	}
 	
 	/**
+	 * A public-facing method to reload the brain from file.
+	 */
+	public static void reloadBrain() {
+		loadBrain();
+	}
+	
+	/**
 	 * Returns a random number between 0 and the upper bound, exclusive.
 	 * @param bound The ceiling for the random number.
 	 * @return A random number.
@@ -92,13 +100,6 @@ public final class Shmames {
 	    	if (--num < 0)
 	    		return t;
 	    throw new AssertionError();
-	}
-	
-	/**
-	 * A public-facing method to reload the brain from file.
-	 */
-	public static void reloadBrain() {
-		loadBrain();
 	}
 	
 	/**
@@ -152,6 +153,28 @@ public final class Shmames {
 	    
 	    return gifurl;
 	}
+	
+	/**
+	 * Saves the bot's data to disk.
+	 */
+	public static void saveBrain() {
+		byte[] bytes = brain.getValuesAsJSON().toString().getBytes();
+		
+		try {
+			FileOutputStream os = new FileOutputStream(brainFile);
+			
+			if(!brainFile.exists()) 
+				brainFile.createNewFile();
+			
+			os.write(bytes);
+			os.flush();
+			os.close();
+		}catch(Exception e) {
+			System.out.println("TOO_MANY_MATCHES: Failed to save my brain to disk.");
+			e.printStackTrace();
+		}
+	}
+
 	
 	/**
 	 * Loads the data from file into memory.

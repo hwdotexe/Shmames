@@ -58,6 +58,8 @@ public class Brain {
 			// Add default values.
 			triggers.put("hey james", TriggerType.COMMAND);
 			statuses.put("with matches", GameType.DEFAULT);
+			tallies.put("memes", 1);
+			responses.put("ronald", TriggerType.RONALD);
 		}
 	}
 	

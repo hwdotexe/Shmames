@@ -11,7 +11,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class AddStatus implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Add a new status to the random pool.";
+		return "Add a new status to the pool.";
 	}
 
 	@Override
@@ -22,6 +22,7 @@ public class AddStatus implements ICommand {
 			
 			Shmames.getBrain().getStatuses().put(message, type);
 			Shmames.getJDA().getPresence().setGame(Game.of(type, message));
+			Shmames.saveBrain();
 			
 			return ":+1:";
 		}else {
