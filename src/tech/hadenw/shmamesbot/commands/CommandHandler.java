@@ -25,17 +25,17 @@ public class CommandHandler {
 	 * @param server The server the command is running on.
 	 */
 	public void PerformCommand(String cmd, MessageChannel channel, User author, Guild server) {
-		// Loop through commands and find alias. If it matches, call that command's run() function.
 		String base = cmd.contains(" ") ? cmd.substring(0, cmd.indexOf(" ")) : cmd;
 		String args = cmd.length() > base.length() ? cmd.split(base, 2)[1].trim() : "";
-		
-		System.out.println("Base: "+base);
-		System.out.println("Args: "+args);
 		
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(a.equalsIgnoreCase(base)) {
-					channel.sendMessage(c.run(args)).queue();
+					String r = c.run(args, author, server);
+					
+					if(r != null && r.length() > 0) {
+						channel.sendMessage(r).queue();
+					}
 					
 					return;
 				}
