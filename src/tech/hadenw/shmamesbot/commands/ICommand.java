@@ -8,7 +8,7 @@ public interface ICommand {
 	 * Returns some help text for how to use this command.
 	 * @return Usage information.
 	 */
-	String getUsage();
+	String getDescription();
 	
 	/**
 	 * Runs the command code.

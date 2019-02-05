@@ -9,11 +9,12 @@ import net.dv8tion.jda.core.entities.User;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
-	private List<ICommand> commands;
+	private static List<ICommand> commands;
 	
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
 		
+		commands.add(new Help());
 		commands.add(new Reload());
 	}
 	
@@ -41,5 +42,13 @@ public class CommandHandler {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets a list of commands actively loaded.
+	 * @return A list of commands.
+	 */
+	public static List<ICommand> getLoadedCommands(){
+		return commands;
 	}
 }

@@ -24,13 +24,6 @@ public final class Shmames {
 	 * @param args Program launch arguments.
 	 */
 	public static void main(String[] args) {
-		Init();
-	}
-	
-	/**
-	 * Constructs the bot instance
-	 */
-	private static void Init() {
 		brainFile = new File("brain.json");
 		r = new Random();
 		
@@ -41,6 +34,7 @@ public final class Shmames {
 			// TestBot
 			jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
 			
+			// Load from file.
 			loadBrain();
 			
 			// Set the bot's status.
@@ -48,6 +42,7 @@ public final class Shmames {
 			GameType t = brain.getStatuses().get(action);
 			Shmames.getJDA().getPresence().setGame(Game.of(t, action));
 			
+			// Begin listening for chats.
 			jda.addEventListener(new Chat());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,16 +75,23 @@ public final class Shmames {
 	}
 	
 	/**
-	 * Gets a random item from a Set. Taken from StackOverflow.
-	 * @param coll The Set to loop through.
+	 * Gets a random item from a Set.
+	 * @param set The Set to loop through.
 	 * @return An item from the Set.
 	 */
-	public static <T> T randomItem(Set<T> coll) {
-	    int num = getRandom(coll.size());
-	    for(T t: coll)
+	public static <T> T randomItem(Set<T> set) {
+	    int num = getRandom(set.size());
+	    for(T t: set)
 	    	if (--num < 0)
 	    		return t;
 	    throw new AssertionError();
+	}
+	
+	/**
+	 * A public-facing method to reload the brain from file.
+	 */
+	public static void reloadBrain() {
+		loadBrain();
 	}
 	
 	/**
