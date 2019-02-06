@@ -7,7 +7,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class ShowTallies implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Displays all the current tallies.";
+		return "Displays all the current tallie on the abacus.";
 	}
 
 	@Override

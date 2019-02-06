@@ -11,7 +11,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class SetStatus implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Sets a temporary status.";
+		return "Sets a temporary status for the bot. Usage: `setstatus statusType statusText`";
 	}
 
 	@Override

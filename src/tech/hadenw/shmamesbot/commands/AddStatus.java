@@ -11,7 +11,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class AddStatus implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Add a new status to the pool.";
+		return "Add a new status to the random pool. Usage: `addstatus statusType statusText`";
 	}
 
 	@Override

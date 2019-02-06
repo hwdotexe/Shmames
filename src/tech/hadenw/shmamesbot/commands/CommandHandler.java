@@ -21,6 +21,8 @@ public class CommandHandler {
 		commands.add(new AddTally());
 		commands.add(new DropTally());
 		commands.add(new ShowTallies());
+		commands.add(new AddTrigger());
+		commands.add(new RemoveTrigger());
 		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());

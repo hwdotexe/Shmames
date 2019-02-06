@@ -7,7 +7,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class DropTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Decrements a tally.";
+		return "Decrements a tally on the abacus. Usage: `droptally tallyName`";
 	}
 
 	@Override

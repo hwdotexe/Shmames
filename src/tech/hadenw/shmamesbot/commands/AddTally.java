@@ -7,7 +7,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class AddTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Increments a tally.";
+		return "Increments a tally on the abacus. Usage: `addtally tallyName`";
 	}
 
 	@Override
