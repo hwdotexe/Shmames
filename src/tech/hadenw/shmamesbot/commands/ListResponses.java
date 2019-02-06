@@ -16,16 +16,20 @@ public class ListResponses implements ICommand {
 	@Override
 	public String run(String args, User author, Guild server) {
 		if(Pattern.compile("^[a-zA-Z]{4,7}$").matcher(args).matches()) {
-			String msg = "";
-	
-			for (String s : Shmames.getBrain().getAllResponsesFor(TriggerType.byName(args))) {
-				if(msg.length() > 0)
-					msg += "\n";
+			if(TriggerType.byName(args) != null) {
+				String msg = "**"+args.toUpperCase()+" Responses:**";
+		
+				for (String s : Shmames.getBrain().getAllResponsesFor(TriggerType.byName(args))) {
+					if(msg.length() > 0)
+						msg += "\n";
+					
+					msg += s;
+				}
 				
-				msg += s;
+				return msg;
+			} else {
+				return ":thinking: I didn't recognize that trigger type.";
 			}
-	
-			return msg;
 		} else {
 			return ":fire: Wrong syntax! Try looking at the help menu.";
 		}

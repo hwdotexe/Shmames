@@ -10,14 +10,14 @@ import tech.hadenw.shmamesbot.TriggerType;
 public class AddTrigger implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Adds a message trigger that will send a random response. Usage: `addtrigger triggerWord triggerType`";
+		return "Adds a message trigger that will send a random response. Usage: `addtrigger triggerType triggerWord`";
 	}
 
 	@Override
 	public String run(String args, User author, Guild server) {
 		if(Pattern.compile("^[a-zA-Z]{3,} [a-zA-Z]{4,7}$").matcher(args).matches()) {
-			String newtrigger = args.substring(0, args.indexOf(" ")).trim();
-			String nttype = args.substring(args.indexOf(" ")).trim();
+			String newtrigger = args.substring(args.indexOf(" ")).trim();
+			String nttype = args.substring(0, args.indexOf(" ")).trim();
 			
 			if (!Shmames.getBrain().getAllTriggers().contains(newtrigger)) {
 				if (TriggerType.byName(nttype) != null) {

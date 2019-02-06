@@ -48,9 +48,11 @@ public class Help implements ICommand {
 			sb.append("**How to use Shmames in 42 easy steps:**");
 			
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
-				String desc = c.getDescription().length() > 35 ? c.getDescription().substring(0, 35) + " [...]" : c.getDescription();
-				sb.append("\n");
-				sb.append("`"+c.getAliases()[0]+"` - "+desc);
+				if(c.getDescription().length() > 0) {
+					String desc = c.getDescription().length() > 35 ? c.getDescription().substring(0, 35) + " [...]" : c.getDescription();
+					sb.append("\n");
+					sb.append("`"+c.getAliases()[0]+"` - "+desc);
+				}
 			}
 			
 			author.openPrivateChannel().queue((c) -> c.sendMessage(sb.toString()).queue());

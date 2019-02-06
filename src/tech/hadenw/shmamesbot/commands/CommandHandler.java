@@ -29,7 +29,7 @@ public class CommandHandler {
 		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());
-		commands.add(new Test());
+		commands.add(new Armageddon());
 	}
 	
 	/**
@@ -46,6 +46,7 @@ public class CommandHandler {
 					
 					// TODO: "Hey james helpSomeCommandHere"
 					// Using the positions, we might create accidental arguments
+					// TODO: case sensitivity?
 					
 					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 					String args = cmd.substring(position).trim();
