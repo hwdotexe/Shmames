@@ -23,6 +23,7 @@ public class CommandHandler {
 		commands.add(new ShowTallies());
 		commands.add(new AddTrigger());
 		commands.add(new RemoveTrigger());
+		commands.add(new ListTriggers());
 		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());
