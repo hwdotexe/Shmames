@@ -47,6 +47,7 @@ public class CommandHandler {
 					// TODO: "Hey james helpSomeCommandHere"
 					// Using the positions, we might create accidental arguments
 					// TODO: case sensitivity?
+					// TODO: sanitize from commas and punctuation
 					
 					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 					String args = cmd.substring(position).trim();
