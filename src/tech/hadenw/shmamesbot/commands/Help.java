@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.entities.User;
 public class Help implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Shows the help menu or additional information on a specific command.";
+		return "Shows help & additional information";
 	}
 
 	@Override

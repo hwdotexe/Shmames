@@ -59,7 +59,7 @@ public class Brain {
 			triggers.put("hey james", TriggerType.COMMAND);
 			statuses.put("with matches", GameType.DEFAULT);
 			tallies.put("memes", 1);
-			responses.put("ronald", TriggerType.RONALD);
+			responses.put("What'd you call me?! :angry:", TriggerType.RONALD);
 		}
 	}
 	
