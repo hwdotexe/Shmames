@@ -24,4 +24,10 @@ public interface ICommand {
 	 * @return A list of aliases.
 	 */
 	String[] getAliases();
+	
+	/**
+	 * Sanitizes (or doesn't) the argument string.
+	 * @return A sanitized version of the argument string.
+	 */
+	String sanitize(String args);
 }

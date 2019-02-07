@@ -42,15 +42,10 @@ public class CommandHandler {
 	public void PerformCommand(String cmd, MessageChannel channel, User author, Guild server) {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
-				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-					
-					// TODO: "Hey james helpSomeCommandHere"
-					// Using the positions, we might create accidental arguments
-					// TODO: case sensitivity?
-					// TODO: sanitize from commas and punctuation
-					
+				//if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
+				if(cmd.toLowerCase().contains(a.toLowerCase())) {
 					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
-					String args = cmd.substring(position).trim();
+					String args = c.sanitize(cmd.substring(position).trim());
 					String r = c.run(args, author, server);
 					
 					if(r != null && r.length() > 0) {
@@ -61,6 +56,8 @@ public class CommandHandler {
 				}
 			}
 		}
+		
+		channel.sendMessage("I couldn't find that command :thinking:").queue();
 	}
 	
 	/**

@@ -34,4 +34,9 @@ public class AddStatus implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"addstatus", "add status"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("", "").toLowerCase();
+	}
 }

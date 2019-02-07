@@ -33,4 +33,9 @@ public class RemoveTrigger implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"removetrigger", "remove trigger"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.toLowerCase();
+	}
 }

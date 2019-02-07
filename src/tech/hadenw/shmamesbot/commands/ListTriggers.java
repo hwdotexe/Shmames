@@ -25,4 +25,9 @@ public class ListTriggers implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"listtriggers", "list triggers"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
 }

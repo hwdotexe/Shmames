@@ -12,21 +12,19 @@ public class DropTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Guild server) {
-		String toTally = sanitize(args).trim().replaceAll(" ", "_");
-
-		if (Shmames.getBrain().getTallies().containsKey(toTally)) {
-			int tallies = Shmames.getBrain().getTallies().get(toTally);
+		if (Shmames.getBrain().getTallies().containsKey(args)) {
+			int tallies = Shmames.getBrain().getTallies().get(args);
 
 			if (tallies - 1 < 1) {
-				Shmames.getBrain().getTallies().remove(toTally);
+				Shmames.getBrain().getTallies().remove(args);
 				Shmames.saveBrain();
 				
-				return "`" + toTally + "` hast been removed, sire";
+				return "`" + args + "` hast been removed, sire";
 			} else {
-				Shmames.getBrain().getTallies().put(toTally, tallies - 1);
+				Shmames.getBrain().getTallies().put(args, tallies - 1);
 				Shmames.saveBrain();
 				
-				return "Current tallies for `" + toTally + "`: `" + Shmames.getBrain().getTallies().get(toTally) + "`";
+				return "Current tallies for `" + args + "`: `" + Shmames.getBrain().getTallies().get(args) + "`";
 			}
 		} else {
 			return "**I'm sorry " + author.getAsMention() + ", I'm afraid I can't do that.**";
@@ -38,8 +36,8 @@ public class DropTally implements ICommand {
 		return new String[] {"droptally", "remove a tally from"};
 	}
 	
-	private String sanitize(String i) {
-		return i.replaceAll("[^\\s\\w]", "").toLowerCase();
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
 	}
-
 }

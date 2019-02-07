@@ -49,4 +49,9 @@ public class AddTrigger implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"addtrigger", "add trigger"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.toLowerCase();
+	}
 }

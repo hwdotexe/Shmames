@@ -46,4 +46,9 @@ public class Armageddon implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"would you please burn the world with fire"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
 }

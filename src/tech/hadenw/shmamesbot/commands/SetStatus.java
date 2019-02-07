@@ -16,8 +16,11 @@ public class SetStatus implements ICommand {
 
 	@Override
 	public String run(String args, User author, Guild server) {
-		if(Pattern.compile("^[a-zA-z]{7,9} [a-zA-Z ]+$").matcher(args).matches()) {
-			GameType type = GameType.valueOf(args.substring(0, args.indexOf(" ")).toUpperCase());
+		if(Pattern.compile("^[a-zA-Z]{7,9} .{3,}$").matcher(args).matches()) {
+			String t = args.substring(0, args.indexOf(" ")).toUpperCase();
+			t = t.equals("PLAYING") ? "DEFAULT" : t;
+			
+			GameType type = GameType.valueOf(t);
 			String message = args.substring(args.indexOf(" "));
 			
 			Shmames.getJDA().getPresence().setGame(Game.of(type, message));
@@ -31,5 +34,10 @@ public class SetStatus implements ICommand {
 	@Override
 	public String[] getAliases() {
 		return new String[] {"setstatus", "set status"};
+	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
 	}
 }

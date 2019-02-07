@@ -68,4 +68,9 @@ public class Roll implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"roll a"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W&&[^\\+\\-]]", "").toLowerCase();
+	}
 }

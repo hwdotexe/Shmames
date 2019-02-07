@@ -47,4 +47,9 @@ public class AddResponse implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"addresponse", "add response"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
 }

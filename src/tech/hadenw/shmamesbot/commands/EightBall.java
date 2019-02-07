@@ -12,9 +12,11 @@ public class EightBall implements ICommand {
 
 	@Override
 	public String run(String args, User author, Guild server) {
-		String[] answers = new String[] {"It is certain.", "It is decidedly so.","Without a doubt.","Yes - definitely.",
-				"You may rely on it.","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes.",
-				"Why don't you ask me later?","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.","Very doubtful."};
+		String[] answers = new String[] {"Definitely.", "Without a doubt.","Yes - of course.",
+				"You can bet on it.","Most likely.","It's looking good!","Duh.","Signs point to yes.",
+				"Why don't you ask me later?",
+				"Don't count on it.","My reply is no.","My sources say no.","It's not looking good.","I highly doubt it.",
+				"Nope.", "No way.", "That's a negative."};
 		
 		return answers[Shmames.getRandom(answers.length)];
 	}
@@ -22,5 +24,10 @@ public class EightBall implements ICommand {
 	@Override
 	public String[] getAliases() {
 		return new String[] {"8ball", "should", "will", "can"};
+	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
 	}
 }

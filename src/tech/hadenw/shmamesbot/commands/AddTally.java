@@ -12,17 +12,15 @@ public class AddTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Guild server) {
-		String toTally = sanitize(args).trim().replaceAll(" ", "_");
-
-		if (Shmames.getBrain().getTallies().containsKey(toTally)) {
-			Shmames.getBrain().getTallies().put(toTally, Shmames.getBrain().getTallies().get(toTally) + 1);
+		if (Shmames.getBrain().getTallies().containsKey(args)) {
+			Shmames.getBrain().getTallies().put(args, Shmames.getBrain().getTallies().get(args) + 1);
 		} else {
-			Shmames.getBrain().getTallies().put(toTally, 1);
+			Shmames.getBrain().getTallies().put(args, 1);
 		}
 		
 		Shmames.saveBrain();
 
-		return "Current tally for `" + toTally + "`: `"+ Shmames.getBrain().getTallies().get(toTally) + "`";
+		return "Current tally for `" + args + "`: `"+ Shmames.getBrain().getTallies().get(args) + "`";
 	}
 
 	@Override
@@ -30,8 +28,8 @@ public class AddTally implements ICommand {
 		return new String[] {"addtally", "add a tally to"};
 	}
 	
-	private String sanitize(String i) {
-		return i.replaceAll("[^\\s\\w]", "").toLowerCase();
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
 	}
-
 }

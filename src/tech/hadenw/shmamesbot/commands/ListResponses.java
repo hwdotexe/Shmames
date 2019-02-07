@@ -39,4 +39,9 @@ public class ListResponses implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"listresponses", "list responses"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
 }

@@ -21,4 +21,9 @@ public class Reload implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"reload"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
 }

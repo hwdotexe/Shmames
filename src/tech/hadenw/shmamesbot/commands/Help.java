@@ -65,6 +65,11 @@ public class Help implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"help", "h"};
+		return new String[] {"help", "how do you use", "how do I use"};
+	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W]", "").toLowerCase();
 	}
 }

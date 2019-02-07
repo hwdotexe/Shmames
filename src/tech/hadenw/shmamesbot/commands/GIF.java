@@ -23,4 +23,9 @@ public class GIF implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"gif", "what is a", "who is"};
 	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
+	}
 }
