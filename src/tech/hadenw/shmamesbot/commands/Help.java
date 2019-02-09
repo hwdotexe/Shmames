@@ -2,6 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.CommandHandler;
 
 public class Help implements ICommand {
 	@Override

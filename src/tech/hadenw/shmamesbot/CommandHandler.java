@@ -1,4 +1,4 @@
-package tech.hadenw.shmamesbot.commands;
+package tech.hadenw.shmamesbot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,24 @@ import java.util.List;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.commands.AddResponse;
+import tech.hadenw.shmamesbot.commands.AddStatus;
+import tech.hadenw.shmamesbot.commands.AddTally;
+import tech.hadenw.shmamesbot.commands.AddTrigger;
+import tech.hadenw.shmamesbot.commands.Armageddon;
+import tech.hadenw.shmamesbot.commands.DropTally;
+import tech.hadenw.shmamesbot.commands.EightBall;
+import tech.hadenw.shmamesbot.commands.GIF;
+import tech.hadenw.shmamesbot.commands.Help;
+import tech.hadenw.shmamesbot.commands.ICommand;
+import tech.hadenw.shmamesbot.commands.ListResponses;
+import tech.hadenw.shmamesbot.commands.ListTriggers;
+import tech.hadenw.shmamesbot.commands.Minesweeper;
+import tech.hadenw.shmamesbot.commands.Reload;
+import tech.hadenw.shmamesbot.commands.RemoveTrigger;
+import tech.hadenw.shmamesbot.commands.Roll;
+import tech.hadenw.shmamesbot.commands.SetStatus;
+import tech.hadenw.shmamesbot.commands.ShowTallies;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
@@ -29,6 +47,7 @@ public class CommandHandler {
 		commands.add(new EightBall());
 		commands.add(new Roll());
 		commands.add(new GIF());
+		commands.add(new Minesweeper());
 		commands.add(new Armageddon());
 	}
 	

@@ -30,6 +30,6 @@ public class AddTally implements ICommand {
 	
 	@Override
 	public String sanitize(String i) {
-		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
+		return i.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
 	}
 }

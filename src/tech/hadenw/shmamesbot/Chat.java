@@ -7,7 +7,6 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import tech.hadenw.shmamesbot.commands.CommandHandler;
 
 public class Chat extends ListenerAdapter {
 	private CommandHandler cmd;
