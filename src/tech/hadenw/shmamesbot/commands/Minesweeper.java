@@ -16,12 +16,12 @@ public class Minesweeper implements ICommand {
 			try {
 				int size = Integer.parseInt(args);
 				
-				if(size > 1 && size <= 11) {
+				if(size >= 6 && size <= 11) {
 					MinesweepGame ms = new MinesweepGame(size);
 					
 					return ms.convertToDiscord();
 				}else {
-					return "Valid range is 2-11.";
+					return "Valid range is 6-11.";
 				}
 			}catch(Exception e) {
 				e.printStackTrace();

@@ -19,8 +19,8 @@ public class MinesweepGame {
 			rows.add(new int[size]);
 		}
 		
-		// Determine where the bombs are. 6-9 per game
-		int bombs = size + r.nextInt(3);
+		// Determine where the bombs are.
+		int bombs = size + r.nextInt(6);
 		
 		for(int i=0; i<bombs; i++) {
 			// pick a random row and place a bomb at a random spot
@@ -28,12 +28,22 @@ public class MinesweepGame {
 			int[] row = rows.get(rrow);
 			
 			// Place a bomb in an empty cell on this row
+			int thr = 0;
 			while(true) {
 				int rcell = r.nextInt(size);
 				
 				if(row[rcell] != -1) {
 					row[rcell] = -1;
 					break;
+				}else {
+					thr += 1;
+				}
+				
+				// If the threshold exceeds 5 attempts, change the row.
+				if(thr > 5) {
+					rrow = r.nextInt(rows.size());
+					row = rows.get(rrow);
+					thr = 0;
 				}
 			}
 			
@@ -46,6 +56,7 @@ public class MinesweepGame {
 			
 			for(int c=0; c<row.length; c++) {
 				if(row[c] != -1) {
+					// Holy Ternary, Batman!
 					int nw = i>0 && c>0 ? rows.get(i-1)[c-1] == -1 ? 1 : 0 : 0;
 					int n = i>0 ? rows.get(i-1)[c] == -1 ? 1 : 0 : 0;
 					int ne = i>0 && c<(size-1) ? rows.get(i-1)[c+1] == -1 ? 1 : 0 : 0;
@@ -93,6 +104,10 @@ public class MinesweepGame {
 			return ":three:";
 		case 4:
 			return ":four:";
+		case 5:
+			return ":five:";
+		case 6:
+			return ":six:";
 		default:
 			return ":small_red_triangle:";
 		}
