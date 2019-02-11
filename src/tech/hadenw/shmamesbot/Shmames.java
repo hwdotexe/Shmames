@@ -50,8 +50,9 @@ public final class Shmames {
 			GameType t = brain.getStatuses().get(action);
 			Shmames.getJDA().getPresence().setGame(Game.of(t, action));
 			
-			// Begin listening for chats.
+			// Begin listening for events.
 			jda.addEventListener(new Chat());
+			jda.addEventListener(new React());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -149,9 +150,10 @@ public final class Shmames {
 	    	gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
 	    }
 	    
-	    String gifurl = gifURLs.get(r.nextInt(gifURLs.size()));
-	    
-	    return gifurl;
+	    if(gifURLs.size() > 0)
+	    	return gifURLs.get(r.nextInt(gifURLs.size()));
+	    else
+	    	return "Uhh, all I could find was this: https://tenor.com/w3sJ.gif";
 	}
 	
 	/**
