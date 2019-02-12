@@ -43,9 +43,6 @@ public class React extends ListenerAdapter {
 	
 	private void strikeMessage(long id, MessageReactionAddEvent e) {
 		if(strikes.contains(id)) {
-			e.getChannel().deleteMessageById(e.getMessageId()).queue();
-			strikes.remove(id);
-			
 			String name = e.getChannel().getMessageById(id).complete().getAuthor().getName();
 			String toTally = "";
 			
@@ -57,6 +54,9 @@ public class React extends ListenerAdapter {
 				// It was not
 				toTally = "bad"+name.toLowerCase();
 			}
+			
+			e.getChannel().deleteMessageById(e.getMessageId()).queue();
+			strikes.remove(id);
 			
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				for(String a : c.getAliases()) {
