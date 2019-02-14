@@ -68,7 +68,11 @@ public class Roll implements ICommand {
 				}
 				
 				// Delete the person's message
-				message.delete().complete();
+				try {
+					message.delete().complete();
+				}catch(Exception e) {
+					// Do nothing, because the bot probably doesn't have permission.
+				}
 				
 				return a;
 			}catch(Exception ex) {
