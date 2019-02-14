@@ -14,7 +14,7 @@ public class Roll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^d\\d{1,3}([\\+\\-]\\d{1,2})?$").matcher(args).matches()) {
+		if(Pattern.compile("^\\d?\\d?d\\d{1,3}([\\+\\-]\\d{1,2})?$").matcher(args).matches()) {
 			try {
 				String input = args.replaceAll("\\+", "p").replaceAll("\\-", "m");
 				
@@ -22,31 +22,44 @@ public class Roll implements ICommand {
 				int mod = 0;
 				boolean subtract = false;
 				
+				int iterations = 1;
+				if(!input.startsWith("d")) {
+					iterations = Integer.parseInt(input.substring(0, input.indexOf("d")));
+				}
 				
 				if(input.contains("p") || input.contains("m")) {
 					// Has a modifier
 					int mindex = input.contains("p") ? input.indexOf("p") : input.indexOf("m");
 					
-					base = Integer.parseInt(input.substring(1, mindex));
+					base = Integer.parseInt(input.substring(input.indexOf("d")+1, mindex));
 					mod = Integer.parseInt(input.substring(mindex+1));
 					subtract = input.charAt(mindex) == 'm' ? true : false;
 				} else {
 					// No modifier
-					base = Integer.parseInt(input.substring(1));
+					base = Integer.parseInt(input.substring(input.indexOf("d")+1));
 				}
 				
-				int roll = Shmames.getRandom(base) + 1;
-				int baseroll = roll;
+				String a = "";
+				int baseroll = -1;
 				
-				if(subtract) {
-					roll -= mod;
-				}else {
-					roll += mod;
+				for(int i=0; i<iterations; i++) {
+					int roll = Shmames.getRandom(base) + 1;
+					baseroll = roll;
+					
+					if(subtract) {
+						roll -= mod;
+					}else {
+						roll += mod;
+					}
+					
+					if(a.length() > 0)
+						a += "\n";
+					
+					a += ":game_die: " + author.getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll);
 				}
 				
-				String a = ":game_die: " + author.getAsMention() + " d"+base+"("+baseroll+")"+ (mod != 0 ? subtract == true ? "-"+mod : "+"+mod : "") +": " + (roll);
-				
-				if(base == 20) {
+				// Send memes
+				if(base == 20 && iterations == 1) {
 					if(baseroll <= 3) {
 						a = a + "\n" + Shmames.getGIF("laugh");
 					} else if(baseroll >= 19) {
@@ -55,7 +68,7 @@ public class Roll implements ICommand {
 				}
 				
 				// Delete the person's message
-				message.delete().queue();
+				message.delete().complete();
 				
 				return a;
 			}catch(Exception ex) {

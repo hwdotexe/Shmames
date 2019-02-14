@@ -23,7 +23,7 @@ public class EightBall implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"8ball", "should", "will", "can"};
+		return new String[] {"8ball"};
 	}
 	
 	@Override

@@ -36,7 +36,7 @@ public class React extends ListenerAdapter {
 						p.getVotes().put(vote, p.getVotes().get(vote) + 1);
 					}
 					
-					break;
+					return;
 				}
 			}
 			

@@ -21,7 +21,7 @@ public class Poll {
 	private HashMap<Integer, Integer> votes;
 	private int pollID;
 	
-	public Poll(MessageChannel ch, String q, List<String> o) {
+	public Poll(MessageChannel ch, String q, List<String> o, int minutes) {
 		question=q;
 		options=o;
 		pollID = Shmames.getPollID();
@@ -29,7 +29,7 @@ public class Poll {
 		
 		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
-    	c.add(Calendar.HOUR, 3);
+    	c.add(Calendar.MINUTE, minutes);
     	//c.add(Calendar.SECOND, 15);
 		
 		EmbedBuilder eBuilder = new EmbedBuilder();
@@ -38,7 +38,7 @@ public class Poll {
         eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
-        eBuilder.setFooter("#" + ch.getName() + " - Expires "+c.get(Calendar.MONTH+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
+        eBuilder.setFooter("#" + ch.getName() + " - Expires "+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
         
         for(int i=0; i<options.size(); i++) {
         	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+"\n");
@@ -58,6 +58,9 @@ public class Poll {
         // Schedule the task
         Timer t = new Timer();
 		t.schedule(new PollFinal(pollID), c.getTime());
+		
+		// Pin the message
+		m.pin().queue();
 	}
 	
 	public HashMap<Integer, Integer> getVotes(){

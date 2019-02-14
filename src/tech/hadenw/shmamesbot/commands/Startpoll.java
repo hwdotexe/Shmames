@@ -11,27 +11,33 @@ import tech.hadenw.shmamesbot.Shmames;
 public class Startpoll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Starts a new poll. Usage: `startpoll question? optionA, optionB...`";
+		return "Starts a new poll. Usage: `startpoll 60m question? optionA, optionB...`";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
 		try {
-			String q = args.substring(0, args.indexOf("?")+1);
-			String o = args.substring(args.indexOf("?")+1).trim();
+			int mins = Integer.parseInt(args.substring(0, args.indexOf("m")));
 			
-			List<String> options = new ArrayList<String>();
-			
-			for(String s : o.split(", ")) {
-				options.add(s);
+			if(mins <= 2880) {
+				String q = args.substring(args.indexOf("m")+1, args.indexOf("?")+1);
+				String o = args.substring(args.indexOf("?")+1).trim();
+				
+				List<String> options = new ArrayList<String>();
+				
+				for(String s : o.split(", ")) {
+					options.add(s);
+				}
+				
+				if(options.size() > 1 && options.size() <= 9) {
+					message.getChannel().deleteMessageById(message.getIdLong()).queue();
+					Shmames.getPolls().add(new Poll(message.getChannel(), q, options, mins));
+				}
+				else
+					return "You must provide at least 2 different options, and fewer than 9!";
+			}else {
+				return "Polls must last 48 hours or less";
 			}
-			
-			if(options.size() > 1 && options.size() <= 9) {
-				message.getChannel().deleteMessageById(message.getIdLong()).queue();
-				Shmames.getPolls().add(new Poll(message.getChannel(), q, options));
-			}
-			else
-				return "You must provide at least 2 different options, and fewer than 9!";
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ":thinking: I don't think that's how you do it.";
