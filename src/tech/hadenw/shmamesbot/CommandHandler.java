@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.commands.AddResponse;
 import tech.hadenw.shmamesbot.commands.AddStatus;
@@ -24,6 +24,7 @@ import tech.hadenw.shmamesbot.commands.RemoveTrigger;
 import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.SetStatus;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
+import tech.hadenw.shmamesbot.commands.Startpoll;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
@@ -48,6 +49,7 @@ public class CommandHandler {
 		commands.add(new Roll());
 		commands.add(new GIF());
 		commands.add(new Minesweeper());
+		commands.add(new Startpoll());
 		commands.add(new Armageddon());
 	}
 	
@@ -58,17 +60,17 @@ public class CommandHandler {
 	 * @param author The user who is running the command.
 	 * @param server The server the command is running on.
 	 */
-	public void PerformCommand(String cmd, MessageChannel channel, User author, Guild server) {
+	public void PerformCommand(String cmd, Message message, User author, Guild server) {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				//if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
 				if(cmd.toLowerCase().contains(a.toLowerCase())) {
 					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 					String args = c.sanitize(cmd.substring(position).trim());
-					String r = c.run(args, author, server);
+					String r = c.run(args, author, message);
 					
 					if(r != null && r.length() > 0) {
-						channel.sendMessage(r).queue();
+						message.getChannel().sendMessage(r).queue();
 					}
 					
 					return;
@@ -76,7 +78,7 @@ public class CommandHandler {
 			}
 		}
 		
-		channel.sendMessage("I couldn't find that command :thinking:").queue();
+		message.getChannel().sendMessage("I couldn't find that command :thinking:").queue();
 	}
 	
 	/**

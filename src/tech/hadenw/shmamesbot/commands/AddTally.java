@@ -1,6 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 
@@ -11,7 +11,7 @@ public class AddTally implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if (Shmames.getBrain().getTallies().containsKey(args)) {
 			Shmames.getBrain().getTallies().put(args, Shmames.getBrain().getTallies().get(args) + 1);
 		} else {

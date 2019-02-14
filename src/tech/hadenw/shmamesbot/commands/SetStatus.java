@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 
@@ -15,15 +15,15 @@ public class SetStatus implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-Z]{7,9} .{3,}$").matcher(args).matches()) {
 			String t = args.substring(0, args.indexOf(" ")).toUpperCase();
 			t = t.equals("PLAYING") ? "DEFAULT" : t;
 			
 			GameType type = GameType.valueOf(t);
-			String message = args.substring(args.indexOf(" "));
+			String msg = args.substring(args.indexOf(" "));
 			
-			Shmames.getJDA().getPresence().setGame(Game.of(type, message));
+			Shmames.getJDA().getPresence().setGame(Game.of(type, msg));
 			
 			return ":v:";
 		}else {

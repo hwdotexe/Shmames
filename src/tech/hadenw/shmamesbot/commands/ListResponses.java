@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import java.util.regex.Pattern;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
@@ -14,7 +14,7 @@ public class ListResponses implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-Z]{4,7}$").matcher(args).matches()) {
 			if(TriggerType.byName(args) != null) {
 				String msg = "**"+args.toUpperCase()+" Responses:**";

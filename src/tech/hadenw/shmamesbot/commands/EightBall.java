@@ -1,6 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 
@@ -11,7 +11,7 @@ public class EightBall implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		String[] answers = new String[] {"Definitely.", "Without a doubt.","Yes - of course.",
 				"You can bet on it.","Most likely.","It's looking good!","Duh.","Signs point to yes.",
 				"Why don't you ask me later?",

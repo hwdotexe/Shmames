@@ -1,6 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.CommandHandler;
 
@@ -11,7 +11,7 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			// Wants help on specific command.
 			

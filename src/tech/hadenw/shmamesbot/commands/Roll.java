@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import java.util.regex.Pattern;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 
@@ -13,7 +13,7 @@ public class Roll implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^d\\d{1,3}([\\+\\-]\\d{1,2})?$").matcher(args).matches()) {
 			try {
 				String input = args.replaceAll("\\+", "p").replaceAll("\\-", "m");
@@ -53,7 +53,10 @@ public class Roll implements ICommand {
 						a = a + "\n" + Shmames.getGIF("hype");
 					}
 				}
-
+				
+				// Delete the person's message
+				message.delete().queue();
+				
 				return a;
 			}catch(Exception ex) {
 				ex.printStackTrace();

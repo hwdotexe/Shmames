@@ -1,6 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 
 public interface ICommand {
@@ -17,7 +17,7 @@ public interface ICommand {
 	 * @param server The server this command is running on.
 	 * @return A string response, if applicable.
 	 */
-	String run(String args, User author, Guild server);
+	String run(String args, User author, Message message);
 	
 	/**
 	 * Returns a list of command aliases for this item.

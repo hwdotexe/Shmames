@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -22,13 +22,13 @@ public class Armageddon implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(isPrimed) {
-			for (TextChannel c : server.getTextChannels()) {
+			for (TextChannel c : message.getGuild().getTextChannels()) {
 				c.delete().queue();
 			}
 
-			for (VoiceChannel c : server.getVoiceChannels()) {
+			for (VoiceChannel c : message.getGuild().getVoiceChannels()) {
 				c.delete().queue();
 			}
 

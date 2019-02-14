@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import java.util.regex.Pattern;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
@@ -14,7 +14,7 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Guild server) {
+	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-Z]{4,7} [\\w\\W]{3,}$").matcher(args).matches()) {
 			String newresp = args.substring(args.indexOf(" ")).trim();
 			String nrtype = args.substring(0, args.indexOf(" ")).trim();

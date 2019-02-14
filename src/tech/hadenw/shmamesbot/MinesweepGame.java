@@ -108,6 +108,12 @@ public class MinesweepGame {
 			return ":five:";
 		case 6:
 			return ":six:";
+		case 7:
+			return ":seven:";
+		case 8:
+			return ":eight:";
+		case 9:
+			return ":nine:";
 		default:
 			return ":small_red_triangle:";
 		}

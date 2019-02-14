@@ -27,7 +27,7 @@ public class Chat extends ListenerAdapter {
 					String command = message.substring(trigger.length()).trim();
 					
 					System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
-					cmd.PerformCommand(command, e.getChannel(), e.getAuthor(), e.getGuild());
+					cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 					
 					return;
 				}

@@ -26,6 +26,7 @@ public final class Shmames {
 	private static File brainFile;
 	private static Random r;
 	private static Brain brain;
+	private static List<Poll> polls;
 	
 	/**
 	 * The entry point for the bot.
@@ -34,6 +35,7 @@ public final class Shmames {
 	public static void main(String[] args) {
 		brainFile = new File("brain.json");
 		r = new Random();
+		polls = new ArrayList<Poll>();
 		
 		try {
 			// Real James
@@ -64,6 +66,14 @@ public final class Shmames {
 	 */
 	public static JDA getJDA() {
 		return jda;
+	}
+	
+	/**
+	 * Returns a list of Poll objects currently in effect.
+	 * @return A list of Polls.
+	 */
+	public static List<Poll> getPolls() {
+		return polls;
 	}
 	
 	/**
@@ -101,6 +111,20 @@ public final class Shmames {
 	    	if (--num < 0)
 	    		return t;
 	    throw new AssertionError();
+	}
+	
+	/**
+	 * Generates a new Poll ID.
+	 * @return An ID.
+	 */
+	public static int getPollID() {
+		int i=0;
+		
+		for(Poll p : polls) {
+			i = p.getID() + 1;
+		}
+		
+		return i;
 	}
 	
 	/**

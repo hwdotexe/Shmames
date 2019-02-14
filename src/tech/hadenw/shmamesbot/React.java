@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
@@ -20,10 +21,30 @@ public class React extends ListenerAdapter {
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
 		ReactionEmote emo = e.getReaction().getReactionEmote();
 		
-		if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-			if(emo.getEmote().getName().equalsIgnoreCase("roygun")) {
-				
-				strikeMessage(e.getMessageIdLong(), e);
+		if(e.getUser() != Shmames.getJDA().getSelfUser()) {
+			for(Poll p : Shmames.getPolls()) {
+				if(p.getMesssage().getIdLong() == e.getMessageIdLong()) {
+					int vote = -1;
+					
+					try {
+						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
+					}catch(Exception ex) {
+						break;
+					}
+					
+					if(p.getVotes().containsKey(vote)) {
+						p.getVotes().put(vote, p.getVotes().get(vote) + 1);
+					}
+					
+					break;
+				}
+			}
+			
+			if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
+				if(emo.getEmote().getName().equalsIgnoreCase("roygun")) {
+					
+					strikeMessage(e.getMessageIdLong(), e);
+				}
 			}
 		}
 	}
@@ -32,10 +53,30 @@ public class React extends ListenerAdapter {
 	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
 		ReactionEmote emo = e.getReaction().getReactionEmote();
 		
-		if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-			if(emo.getEmote().getName().equalsIgnoreCase("roygun")) {
-				if(strikes.contains(e.getMessageIdLong())) {
-					strikes.remove(e.getMessageIdLong());
+		if(e.getUser() != Shmames.getJDA().getSelfUser()) {
+			for(Poll p : Shmames.getPolls()) {
+				if(p.getMesssage().getIdLong() == e.getMessageIdLong()) {
+					int vote = -1;
+					
+					try {
+						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
+					}catch(Exception ex) {
+						break;
+					}
+					
+					if(p.getVotes().containsKey(vote)) {
+						p.getVotes().put(vote, p.getVotes().get(vote) - 1);
+					}
+					
+					break;
+				}
+			}
+			
+			if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
+				if(emo.getEmote().getName().equalsIgnoreCase("roygun")) {
+					if(strikes.contains(e.getMessageIdLong())) {
+						strikes.remove(e.getMessageIdLong());
+					}
 				}
 			}
 		}
@@ -43,7 +84,8 @@ public class React extends ListenerAdapter {
 	
 	private void strikeMessage(long id, MessageReactionAddEvent e) {
 		if(strikes.contains(id)) {
-			String name = e.getChannel().getMessageById(id).complete().getAuthor().getName();
+			Message m = e.getChannel().getMessageById(id).complete();
+			String name = m.getAuthor().getName();
 			String toTally = "";
 			
 			// Change tally
@@ -62,7 +104,7 @@ public class React extends ListenerAdapter {
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase("addtally")) {
-						String response = c.run(toTally, Shmames.getJDA().getSelfUser(), e.getGuild());
+						String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
 						e.getChannel().sendMessage(response).queue();
 						return;
 					}
