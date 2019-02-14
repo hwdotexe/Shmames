@@ -20,29 +20,28 @@ public class React extends ListenerAdapter {
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
 		ReactionEmote emo = e.getReaction().getReactionEmote();
-		
-		if(e.getUser() != Shmames.getJDA().getSelfUser()) {
-			for(Poll p : Shmames.getPolls()) {
-				if(p.getMesssage().getIdLong() == e.getMessageIdLong()) {
+
+		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
+			for (Poll p : Shmames.getPolls()) {
+				if (p.getMesssage().getId().equals(e.getMessageId())) {
 					int vote = -1;
-					
+
 					try {
 						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
-					}catch(Exception ex) {
-						break;
+					} catch (Exception ex) {
+						return;
 					}
-					
-					if(p.getVotes().containsKey(vote)) {
+
+					if (p.getVotes().containsKey(vote)) {
 						p.getVotes().put(vote, p.getVotes().get(vote) + 1);
 					}
-					
+
 					return;
 				}
 			}
-			
-			if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-				if(emo.getEmote().getName().equalsIgnoreCase("roygun")) {
-					
+
+			if (emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
+				if (emo.getEmote().getName().equalsIgnoreCase("roygun")) {
 					strikeMessage(e.getMessageIdLong(), e);
 				}
 			}

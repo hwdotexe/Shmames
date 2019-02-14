@@ -29,7 +29,7 @@ public class PollFinal extends TimerTask{
 		        eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
 		        eBuilder.setColor(Color.BLUE);
 		        eBuilder.setTitle(p.getQuestion()+" (RESULTS)");
-		        eBuilder.setFooter("#" + p.getMesssage().getChannel().getName() + " - Expired "+c.get(Calendar.MONTH+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
+		        eBuilder.setFooter("#" + p.getMesssage().getChannel().getName() + " - Expired "+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
 		        
 		        for(int i=0; i<p.getOptions().size(); i++) {
 		        	eBuilder.appendDescription("**"+(i+1)+"**: "+p.getOptions().get(i)+" **("+p.getVotes().get(i)+" votes)**"+"\n");
