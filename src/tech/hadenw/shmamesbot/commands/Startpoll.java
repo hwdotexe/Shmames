@@ -30,7 +30,12 @@ public class Startpoll implements ICommand {
 				}
 				
 				if(options.size() > 1 && options.size() <= 9) {
-					message.getChannel().deleteMessageById(message.getIdLong()).queue();
+					try {
+						message.delete().queue();
+					}catch(Exception e) {
+						// Do nothing; we don't have permission
+					}
+					
 					Shmames.getPolls().add(new Poll(message.getChannel(), q, options, mins));
 				}
 				else

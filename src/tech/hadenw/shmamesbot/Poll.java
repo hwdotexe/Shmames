@@ -38,7 +38,7 @@ public class Poll {
         eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
-        eBuilder.setFooter("#" + ch.getName() + " - Expires "+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
+        eBuilder.setFooter("#" + ch.getName() + " - Expires "+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+(c.get(Calendar.MINUTE) < 10 ? "0"+c.get(Calendar.MINUTE) : c.get(Calendar.MINUTE))+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM"), null);
         
         for(int i=0; i<options.size(); i++) {
         	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+"\n");
@@ -60,7 +60,11 @@ public class Poll {
 		t.schedule(new PollFinal(pollID), c.getTime());
 		
 		// Pin the message
-		m.pin().queue();
+		try {
+			m.pin().queue();
+		}catch(Exception e) {
+			// Do nothing; we don't have permission
+		}
 	}
 	
 	public HashMap<Integer, Integer> getVotes(){
