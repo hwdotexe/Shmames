@@ -1,18 +1,11 @@
 package tech.hadenw.shmamesbot;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import net.dv8tion.jda.core.AccountType;
@@ -24,7 +17,6 @@ import net.dv8tion.jda.core.entities.Game.GameType;
 public final class Shmames {
 	private static JDA jda;
 	private static File brainFile;
-	private static Random r;
 	private static Brain brain;
 	private static List<Poll> polls;
 	
@@ -34,8 +26,9 @@ public final class Shmames {
 	 */
 	public static void main(String[] args) {
 		brainFile = new File("brain.json");
-		r = new Random();
 		polls = new ArrayList<Poll>();
+		
+		Utils.Init();
 		
 		try {
 			// Real James
@@ -48,7 +41,7 @@ public final class Shmames {
 			loadBrain();
 			
 			// Set the bot's status.
-			String action = Shmames.randomItem(brain.getStatuses().keySet());
+			String action = Utils.randomItem(brain.getStatuses().keySet());
 			GameType t = brain.getStatuses().get(action);
 			Shmames.getJDA().getPresence().setGame(Game.of(t, action));
 			
@@ -92,28 +85,6 @@ public final class Shmames {
 	}
 	
 	/**
-	 * Returns a random number between 0 and the upper bound, exclusive.
-	 * @param bound The ceiling for the random number.
-	 * @return A random number.
-	 */
-	public static int getRandom(int bound) {
-		return r.nextInt(bound);
-	}
-	
-	/**
-	 * Gets a random item from a Set.
-	 * @param set The Set to loop through.
-	 * @return An item from the Set.
-	 */
-	public static <T> T randomItem(Set<T> set) {
-	    int num = getRandom(set.size());
-	    for(T t: set)
-	    	if (--num < 0)
-	    		return t;
-	    throw new AssertionError();
-	}
-	
-	/**
 	 * Generates a new Poll ID.
 	 * @return An ID.
 	 */
@@ -125,59 +96,6 @@ public final class Shmames {
 		}
 		
 		return i;
-	}
-	
-	/**
-	 * Sends an HTTP GET request to the specified URL.
-	 * @param u The URL to GET.
-	 * @return A String representing the response.
-	 */
-	public static String sendGET(String u) {
-		try {
-			URL url = new URL(u);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			
-		    conn.setRequestMethod("GET");
-		    
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
-		    String result = "";
-		    
-		    while ((line = rd.readLine()) != null) {
-		       result += line;
-		    }
-		    
-		    rd.close();
-		    
-		    return result;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-	
-	/**
-	 * Searches a GIF API and sends back a random result.
-	 * @param search The search criteria.
-	 * @return A String GIF URL.
-	 */
-	public static String getGIF(String search) {
-		search = search.replaceAll(" ", "%20");
-		String result = sendGET("https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&safesearch=moderate&limit=20");
-		
-		JSONObject json = new JSONObject(result);
-	    JSONArray jsonArray = json.getJSONArray("results");
-	    List<String> gifURLs = new ArrayList<String>();
-	    
-	    for(int i=0; i<jsonArray.length(); i++) {
-	    	gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
-	    }
-	    
-	    if(gifURLs.size() > 0)
-	    	return gifURLs.get(r.nextInt(gifURLs.size()));
-	    else
-	    	return "Uhh, all I could find was this: https://tenor.com/w3sJ.gif";
 	}
 	
 	/**

@@ -19,6 +19,7 @@ import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
+import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.Reload;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
 import tech.hadenw.shmamesbot.commands.Roll;
@@ -50,6 +51,7 @@ public class CommandHandler {
 		commands.add(new GIF());
 		commands.add(new Minesweeper());
 		commands.add(new Startpoll());
+		commands.add(new PinThat());
 		commands.add(new Armageddon());
 	}
 	

@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.Utils;
 
 public class GIF implements ICommand {
 	@Override
@@ -13,7 +13,7 @@ public class GIF implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
-			return Shmames.getGIF(args);
+			return Utils.getGIF(args);
 		else {
 			return "You actually need to specify what you want me to search...";
 		}

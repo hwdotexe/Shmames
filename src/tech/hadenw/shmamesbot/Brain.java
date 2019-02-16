@@ -14,12 +14,14 @@ public class Brain {
 	private HashMap<String, GameType> statuses;
 	private HashMap<String, TriggerType> triggers;
 	private HashMap<String, TriggerType> responses;
+	private String removeEmoji;
 	
 	public Brain(JSONObject json) {
 		tallies = new HashMap<String, Integer>();
 		statuses = new HashMap<String, GameType>();
 		triggers = new HashMap<String, TriggerType>();
 		responses = new HashMap<String, TriggerType>();
+		removeEmoji = "roygun"; // TODO make this configurable using the bot, and per-server.
 		
 		if(json != null) {
 			JSONObject t = json.getJSONObject("tallies");
@@ -61,6 +63,10 @@ public class Brain {
 			tallies.put("memes", 1);
 			responses.put("What'd you call me?! :angry:", TriggerType.RONALD);
 		}
+	}
+	
+	public String getRemovalEmoji() {
+		return removeEmoji;
 	}
 	
 	public HashMap<String, Integer> getTallies(){

@@ -11,7 +11,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class Startpoll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Starts a new poll. Usage: `startpoll 60m question? optionA, optionB...`";
+		return "Starts a new poll in the current channel. Usage: `startpoll 60m question? optionA, optionB...`";
 	}
 
 	@Override

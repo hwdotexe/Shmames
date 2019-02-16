@@ -2,7 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.Utils;
 
 public class EightBall implements ICommand {
 	@Override
@@ -18,7 +18,7 @@ public class EightBall implements ICommand {
 				"Don't count on it.","My reply is no.","My sources say no.","It's not looking good.","I highly doubt it.",
 				"Nope.", "No way.", "That's a negative."};
 		
-		return answers[Shmames.getRandom(answers.length)];
+		return answers[Utils.getRandom(answers.length)];
 	}
 
 	@Override

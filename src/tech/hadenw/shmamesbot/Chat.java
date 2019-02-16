@@ -42,7 +42,7 @@ public class Chat extends ListenerAdapter {
 								sendRandom(e.getChannel(), type, e.getAuthor());
 							} else {
 								List<Emote> em = Shmames.getJDA().getEmotes();
-								e.getMessage().addReaction(em.get(Shmames.getRandom(em.size()))).queue();
+								e.getMessage().addReaction(em.get(Utils.getRandom(em.size()))).queue();
 								return;
 							}
 						}
@@ -52,12 +52,12 @@ public class Chat extends ListenerAdapter {
 			
 			//Nicolas Cage memes
 			if (sanitize(message).contains("nicolas cage")) {
-				e.getChannel().sendMessage(Shmames.getGIF("nicolas cage")).queue();
+				e.getChannel().sendMessage(Utils.getGIF("nicolas cage")).queue();
 				return;
 			}
 
 			// James needs to give his two cents
-			if (Shmames.getRandom(100) < 1) {
+			if (Utils.getRandom(100) < 1) {
 				sendRandom(e.getChannel(), TriggerType.RANDOM, e.getAuthor());
 			}
 		}
@@ -69,10 +69,10 @@ public class Chat extends ListenerAdapter {
 	
 	private void sendRandom(MessageChannel c, TriggerType t, User author) {
 		List<String> r = Shmames.getBrain().getAllResponsesFor(t); 
-		String response = r.get(Shmames.getRandom(r.size()));
+		String response = r.get(Utils.getRandom(r.size()));
 
 		if (response.startsWith("[gif]"))
-			c.sendMessage(Shmames.getGIF(response.split("\\[gif\\]",2)[1])).queue();
+			c.sendMessage(Utils.getGIF(response.split("\\[gif\\]",2)[1])).queue();
 		else
 			c.sendMessage(response.replaceAll("%NAME%", author.getAsMention())).queue();
 
