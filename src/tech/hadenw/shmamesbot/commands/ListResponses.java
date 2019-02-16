@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
 
@@ -31,7 +32,7 @@ public class ListResponses implements ICommand {
 				return ":thinking: I didn't recognize that trigger type.";
 			}
 		} else {
-			return ":fire: Wrong syntax! Try looking at the help menu.";
+			return Errors.WRONG_USAGE;
 		}
 	}
 

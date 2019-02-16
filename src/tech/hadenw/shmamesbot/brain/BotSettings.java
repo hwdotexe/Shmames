@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot.brain;
 
 public enum BotSettings {
-	PINCHANNEL,
-	REMOVALEMOTE
+	PIN_CHANNEL,
+	REMOVAL_EMOTE,
+	REMOVAL_THRESHOLD
 }

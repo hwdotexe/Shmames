@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Poll;
 import tech.hadenw.shmamesbot.Shmames;
 
@@ -45,7 +46,7 @@ public class Startpoll implements ICommand {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			return ":thinking: I don't think that's how you do it.";
+			return Errors.WRONG_USAGE;
 		}
 		
 		return "";

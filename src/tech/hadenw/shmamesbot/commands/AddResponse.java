@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
 import tech.hadenw.shmamesbot.brain.Brain;
@@ -41,7 +42,7 @@ public class AddResponse implements ICommand {
 				return "Good idea, but that response already exists :sob:";
 			}
 		} else {
-			return ":fire: Wrong syntax! Try looking at the help menu.";
+			return Errors.WRONG_USAGE;
 		}
 	}
 

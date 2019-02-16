@@ -6,16 +6,22 @@ import java.util.regex.Pattern;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
+import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class PinThat implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Pins a message to #the-wall, if the channel exists. `Usage: pinthat ^`\n**TIP: Try `pinthat ^^^`!**";
+		return "Echoes a message to another channel. `Usage: pinthat ^`\n**TIP: Try `pinthat ^^^`!**";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[\\^]{1,10}$").matcher(args).matches()) {
+			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+			
 			try {
 				int messages = args.length();
 				
@@ -23,7 +29,7 @@ public class PinThat implements ICommand {
 				Message toPin = msgs.get(msgs.size()-1);
 				
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
-					if(ch.getName().equalsIgnoreCase("the-wall")) {
+					if(ch.getName().equalsIgnoreCase(b.getSettings().get(BotSettings.PIN_CHANNEL))) {
 						ch.sendMessage(toPin.getAuthor().getAsMention()+" (#"+toPin.getChannel().getName()+"): "+toPin.getContentDisplay()).queue();
 						
 						break;
@@ -33,7 +39,7 @@ public class PinThat implements ICommand {
 				return "";
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				return "I wasn't able to pin that. Sorry!";
+				return Errors.NO_PERMISSION;
 			}
 		}
 		

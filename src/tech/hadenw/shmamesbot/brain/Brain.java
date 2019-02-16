@@ -67,10 +67,6 @@ public class Brain {
 		return tt;
 	}
 	
-	public String getRemovalEmoji() {
-		return settings.get(BotSettings.REMOVALEMOTE);
-	}
-	
 	/**
 	 * Loads default settings into the system.
 	 */
@@ -79,7 +75,8 @@ public class Brain {
 		tallies.put("memes", 1);
 		responses.put("What'd you call me?! :angry:", TriggerType.RONALD);
 		
-		settings.put(BotSettings.PINCHANNEL, "general");
-		settings.put(BotSettings.REMOVALEMOTE, "x");
+		settings.put(BotSettings.PIN_CHANNEL, "general");
+		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");
+		settings.put(BotSettings.REMOVAL_THRESHOLD, "3");
 	}
 }

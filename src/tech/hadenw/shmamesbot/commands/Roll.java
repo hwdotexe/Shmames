@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Utils;
 
 public class Roll implements ICommand {
@@ -67,7 +68,7 @@ public class Roll implements ICommand {
 				return a;
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				return "I sense a plot to destroy me.";
+				return Errors.BOT_ERROR;
 			}
 		}else {
 			return "Try `roll a d20`!";

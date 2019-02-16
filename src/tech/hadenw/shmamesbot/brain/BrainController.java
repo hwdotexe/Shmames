@@ -26,7 +26,15 @@ public class BrainController {
 		globalSettingsFile = new File("brains/motherBrain.json");
 
 		for (File b : discoverBrains()) {
-			brains.add(gson.fromJson(loadJSONFile(b), Brain.class));
+			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
+			brains.add(brain);
+			
+			// Ensure new settings are available to change
+			for(BotSettings s : BotSettings.values()) {
+				if(!brain.getSettings().containsKey(s)) {
+					brain.getSettings().put(s, "not set");
+				}
+			}
 		}
 
 		if (globalSettingsFile.exists()) {

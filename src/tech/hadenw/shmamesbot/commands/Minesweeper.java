@@ -17,9 +17,7 @@ public class Minesweeper implements ICommand {
 				int size = Integer.parseInt(args);
 				
 				if(size >= 6 && size <= 11) {
-					MinesweepGame ms = new MinesweepGame(size);
-					
-					return ms.convertToDiscord();
+					return MinesweepGame.BuildNewGame(size);
 				}else {
 					return "Valid range is 6-11.";
 				}

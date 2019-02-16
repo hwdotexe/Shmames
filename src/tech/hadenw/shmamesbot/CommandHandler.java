@@ -78,7 +78,7 @@ public class CommandHandler {
 							message.getChannel().sendMessage(r).queue();
 						}
 					}else {
-						message.getChannel().sendMessage("That command must be run on a server!").queue();
+						message.getChannel().sendMessage(Errors.GUILD_REQUIRED).queue();
 					}
 					
 					return;
@@ -86,7 +86,7 @@ public class CommandHandler {
 			}
 		}
 		
-		message.getChannel().sendMessage("I couldn't find that command :thinking:").queue();
+		message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
 	}
 	
 	/**

@@ -5,15 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 public class MinesweepGame {
-	// 6x6 grid
-	// -1: bomb
-	// 0-x: bombs in the surrounding 8 spaces
-	private List<int[]> rows;
-	private Random r;
-	
-	public MinesweepGame(int size) {
-		rows = new ArrayList<int[]>();
-		r = new Random();
+	public static String BuildNewGame(int size) {
+		List<int[]> rows = new ArrayList<int[]>();
+		Random r = new Random();
 		
 		for(int i=0; i<size; i++) {
 			rows.add(new int[size]);
@@ -73,9 +67,8 @@ public class MinesweepGame {
 			
 			rows.set(i, row);
 		}
-	}
-	
-	public String convertToDiscord() {
+		
+		// Convert it to a string and send it back.
 		StringBuilder ms = new StringBuilder();
 		
 		for(int[] row : rows) {
@@ -90,7 +83,7 @@ public class MinesweepGame {
 		return ms.toString();
 	}
 	
-	private String numberToEmoji(int i) {
+	private static String numberToEmoji(int i) {
 		switch(i){
 		case -1:
 			return ":bomb:";

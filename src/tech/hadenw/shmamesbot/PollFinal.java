@@ -7,7 +7,6 @@ import java.util.TimerTask;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 public class PollFinal extends TimerTask{
@@ -24,9 +23,7 @@ public class PollFinal extends TimerTask{
 		    	c.setTime(new Date());
 				
 				EmbedBuilder eBuilder = new EmbedBuilder();
-				User a = Shmames.getJDA().getSelfUser();
-
-		        eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
+				
 		        eBuilder.setColor(Color.GRAY);
 		        eBuilder.setTitle(p.getQuestion()+" (RESULTS)");
 		        eBuilder.setFooter("#" + p.getMesssage().getChannel().getName() + " - Expired "+Utils.getFriendlyDate(c), null);

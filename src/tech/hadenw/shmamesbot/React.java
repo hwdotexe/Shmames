@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import tech.hadenw.shmamesbot.brain.BotSettings;
 import tech.hadenw.shmamesbot.commands.ICommand;
 
 public class React extends ListenerAdapter {
@@ -38,11 +39,9 @@ public class React extends ListenerAdapter {
 					return;
 				}
 			}
-
-			if (emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-				if (emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getRemovalEmoji())) {
-					strikeMessage(e.getMessageIdLong(), e);
-				}
+			
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
+				strikeMessage(e.getMessageIdLong(), e);
 			}
 		}
 	}
@@ -70,9 +69,15 @@ public class React extends ListenerAdapter {
 				}
 			}
 			
-			if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-				if(emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getRemovalEmoji())) {
-					// TODO drop strike
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
+				long id = e.getMessageIdLong();
+				
+				if(strikes.containsKey(id)) {
+					strikes.put(id, strikes.get(id) > 1 ? strikes.get(id) - 1 : 0);
+					
+					if(strikes.get(id) <= 0){
+						strikes.remove(id);
+					}
 				}
 			}
 		}
@@ -82,7 +87,14 @@ public class React extends ListenerAdapter {
 		// Increment strike on this message
 		strikes.put(id, strikes.containsKey(id) ? strikes.get(id) + 1 : 1);
 		
-		if(strikes.get(id) >= 3) {
+		int t = 3;
+		try {
+			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_THRESHOLD));
+		}catch(Exception ex) {
+			
+		}
+		
+		if(strikes.get(id) >= t) {
 			Message m = e.getChannel().getMessageById(id).complete();
 			String name = m.getAuthor().getName();
 			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "badbot" : "bad"+name;
@@ -102,7 +114,7 @@ public class React extends ListenerAdapter {
 					}
 				}
 			}catch(Exception ex) {
-				e.getChannel().sendMessage("[No Permission] I wasn't able to delete that :/").queue();
+				e.getChannel().sendMessage(Errors.NO_PERMISSION).queue();
 			}
 		}
 	}

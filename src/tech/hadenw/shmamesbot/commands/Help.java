@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot.commands;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.CommandHandler;
+import tech.hadenw.shmamesbot.Errors;
 
 public class Help implements ICommand {
 	@Override
@@ -61,7 +62,7 @@ public class Help implements ICommand {
 			return "PM'd you the deets :punch:";
 		}
 		
-		return "I couldn't find that command :thinking:";
+		return Errors.COMMAND_NOT_FOUND;
 	}
 
 	@Override

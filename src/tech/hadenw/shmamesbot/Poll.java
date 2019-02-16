@@ -11,7 +11,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 public class Poll {
@@ -33,9 +32,7 @@ public class Poll {
     	//c.add(Calendar.SECOND, 15);
 		
 		EmbedBuilder eBuilder = new EmbedBuilder();
-		User a = Shmames.getJDA().getSelfUser();
-
-        eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
+		
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
         eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c), null);
