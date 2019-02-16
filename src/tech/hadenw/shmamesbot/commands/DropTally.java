@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot.commands;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class DropTally implements ICommand {
 	@Override
@@ -12,19 +13,21 @@ public class DropTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if (Shmames.getBrain().getTallies().containsKey(args)) {
-			int tallies = Shmames.getBrain().getTallies().get(args);
+		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		
+		if (b.getTallies().containsKey(args)) {
+			int tallies = b.getTallies().get(args);
 
 			if (tallies - 1 < 1) {
-				Shmames.getBrain().getTallies().remove(args);
-				Shmames.saveBrain();
+				b.getTallies().remove(args);
+				Shmames.getBrains().saveBrain(b);
 				
 				return "`" + args + "` hast been removed, sire";
 			} else {
-				Shmames.getBrain().getTallies().put(args, tallies - 1);
-				Shmames.saveBrain();
+				b.getTallies().put(args, tallies - 1);
+				Shmames.getBrains().saveBrain(b);
 				
-				return "Current tallies for `" + args + "`: `" + Shmames.getBrain().getTallies().get(args) + "`";
+				return "Current tallies for `" + args + "`: `" + b.getTallies().get(args) + "`";
 			}
 		} else {
 			return "**I'm sorry " + author.getAsMention() + ", I'm afraid I can't do that.**";
@@ -39,5 +42,10 @@ public class DropTally implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

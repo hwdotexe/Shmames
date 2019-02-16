@@ -30,4 +30,10 @@ public interface ICommand {
 	 * @return A sanitized version of the argument string.
 	 */
 	String sanitize(String args);
+	
+	/**
+	 * Sets whether this command must be run in a Guild.
+	 * @return Whether this must be a Guild.
+	 */
+	boolean requiresGuild();
 }

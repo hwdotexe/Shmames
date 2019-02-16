@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot.commands;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class RemoveTrigger implements ICommand {
 	@Override
@@ -14,9 +15,11 @@ public class RemoveTrigger implements ICommand {
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			if (!args.equalsIgnoreCase("hey james")) {
-				if (Shmames.getBrain().getTriggers().containsKey(args)) {
-					Shmames.getBrain().getTriggers().remove(args);
-					Shmames.saveBrain();
+				Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+				
+				if (b.getTriggers().containsKey(args)) {
+					b.getTriggers().remove(args);
+					Shmames.getBrains().saveBrain(b);
 	
 					return "I threw it on the **GROUND**!";
 				} else
@@ -37,5 +40,10 @@ public class RemoveTrigger implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i.toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

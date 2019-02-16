@@ -40,4 +40,9 @@ public class SetStatus implements ICommand {
 	public String sanitize(String i) {
 		return i;
 	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return false;
+	}
 }

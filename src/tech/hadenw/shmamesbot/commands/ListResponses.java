@@ -19,7 +19,7 @@ public class ListResponses implements ICommand {
 			if(TriggerType.byName(args) != null) {
 				String msg = "**"+args.toUpperCase()+" Responses:**";
 		
-				for (String s : Shmames.getBrain().getAllResponsesFor(TriggerType.byName(args))) {
+				for (String s : Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(args))) {
 					if(msg.length() > 0)
 						msg += "\n";
 					
@@ -43,5 +43,10 @@ public class ListResponses implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i;
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

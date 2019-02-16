@@ -67,12 +67,16 @@ public class CommandHandler {
 			for(String a : c.getAliases()) {
 				//if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
 				if(cmd.toLowerCase().contains(a.toLowerCase())) {
-					int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
-					String args = c.sanitize(cmd.substring(position).trim());
-					String r = c.run(args, author, message);
-					
-					if(r != null && r.length() > 0) {
-						message.getChannel().sendMessage(r).queue();
+					if(!(server==null && c.requiresGuild())) {
+						int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
+						String args = c.sanitize(cmd.substring(position).trim());
+						String r = c.run(args, author, message);
+						
+						if(r != null && r.length() > 0) {
+							message.getChannel().sendMessage(r).queue();
+						}
+					}else {
+						message.getChannel().sendMessage("That command must be run on a server!").queue();
 					}
 					
 					return;

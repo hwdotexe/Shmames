@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.MotherBrain;
 
 public class AddStatus implements ICommand {
 	@Override
@@ -17,12 +18,13 @@ public class AddStatus implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-z]{7,9} [a-zA-Z ]+$").matcher(args).matches()) {
+			MotherBrain b = Shmames.getBrains().getMotherBrain();
 			GameType type = GameType.valueOf(args.substring(0, args.indexOf(" ")).toUpperCase());
 			String msg = args.substring(args.indexOf(" "));
 			
-			Shmames.getBrain().getStatuses().put(msg, type);
+			b.getStatuses().put(msg, type);
 			Shmames.getJDA().getPresence().setGame(Game.of(type, msg));
-			Shmames.saveBrain();
+			Shmames.getBrains().saveMotherBrain();
 			
 			return ":+1:";
 		}else {
@@ -38,5 +40,10 @@ public class AddStatus implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i.replaceAll("", "").toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

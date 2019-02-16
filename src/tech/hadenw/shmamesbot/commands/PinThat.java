@@ -49,4 +49,9 @@ public class PinThat implements ICommand {
 	public String sanitize(String i) {
 		return i;
 	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
+	}
 }

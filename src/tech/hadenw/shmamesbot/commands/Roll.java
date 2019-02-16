@@ -83,4 +83,9 @@ public class Roll implements ICommand {
 	public String sanitize(String i) {
 		return i.replaceAll("[\\W&&[^\\+\\-]]", "").toLowerCase();
 	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return false;
+	}
 }

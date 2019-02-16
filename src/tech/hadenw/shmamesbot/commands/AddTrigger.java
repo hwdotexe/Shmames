@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class AddTrigger implements ICommand {
 	@Override
@@ -16,13 +17,14 @@ public class AddTrigger implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-Z]{3,} [a-zA-Z]{4,7}$").matcher(args).matches()) {
+			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newtrigger = args.substring(args.indexOf(" ")).trim();
 			String nttype = args.substring(0, args.indexOf(" ")).trim();
 			
-			if (!Shmames.getBrain().getAllTriggers().contains(newtrigger)) {
+			if (!b.getTriggers().keySet().contains(newtrigger)) {
 				if (TriggerType.byName(nttype) != null) {
-					Shmames.getBrain().addTrigger(newtrigger, TriggerType.byName(nttype));
-					Shmames.saveBrain();
+					b.getTriggers().put(newtrigger, TriggerType.byName(nttype));
+					Shmames.getBrains().saveBrain(b);
 					
 					return "I will now send a `" + TriggerType.byName(nttype).toString()+ "` response when I hear `" + newtrigger + "`!";
 				} else {
@@ -53,5 +55,10 @@ public class AddTrigger implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i.toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

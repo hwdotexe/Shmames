@@ -40,7 +40,7 @@ public class React extends ListenerAdapter {
 			}
 
 			if (emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-				if (emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrain().getRemovalEmoji())) {
+				if (emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getRemovalEmoji())) {
 					strikeMessage(e.getMessageIdLong(), e);
 				}
 			}
@@ -71,7 +71,7 @@ public class React extends ListenerAdapter {
 			}
 			
 			if(emo.isEmote() && e.getGuild().getEmotes().contains(emo.getEmote())) {
-				if(emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrain().getRemovalEmoji())) {
+				if(emo.getEmote().getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getRemovalEmoji())) {
 					// TODO drop strike
 				}
 			}

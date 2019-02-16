@@ -3,6 +3,7 @@ package tech.hadenw.shmamesbot.commands;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class AddTally implements ICommand {
 	@Override
@@ -12,15 +13,16 @@ public class AddTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if (Shmames.getBrain().getTallies().containsKey(args)) {
-			Shmames.getBrain().getTallies().put(args, Shmames.getBrain().getTallies().get(args) + 1);
+		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		if (b.getTallies().containsKey(args)) {
+			b.getTallies().put(args, b.getTallies().get(args) + 1);
 		} else {
-			Shmames.getBrain().getTallies().put(args, 1);
+			b.getTallies().put(args, 1);
 		}
 		
-		Shmames.saveBrain();
+		Shmames.getBrains().saveBrain(b);
 
-		return "Current tally for `" + args + "`: `"+ Shmames.getBrain().getTallies().get(args) + "`";
+		return "Current tally for `" + args + "`: `"+ b.getTallies().get(args) + "`";
 	}
 
 	@Override
@@ -31,5 +33,10 @@ public class AddTally implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }

@@ -28,4 +28,9 @@ public class GIF implements ICommand {
 	public String sanitize(String i) {
 		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
 	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return false;
+	}
 }

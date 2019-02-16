@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class AddResponse implements ICommand {
 	@Override
@@ -16,13 +17,14 @@ public class AddResponse implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(Pattern.compile("^[a-zA-Z]{4,7} [\\w\\W]{3,}$").matcher(args).matches()) {
+			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newresp = args.substring(args.indexOf(" ")).trim();
 			String nrtype = args.substring(0, args.indexOf(" ")).trim();
 	
-			if (!Shmames.getBrain().getResponses().containsKey(newresp)) {
+			if (!b.getResponses().containsKey(newresp)) {
 				if (TriggerType.byName(nrtype) != null) {
-					Shmames.getBrain().addResponse(newresp, TriggerType.byName(nrtype));
-					Shmames.saveBrain();
+					b.getResponses().put(newresp, TriggerType.byName(nrtype));
+					Shmames.getBrains().saveBrain(b);
 	
 					return "Added :+1:";
 				} else {
@@ -51,5 +53,10 @@ public class AddResponse implements ICommand {
 	@Override
 	public String sanitize(String i) {
 		return i;
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 }
