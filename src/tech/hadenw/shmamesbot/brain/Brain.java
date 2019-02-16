@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
 
 public class Brain {
@@ -11,15 +12,16 @@ public class Brain {
 	private HashMap<String, Integer> tallies;
 	private HashMap<String, TriggerType> triggers;
 	private HashMap<String, TriggerType> responses;
-	
-	private String removeEmoji;
+	private HashMap<BotSettings, String> settings;
 	
 	public Brain(String gid) {
 		guildID = gid;
 		tallies = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
 		responses = new HashMap<String, TriggerType>();
-		removeEmoji = "x";
+		settings = new HashMap<BotSettings, String>();
+		
+		loadDefaults();
 	}
 	
 	public String getGuildID() {
@@ -28,6 +30,10 @@ public class Brain {
 	
 	public HashMap<String, TriggerType> getResponses(){
 		return responses;
+	}
+	
+	public HashMap<BotSettings, String> getSettings(){
+		return settings;
 	}
 	
 	public List<String> getResponsesFor(TriggerType type){
@@ -62,15 +68,18 @@ public class Brain {
 	}
 	
 	public String getRemovalEmoji() {
-		return removeEmoji;
+		return settings.get(BotSettings.REMOVALEMOTE);
 	}
 	
 	/**
 	 * Loads default settings into the system.
 	 */
 	public void loadDefaults() {
-		triggers.put("hey bot", TriggerType.COMMAND);
+		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
 		tallies.put("memes", 1);
 		responses.put("What'd you call me?! :angry:", TriggerType.RONALD);
+		
+		settings.put(BotSettings.PINCHANNEL, "general");
+		settings.put(BotSettings.REMOVALEMOTE, "x");
 	}
 }

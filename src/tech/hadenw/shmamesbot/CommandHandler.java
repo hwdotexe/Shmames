@@ -19,6 +19,7 @@ import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
+import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.Reload;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
@@ -36,6 +37,9 @@ public class CommandHandler {
 		
 		commands.add(new Help());
 		commands.add(new Reload());
+		commands.add(new Modify());
+		commands.add(new Startpoll());
+		commands.add(new PinThat());
 		commands.add(new AddStatus());
 		commands.add(new SetStatus());
 		commands.add(new AddTally());
@@ -50,8 +54,6 @@ public class CommandHandler {
 		commands.add(new Roll());
 		commands.add(new GIF());
 		commands.add(new Minesweeper());
-		commands.add(new Startpoll());
-		commands.add(new PinThat());
 		commands.add(new Armageddon());
 	}
 	
@@ -65,8 +67,8 @@ public class CommandHandler {
 	public void PerformCommand(String cmd, Message message, User author, Guild server) {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
-				//if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-				if(cmd.toLowerCase().contains(a.toLowerCase())) {
+				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
+				//if(cmd.toLowerCase().contains(a.toLowerCase())) {
 					if(!(server==null && c.requiresGuild())) {
 						int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 						String args = c.sanitize(cmd.substring(position).trim());

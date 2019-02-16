@@ -46,7 +46,6 @@ public class BrainController {
 		}
 
 		Brain b = new Brain(guildID);
-		b.loadDefaults();
 		brains.add(b);
 		
 		return b;

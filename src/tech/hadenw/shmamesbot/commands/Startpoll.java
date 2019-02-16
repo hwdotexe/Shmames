@@ -11,7 +11,7 @@ import tech.hadenw.shmamesbot.Shmames;
 public class Startpoll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Starts a new poll in the current channel. Usage: `startpoll 60m question? optionA, optionB...`";
+		return "Starts a new poll in the current channel. Usage: `startpoll 60m Question? OptionA; OptionB...`";
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public class Startpoll implements ICommand {
 				
 				List<String> options = new ArrayList<String>();
 				
-				for(String s : o.split(", ")) {
-					options.add(s);
+				for(String s : o.split(";")) {
+					options.add(s.trim());
 				}
 				
 				if(options.size() > 1 && options.size() <= 9) {
