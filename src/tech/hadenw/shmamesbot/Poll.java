@@ -33,6 +33,7 @@ public class Poll {
 		
 		EmbedBuilder eBuilder = new EmbedBuilder();
 		
+		eBuilder.setAuthor("== POLL ==");
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
         eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c), null);

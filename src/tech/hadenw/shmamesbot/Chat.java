@@ -63,7 +63,7 @@ public class Chat extends ListenerAdapter {
 				}
 	
 				// Bot gives its two cents
-				if (Utils.getRandom(100) < 1) {
+				if (Utils.getRandom(120) == 0) {
 					sendRandom(e.getChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
 				}
 			}else {

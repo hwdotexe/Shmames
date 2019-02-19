@@ -40,6 +40,9 @@ public final class Shmames {
 			// Begin listening for events.
 			jda.addEventListener(new Chat());
 			jda.addEventListener(new React());
+			
+			// Get a truly random seed
+			//Utils.updateRandomSeed();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -35,7 +35,7 @@ public class Utils {
 	public static String getFriendlyDate(Calendar c) {
 		int minute = c.get(Calendar.MINUTE);
 		
-		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" "+c.get(Calendar.HOUR)+":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
+		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
 	}
 	
 	public static String sendGET(String u) {
@@ -44,6 +44,37 @@ public class Utils {
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
 		    conn.setRequestMethod("GET");
+		    
+		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		    String line;
+		    String result = "";
+		    
+		    while ((line = rd.readLine()) != null) {
+		       result += line;
+		    }
+		    
+		    rd.close();
+		    
+		    return result;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public static String sendPOST(String u, JSONObject body) {
+		try {
+			URL url = new URL(u);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+		    conn.setRequestMethod("POST");
+		    
+		    if(body != null) {
+		    	conn.setDoOutput(true);
+		    	conn.setRequestProperty("content-type", "application/json");
+		    	conn.getOutputStream().write(body.toString().getBytes());
+		    }
 		    
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		    String line;
@@ -79,5 +110,26 @@ public class Utils {
 	    	return gifURLs.get(r.nextInt(gifURLs.size()));
 	    else
 	    	return "Uhh, all I could find was this: https://tenor.com/w3sJ.gif";
+	}
+	
+	/**
+	 * Still under development (TODO)
+	 */
+	public static void updateRandomSeed() {
+		JSONObject main = new JSONObject();
+		JSONObject params = new JSONObject();
+		params.put("apiKey", "e22bb95e-e5b9-4835-955e-2749854884ff");
+		params.put("n", 1);
+		params.put("min", 100000000);
+		params.put("max", 999999999);
+		
+		main.put("jsonrpc", "2.0");
+		main.put("method", "generateIntegers");
+		main.put("params", params);
+		main.put("id", 1);
+		
+		String result = sendPOST("https://api.random.org/json-rpc/2/invoke", main);
+		
+		System.out.println(result);
 	}
 }

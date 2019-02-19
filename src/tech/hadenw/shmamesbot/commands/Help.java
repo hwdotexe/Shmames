@@ -1,5 +1,8 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.awt.Color;
+
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.CommandHandler;
@@ -19,11 +22,6 @@ public class Help implements ICommand {
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
-						StringBuilder sb = new StringBuilder();
-						
-						sb.append("**Check it out:**");
-						sb.append("\nCommand: `"+c.getAliases()[0]+"`");
-						
 						// Create list of aliases
 						StringBuilder alsb = new StringBuilder();
 						
@@ -34,11 +32,18 @@ public class Help implements ICommand {
 							
 							alsb.append("`"+al+"`");
 						}
+						 
+						EmbedBuilder eBuilder = new EmbedBuilder();
 						
-						sb.append("\nAliases: "+alsb.toString());
-						sb.append("\nDescription: "+c.getDescription());
+						eBuilder.setAuthor("== Command Help ==");
+				        eBuilder.setColor(Color.MAGENTA);
+				        eBuilder.setTitle(c.getAliases()[0]);
+				        eBuilder.appendDescription("**Aliases:** "+alsb.toString()+"\n");
+				        eBuilder.appendDescription("**Description:** "+c.getDescription());
 						
-						return sb.toString();
+				        message.getChannel().sendMessage(eBuilder.build()).queue();
+				        
+						return "";
 					}
 				}
 			}

@@ -7,24 +7,22 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.commands.AddResponse;
-import tech.hadenw.shmamesbot.commands.AddStatus;
 import tech.hadenw.shmamesbot.commands.AddTally;
 import tech.hadenw.shmamesbot.commands.AddTrigger;
-import tech.hadenw.shmamesbot.commands.Armageddon;
+import tech.hadenw.shmamesbot.commands.Dev;
 import tech.hadenw.shmamesbot.commands.DropTally;
 import tech.hadenw.shmamesbot.commands.EightBall;
 import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
+import tech.hadenw.shmamesbot.commands.Invite;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
-import tech.hadenw.shmamesbot.commands.Reload;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
 import tech.hadenw.shmamesbot.commands.Roll;
-import tech.hadenw.shmamesbot.commands.SetStatus;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
 import tech.hadenw.shmamesbot.commands.Startpoll;
 
@@ -36,12 +34,9 @@ public class CommandHandler {
 		commands = new ArrayList<ICommand>();
 		
 		commands.add(new Help());
-		commands.add(new Reload());
 		commands.add(new Modify());
 		commands.add(new Startpoll());
 		commands.add(new PinThat());
-		commands.add(new AddStatus());
-		commands.add(new SetStatus());
 		commands.add(new AddTally());
 		commands.add(new DropTally());
 		commands.add(new ShowTallies());
@@ -54,7 +49,8 @@ public class CommandHandler {
 		commands.add(new Roll());
 		commands.add(new GIF());
 		commands.add(new Minesweeper());
-		commands.add(new Armageddon());
+		commands.add(new Dev());
+		commands.add(new Invite());
 	}
 	
 	/**
@@ -74,8 +70,13 @@ public class CommandHandler {
 						String args = c.sanitize(cmd.substring(position).trim());
 						String r = c.run(args, author, message);
 						
-						if(r != null && r.length() > 0) {
-							message.getChannel().sendMessage(r).queue();
+						if(r != null) {
+							if(r.length() > 0) {
+								message.getChannel().sendMessage(r).queue();
+							}
+						}else {
+							// If a command returns null, send the 404 message.
+							message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
 						}
 					}else {
 						message.getChannel().sendMessage(Errors.GUILD_REQUIRED).queue();

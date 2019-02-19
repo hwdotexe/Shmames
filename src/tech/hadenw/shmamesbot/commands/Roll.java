@@ -52,10 +52,12 @@ public class Roll implements ICommand {
 				
 				
 				// Send memes
-				if(baseroll <= 3) {
-					a = a + "\n" + Utils.getGIF("laugh");
-				} else if(baseroll >= 19) {
-					a = a + "\n" + Utils.getGIF("hype");
+				if(base == 20) {
+					if(baseroll <= 3) {
+						a = a + "\n" + Utils.getGIF("laugh");
+					} else if(baseroll >= 19) {
+						a = a + "\n" + Utils.getGIF("hype");
+					}
 				}
 				
 				// Delete the person's message

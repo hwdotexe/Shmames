@@ -24,8 +24,9 @@ public class PollFinal extends TimerTask{
 				
 				EmbedBuilder eBuilder = new EmbedBuilder();
 				
+				eBuilder.setAuthor("== POLL (results) ==");
 		        eBuilder.setColor(Color.GRAY);
-		        eBuilder.setTitle(p.getQuestion()+" (RESULTS)");
+		        eBuilder.setTitle(p.getQuestion());
 		        eBuilder.setFooter("#" + p.getMesssage().getChannel().getName() + " - Expired "+Utils.getFriendlyDate(c), null);
 		        
 		        for(int i=0; i<p.getOptions().size(); i++) {
