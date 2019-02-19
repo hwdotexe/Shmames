@@ -9,6 +9,11 @@ public class GIF implements ICommand {
 	public String getDescription() {
 		return "Send a super :sunglasses: GIF.";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "gif <search>";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {

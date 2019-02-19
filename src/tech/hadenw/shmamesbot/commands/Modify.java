@@ -16,6 +16,11 @@ public class Modify implements ICommand {
 		return "Change some of the bot's settings.";
 	}
 	
+	@Override
+	public String getUsage() {
+		return "modify [<setting> <value>]";
+	}
+	
 	// TODO check user's role for permissions, deny if they aren't allowed to change values.
 	@Override
 	public String run(String args, User author, Message message) {

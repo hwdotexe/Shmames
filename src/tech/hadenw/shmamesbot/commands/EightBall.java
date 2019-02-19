@@ -7,7 +7,12 @@ import tech.hadenw.shmamesbot.Utils;
 public class EightBall implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Shake a Magic 8 Ball and let James decide your future.";
+		return "Shake a Magic 8 Ball and let me see your future.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "8ball <your question>";
 	}
 
 	@Override

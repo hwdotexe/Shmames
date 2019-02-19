@@ -8,7 +8,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class RemoveTrigger implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Removes an existing trigger from the bot. Usage: `removetrigger triggerWord`";
+		return "Removes an existing trigger from the bot.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "removeTrigger triggerWord";
 	}
 
 	@Override

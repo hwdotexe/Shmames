@@ -14,7 +14,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class PinThat implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Echoes a message to another channel. `Usage: pinthat ^`\n**TIP: Try `pinthat ^^^`!**";
+		return "Echoes a message to another channel.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "pinThat <^...>";
 	}
 
 	@Override

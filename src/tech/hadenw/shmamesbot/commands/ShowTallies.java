@@ -10,6 +10,11 @@ public class ShowTallies implements ICommand {
 	public String getDescription() {
 		return "Displays all the current tallie on the abacus.";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "showTallies";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {

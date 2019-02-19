@@ -11,7 +11,12 @@ import tech.hadenw.shmamesbot.TriggerType;
 public class ListResponses implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Lists the random responses and their types. Usage: `listresponses responseType`";
+		return "Lists the random responses and their types.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "listResponses responseType";
 	}
 
 	@Override

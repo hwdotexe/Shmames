@@ -8,7 +8,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class AddTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Increments a tally on the abacus. Usage: `addtally tallyName`";
+		return "Increments a tally on the abacus.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "addtally tallyname";
 	}
 
 	@Override

@@ -10,6 +10,11 @@ public class ListTriggers implements ICommand {
 	public String getDescription() {
 		return "Lists all the message triggers.";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "listTriggers";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {

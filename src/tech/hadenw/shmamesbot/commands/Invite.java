@@ -8,6 +8,11 @@ public class Invite implements ICommand {
 	public String getDescription() {
 		return "Share this bot with others!";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "invite";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {
@@ -18,7 +23,7 @@ public class Invite implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"8ball"};
+		return new String[] {"invite"};
 	}
 	
 	@Override

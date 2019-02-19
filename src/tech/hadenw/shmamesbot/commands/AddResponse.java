@@ -12,7 +12,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class AddResponse implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Adds a new response to the random pool. Usage: `addresponse responseType responseText`";
+		return "Adds a new response to the random pool.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "addresponse responseType responseText";
 	}
 
 	@Override

@@ -13,6 +13,11 @@ public class Help implements ICommand {
 	public String getDescription() {
 		return "Shows help & additional information";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "help [command]";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {
@@ -39,6 +44,7 @@ public class Help implements ICommand {
 				        eBuilder.setColor(Color.MAGENTA);
 				        eBuilder.setTitle(c.getAliases()[0]);
 				        eBuilder.appendDescription("**Aliases:** "+alsb.toString()+"\n");
+				        eBuilder.appendDescription("**Usage:** `"+c.getUsage()+"`\n");
 				        eBuilder.appendDescription("**Description:** "+c.getDescription());
 						
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
@@ -56,7 +62,7 @@ public class Help implements ICommand {
 			
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				if(c.getDescription().length() > 0) {
-					String desc = c.getDescription().length() > 35 ? c.getDescription().substring(0, 35) + " [...]" : c.getDescription();
+					String desc = c.getDescription().length() > 50 ? c.getDescription().substring(0, 50) + " [...]" : c.getDescription();
 					sb.append("\n");
 					sb.append("`"+c.getAliases()[0]+"` - "+desc);
 				}

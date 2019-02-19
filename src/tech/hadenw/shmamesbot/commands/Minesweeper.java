@@ -7,7 +7,12 @@ import tech.hadenw.shmamesbot.MinesweepGame;
 public class Minesweeper implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Play a game of Minesweeper. Usage: `minesweep size`";
+		return "Play a game of Minesweeper.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "minesweep <size>";
 	}
 
 	@Override

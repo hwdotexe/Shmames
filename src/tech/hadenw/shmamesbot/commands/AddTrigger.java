@@ -12,7 +12,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class AddTrigger implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Adds a message trigger that will send a random response. Usage: `addtrigger triggerType triggerWord`";
+		return "Adds a message trigger to send a random response.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "addtrigger triggerType triggerWord";
 	}
 
 	@Override

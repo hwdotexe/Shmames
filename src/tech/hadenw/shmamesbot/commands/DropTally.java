@@ -8,7 +8,12 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class DropTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Decrements a tally on the abacus. Usage: `droptally tallyName`";
+		return "Decrements a tally on the abacus.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "droptally tallyName";
 	}
 
 	@Override

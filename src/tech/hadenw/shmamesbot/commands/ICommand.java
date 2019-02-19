@@ -5,10 +5,16 @@ import net.dv8tion.jda.core.entities.User;
 
 public interface ICommand {
 	/**
+	 * Returns a description of the command.
+	 * @return About information.
+	 */
+	String getDescription();
+	
+	/**
 	 * Returns some help text for how to use this command.
 	 * @return Usage information.
 	 */
-	String getDescription();
+	String getUsage();
 	
 	/**
 	 * Runs the command code.

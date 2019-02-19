@@ -23,6 +23,11 @@ public class Dev implements ICommand {
 	public String getDescription() {
 		return "";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "This command is restricted to bot developers.";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {

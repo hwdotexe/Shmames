@@ -12,6 +12,11 @@ public class Roll implements ICommand {
 	public String getDescription() {
 		return "Just roll some dice.";
 	}
+	
+	@Override
+	public String getUsage() {
+		return "roll a d<#>[+#]";
+	}
 
 	@Override
 	public String run(String args, User author, Message message) {
