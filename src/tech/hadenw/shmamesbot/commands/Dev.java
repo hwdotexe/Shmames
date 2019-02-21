@@ -47,7 +47,7 @@ public class Dev implements ICommand {
 						
 						return "Changed!";
 					} else if(args.toLowerCase().startsWith("getguilds")) {
-						String guilds = "**Guilds:**\n";
+						String guilds = "**Guilds:**";
 						
 						for(Guild g : Shmames.getJDA().getGuilds()) {
 							guilds += "\n";
@@ -92,6 +92,18 @@ public class Dev implements ICommand {
 						}
 						
 						return "Sent the message to "+msgs+" guilds!";
+					} else if(args.toLowerCase().startsWith("leave")) {
+						args = args.substring("leave".length()+1).trim();
+						
+						for(Guild g : Shmames.getJDA().getGuilds()) {
+							if(g.getId().equals(args)) {
+								g.leave().queue();
+								
+								return "Left guild \""+g.getName()+"\"!";
+							}
+						}
+						
+						return "I couldn't leave that one :/";
 					} else if(args.toLowerCase().startsWith("nuke")) {
 						args = args.substring("nuke".length()+1).trim();
 						
@@ -132,6 +144,7 @@ public class Dev implements ICommand {
 							+ "getGuilds\n"
 							+ "reload <guildID>\n"
 							+ "announce <message>\n"
+							+ "leave <guildID>\n"
 							+ "nuke <guildID>";
 				}
 			}

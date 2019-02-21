@@ -22,7 +22,7 @@ public class AddTrigger implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[a-zA-Z]{3,} [a-zA-Z]{4,7}$").matcher(args).matches()) {
+		if(Pattern.compile("^[a-zA-Z]{3,} [a-zA-Z]{3,7}$").matcher(args).matches()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newtrigger = args.substring(args.indexOf(" ")).trim();
 			String nttype = args.substring(0, args.indexOf(" ")).trim();
