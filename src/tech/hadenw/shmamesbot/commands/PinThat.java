@@ -35,7 +35,7 @@ public class PinThat implements ICommand {
 				
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
 					if(ch.getName().equalsIgnoreCase(b.getSettings().get(BotSettings.PIN_CHANNEL))) {
-						ch.sendMessage(toPin.getAuthor().getAsMention()+" (#"+toPin.getChannel().getName()+"): "+toPin.getContentDisplay()).queue();
+						ch.sendMessage(toPin.getAuthor().getAsMention()+" (#"+toPin.getChannel().getName()+"): "+toPin.getContentRaw()).queue();
 						
 						break;
 					}

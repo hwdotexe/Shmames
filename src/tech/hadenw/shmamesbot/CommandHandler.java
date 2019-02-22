@@ -24,6 +24,7 @@ import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
 import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
+import tech.hadenw.shmamesbot.commands.SimonSays;
 import tech.hadenw.shmamesbot.commands.Startpoll;
 
 // After the bot is summoned, this is called to determine which command to run
@@ -51,6 +52,7 @@ public class CommandHandler {
 		commands.add(new Minesweeper());
 		commands.add(new Dev());
 		commands.add(new Invite());
+		commands.add(new SimonSays());
 	}
 	
 	/**
@@ -61,6 +63,11 @@ public class CommandHandler {
 	 * @param server The server the command is running on.
 	 */
 	public void PerformCommand(String cmd, Message message, User author, Guild server) {
+		if(cmd.length() == 0) {
+			message.getChannel().sendMessage(Errors.HEY_THERE).queue();
+			return;
+		}
+		
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
