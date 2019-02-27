@@ -58,7 +58,7 @@ public class AddResponse implements ICommand {
 	
 	@Override
 	public String sanitize(String i) {
-		return i;
+		return i.replace("@", "");
 	}
 	
 	@Override

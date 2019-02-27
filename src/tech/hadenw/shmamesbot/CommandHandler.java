@@ -22,6 +22,7 @@ import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
+import tech.hadenw.shmamesbot.commands.Report;
 import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
 import tech.hadenw.shmamesbot.commands.SimonSays;
@@ -53,6 +54,7 @@ public class CommandHandler {
 		commands.add(new Dev());
 		commands.add(new Invite());
 		commands.add(new SimonSays());
+		commands.add(new Report());
 	}
 	
 	/**

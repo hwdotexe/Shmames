@@ -1,9 +1,12 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
@@ -35,7 +38,15 @@ public class PinThat implements ICommand {
 				
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
 					if(ch.getName().equalsIgnoreCase(b.getSettings().get(BotSettings.PIN_CHANNEL))) {
-						ch.sendMessage(toPin.getAuthor().getAsMention()+" (#"+toPin.getChannel().getName()+"): "+toPin.getContentRaw()).queue();
+						EmbedBuilder eBuilder = new EmbedBuilder();
+						
+						eBuilder.setAuthor(toPin.getAuthor().getName(), null, toPin.getAuthor().getEffectiveAvatarUrl());
+				        eBuilder.setColor(Color.CYAN);
+				        eBuilder.appendDescription(toPin.getContentRaw());
+				        eBuilder.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @"+message.getAuthor().getName(), null);
+
+				        MessageEmbed embed = eBuilder.build();
+				        ch.sendMessage(embed).queue();
 						
 						break;
 					}

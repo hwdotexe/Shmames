@@ -1,6 +1,8 @@
 package tech.hadenw.shmamesbot.commands;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,6 +18,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.Utils;
+import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.brain.MotherBrain;
 
 public class Dev implements ICommand {
@@ -104,6 +107,53 @@ public class Dev implements ICommand {
 						}
 						
 						return "I couldn't leave that one :/";
+					} else if(args.toLowerCase().startsWith("getreports")) {
+						String reports = "== User Reports ==";
+						
+						for(Guild g : Shmames.getJDA().getGuilds()) {
+							Brain b = Shmames.getBrains().getBrain(g.getId());
+							
+							if(b.getFeedback().size()>0) {
+								reports += "\n";
+								reports += "== "+g.getName()+" ==";
+								
+								for(String r : b.getFeedback()) {
+									reports += "\n";
+									reports += r;
+								}
+							}
+						}
+						
+						
+						File dir = new File("reports");
+						File f = new File("reports/"+System.currentTimeMillis()+".txt");
+						dir.mkdirs();
+						
+						try {
+							f.createNewFile();
+							
+							FileOutputStream fo = new FileOutputStream(f);
+							fo.write(reports.getBytes());
+							fo.flush();
+							fo.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						message.getChannel().sendFile(f).complete();
+						
+						f.delete();
+						
+						return "";
+					} else if(args.toLowerCase().startsWith("clearreports")) {
+						for(Guild g : Shmames.getJDA().getGuilds()) {
+							Brain b = Shmames.getBrains().getBrain(g.getId());
+							
+							b.getFeedback().clear();
+							Shmames.getBrains().saveBrain(b);
+						}
+						
+						return "All feedback cleared!";
 					} else if(args.toLowerCase().startsWith("nuke")) {
 						args = args.substring("nuke".length()+1).trim();
 						
@@ -145,6 +195,8 @@ public class Dev implements ICommand {
 							+ "reload <guildID>\n"
 							+ "announce <message>\n"
 							+ "leave <guildID>\n"
+							+ "getReports\n"
+							+ "clearReports\n"
 							+ "nuke <guildID>";
 				}
 			}

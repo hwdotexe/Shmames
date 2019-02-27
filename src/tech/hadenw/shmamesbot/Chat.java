@@ -22,7 +22,7 @@ public class Chat extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if (!e.getAuthor().isBot()) {
 			
-			String message = e.getMessage().getContentDisplay();
+			String message = e.getMessage().getContentRaw();
 			
 			if(e.getChannelType() == ChannelType.TEXT) {
 				Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
@@ -30,7 +30,10 @@ public class Chat extends ListenerAdapter {
 				// Commands
 				for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
 					if (message.toLowerCase().startsWith(trigger.toLowerCase())) {
-						String command = message.substring(trigger.length()).trim();
+						String command = message.substring(trigger.length());
+						
+						if(command.contains(" "))
+							command = command.substring(command.indexOf(" ")+1).trim();
 						
 						System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
 						cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
@@ -85,12 +88,12 @@ public class Chat extends ListenerAdapter {
 	
 	private void sendRandom(MessageChannel c, Guild g, TriggerType t, User author) {
 		List<String> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t); 
-		String response = r.get(Utils.getRandom(r.size()));
+		String response = r.get(Utils.getRandom(r.size())).replaceAll("%NAME%", author.getName());
 
 		if (response.startsWith("[gif]"))
-			c.sendMessage(Utils.getGIF(response.split("\\[gif\\]",2)[1])).queue();
-		else
-			c.sendMessage(response.replaceAll("%NAME%", author.getAsMention())).queue();
+			response = Utils.getGIF(response.split("\\[gif\\]",2)[1]);
+		
+		c.sendMessage(response).queue();
 
 		return;
 	}

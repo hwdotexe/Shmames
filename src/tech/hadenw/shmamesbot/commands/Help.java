@@ -42,10 +42,9 @@ public class Help implements ICommand {
 						
 						eBuilder.setAuthor("== Command Help ==");
 				        eBuilder.setColor(Color.MAGENTA);
-				        eBuilder.setTitle(c.getAliases()[0]);
+				        eBuilder.setTitle(c.getDescription());
 				        eBuilder.appendDescription("**Aliases:** "+alsb.toString()+"\n");
 				        eBuilder.appendDescription("**Usage:** `"+c.getUsage()+"`\n");
-				        eBuilder.appendDescription("**Description:** "+c.getDescription());
 						
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
 				        

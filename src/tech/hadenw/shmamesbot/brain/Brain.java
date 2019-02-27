@@ -13,6 +13,7 @@ public class Brain {
 	private HashMap<String, TriggerType> triggers;
 	private HashMap<String, TriggerType> responses;
 	private HashMap<BotSettings, String> settings;
+	private List<String> feedback;
 	
 	public Brain(String gid) {
 		guildID = gid;
@@ -20,6 +21,7 @@ public class Brain {
 		triggers = new HashMap<String, TriggerType>();
 		responses = new HashMap<String, TriggerType>();
 		settings = new HashMap<BotSettings, String>();
+		feedback = new ArrayList<String>();
 		
 		loadDefaults();
 	}
@@ -55,6 +57,13 @@ public class Brain {
 		return triggers;
 	}
 	
+	public List<String> getFeedback(){
+		if(feedback == null)
+			feedback = new ArrayList<String>();
+		
+		return feedback;
+	}
+	
 	public List<String> getTriggers(TriggerType type){
 		List<String> tt = new ArrayList<String>();
 		
@@ -78,5 +87,7 @@ public class Brain {
 		settings.put(BotSettings.PIN_CHANNEL, "general");
 		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");
 		settings.put(BotSettings.REMOVAL_THRESHOLD, "3");
+		
+		feedback.add("Example feedback");
 	}
 }

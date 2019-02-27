@@ -33,9 +33,10 @@ public class Utils {
 	}
 	
 	public static String getFriendlyDate(Calendar c) {
+		int hour = c.get(Calendar.HOUR);
 		int minute = c.get(Calendar.MINUTE);
 		
-		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+c.get(Calendar.HOUR)+":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
+		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+ (hour == 0 ? "12" : hour) +":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
 	}
 	
 	public static String sendGET(String u) {
