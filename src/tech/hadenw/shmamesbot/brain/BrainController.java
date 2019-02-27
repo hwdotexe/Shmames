@@ -72,7 +72,7 @@ public class BrainController {
 			}
 		}
 		
-		brains.add(gson.fromJson(loadJSONFile(new File(gid+".json")), Brain.class));
+		brains.add(gson.fromJson(loadJSONFile(new File("brains/servers/"+gid+".json")), Brain.class));
 	}
 	
 	public void saveBrain(Brain b) {
