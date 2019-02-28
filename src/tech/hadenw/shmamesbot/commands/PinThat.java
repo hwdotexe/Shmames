@@ -55,7 +55,7 @@ public class PinThat implements ICommand {
 				return "";
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				return Errors.NO_PERMISSION;
+				return Errors.NO_PERMISSION_BOT;
 			}
 		}
 		

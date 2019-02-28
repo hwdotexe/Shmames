@@ -21,63 +21,67 @@ public class Chat extends ListenerAdapter {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if (!e.getAuthor().isBot()) {
-			
-			String message = e.getMessage().getContentRaw();
-			
-			if(e.getChannelType() == ChannelType.TEXT) {
-				Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
+			if(!Shmames.isOnTimeout()) {
+				String message = e.getMessage().getContentRaw();
 				
-				// Commands
-				for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
-					if (message.toLowerCase().startsWith(trigger.toLowerCase())) {
-						String command = message.substring(trigger.length());
-						
-						if(command.contains(" "))
-							command = command.substring(command.indexOf(" ")+1).trim();
-						
-						System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
-						cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
-						
-						return;
+				if(e.getChannelType() == ChannelType.TEXT) {
+					Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
+					
+					// Commands
+					for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
+						if (message.toLowerCase().startsWith(trigger.toLowerCase())) {
+							String command = message.substring(trigger.length());
+							
+							if(command.contains(" "))
+								command = command.substring(command.indexOf(" ")+1).trim();
+							
+							System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
+							cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
+							
+							return;
+						}
 					}
-				}
-				
-				// Triggers
-				for (TriggerType type : TriggerType.values()) {
-					for (String trigger : brain.getTriggers(type)) {
-						if (sanitize(message).contains(trigger)) {
-							if (type != TriggerType.COMMAND) {
-								if (type != TriggerType.REACT) {
-									sendRandom(e.getChannel(), e.getGuild(), type, e.getAuthor());
-								} else {
-									List<Emote> em = Shmames.getJDA().getEmotes();
-									e.getMessage().addReaction(em.get(Utils.getRandom(em.size()))).queue();
+					
+					// Triggers
+					for (TriggerType type : TriggerType.values()) {
+						for (String trigger : brain.getTriggers(type)) {
+							if (sanitize(message).contains(trigger)) {
+								if (type != TriggerType.COMMAND) {
+									if (type != TriggerType.REACT) {
+										sendRandom(e.getChannel(), e.getGuild(), type, e.getAuthor());
+									} else {
+										List<Emote> em = Shmames.getJDA().getEmotes();
+										e.getMessage().addReaction(em.get(Utils.getRandom(em.size()))).queue();
+									}
+									
 									return;
 								}
 							}
 						}
 					}
-				}
-				
-				//Nicolas Cage memes
-				if (sanitize(message).contains("nicolas cage")) {
-					e.getChannel().sendMessage(Utils.getGIF("nicolas cage")).queue();
-					return;
-				}
-	
-				// Bot gives its two cents
-				if (Utils.getRandom(120) == 0) {
-					sendRandom(e.getChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
-				}
-			}else {
-				if (message.toLowerCase().startsWith(Shmames.getJDA().getSelfUser().getName().toLowerCase())) {
-					String command = message.substring(Shmames.getJDA().getSelfUser().getName().length()).trim();
 					
-					System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
-					cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);
-					
-					return;
+					//Nicolas Cage memes
+					if (sanitize(message).contains("nicolas cage")) {
+						e.getChannel().sendMessage(Utils.getGIF("nicolas cage")).queue();
+						return;
+					}
+		
+					// Bot gives its two cents
+					if (Utils.getRandom(120) == 0) {
+						sendRandom(e.getChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
+					}
+				}else {
+					if (message.toLowerCase().startsWith(Shmames.getJDA().getSelfUser().getName().toLowerCase())) {
+						String command = message.substring(Shmames.getJDA().getSelfUser().getName().length()).trim();
+						
+						System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
+						cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);
+						
+						return;
+					}
 				}
+			} else { 
+				e.getChannel().sendMessage(":unamused:").queue();
 			}
 		}
 	}

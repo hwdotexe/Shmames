@@ -114,7 +114,7 @@ public class React extends ListenerAdapter {
 					}
 				}
 			}catch(Exception ex) {
-				e.getChannel().sendMessage(Errors.NO_PERMISSION).queue();
+				e.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
 			}
 		}
 	}

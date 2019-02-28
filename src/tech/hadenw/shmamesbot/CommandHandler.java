@@ -27,6 +27,7 @@ import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
 import tech.hadenw.shmamesbot.commands.SimonSays;
 import tech.hadenw.shmamesbot.commands.Startpoll;
+import tech.hadenw.shmamesbot.commands.Timeout;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
@@ -55,6 +56,7 @@ public class CommandHandler {
 		commands.add(new Invite());
 		commands.add(new SimonSays());
 		commands.add(new Report());
+		commands.add(new Timeout());
 	}
 	
 	/**

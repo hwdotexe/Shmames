@@ -14,6 +14,7 @@ public final class Shmames {
 	private static JDA jda;
 	private static List<Poll> polls;
 	private static BrainController brains;
+	private static boolean isOnTimeout;
 	
 	/**
 	 * The entry point for the bot.
@@ -22,11 +23,12 @@ public final class Shmames {
 	public static void main(String[] args) {
 		polls = new ArrayList<Poll>();
 		brains = new BrainController();
+		isOnTimeout = false;
 		
 		Utils.Init();
 		
 		try {
-			// Real James
+			// Real Bot
 			jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").build();
 			
 			// TestBot
@@ -46,6 +48,21 @@ public final class Shmames {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Returns whether the bot has been punished.
+	 * @return True if on timeout.
+	 */
+	public static boolean isOnTimeout() {
+		return isOnTimeout;
+	}
+	
+	/**
+	 * Sets whether the bot is being punished.
+	 */
+	public static void setIsOnTimeout(boolean t) {
+		isOnTimeout = t;
 	}
 	
 	/**

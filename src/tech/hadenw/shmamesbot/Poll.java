@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -13,12 +14,13 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
-public class Poll {
+public class Poll extends TimerTask{
 	private Message m;
 	private String question;
 	private List<String> options;
 	private HashMap<Integer, Integer> votes;
 	private int pollID;
+	private Calendar c;
 	
 	public Poll(MessageChannel ch, String q, List<String> o, int minutes) {
 		question=q;
@@ -26,7 +28,7 @@ public class Poll {
 		pollID = Shmames.getPollID();
 		votes = new HashMap<Integer, Integer>();
 		
-		Calendar c = Calendar.getInstance();
+		c = Calendar.getInstance();
     	c.setTime(new Date());
     	c.add(Calendar.MINUTE, minutes);
     	//c.add(Calendar.SECOND, 15);
@@ -55,14 +57,35 @@ public class Poll {
         
         // Schedule the task
         Timer t = new Timer();
-		t.schedule(new PollFinal(pollID), c.getTime());
+		t.schedule(this, c.getTime());
 		
 		// Pin the message
 		try {
 			m.pin().queue();
-		}catch(Exception e) {
-			// Do nothing; we don't have permission
-		}
+		}catch(Exception e) {}
+	}
+	
+	public void run() {
+    	c.setTime(new Date());
+		
+		EmbedBuilder eBuilder = new EmbedBuilder();
+		
+		eBuilder.setAuthor("== POLL (results) ==");
+        eBuilder.setColor(Color.GRAY);
+        eBuilder.setTitle(question);
+        eBuilder.setFooter("#" + m.getChannel().getName() + " - Expired "+Utils.getFriendlyDate(c), null);
+        
+        for(int i=0; i<options.size(); i++) {
+        	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+" **("+votes.get(i)+" votes)**"+"\n");
+        }
+
+        MessageEmbed embed = eBuilder.build();
+        MessageAction ma = m.getChannel().sendMessage(embed);
+        
+        ma.complete();
+		
+		m.delete().queue();
+		Shmames.getPolls().remove(this);
 	}
 	
 	public HashMap<Integer, Integer> getVotes(){
