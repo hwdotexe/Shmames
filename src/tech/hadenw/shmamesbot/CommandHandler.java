@@ -10,12 +10,14 @@ import tech.hadenw.shmamesbot.commands.AddResponse;
 import tech.hadenw.shmamesbot.commands.AddTally;
 import tech.hadenw.shmamesbot.commands.AddTrigger;
 import tech.hadenw.shmamesbot.commands.Dev;
+import tech.hadenw.shmamesbot.commands.DropResponse;
 import tech.hadenw.shmamesbot.commands.DropTally;
 import tech.hadenw.shmamesbot.commands.EightBall;
 import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.Invite;
+import tech.hadenw.shmamesbot.commands.JTimer;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
@@ -47,6 +49,7 @@ public class CommandHandler {
 		commands.add(new RemoveTrigger());
 		commands.add(new ListTriggers());
 		commands.add(new AddResponse());
+		commands.add(new DropResponse());
 		commands.add(new ListResponses());
 		commands.add(new EightBall());
 		commands.add(new Roll());
@@ -57,6 +60,7 @@ public class CommandHandler {
 		commands.add(new SimonSays());
 		commands.add(new Report());
 		commands.add(new Timeout());
+		commands.add(new JTimer());
 	}
 	
 	/**

@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import tech.hadenw.shmamesbot.brain.Brain;
+import tech.hadenw.shmamesbot.brain.Response;
 
 public class Chat extends ListenerAdapter {
 	private CommandHandler cmd;
@@ -80,8 +81,6 @@ public class Chat extends ListenerAdapter {
 						return;
 					}
 				}
-			} else { 
-				e.getChannel().sendMessage(":unamused:").queue();
 			}
 		}
 	}
@@ -91,8 +90,8 @@ public class Chat extends ListenerAdapter {
 	}
 	
 	private void sendRandom(MessageChannel c, Guild g, TriggerType t, User author) {
-		List<String> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t); 
-		String response = r.get(Utils.getRandom(r.size())).replaceAll("%NAME%", author.getName());
+		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t); 
+		String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
 		if (response.startsWith("[gif]"))
 			response = Utils.getGIF(response.split("\\[gif\\]",2)[1]);

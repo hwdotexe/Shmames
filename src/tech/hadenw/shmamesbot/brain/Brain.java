@@ -11,7 +11,7 @@ public class Brain {
 	private String guildID;
 	private HashMap<String, Integer> tallies;
 	private HashMap<String, TriggerType> triggers;
-	private HashMap<String, TriggerType> responses;
+	private List<Response> triggerResponses;
 	private HashMap<BotSettings, String> settings;
 	private List<String> feedback;
 	
@@ -19,7 +19,7 @@ public class Brain {
 		guildID = gid;
 		tallies = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
-		responses = new HashMap<String, TriggerType>();
+		triggerResponses = new ArrayList<Response>();
 		settings = new HashMap<BotSettings, String>();
 		feedback = new ArrayList<String>();
 		
@@ -30,19 +30,23 @@ public class Brain {
 		return guildID;
 	}
 	
-	public HashMap<String, TriggerType> getResponses(){
-		return responses;
+	public List<Response> getTriggerResponses(){
+		return triggerResponses;
+	}
+	
+	public void removeTriggerResponse(Response r) {
+		triggerResponses.remove(r);
 	}
 	
 	public HashMap<BotSettings, String> getSettings(){
 		return settings;
 	}
 	
-	public List<String> getResponsesFor(TriggerType type){
-		List<String> t = new ArrayList<String>();
-		
-		for(String tr : responses.keySet()) {
-			if(responses.get(tr)==type)
+	public List<Response> getResponsesFor(TriggerType type){
+		List<Response> t = new ArrayList<Response>();
+
+		for(Response tr : getTriggerResponses()) {
+			if(tr.getType() == type)
 				t.add(tr);
 		}
 		
@@ -82,7 +86,7 @@ public class Brain {
 	public void loadDefaults() {
 		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
 		tallies.put("memes", 1);
-		responses.put("What'd you call me?! :angry:", TriggerType.RONALD);
+		triggerResponses.add(new Response(TriggerType.RONALD, "What'd you call me?! :angry:"));
 		
 		settings.put(BotSettings.PIN_CHANNEL, "general");
 		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");

@@ -6,9 +6,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.MessageChannel;
 
 public class TimeoutTask extends TimerTask{
-	public TimeoutTask() {
+	private String msg;
+	private MessageChannel msgch;
+	
+	public TimeoutTask(String returnMsg, MessageChannel ch) {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
     	c.setTime(new Date());
@@ -18,10 +22,15 @@ public class TimeoutTask extends TimerTask{
 		
 		Shmames.getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
 		Shmames.setIsOnTimeout(true);
+		
+		msg = returnMsg;
+		msgch = ch;
 	}
 	
 	public void run() {
 		Shmames.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
 		Shmames.setIsOnTimeout(false);
+		
+		msgch.sendMessage(msg).queue();
 	}
 }

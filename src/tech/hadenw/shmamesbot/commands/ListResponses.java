@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
+import tech.hadenw.shmamesbot.brain.Response;
 
 public class ListResponses implements ICommand {
 	@Override
@@ -25,11 +27,13 @@ public class ListResponses implements ICommand {
 			if(TriggerType.byName(args) != null) {
 				String msg = "**"+args.toUpperCase()+" Responses:**";
 		
-				for (String s : Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(args))) {
+				List<Response> rs = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(args));
+				for (Response r : rs) {
 					if(msg.length() > 0)
 						msg += "\n";
 					
-					msg += s;
+					msg += (rs.indexOf(r)+1) + ": ";
+					msg += r.getResponse();
 				}
 				
 				return msg;
