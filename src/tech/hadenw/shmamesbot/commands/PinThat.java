@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -42,8 +43,14 @@ public class PinThat implements ICommand {
 						
 						eBuilder.setAuthor(toPin.getAuthor().getName(), null, toPin.getAuthor().getEffectiveAvatarUrl());
 				        eBuilder.setColor(Color.CYAN);
-				        eBuilder.appendDescription(toPin.getContentRaw());
-				        eBuilder.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @"+message.getAuthor().getName(), null);
+				        
+				        String msg = toPin.getContentRaw();
+				        for(Attachment a : toPin.getAttachments()) {
+				        	msg += "\n";
+				        	msg += a.getUrl();
+				        }
+				        eBuilder.appendDescription(msg);
+				        eBuilder.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @"+message.getAuthor().getName(), null);				        
 
 				        MessageEmbed embed = eBuilder.build();
 				        ch.sendMessage(embed).queue();
