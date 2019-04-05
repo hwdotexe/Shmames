@@ -24,6 +24,7 @@ import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.RemoveTrigger;
+import tech.hadenw.shmamesbot.commands.React;
 import tech.hadenw.shmamesbot.commands.Report;
 import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
@@ -61,6 +62,7 @@ public class CommandHandler {
 		commands.add(new Report());
 		commands.add(new Timeout());
 		commands.add(new JTimer());
+		commands.add(new React());
 	}
 	
 	/**
