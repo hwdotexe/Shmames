@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,10 +28,26 @@ public class React implements ICommand {
 				
 				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
 				Message toPin = msgs.get(msgs.size()-1);
+				List<Character> chars = new ArrayList<Character>();
 				
 				for(char letter : word.toCharArray()) {
+					if(chars.contains(letter)) {
+						String l = dupLetterEmoji(letter);
+						
+						if(l != null)
+							toPin.addReaction(l).queue();
+						
+						continue;
+					}
+					
 					toPin.addReaction(letterToEmoji(letter)).queue();
+					chars.add(letter);
 				}
+				
+				// Remove the querying message
+				try {
+					message.delete().queue();
+				}catch(Exception e) {}
 				
 				return "";
 			}catch(Exception ex) {
@@ -55,6 +72,36 @@ public class React implements ICommand {
 	@Override
 	public boolean requiresGuild() {
 		return false;
+	}
+	
+	// Provides duplicate/alternate letters, so we can use the same letter twice.
+	private String dupLetterEmoji(char letter) {
+		switch(letter) {
+		case 'a':
+			return "\uD83C\uDD70";
+		case 'b':
+			return "\uD83C\uDD71";
+		case 'c':
+			return "\u00A9";
+		case 'i':
+			return "\u2139";
+		case 'l':
+			return "\u0031\u20E3";
+		case 'o':
+			return "\u0030\u20E3";
+		case 'p':
+			return "\uD83C\uDD7F";
+		case 'r':
+			return "\u00AE";
+		case 's':
+			return "\uD83D\uDCB2";
+		case 'x':
+			return "\u2716";
+		case 'z':
+			return "\u0032\u20E3";
+		default:
+			return null;
+		}
 	}
 	
 	private String letterToEmoji(char letter) {
@@ -111,6 +158,12 @@ public class React implements ICommand {
 			return "\uD83C\uDDFE";
 		case 'z':
 			return "\uD83C\uDDFF";
+		case '-':
+			return "\u2796";
+		case '_':
+			return "\u2796";
+		case '$':
+			return "\uD83D\uDCB2";
 		default:
 			return "\uD83D\uDD95";
 		}
