@@ -23,7 +23,7 @@ import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
-import tech.hadenw.shmamesbot.commands.RemoveTrigger;
+import tech.hadenw.shmamesbot.commands.DropTrigger;
 import tech.hadenw.shmamesbot.commands.React;
 import tech.hadenw.shmamesbot.commands.Report;
 import tech.hadenw.shmamesbot.commands.Roll;
@@ -47,7 +47,7 @@ public class CommandHandler {
 		commands.add(new DropTally());
 		commands.add(new ShowTallies());
 		commands.add(new AddTrigger());
-		commands.add(new RemoveTrigger());
+		commands.add(new DropTrigger());
 		commands.add(new ListTriggers());
 		commands.add(new AddResponse());
 		commands.add(new DropResponse());

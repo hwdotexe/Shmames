@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.brain.Brain;
 
-public class RemoveTrigger implements ICommand {
+public class DropTrigger implements ICommand {
 	@Override
 	public String getDescription() {
 		return "Removes an existing trigger from the bot.";
@@ -39,7 +39,7 @@ public class RemoveTrigger implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"removetrigger", "remove trigger"};
+		return new String[] {"droptrigger", "drop trigger", "remove trigger"};
 	}
 	
 	@Override

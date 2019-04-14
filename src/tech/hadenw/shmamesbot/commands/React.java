@@ -81,20 +81,21 @@ public class React implements ICommand {
 			return "\uD83C\uDD70";
 		case 'b':
 			return "\uD83C\uDD71";
-		case 'c':
-			return "\u00A9";
+		case 'e':
+			return "\u0033\u20E3";
 		case 'i':
 			return "\u2139";
 		case 'l':
 			return "\u0031\u20E3";
+		case 'm':
+			//return "\u303D";
+			return "\u24C2";
 		case 'o':
 			return "\u0030\u20E3";
 		case 'p':
 			return "\uD83C\uDD7F";
-		case 'r':
-			return "\u00AE";
 		case 's':
-			return "\uD83D\uDCB2";
+			return "\u0035\u20E3";
 		case 'x':
 			return "\u2716";
 		case 'z':

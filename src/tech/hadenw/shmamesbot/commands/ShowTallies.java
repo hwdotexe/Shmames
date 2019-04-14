@@ -30,7 +30,7 @@ public class ShowTallies implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"showtallies", "show all the tallies", "show all tallies", "show all the tallier"};
+		return new String[] {"showtallies", "show tallies", "show all the tallies", "show all tallies", "show all the tallier"};
 	}
 	
 	@Override

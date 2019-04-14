@@ -32,7 +32,7 @@ public class AddTally implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"addtally", "add a tally to"};
+		return new String[] {"addtally", "add tally", "add a tally to"};
 	}
 	
 	@Override

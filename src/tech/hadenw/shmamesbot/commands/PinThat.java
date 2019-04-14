@@ -71,7 +71,7 @@ public class PinThat implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"pinthat"};
+		return new String[] {"pinthat", "pin that"};
 	}
 	
 	@Override

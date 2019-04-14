@@ -59,7 +59,7 @@ public class Startpoll implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"startpoll"};
+		return new String[] {"startpoll", "start poll"};
 	}
 	
 	@Override

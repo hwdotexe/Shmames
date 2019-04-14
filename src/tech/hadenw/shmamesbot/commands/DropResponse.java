@@ -58,7 +58,7 @@ public class DropResponse implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"dropresponse", "removeresponse"};
+		return new String[] {"dropresponse", "drop response", "removeresponse", "remove response"};
 	}
 	
 	@Override
