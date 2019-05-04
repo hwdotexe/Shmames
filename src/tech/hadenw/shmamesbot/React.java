@@ -97,6 +97,7 @@ public class React extends ListenerAdapter {
 		if(strikes.get(id) >= t) {
 			Message m = e.getChannel().getMessageById(id).complete();
 			String name = m.getAuthor().getName();
+			name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
 			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "badbot" : "bad"+name;
 			
 			// Remove the message & process
