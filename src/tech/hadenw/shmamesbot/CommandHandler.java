@@ -89,6 +89,12 @@ public class CommandHandler {
 						
 						if(r != null) {
 							if(r.length() > 0) {
+								
+								if(r.length() > 2000) {
+									message.getChannel().sendMessage(r.substring(0, 1997)+"...").queue();
+									return;
+								}
+								
 								message.getChannel().sendMessage(r).queue();
 							}
 						}else {
