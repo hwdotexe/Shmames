@@ -2,6 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.brain.Brain;
 
@@ -35,7 +36,7 @@ public class DropTally implements ICommand {
 				return "Current tallies for `" + args + "`: `" + b.getTallies().get(args) + "`";
 			}
 		} else {
-			return "**I'm sorry " + author.getAsMention() + ", I'm afraid I can't do that.**";
+			return Errors.NOT_FOUND;
 		}
 	}
 

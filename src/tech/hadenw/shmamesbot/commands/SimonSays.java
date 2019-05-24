@@ -24,7 +24,7 @@ public class SimonSays implements ICommand {
 			
 			return args;
 		}else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

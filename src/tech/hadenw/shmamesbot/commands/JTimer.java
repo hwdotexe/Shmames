@@ -27,7 +27,7 @@ public class JTimer implements ICommand {
 			
 			return "Started a new :alarm_clock: for **"+minutes+"** minutes.";
 		}else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

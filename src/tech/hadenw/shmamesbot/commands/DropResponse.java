@@ -52,7 +52,7 @@ public class DropResponse implements ICommand {
 				return ":scream: Invalid trigger type! Your options are:" + types;
 			}
 		} else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

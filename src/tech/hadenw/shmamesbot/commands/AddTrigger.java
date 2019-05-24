@@ -49,7 +49,7 @@ public class AddTrigger implements ICommand {
 				return "Good idea, but that trigger already exists :sob:";
 			}
 		} else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

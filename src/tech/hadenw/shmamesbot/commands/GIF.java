@@ -2,6 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Utils;
 
 public class GIF implements ICommand {
@@ -20,7 +21,7 @@ public class GIF implements ICommand {
 		if(args.length() > 0)
 			return Utils.getGIF(args);
 		else {
-			return "You actually need to specify what you want me to search...";
+			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 		}
 	}
 

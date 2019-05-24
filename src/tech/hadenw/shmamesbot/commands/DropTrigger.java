@@ -19,7 +19,7 @@ public class DropTrigger implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
-			if (!args.equalsIgnoreCase("hey james")) {
+			if (!args.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName().toLowerCase())) {
 				Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 				
 				if (b.getTriggers().containsKey(args)) {

@@ -66,7 +66,7 @@ public class PinThat implements ICommand {
 			}
 		}
 		
-		return "What am I supposed to pin, exactly?";
+		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 	}
 
 	@Override

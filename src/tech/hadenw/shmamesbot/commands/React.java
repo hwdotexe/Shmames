@@ -56,7 +56,7 @@ public class React implements ICommand {
 			}
 		}
 		
-		return "What am I supposed to react to, exactly?";
+		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 	}
 
 	@Override

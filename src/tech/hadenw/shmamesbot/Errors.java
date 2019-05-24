@@ -8,4 +8,10 @@ public class Errors {
 	public static final String BOT_ERROR = "I sense a plot to destroy me. _[Bot Error]_";
 	public static final String HEY_THERE = "Hey there! Try using `"+Shmames.getJDA().getSelfUser().getName().toLowerCase()+" help`!";
 	public static final String NO_PERMISSION_USER = "I'm afraid I can't let you do that. _[User: No Permission]_";
+	public static final String NOT_FOUND = "That thing you said... I'm not sure what it is. _[Not Found]_";
+	public static final String INCOMPLETE = "I'm gonna need a few more details. [Incomplete Command]";
+	
+	public static String formatUsage(String error, String usage) {
+		return error+"\nGive this a try: `"+usage+"`";
+	}
 }

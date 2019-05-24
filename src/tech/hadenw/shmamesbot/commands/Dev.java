@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.PrivateChannel;
@@ -64,6 +65,21 @@ public class Dev implements ICommand {
 						Shmames.getBrains().reloadBrain(args);
 						
 						return "Reloaded Guild #"+args+"'s brain";
+					}  else if(args.toLowerCase().startsWith("getmembers")) {
+						args = args.substring("getmembers".length()+1).trim();
+						
+						String ms = "";
+						for(Member m : Shmames.getJDA().getGuildById(args).getMembers()) {
+							if(ms.length() > 0)
+								ms += ", ";
+							
+							ms += m.getUser().getName();
+						}
+						
+						if(ms.length() > 2000)
+							ms = ms.substring(0, 1997)+"...";
+						
+						return ms;
 					} else if(args.toLowerCase().startsWith("announce")) {
 						args = args.substring("announce".length()+1).trim();
 						
@@ -197,6 +213,7 @@ public class Dev implements ICommand {
 							+ "leave <guildID>\n"
 							+ "getReports\n"
 							+ "clearReports\n"
+							+ "getMembers <guildID>\n"
 							+ "nuke <guildID>";
 				}
 			}

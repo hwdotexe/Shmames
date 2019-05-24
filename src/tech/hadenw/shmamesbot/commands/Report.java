@@ -31,7 +31,7 @@ public class Report implements ICommand {
 			
 			return ":notepad_spiral: Your feedback has been noted. Thanks!";
 		}else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

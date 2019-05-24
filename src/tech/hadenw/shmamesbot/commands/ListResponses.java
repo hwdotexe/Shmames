@@ -41,7 +41,7 @@ public class ListResponses implements ICommand {
 				return ":thinking: I didn't recognize that trigger type.";
 			}
 		} else {
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 	}
 

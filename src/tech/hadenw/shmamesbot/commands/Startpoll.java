@@ -51,7 +51,7 @@ public class Startpoll implements ICommand {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			return Errors.WRONG_USAGE;
+			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
 		
 		return "";
