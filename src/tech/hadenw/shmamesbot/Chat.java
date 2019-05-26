@@ -61,6 +61,18 @@ public class Chat extends ListenerAdapter {
 						}
 					}
 					
+					// Gather emoji stats
+					for(Emote emo : e.getMessage().getEmotes()) {
+						String name = emo.getName();
+						Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+						
+						if(b.getEmoteStats().containsKey(name)) {
+							b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+						}else {
+							b.getEmoteStats().put(name, 1);
+						}
+					}
+					
 					//Nicolas Cage memes
 					if (sanitize(message).contains("nicolas cage")) {
 						e.getChannel().sendMessage(Utils.getGIF("nicolas cage")).queue();

@@ -10,6 +10,7 @@ import tech.hadenw.shmamesbot.TriggerType;
 public class Brain {
 	private String guildID;
 	private HashMap<String, Integer> tallies;
+	private HashMap<String, Integer> emoteStats;
 	private HashMap<String, TriggerType> triggers;
 	private List<Response> triggerResponses;
 	private HashMap<BotSettings, String> settings;
@@ -18,6 +19,7 @@ public class Brain {
 	public Brain(String gid) {
 		guildID = gid;
 		tallies = new HashMap<String, Integer>();
+		emoteStats = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
 		triggerResponses = new ArrayList<Response>();
 		settings = new HashMap<BotSettings, String>();
@@ -57,6 +59,13 @@ public class Brain {
 		return tallies;
 	}
 	
+	public HashMap<String, Integer> getEmoteStats(){
+		if(emoteStats == null)
+			emoteStats = new HashMap<String, Integer>();
+		
+		return emoteStats;
+	}
+	
 	public HashMap<String, TriggerType> getTriggers(){
 		return triggers;
 	}
@@ -86,11 +95,14 @@ public class Brain {
 	public void loadDefaults() {
 		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
 		tallies.put("memes", 1);
+		emoteStats.put("dedede", 0);
 		triggerResponses.add(new Response(TriggerType.RONALD, "What'd you call me?! :angry:"));
 		
 		settings.put(BotSettings.PIN_CHANNEL, "general");
 		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");
+		settings.put(BotSettings.APPROVAL_EMOTE, "dedede");
 		settings.put(BotSettings.REMOVAL_THRESHOLD, "3");
+		settings.put(BotSettings.APPROVAL_THRESHOLD, "3");
 		
 		feedback.add("Example feedback");
 	}

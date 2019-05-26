@@ -12,20 +12,22 @@ import tech.hadenw.shmamesbot.commands.AddTrigger;
 import tech.hadenw.shmamesbot.commands.Dev;
 import tech.hadenw.shmamesbot.commands.DropResponse;
 import tech.hadenw.shmamesbot.commands.DropTally;
+import tech.hadenw.shmamesbot.commands.DropTrigger;
 import tech.hadenw.shmamesbot.commands.EightBall;
 import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.Invite;
 import tech.hadenw.shmamesbot.commands.JTimer;
+import tech.hadenw.shmamesbot.commands.ListEmoteStats;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
 import tech.hadenw.shmamesbot.commands.PinThat;
-import tech.hadenw.shmamesbot.commands.DropTrigger;
 import tech.hadenw.shmamesbot.commands.React;
 import tech.hadenw.shmamesbot.commands.Report;
+import tech.hadenw.shmamesbot.commands.ResetEmoteStats;
 import tech.hadenw.shmamesbot.commands.Roll;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
 import tech.hadenw.shmamesbot.commands.SimonSays;
@@ -63,6 +65,8 @@ public class CommandHandler {
 		commands.add(new Timeout());
 		commands.add(new JTimer());
 		commands.add(new React());
+		commands.add(new ListEmoteStats());
+		commands.add(new ResetEmoteStats());
 	}
 	
 	/**

@@ -8,13 +8,16 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.commands.ICommand;
 
 public class React extends ListenerAdapter {
 	private HashMap<Long, Integer> strikes;
+	private HashMap<Long, Integer> votes;
 	
 	public React() {
 		strikes = new HashMap<Long, Integer>();
+		votes = new HashMap<Long, Integer>();
 	}
 	
 	@Override
@@ -42,6 +45,24 @@ public class React extends ListenerAdapter {
 			
 			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
 				strikeMessage(e.getMessageIdLong(), e);
+				return;
+			}
+			
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_EMOTE))) {
+				voteMessage(e.getMessageIdLong(), e);
+				return;
+			}
+			
+			// Tally up the emote
+			if(emo.isEmote()) {
+				Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+				String name = emo.getName();
+				
+				if(b.getEmoteStats().containsKey(name)) {
+					b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+				}else {
+					b.getEmoteStats().put(name, 1);
+				}
 			}
 		}
 	}
@@ -90,9 +111,7 @@ public class React extends ListenerAdapter {
 		int t = 3;
 		try {
 			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_THRESHOLD));
-		}catch(Exception ex) {
-			
-		}
+		}catch(Exception ex) {}
 		
 		if(strikes.get(id) >= t) {
 			Message m = e.getChannel().getMessageById(id).complete();
@@ -116,6 +135,34 @@ public class React extends ListenerAdapter {
 				}
 			}catch(Exception ex) {
 				e.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
+			}
+		}
+	}
+	
+	private void voteMessage(long id, MessageReactionAddEvent e) {
+		// Increment vote on this message
+		votes.put(id, votes.containsKey(id) ? votes.get(id) + 1 : 1);
+		
+		int t = 3;
+		try {
+			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_THRESHOLD));
+		}catch(Exception ex) {}
+		
+		if(votes.get(id) == t) {
+			Message m = e.getChannel().getMessageById(id).complete();
+			String name = m.getAuthor().getName();
+			name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "g"+name;
+			
+			// Process
+			for(ICommand c : CommandHandler.getLoadedCommands()) {
+				for(String a : c.getAliases()) {
+					if(a.equalsIgnoreCase("addtally")) {
+						String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
+						e.getChannel().sendMessage(response).queue();
+						return;
+					}
+				}
 			}
 		}
 	}
