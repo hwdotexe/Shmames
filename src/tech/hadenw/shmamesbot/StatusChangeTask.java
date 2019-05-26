@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
+import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.brain.MotherBrain;
 
 public class StatusChangeTask extends TimerTask{
@@ -26,5 +27,10 @@ public class StatusChangeTask extends TimerTask{
 		String action = Utils.randomItem(mb.getStatuses().keySet());
 		GameType t = mb.getStatuses().get(action);
 		Shmames.getJDA().getPresence().setGame(Game.of(t, action));
+		
+		// Save all brains
+		for(Brain b : Shmames.getBrains().getBrains()) {
+			Shmames.getBrains().saveBrain(b);
+		}
 	}
 }

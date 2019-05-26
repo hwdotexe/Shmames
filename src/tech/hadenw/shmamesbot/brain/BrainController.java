@@ -63,6 +63,10 @@ public class BrainController {
 		return global;
 	}
 	
+	public List<Brain> getBrains() {
+		return brains;
+	}
+	
 	public void reloadBrain(String gid) {
 		
 		for(Brain b : brains) {
