@@ -152,7 +152,7 @@ public class React extends ListenerAdapter {
 			Message m = e.getChannel().getMessageById(id).complete();
 			String name = m.getAuthor().getName();
 			name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
-			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "g"+name;
+			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "good"+name;
 			
 			// Process
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
