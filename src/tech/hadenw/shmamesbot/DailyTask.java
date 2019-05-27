@@ -10,9 +10,13 @@ import net.dv8tion.jda.core.entities.Game.GameType;
 import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.brain.MotherBrain;
 
-public class StatusChangeTask extends TimerTask{
+/**
+ * Runs this code at a daily interval. This is useful for routine tasks and
+ * necessary cosmetic changes.
+ */
+public class DailyTask extends TimerTask{
 	
-	public StatusChangeTask() {
+	public DailyTask() {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
 		

@@ -33,7 +33,7 @@ public final class Shmames {
 			//jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
 			
 			// Set the bot's status.
-			new StatusChangeTask();
+			new DailyTask();
 			
 			// Begin listening for events.
 			jda.addEventListener(new Chat());

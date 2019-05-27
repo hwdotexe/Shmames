@@ -99,7 +99,8 @@ public class CommandHandler {
 									return;
 								}
 								
-								message.getChannel().sendMessage(r).queue();
+								//message.getChannel().sendMessage(r).queue();
+								new Typing(message.getChannel(), r);
 							}
 						}else {
 							// If a command returns null, send the 404 message.

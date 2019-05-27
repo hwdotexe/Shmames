@@ -170,6 +170,12 @@ public class Dev implements ICommand {
 						}
 						
 						return "All feedback cleared!";
+					} else if(args.toLowerCase().startsWith("savebrains")) {
+						for(Brain b : Shmames.getBrains().getBrains()) {
+							Shmames.getBrains().saveBrain(b);
+						}
+						
+						return "Saved all brains to disk!";
 					} else if(args.toLowerCase().startsWith("nuke")) {
 						args = args.substring("nuke".length()+1).trim();
 						
@@ -214,6 +220,7 @@ public class Dev implements ICommand {
 							+ "getReports\n"
 							+ "clearReports\n"
 							+ "getMembers <guildID>\n"
+							+ "saveBrains\n"
 							+ "nuke <guildID>";
 				}
 			}
