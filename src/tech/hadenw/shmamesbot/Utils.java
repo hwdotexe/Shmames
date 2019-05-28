@@ -109,8 +109,12 @@ public class Utils {
 	    
 	    if(gifURLs.size() > 0)
 	    	return gifURLs.get(r.nextInt(gifURLs.size()));
-	    else
-	    	return "Uhh, all I could find was this: https://tenor.com/w3sJ.gif";
+	    else {
+	    	String[] keyword = new String[] {"lost", "crash", "404", "anime", "cat", "doggo", "explode"};
+	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is", "I think you'd like this instead"};	
+	    	
+	    	return message[r.nextInt(message.length)]+": "+getGIF(keyword[r.nextInt(keyword.length)]);
+	    }
 	}
 	
 	/**
