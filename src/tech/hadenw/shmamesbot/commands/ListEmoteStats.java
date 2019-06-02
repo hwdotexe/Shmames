@@ -23,17 +23,24 @@ public class ListEmoteStats implements ICommand {
 	public String run(String args, User author, Message message) {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 		
-		String stats = "**Thus sayeth the Shmames:**";
+		String stats = "**Thus sayeth the Shmames:**\n";
 		
 		// TODO does not sort
 		if(b.getEmoteStats().keySet().size() > 0) {
+			int i = 0;
+			
 			for(String em : b.getEmoteStats().keySet()) {
-				stats += "\n";
-				
 				List<Emote> ems = message.getGuild().getEmotesByName(em, false);
 				
 				if(!ems.isEmpty()) {
-					stats += ems.get(0).getAsMention() + ": " + b.getEmoteStats().get(em);
+					i++;
+					
+					if(i > 5) {
+						stats += "\n";
+						i = 1;
+					}
+					
+					stats += ems.get(0).getAsMention() + ": " + b.getEmoteStats().get(em)+"  ";
 				}
 			}
 		}else {
