@@ -71,7 +71,7 @@ public class Roll implements ICommand {
 					if(modDiceSize > 0) {
 						// Roll the modifier dice
 						for(int i=0; i<modDice; i++) {
-							modRolls.add(Utils.getRandom(modDiceSize));
+							modRolls.add(Utils.getRandom(modDiceSize)+1);
 						}
 						
 						for(int r : modRolls) {
@@ -86,7 +86,7 @@ public class Roll implements ICommand {
 				
 				// Roll the base dice
 				for(int i=0; i<dice; i++) {
-					baseRolls.add(Utils.getRandom(diceSize));
+					baseRolls.add(Utils.getRandom(diceSize)+1);
 				}
 				
 				for(int r : baseRolls) {
