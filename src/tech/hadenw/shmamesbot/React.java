@@ -55,13 +55,15 @@ public class React extends ListenerAdapter {
 			
 			// Tally up the emote
 			if(emo.isEmote()) {
-				Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
-				String name = emo.getName();
-				
-				if(b.getEmoteStats().containsKey(name)) {
-					b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
-				}else {
-					b.getEmoteStats().put(name, 1);
+				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
+					Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+					String name = emo.getName();
+					
+					if(b.getEmoteStats().containsKey(name)) {
+						b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+					}else {
+						b.getEmoteStats().put(name, 1);
+					}
 				}
 			}
 		}

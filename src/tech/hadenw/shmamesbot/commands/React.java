@@ -21,7 +21,7 @@ public class React implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^\\w{2,16} [\\^]{1,10}$").matcher(args).matches()) {
+		if(Pattern.compile("^\\w{2,16} [\\^]{1,15}$").matcher(args).matches()) {
 			try {
 				int messages = args.substring(args.indexOf("^")).length();
 				String word = args.substring(0, args.indexOf(" ")).trim().toLowerCase();

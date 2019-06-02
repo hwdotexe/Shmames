@@ -28,7 +28,7 @@ public class PinThat implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[\\^]{1,10}$").matcher(args).matches()) {
+		if(Pattern.compile("^[\\^]{1,15}$").matcher(args).matches()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			
 			try {
