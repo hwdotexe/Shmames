@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.commands.AddResponse;
 import tech.hadenw.shmamesbot.commands.AddTally;
 import tech.hadenw.shmamesbot.commands.AddTrigger;
+import tech.hadenw.shmamesbot.commands.CringeThat;
 import tech.hadenw.shmamesbot.commands.Dev;
 import tech.hadenw.shmamesbot.commands.DropResponse;
 import tech.hadenw.shmamesbot.commands.DropTally;
@@ -67,6 +68,7 @@ public class CommandHandler {
 		commands.add(new React());
 		commands.add(new ListEmoteStats());
 		commands.add(new ResetEmoteStats());
+		commands.add(new CringeThat());
 	}
 	
 	/**

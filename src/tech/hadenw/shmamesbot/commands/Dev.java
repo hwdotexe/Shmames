@@ -223,6 +223,8 @@ public class Dev implements ICommand {
 							+ "saveBrains\n"
 							+ "nuke <guildID>";
 				}
+			}else {
+				return "That command is reserved for my friends _only_";
 			}
 		}
 		
