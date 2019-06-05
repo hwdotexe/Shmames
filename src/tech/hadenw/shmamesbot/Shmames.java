@@ -27,16 +27,11 @@ public final class Shmames {
 		
 		try {
 			// Use the TestBot if the debug argument is supplied at launch.
-			if(args.length > 0) {
-				String a0 = args[0].toLowerCase();
-				
-				if(a0.equals("debug")) {
-					// TestBot
-					jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
-				}
-			}else {
+			if(args.length > 0 && args[0].toLowerCase().equals("debug")) {
+				jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
+			} else {
 				// Real Bot
-				jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.DOP4Yw.0fcDxWpRiy1G-BhzVLL-Idd2854").build();
+				jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.XPcHnQ.jdKNHXnS5Z3lkAy0GDwz1_6tmeA").build();
 			}
 			
 			// Set the bot's status.

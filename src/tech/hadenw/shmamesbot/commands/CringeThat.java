@@ -35,7 +35,7 @@ public class CringeThat implements ICommand {
 				
 				// Some basic cringe
 				cringe = cringe.substring(0, 1).toUpperCase() + "-" + cringe;
-				cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W").replace("th", "f");
+				cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
 				
 				if(Utils.getRandom(7) == 1) {
 					String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
