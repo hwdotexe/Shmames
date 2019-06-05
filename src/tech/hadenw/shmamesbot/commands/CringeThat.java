@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,27 +31,34 @@ public class CringeThat implements ICommand {
 				
 				String cringe = toPin.getContentDisplay();
 				
-				String[] creepyAsterisks = new String[] {"`*nuzzles you*`", "`*soft*`", "`*nosebleed*`", "`*sobs*`", "`*meows*`", "`*smiles*`", "`*boops*`", "`*shy*`", "`*sniffs you*`", "`*pounces on you*`", "`*cuddles*`", "`*hugs*`", "`*pokes you*`"};
+				String[] creepyAsterisks = new String[] {"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*"};
 				String[] creepyOwos = new String[] {"Owo", ">w<", "UwU", "OwO", "x3", ">^<", ";3", "^~^"};
 				
 				// Some basic cringe
-				cringe = cringe.substring(0, 1).toUpperCase() + "-" + cringe;
 				cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
+				cringe = cringe.replace(" th", " d").replaceAll("th ", "f ");
 				
-				if(Utils.getRandom(7) == 1) {
-					String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
+				// Stutter
+				for(int i=0; i<Utils.getRandom(4)+1; i++) {
+					int pos = getStringPosition(cringe);
 					
-					int pos = cringe.indexOf(" ", Utils.getRandom(cringe.length()));
-					
-					cringe = cringe.substring(0, pos) + " " + rItem + " " + cringe.substring(pos+1);
+					cringe = cringe.substring(0, pos) + cringe.charAt(pos) + "-" + cringe.substring(pos);
 				}
 				
-				if(Utils.getRandom(5) == 1) {
+				// Asterisks
+				for(int i=0; i<Utils.getRandom(3); i++) {
+					String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
+					int pos = getStringPosition(cringe);
+					
+					cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+				}
+				
+				// Owo
+				for(int i=0; i<Utils.getRandom(4); i++) {
 					String rItem = creepyOwos[Utils.getRandom(creepyOwos.length)];
+					int pos = getStringPosition(cringe);
 					
-					int pos = cringe.indexOf(" ", Utils.getRandom(cringe.length()));
-					
-					cringe = cringe.substring(0, pos) + " " + rItem + " " + cringe.substring(pos+1);
+					cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
 				}
 				
 				return cringe;
@@ -61,6 +69,24 @@ public class CringeThat implements ICommand {
 		}
 		
 		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+	}
+	
+	// Returns the position of a word that is safe to interject text into
+	private int getStringPosition(String src) {
+		String[] words= src.split(" ");
+		List<String> safeWords = new ArrayList<String>();
+		
+		Pattern p = Pattern.compile("^[a-zA-Z]");
+		
+		for(int i=0; i<words.length; i++) {
+			if(p.matcher(words[i]).find()) {
+				safeWords.add(words[i]);
+			}
+		}
+		
+		String rWord = safeWords.get(Utils.getRandom(safeWords.size()));
+		
+		return src.indexOf(rWord);
 	}
 
 	@Override
