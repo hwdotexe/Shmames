@@ -25,6 +25,7 @@ public class React extends ListenerAdapter {
 		ReactionEmote emo = e.getReaction().getReactionEmote();
 
 		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
+			// Polls
 			for (Poll p : Shmames.getPolls()) {
 				if (p.getMesssage().getId().equals(e.getMessageId())) {
 					int vote = -1;
@@ -43,16 +44,6 @@ public class React extends ListenerAdapter {
 				}
 			}
 			
-			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
-				strikeMessage(e.getMessageIdLong(), e);
-				return;
-			}
-			
-			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_EMOTE))) {
-				voteMessage(e.getMessageIdLong(), e);
-				return;
-			}
-			
 			// Tally up the emote
 			if(emo.isEmote()) {
 				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
@@ -65,6 +56,18 @@ public class React extends ListenerAdapter {
 						b.getEmoteStats().put(name, 1);
 					}
 				}
+			}
+			
+			// Removal emotes
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
+				strikeMessage(e.getMessageIdLong(), e);
+				return;
+			}
+			
+			// Approval emotes
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_EMOTE))) {
+				voteMessage(e.getMessageIdLong(), e);
+				return;
 			}
 		}
 	}
