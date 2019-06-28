@@ -17,7 +17,7 @@ public class Report implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "report <bug|feature> <your message>";
+		return "report [bug|feature] <your message>";
 	}
 
 	@Override

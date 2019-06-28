@@ -18,7 +18,7 @@ public class CringeThat implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "cringeThat <^...>";
+		return "cringeThat <^...> [times]";
 	}
 
 	@Override
