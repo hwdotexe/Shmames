@@ -37,8 +37,11 @@ public class PinThat implements ICommand {
 				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
 				Message toPin = msgs.get(msgs.size()-1);
 				
+				boolean channelFound = false;
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
 					if(ch.getName().equalsIgnoreCase(b.getSettings().get(BotSettings.PIN_CHANNEL))) {
+						channelFound = true;
+						
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
 						eBuilder.setAuthor(toPin.getAuthor().getName(), null, toPin.getAuthor().getEffectiveAvatarUrl());
@@ -58,6 +61,9 @@ public class PinThat implements ICommand {
 						break;
 					}
 				}
+				
+				if(!channelFound)
+					return Errors.CHANNEL_NOT_FOUND;
 				
 				return "";
 			}catch(Exception ex) {

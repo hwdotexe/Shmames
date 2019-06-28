@@ -2,6 +2,7 @@ package tech.hadenw.shmamesbot.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
@@ -22,9 +23,16 @@ public class CringeThat implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[\\^]{1,15}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("^([\\^]{1,15})( \\d{1,2})?$").matcher(args);
+		
+		if(m.find()) {
 			try {
-				int messages = args.length();
+				int messages = m.group(1).length();
+				int iterations = 1;
+				
+				if(m.group(2) != null) {
+					iterations = Integer.parseInt(m.group(2).trim());
+				}
 				
 				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
 				Message toPin = msgs.get(msgs.size()-1);
@@ -34,31 +42,33 @@ public class CringeThat implements ICommand {
 				String[] creepyAsterisks = new String[] {"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*"};
 				String[] creepyOwos = new String[] {"Owo", ">w<", "UwU", "OwO", "x3", ">^<", ";3", "^~^"};
 				
-				// Some basic cringe
-				cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
-				cringe = cringe.replace(" th", " d").replaceAll("th ", "f ");
-				
-				// Stutter
-				for(int i=0; i<Utils.getRandom(4)+1; i++) {
-					int pos = getStringPosition(cringe);
+				for(int it=0; it<iterations; it++) {
+					// Some basic cringe
+					cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
+					cringe = cringe.replace(" th", " d").replaceAll("th ", "f ");
 					
-					cringe = cringe.substring(0, pos) + cringe.charAt(pos) + "-" + cringe.substring(pos);
-				}
-				
-				// Asterisks
-				for(int i=0; i<Utils.getRandom(3); i++) {
-					String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
-					int pos = getStringPosition(cringe);
+					// Stutter
+					for(int i=0; i<Utils.getRandom(4)+1; i++) {
+						int pos = getStringPosition(cringe);
+						
+						cringe = cringe.substring(0, pos) + cringe.charAt(pos) + "-" + cringe.substring(pos);
+					}
 					
-					cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
-				}
-				
-				// Owo
-				for(int i=0; i<Utils.getRandom(4); i++) {
-					String rItem = creepyOwos[Utils.getRandom(creepyOwos.length)];
-					int pos = getStringPosition(cringe);
+					// Asterisks
+					for(int i=0; i<Utils.getRandom(3); i++) {
+						String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
+						int pos = getStringPosition(cringe);
+						
+						cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+					}
 					
-					cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+					// Owo
+					for(int i=0; i<Utils.getRandom(4); i++) {
+						String rItem = creepyOwos[Utils.getRandom(creepyOwos.length)];
+						int pos = getStringPosition(cringe);
+						
+						cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+					}
 				}
 				
 				return cringe;

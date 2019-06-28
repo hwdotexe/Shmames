@@ -22,7 +22,7 @@ public class Poll extends TimerTask{
 	private int pollID;
 	private Calendar c;
 	
-	public Poll(MessageChannel ch, String q, List<String> o, int minutes) {
+	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval) {
 		question=q;
 		options=o;
 		pollID = Shmames.getPollID();
@@ -30,8 +30,23 @@ public class Poll extends TimerTask{
 		
 		c = Calendar.getInstance();
     	c.setTime(new Date());
-    	c.add(Calendar.MINUTE, minutes);
-    	//c.add(Calendar.SECOND, 15);
+    	
+    	switch(interval) {
+    	case "d":
+    		c.add(Calendar.HOUR, 24*time);
+    		break;
+    	case "h":
+    		c.add(Calendar.HOUR, time);
+    		break;
+    	case "m":
+    		c.add(Calendar.MINUTE, time);
+    		break;
+    	case "s":
+    		c.add(Calendar.SECOND, time);
+    		break;
+    	default:
+    		c.add(Calendar.MINUTE, time);
+    	}
 		
 		EmbedBuilder eBuilder = new EmbedBuilder();
 		

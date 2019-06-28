@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
@@ -21,10 +22,15 @@ public class Report implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^((bug)|(feature)) .{5,}$").matcher(args.toLowerCase()).matches()) {
+		Matcher m = Pattern.compile("^((bug)|(feature) )?(.{5,})$").matcher(args.toLowerCase());
+		
+		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-			String type = args.substring(0, args.indexOf(" ")+1).trim();
-			String msg = args.substring(args.indexOf(" ")+1).trim();
+			String type = m.group(1); // Could be empty!
+			String msg = m.group(4);
+			
+			if(type == null)
+				type = "UNSPECIFIED";
 			
 			b.getFeedback().add(author.getName()+" ("+message.getGuild().getName()+"): ["+type.toUpperCase()+"] "+msg);
 			Shmames.getBrains().saveBrain(b);
@@ -37,7 +43,7 @@ public class Report implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"report"};
+		return new String[] {"report", "feedback"};
 	}
 	
 	@Override
