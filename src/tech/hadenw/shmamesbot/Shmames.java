@@ -14,6 +14,8 @@ public final class Shmames {
 	private static BrainController brains;
 	private static boolean isOnTimeout;
 	
+	public static boolean isDebug;
+	
 	/**
 	 * The entry point for the bot.
 	 * @param args Program launch arguments.
@@ -23,12 +25,15 @@ public final class Shmames {
 		brains = new BrainController();
 		isOnTimeout = false;
 		
+		isDebug = false;
+		
 		Utils.Init();
 		
 		try {
 			// Use the TestBot if the debug argument is supplied at launch.
 			if(args.length > 0 && args[0].toLowerCase().equals("debug")) {
 				jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
+				isDebug = true;
 			} else {
 				// Real Bot
 				jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.XPcHnQ.jdKNHXnS5Z3lkAy0GDwz1_6tmeA").build();

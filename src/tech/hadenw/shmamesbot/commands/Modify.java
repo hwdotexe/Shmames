@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot.commands;
 
 import java.awt.Color;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -26,15 +27,16 @@ public class Modify implements ICommand {
 	// TODO check user's role for permissions, deny if they aren't allowed to change values.
 	@Override
 	public String run(String args, User author, Message message) {
-		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR)) {
+		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			
-			if(Pattern.compile("^[\\w]+ [\\w\\-]+$").matcher(args).matches()) {
-				BotSettings setting = BotSettings.valueOf(args.substring(0, args.indexOf(" ")).toUpperCase());
-				String value = args.substring(args.indexOf(" ")+1);
+			if(m.find()) {
+				BotSettings setting = BotSettings.valueOf(m.group(1).toUpperCase());
+				String value = m.group(2);
 				
 				if(setting != null) {
-					b.getSettings().put(setting, value);
+					b.getSettings().put(setting, value.toLowerCase());
 					
 					EmbedBuilder eBuilder = new EmbedBuilder();
 					

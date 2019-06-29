@@ -13,6 +13,8 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class Poll extends TimerTask{
 	private Message m;
@@ -75,9 +77,14 @@ public class Poll extends TimerTask{
 		t.schedule(this, c.getTime());
 		
 		// Pin the message
-		try {
-			m.pin().queue();
-		}catch(Exception e) {}
+		Brain b = Shmames.getBrains().getBrain(m.getGuild().getId());
+		if(b.getSettings().get(BotSettings.DO_PIN).equalsIgnoreCase("true")) {
+			try {
+				m.pin().queue();
+			}catch(Exception e) {
+				m.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
+			}
+		}
 	}
 	
 	public void run() {

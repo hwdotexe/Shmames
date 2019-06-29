@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.Utils;
+import tech.hadenw.shmamesbot.brain.BotSettings;
 import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.brain.MotherBrain;
 
@@ -95,22 +96,24 @@ public class Dev implements ICommand {
 				        eBuilder.setFooter("Developer Note - sent on "+Utils.getFriendlyDate(c), null);
 
 				        MessageEmbed embed = eBuilder.build();
-				        int msgs = 0;
+				        int success = 0;
+				        int fail = 0;
 				        
 				        // Send to one channel for all guilds
 				        for(Guild g : Shmames.getJDA().getGuilds()) {
-							for(TextChannel ch : g.getTextChannels()) {
-								try {
-									ch.sendMessage(embed).complete();
-									msgs++;
-									break;
-								}catch(Exception e) {
-									// Was not able to send to this channel, try again.
-								}
+				        	Brain b = Shmames.getBrains().getBrain(g.getId());
+				        	String channel = b.getSettings().get(BotSettings.DEV_ANNOUNCE_CHANNEL);
+				        	
+				        	try {
+								g.getTextChannelsByName(channel, true).get(0).sendMessage(embed).complete();
+								success++;
+							}catch(Exception e) {
+								// Was not able to send to this channel - add to failures.
+								fail++;
 							}
 						}
 						
-						return "Sent the message to "+msgs+" guilds!";
+						return ":white_check_mark: Sent the message to "+success+" guilds!\n:no_entry: Failed for "+fail+" guilds.";
 					} else if(args.toLowerCase().startsWith("leave")) {
 						args = args.substring("leave".length()+1).trim();
 						

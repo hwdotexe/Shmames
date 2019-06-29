@@ -99,6 +99,8 @@ public class Brain {
 		triggerResponses.add(new Response(TriggerType.RONALD, "What'd you call me?! :angry:"));
 		
 		settings.put(BotSettings.PIN_CHANNEL, "general");
+		settings.put(BotSettings.DO_PIN, "true");
+		settings.put(BotSettings.DEV_ANNOUNCE_CHANNEL, "general");
 		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");
 		settings.put(BotSettings.APPROVAL_EMOTE, "dedede");
 		settings.put(BotSettings.REMOVAL_THRESHOLD, "3");

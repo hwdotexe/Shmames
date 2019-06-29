@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,10 +40,19 @@ public class CringeThat implements ICommand {
 				
 				String cringe = toPin.getContentDisplay();
 				
-				String[] creepyAsterisks = new String[] {"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*"};
+				String[] creepyAsterisks = new String[] {"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*",
+						"*curious*", "*moves closer*", "*licks*", "*stares*", "*gag*", "*bites lip*"};
 				String[] creepyOwos = new String[] {"Owo", ">w<", "UwU", "OwO", "x3", ">^<", ";3", "^~^"};
+				HashMap<String, String> cringeDict = new HashMap<String, String>();
+				cringeDict.put("food", "numsies"); cringeDict.put("can't", "nu can"); cringeDict.put("have", "hab");
+				cringeDict.put("and", "an"); cringeDict.put("stupid", "stoopi"); cringeDict.put("dumb", "no smart");
 				
 				for(int it=0; it<iterations; it++) {
+					// Replace words
+					for(String word : cringeDict.keySet()) {
+						cringe = cringe.replace(word, cringeDict.get(word));
+					}
+					
 					// Some basic cringe
 					cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
 					cringe = cringe.replace(" th", " d").replaceAll("th ", "f ");
@@ -51,7 +61,8 @@ public class CringeThat implements ICommand {
 					for(int i=0; i<Utils.getRandom(4)+1; i++) {
 						int pos = getStringPosition(cringe);
 						
-						cringe = cringe.substring(0, pos) + cringe.charAt(pos) + "-" + cringe.substring(pos);
+						if(pos > 0)
+							cringe = cringe.substring(0, pos) + cringe.charAt(pos) + "-" + cringe.substring(pos);
 					}
 					
 					// Asterisks
@@ -59,15 +70,17 @@ public class CringeThat implements ICommand {
 						String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
 						int pos = getStringPosition(cringe);
 						
-						cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+						if(pos > 0)
+							cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
 					}
 					
 					// Owo
-					for(int i=0; i<Utils.getRandom(4); i++) {
+					for(int i=0; i<Utils.getRandom(3); i++) {
 						String rItem = creepyOwos[Utils.getRandom(creepyOwos.length)];
 						int pos = getStringPosition(cringe);
 						
-						cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
+						if(pos > 0)
+							cringe = cringe.substring(0, pos) + "`"+rItem+"`" + " " + cringe.substring(pos);
 					}
 				}
 				
@@ -86,17 +99,21 @@ public class CringeThat implements ICommand {
 		String[] words= src.split(" ");
 		List<String> safeWords = new ArrayList<String>();
 		
-		Pattern p = Pattern.compile("^[a-zA-Z]");
+		Pattern p = Pattern.compile("^[a-zA-Z]{3,}$");
 		
 		for(int i=0; i<words.length; i++) {
-			if(p.matcher(words[i]).find()) {
+			if(p.matcher(words[i].trim()).find()) {
 				safeWords.add(words[i]);
 			}
 		}
 		
-		String rWord = safeWords.get(Utils.getRandom(safeWords.size()));
-		
-		return src.indexOf(rWord);
+		if(safeWords.size() > 0) {
+			String rWord = safeWords.get(Utils.getRandom(safeWords.size()));
+			
+			return src.indexOf(rWord);
+		}else {
+			return -1;
+		}
 	}
 
 	@Override
