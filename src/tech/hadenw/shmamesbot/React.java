@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.commands.ICommand;
 
@@ -59,13 +59,13 @@ public class React extends ListenerAdapter {
 			}
 			
 			// Removal emotes
-			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue())) {
 				strikeMessage(e.getMessageIdLong(), e);
 				return;
 			}
 			
 			// Approval emotes
-			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_EMOTE))) {
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue())) {
 				voteMessage(e.getMessageIdLong(), e);
 				return;
 			}
@@ -95,7 +95,7 @@ public class React extends ListenerAdapter {
 				}
 			}
 			
-			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_EMOTE))) {
+			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue())) {
 				long id = e.getMessageIdLong();
 				
 				if(strikes.containsKey(id)) {
@@ -115,7 +115,7 @@ public class React extends ListenerAdapter {
 		
 		int t = 3;
 		try {
-			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.REMOVAL_THRESHOLD));
+			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_THRESHOLD).getValue());
 		}catch(Exception ex) {}
 		
 		if(strikes.get(id) >= t) {
@@ -150,7 +150,7 @@ public class React extends ListenerAdapter {
 		
 		int t = 3;
 		try {
-			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettings().get(BotSettings.APPROVAL_THRESHOLD));
+			t = Integer.parseInt(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_THRESHOLD).getValue());
 		}catch(Exception ex) {}
 		
 		if(votes.get(id) == t) {

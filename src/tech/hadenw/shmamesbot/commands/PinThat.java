@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
-import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.Brain;
 
 public class PinThat implements ICommand {
@@ -39,7 +39,7 @@ public class PinThat implements ICommand {
 				
 				boolean channelFound = false;
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
-					if(ch.getName().equalsIgnoreCase(b.getSettings().get(BotSettings.PIN_CHANNEL))) {
+					if(ch.getName().equalsIgnoreCase(b.getSettingFor(BotSettingName.PIN_CHANNEL).getValue())) {
 						channelFound = true;
 						
 						EmbedBuilder eBuilder = new EmbedBuilder();

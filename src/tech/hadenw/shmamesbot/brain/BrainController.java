@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import tech.hadenw.shmamesbot.Shmames;
+
 /**
  * Loads the global brain, then loads brains retroactively from the brain
  * directory. Provides an access point to retrieve a Guild's brain based on the
@@ -25,14 +27,23 @@ public class BrainController {
 		brains = new ArrayList<Brain>();
 		globalSettingsFile = new File("brains/motherBrain.json");
 
-		for (File b : discoverBrains()) {
+		// Ensure new settings are made available for the user to change.
+		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
 			brains.add(brain);
 			
-			// Ensure new settings are available to change
-			for(BotSettings s : BotSettings.values()) {
-				if(!brain.getSettings().containsKey(s)) {
-					brain.getSettings().put(s, "not set");
+			for(BotSetting s : Shmames.defaults) {
+				boolean exists = false;
+				
+				for(BotSetting bs : brain.getSettings()) {
+					if(bs.getName() == s.getName()) {
+						exists = true;
+						break;
+					}
+				}
+				
+				if(!exists) {
+					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getValue()));
 				}
 			}
 		}

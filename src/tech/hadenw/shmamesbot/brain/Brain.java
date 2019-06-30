@@ -13,7 +13,7 @@ public class Brain {
 	private HashMap<String, Integer> emoteStats;
 	private HashMap<String, TriggerType> triggers;
 	private List<Response> triggerResponses;
-	private HashMap<BotSettings, String> settings;
+	private List<BotSetting> settings;
 	private List<String> feedback;
 	
 	public Brain(String gid) {
@@ -22,7 +22,7 @@ public class Brain {
 		emoteStats = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
 		triggerResponses = new ArrayList<Response>();
-		settings = new HashMap<BotSettings, String>();
+		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
 		
 		loadDefaults();
@@ -40,8 +40,18 @@ public class Brain {
 		triggerResponses.remove(r);
 	}
 	
-	public HashMap<BotSettings, String> getSettings(){
+	public List<BotSetting> getSettings(){
 		return settings;
+	}
+	
+	public BotSetting getSettingFor(BotSettingName n) {
+		for(BotSetting s : settings) {
+			if(s.getName() == n) {
+				return s;
+			}
+		}
+		
+		return null;
 	}
 	
 	public List<Response> getResponsesFor(TriggerType type){
@@ -94,18 +104,7 @@ public class Brain {
 	 */
 	public void loadDefaults() {
 		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
-		tallies.put("memes", 1);
-		emoteStats.put("dedede", 0);
-		triggerResponses.add(new Response(TriggerType.RONALD, "What'd you call me?! :angry:"));
-		
-		settings.put(BotSettings.PIN_CHANNEL, "general");
-		settings.put(BotSettings.DO_PIN, "true");
-		settings.put(BotSettings.DEV_ANNOUNCE_CHANNEL, "general");
-		settings.put(BotSettings.REMOVAL_EMOTE, "royGun");
-		settings.put(BotSettings.APPROVAL_EMOTE, "dedede");
-		settings.put(BotSettings.REMOVAL_THRESHOLD, "3");
-		settings.put(BotSettings.APPROVAL_THRESHOLD, "3");
-		
+		settings.addAll(Shmames.defaults);
 		feedback.add("Example feedback");
 	}
 }

@@ -1,6 +1,6 @@
 package tech.hadenw.shmamesbot.brain;
 
-public enum BotSettings {
+public enum BotSettingName {
 	PIN_CHANNEL,
 	DEV_ANNOUNCE_CHANNEL,
 	DO_PIN,

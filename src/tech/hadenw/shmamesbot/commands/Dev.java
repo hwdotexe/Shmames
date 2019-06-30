@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.Utils;
-import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.brain.MotherBrain;
 
@@ -102,7 +102,7 @@ public class Dev implements ICommand {
 				        // Send to one channel for all guilds
 				        for(Guild g : Shmames.getJDA().getGuilds()) {
 				        	Brain b = Shmames.getBrains().getBrain(g.getId());
-				        	String channel = b.getSettings().get(BotSettings.DEV_ANNOUNCE_CHANNEL);
+				        	String channel = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL).getValue();
 				        	
 				        	try {
 								g.getTextChannelsByName(channel, true).get(0).sendMessage(embed).complete();

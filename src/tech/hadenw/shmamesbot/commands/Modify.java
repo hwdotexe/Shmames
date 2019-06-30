@@ -10,7 +10,8 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
-import tech.hadenw.shmamesbot.brain.BotSettings;
+import tech.hadenw.shmamesbot.brain.BotSettingName;
+import tech.hadenw.shmamesbot.brain.BotSetting;
 import tech.hadenw.shmamesbot.brain.Brain;
 
 public class Modify implements ICommand {
@@ -24,7 +25,6 @@ public class Modify implements ICommand {
 		return "modify [<setting> <value>]";
 	}
 	
-	// TODO check user's role for permissions, deny if they aren't allowed to change values.
 	@Override
 	public String run(String args, User author, Message message) {
 		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
@@ -32,22 +32,28 @@ public class Modify implements ICommand {
 			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			
 			if(m.find()) {
-				BotSettings setting = BotSettings.valueOf(m.group(1).toUpperCase());
+				BotSettingName setting = BotSettingName.valueOf(m.group(1).toUpperCase());
 				String value = m.group(2);
 				
 				if(setting != null) {
-					b.getSettings().put(setting, value.toLowerCase());
+					//b.getSettings().put(setting, value.toLowerCase());
+					BotSetting val = b.getSettingFor(setting);
 					
-					EmbedBuilder eBuilder = new EmbedBuilder();
-					
-			        eBuilder.setColor(Color.ORANGE);
-			        eBuilder.appendDescription("**"+setting.toString()+"**: "+b.getSettings().get(setting)+"\n");
-			        
-			        message.getChannel().sendMessage(eBuilder.build()).queue();
-			        
-			        // Save the new settings
-			        Shmames.getBrains().saveBrain(b);
-					return "";
+					if(val.setValue(value, b)) {
+						EmbedBuilder eBuilder = new EmbedBuilder();
+						
+				        eBuilder.setColor(Color.ORANGE);
+				        eBuilder.appendDescription("**"+val.getName()+"** = "+val.getValue()+"\n");
+				        
+				        message.getChannel().sendMessage(eBuilder.build()).queue();
+				        
+				        // Save the new settings
+				        Shmames.getBrains().saveBrain(b);
+						return "";
+					}else {
+						// Not successful
+						return Errors.WRONG_USAGE;
+					}
 				}else {
 					return "I couldn't find that setting.";
 				}
@@ -57,8 +63,8 @@ public class Modify implements ICommand {
 		        eBuilder.setColor(Color.ORANGE);
 		        eBuilder.setTitle("Available settings:");
 		        
-		        for(BotSettings s : BotSettings.values()) {
-		        	eBuilder.appendDescription("**"+s.toString()+"**: "+b.getSettings().get(s)+"\n");
+		        for(BotSetting v : b.getSettings()) {
+		        	eBuilder.appendDescription("**"+v.getName().toString()+"**:"+v.getType().toString()+" = "+v.getValue()+"\n");
 		        }
 		        
 		        message.getChannel().sendMessage(eBuilder.build()).queue();

@@ -6,6 +6,9 @@ import java.util.List;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import tech.hadenw.shmamesbot.brain.BotSetting;
+import tech.hadenw.shmamesbot.brain.BotSettingName;
+import tech.hadenw.shmamesbot.brain.BotSettingType;
 import tech.hadenw.shmamesbot.brain.BrainController;
 
 public final class Shmames {
@@ -15,12 +18,15 @@ public final class Shmames {
 	private static boolean isOnTimeout;
 	
 	public static boolean isDebug;
+	public static List<BotSetting> defaults;
 	
 	/**
 	 * The entry point for the bot.
 	 * @param args Program launch arguments.
 	 */
 	public static void main(String[] args) {
+		setDefaults();
+		
 		polls = new ArrayList<Poll>();
 		brains = new BrainController();
 		isOnTimeout = false;
@@ -51,6 +57,19 @@ public final class Shmames {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void setDefaults() {
+		// Default settings for the bot. New settings are inserted automatically to existing servers.
+		// To create a new default, simply add to this list or change the existing value.
+		defaults = new ArrayList<BotSetting>();
+		defaults.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
+		defaults.add(new BotSetting(BotSettingName.DO_PIN, BotSettingType.BOOLEAN, "true"));
+		defaults.add(new BotSetting(BotSettingName.DEV_ANNOUNCE_CHANNEL, BotSettingType.CHANNEL, "general"));
+		defaults.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "roygun"));
+		defaults.add(new BotSetting(BotSettingName.APPROVAL_EMOTE, BotSettingType.EMOTE, "dedede"));
+		defaults.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
+		defaults.add(new BotSetting(BotSettingName.APPROVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 	}
 	
 	/**
