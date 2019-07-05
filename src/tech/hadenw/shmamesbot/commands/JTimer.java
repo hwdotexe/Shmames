@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
@@ -15,25 +16,26 @@ public class JTimer implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "timer <time>[d/h/m/s]";
+		return "timer <time>[d/h/m/s] [description]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^\\d{1,3}[dhms]?$").matcher(args).matches()) {
-			int time;
+		Matcher m = Pattern.compile("^(\\d{1,3})([dhms]?)(.*?)$").matcher(args);
+		
+		if(m.find()) {
+			int time = Integer.parseInt(m.group(1));
 			
-			System.out.println(args.charAt(args.length()-1));
-			
-			if(isInt(args.charAt(args.length()-1))){
-				time = Integer.parseInt(args);
-			}else {
-				time = Integer.parseInt(args.substring(0, args.length()-1));
-			}
+			String rmsg = m.group(3) != null ? m.group(3) : "";
 			
 			if(time > 0) {
 				int interval = -1;
-				switch(args.charAt(args.length()-1)) {
+				String i = m.group(2);
+				
+				if(i == null || i.length() == 0)
+					i = "m";
+					
+				switch(i.charAt(0)) {
 				case 'd':
 					interval = 1;
 					break;
@@ -50,7 +52,7 @@ public class JTimer implements ICommand {
 					interval = 3;
 				}
 				
-				new JTimerTask(author, message.getChannel(), time, interval);
+				new JTimerTask(author, message.getChannel(), time, interval, rmsg);
 				
 				return "Started a new :alarm_clock: for **"+time+"** "+(interval==1?"Days":interval==2?"Hours":interval==3?"Minutes":interval==4?"Seconds":"");
 			}else {
@@ -63,7 +65,7 @@ public class JTimer implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"timer"};
+		return new String[] {"timer", "remind me in", "alert"};
 	}
 	
 	@Override
@@ -74,14 +76,5 @@ public class JTimer implements ICommand {
 	@Override
 	public boolean requiresGuild() {
 		return false;
-	}
-	
-	private boolean isInt(char c) {
-		try {
-			Integer.parseInt(String.valueOf(c));
-			return true;
-		}catch(Exception e) {
-			return false;
-		}
 	}
 }

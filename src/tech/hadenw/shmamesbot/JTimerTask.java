@@ -11,11 +11,13 @@ import net.dv8tion.jda.core.entities.User;
 public class JTimerTask extends TimerTask{
 	private User u;
 	private MessageChannel msgch;
+	private String message;
 	
-	public JTimerTask(User user, MessageChannel ch, int time, int interval) {
+	public JTimerTask(User user, MessageChannel ch, int time, int interval, String msg) {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
     	c.setTime(new Date());
+    	message = msg;
     	
     	switch(interval) {
     	case 1:
@@ -41,6 +43,10 @@ public class JTimerTask extends TimerTask{
 	}
 	
 	public void run() {
-		msgch.sendMessage(":alarm_clock: ("+u.getAsMention()+"): The timer you set is finished!").queue();
+		String m = ":alarm_clock: ("+u.getAsMention()+"): The timer you set is finished!";
+		if(message.length() > 0)
+			m = m+"\n_"+message+"_";
+		
+		msgch.sendMessage(m).queue();
 	}
 }

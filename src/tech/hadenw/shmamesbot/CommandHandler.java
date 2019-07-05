@@ -15,6 +15,7 @@ import tech.hadenw.shmamesbot.commands.DropResponse;
 import tech.hadenw.shmamesbot.commands.DropTally;
 import tech.hadenw.shmamesbot.commands.DropTrigger;
 import tech.hadenw.shmamesbot.commands.EightBall;
+import tech.hadenw.shmamesbot.commands.Enhance;
 import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
@@ -69,6 +70,7 @@ public class CommandHandler {
 		commands.add(new ListEmoteStats());
 		commands.add(new ResetEmoteStats());
 		commands.add(new CringeThat());
+		commands.add(new Enhance());
 	}
 	
 	/**

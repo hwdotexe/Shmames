@@ -99,7 +99,7 @@ public class CringeThat implements ICommand {
 		String[] words= src.split(" ");
 		List<String> safeWords = new ArrayList<String>();
 		
-		Pattern p = Pattern.compile("^[a-zA-Z]{3,}$");
+		Pattern p = Pattern.compile("^[a-zA-Z]{3,}");
 		
 		for(int i=0; i<words.length; i++) {
 			if(p.matcher(words[i].trim()).find()) {
