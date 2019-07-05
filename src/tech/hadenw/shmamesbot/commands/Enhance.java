@@ -2,9 +2,23 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Utils;
 
 public class Enhance implements ICommand {
+	private String[] answers;
+	
+	public Enhance() {
+		answers = new String[] {"Done - @PH is now solid gold.", "Done - @PH now smells nice.",
+				"Done - @PH is now 10GP richer.", "Done - @PH won a Nobel Prize.", "Done - @PH now has friends.",
+				"Done - @PH just made the newspaper", "Done - @PH is now part Dragon", "Done - @PH now owns the One Ring",
+				"Done - @PH is now a wizard, Harry.", "Done - @PH came back from the dead.", "Done - @PH is now a weeb.",
+				"Done - @PH just won the lottery.", "Done - @PH now plays Minecraft.", "Done - @PH can now rap mad rhymes.",
+				"Done - @PH's ex lover just moved to Madagascar.", "Done - @PH is now good at archery.", "Done - @PH can now cast magic.",
+				"Done - @PH now has a college degree", "Done - @PH just invented the lightsaber.",
+				"Done - @PH is now radioactive."};
+	}
+	
 	@Override
 	public String getDescription() {
 		return "Enhance things.";
@@ -12,21 +26,15 @@ public class Enhance implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "enhance";
+		return "enhance <item>";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String[] answers = new String[] {"Done - it is now solid gold.", "Done - it now smells nice.",
-				"Done - it is now 10GP richer.", "Done - it won a Nobel Prize.", "Done - it now has friends.",
-				"Done - it just made the newspaper", "Done - it is now part Dragon", "Done - it now owns the One Ring",
-				"Done - it is now a wizard, Harry.", "Done - it came back from the dead.", "Done - it is now a weeb.",
-				"Done - it just won the lottery.", "Done - it now plays Minecraft.", "Done - it can now rap mad rhymes.",
-				"Done - its ex lover just moved to Madagascar.", "Done - it is now good at archery.", "Done - it can now cast magic.",
-				"Done - it now has a college degree", "Done - it just invented the lightsaber.",
-				"Done - it is now radioactive."};
+		if(args.length() > 0)
+			return answers[Utils.getRandom(answers.length)].replace("@PH", args);
 		
-		return answers[Utils.getRandom(answers.length)];
+		return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
 	}
 
 	@Override

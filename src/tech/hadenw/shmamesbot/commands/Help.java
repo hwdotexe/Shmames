@@ -45,6 +45,7 @@ public class Help implements ICommand {
 				        eBuilder.setTitle(c.getDescription());
 				        eBuilder.appendDescription("**Aliases:** "+alsb.toString()+"\n");
 				        eBuilder.appendDescription("**Usage:** `"+c.getUsage()+"`\n");
+				        eBuilder.appendDescription("**Server-Only:** `"+(c.requiresGuild() ? "Yes" : "No")+"`\n");
 						
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
 				        
