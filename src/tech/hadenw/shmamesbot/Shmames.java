@@ -62,6 +62,7 @@ public final class Shmames {
 	private static void setDefaults() {
 		// Default settings for the bot. New settings are inserted automatically to existing servers.
 		// To create a new default, simply add to this list or change the existing value.
+		// These can be completely removed, and existing brains should load normally.
 		defaults = new ArrayList<BotSetting>();
 		defaults.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
 		defaults.add(new BotSetting(BotSettingName.DO_PIN, BotSettingType.BOOLEAN, "true"));
