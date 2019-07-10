@@ -27,10 +27,20 @@ public class ListEmoteStats implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-		String stats = "**Thus sayeth the Shmames:**\n";
-		LinkedHashMap<String, Integer> emotes = sortHashMapByValues(b.getEmoteStats());
+		String statMsg = "**Thus sayeth the Shmames:**\n";
+		HashMap<String, Integer> emStats = new HashMap<String, Integer>(b.getEmoteStats());
 		
-		// TODO does not sort
+		// Add emotes without any uses
+		for(Emote e : message.getGuild().getEmotes()) {
+			if(!emStats.containsKey(e.getName())) {
+				emStats.put(e.getName(), 0);
+			}
+		}
+		
+		// Sort
+		LinkedHashMap<String, Integer> emotes = sortHashMapByValues(emStats);
+		
+		// Send to the server
 		if(emotes.keySet().size() > 0) {
 			int i = 0;
 			
@@ -41,18 +51,18 @@ public class ListEmoteStats implements ICommand {
 					i++;
 					
 					if(i > 5) {
-						stats += "\n";
+						statMsg += "\n";
 						i = 1;
 					}
 					
-					stats += ems.get(0).getAsMention() + ": " + emotes.get(em)+"  ";
+					statMsg += ems.get(0).getAsMention() + ": " + emotes.get(em)+"  ";
 				}
 			}
 		}else {
-			stats += "\nThere's nothing here!";
+			statMsg += "\nThere's nothing here!";
 		}
 
-		return stats;
+		return statMsg;
 	}
 	
 	// From https://stackoverflow.com/questions/8119366/sorting-hashmap-by-values
