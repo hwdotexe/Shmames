@@ -53,6 +53,32 @@ public class CringeThat implements ICommand {
 						cringe = cringe.replace(word, cringeDict.get(word));
 					}
 					
+					// Add more owos
+					if(Utils.getRandom(4)==1) {
+						Pattern p = Pattern.compile("(.+o)[\\.\\?\\!\\~]?$");
+						String[] cw = cringe.split(" ");
+						String[] ncw = new String[cw.length];
+						
+						for(int i=0; i<cw.length; i++) {
+							Matcher mat = p.matcher(cw[i]);
+							
+							if(mat.find()) {
+								ncw[i] = cw[i]+"wo";
+							}else {
+								ncw[i] = cw[i];
+							}
+						}
+						
+						cringe = "";
+						
+						for(String w : ncw) {
+							if(cringe.length() > 0)
+								cringe += " ";
+							
+							cringe += w;
+						}
+					}
+					
 					// Some basic cringe
 					cringe = cringe.replace("r", "w").replace("R", "W").replace("l", "w").replace("L", "W");
 					cringe = cringe.replace(" th", " d").replaceAll("th ", "f ");
