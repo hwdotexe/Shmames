@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/JDA-3.8.0_423-withDependencies.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="lib/JDA-3.8.3_464-withDependencies-no-opus.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
