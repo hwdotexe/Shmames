@@ -20,7 +20,7 @@ import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.Invite;
-import tech.hadenw.shmamesbot.commands.JTimer;
+import tech.hadenw.shmamesbot.commands.Timer;
 import tech.hadenw.shmamesbot.commands.ListEmoteStats;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
@@ -43,40 +43,40 @@ public class CommandHandler {
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
 		
-		commands.add(new Help());
-		commands.add(new Modify());
-		commands.add(new Startpoll());
-		commands.add(new PinThat());
-		commands.add(new AddTally());
-		commands.add(new DropTally());
-		commands.add(new ShowTallies());
-		commands.add(new AddTrigger());
-		commands.add(new DropTrigger());
-		commands.add(new ListTriggers());
 		commands.add(new AddResponse());
-		commands.add(new DropResponse());
-		commands.add(new ListResponses());
-		commands.add(new EightBall());
-		commands.add(new Roll());
-		commands.add(new GIF());
-		commands.add(new Minesweeper());
-		commands.add(new Dev());
-		commands.add(new Invite());
-		commands.add(new SimonSays());
-		commands.add(new Report());
-		commands.add(new Timeout());
-		commands.add(new JTimer());
-		commands.add(new React());
-		commands.add(new ListEmoteStats());
-		commands.add(new ResetEmoteStats());
+		commands.add(new AddTally());
+		commands.add(new AddTrigger());
 		commands.add(new CringeThat());
+		commands.add(new Dev());
+		commands.add(new DropResponse());
+		commands.add(new DropTally());
+		commands.add(new DropTrigger());
+		commands.add(new EightBall());
 		commands.add(new Enhance());
+		commands.add(new GIF());
+		commands.add(new Help());
+		commands.add(new Invite());
+		commands.add(new ListEmoteStats());
+		commands.add(new ListResponses());
+		commands.add(new ListTriggers());
+		commands.add(new Minesweeper());
+		commands.add(new Modify());
+		commands.add(new PinThat());
+		commands.add(new React());
+		commands.add(new Report());
+		commands.add(new ResetEmoteStats());
+		commands.add(new Roll());
+		commands.add(new SimonSays());
+		commands.add(new ShowTallies());
+		commands.add(new Startpoll());
+		commands.add(new Timeout());
+		commands.add(new Timer());
 	}
 	
 	/**
 	 * Parses the command provided, and performs an action based on the command determined.
 	 * @param cmd The raw String calling the command.
-	 * @param channel The message channel.
+	 * @param message The message.
 	 * @param author The user who is running the command.
 	 * @param server The server the command is running on.
 	 */

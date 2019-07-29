@@ -43,6 +43,20 @@ public class Chat extends ListenerAdapter {
 						}
 					}
 					
+					// Gather emoji stats
+					for(Emote emo : e.getMessage().getEmotes()) {
+						if(e.getGuild().getEmotes().contains(emo)) {
+							String name = emo.getName();
+							Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+							
+							if(b.getEmoteStats().containsKey(name)) {
+								b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+							}else {
+								b.getEmoteStats().put(name, 1);
+							}
+						}
+					}
+					
 					// Triggers
 					for (TriggerType type : TriggerType.values()) {
 						for (String trigger : brain.getTriggers(type)) {
@@ -57,20 +71,6 @@ public class Chat extends ListenerAdapter {
 									
 									return;
 								}
-							}
-						}
-					}
-					
-					// Gather emoji stats
-					for(Emote emo : e.getMessage().getEmotes()) {
-						if(e.getGuild().getEmotes().contains(emo)) {
-							String name = emo.getName();
-							Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
-							
-							if(b.getEmoteStats().containsKey(name)) {
-								b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
-							}else {
-								b.getEmoteStats().put(name, 1);
 							}
 						}
 					}

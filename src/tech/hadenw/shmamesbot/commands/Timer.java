@@ -8,7 +8,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.JTimerTask;
 
-public class JTimer implements ICommand {
+public class Timer implements ICommand {
 	@Override
 	public String getDescription() {
 		return "Start a timer.";

@@ -23,89 +23,84 @@ public class Roll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^(\\d{1,2})?d\\d{1,3}([\\+\\-](\\d{1,2}d)?\\d{1,2})?$").matcher(args).matches()) {
+		Matcher roll = Pattern.compile("^((\\d{1,3})*(d\\d{1,3}))([\\+\\-](\\d{1,3})(d\\d{1,3})*)*$").matcher(args);
+		if(roll.matches()) {
 			try {
-				String input = args.replaceAll("\\+", "p").replaceAll("\\-", "m");
-				int dice = 1;
+				int diceQuantity = 1;
 				
-				if(Pattern.compile("^\\d{1,2}").matcher(input).find()) {
-					//begins with a number, so they want to roll that many dice.
-					Matcher m = Pattern.compile("^(\\d{1,2})").matcher(input);
-					m.find();
-					dice = Integer.parseInt(m.group(1));
+				// command: 1d20+2d6
+				// g1: 1d20
+				// g2: 1
+				// g3: d20
+				// g4: +2d6
+				// g5: 2
+				// g6: d6
+				
+				// This group is optional.
+				if(roll.group(2) != null) {
+					diceQuantity = Integer.parseInt(roll.group(2));
 				}
 				
-				Matcher m1 = Pattern.compile("d(\\d{1,2})").matcher(input);
-				m1.find();
-				int diceSize = Integer.parseInt(m1.group(1));
+				// Take the dice size and strip the preceding "d".
+				int diceSize = Integer.parseInt(roll.group(3).substring(1));
 				
+				// Prepare variables.
 				List<Integer> baseRolls = new ArrayList<Integer>();
 				List<Integer> modRolls = new ArrayList<Integer>();
-				int baseSum = 0;
+				int modBase = -1;
+				int modDiceSize = -1;
+				int modOperation = 1;
 				int modSum = 0;
-				int modOP = 1;
-				int modDice = 1;
-				int modDiceSize = 0;
+				int baseSum = 0;
 				
-				if(Pattern.compile("[mp]").matcher(input).find()) {
-					// Has additional numbers or dice to roll.
+				// Process modifier dice.
+				if(roll.group(4) != null) {
+					// Set the base modifier, or the number of modifier dice.
+					modBase = Integer.parseInt(roll.group(5));
 					
-					// Are we rolling more dice or adding a flat number?
+					// Set the size of the modifier dice.
+					if(roll.group(6) != null) {
+						modDiceSize = Integer.parseInt(roll.group(6).substring(1));
+					}
 					
-					Matcher m2 = Pattern.compile("[mp](\\d{1,2}(d\\d{1,2})?)$").matcher(input);
-					m2.find();
-					String input2 = m2.group(1);
+					// Set the operation (plus or minus).
+					if(roll.group(4).substring(0,1).equals("m"))
+						modOperation = -1;
 					
-					if(input.contains("m"))
-						modOP = -1;
-					
-					Matcher m3 = Pattern.compile("(\\d{1,2})").matcher(input2);
-					m3.find();
-					modDice = Integer.parseInt(m3.group(1));
-					
-					// If this doesn't find anything, then we aren't rolling dice - just using a flat number.
-					Matcher m4 = Pattern.compile("d(\\d{1,2})").matcher(input2);
-					if(m4.find())
-						modDiceSize = Integer.parseInt(m4.group(1));
-					
+					// Apply modifiers.
 					if(modDiceSize > 0) {
-						// Roll the modifier dice
-						for(int i=0; i<modDice; i++) {
-							modRolls.add(Utils.getRandom(modDiceSize)+1);
-						}
-						
-						for(int r : modRolls) {
+						// Roll the modifier dice and add to the modifier sum.
+						for(int i=0; i<modBase; i++) {
+							int r = Utils.getRandom(modDiceSize)+1;
+							modRolls.add(r);
 							modSum += r;
 						}
 					}else {
 						// User is modifying with a flat amount.
-						modRolls.add(modDice);
-						modSum = modDice;
+						modRolls.add(modBase);
+						modSum = modBase;
 					}
 				}
 				
 				// Roll the base dice
-				for(int i=0; i<dice; i++) {
-					baseRolls.add(Utils.getRandom(diceSize)+1);
-				}
-				
-				for(int r : baseRolls) {
+				for(int i=0; i<diceQuantity; i++) {
+					int r = Utils.getRandom(diceSize)+1;
+					baseRolls.add(r);
 					baseSum += r;
 				}
 				
-				// Apply modifiers
-				modSum *= modOP;
-				//baseSum += modSum;
+				// Use the modifier operation.
+				modSum *= modOperation;
 				
-				String result = ":game_die: "+author.getAsMention()+" -> "+dice+"d"+diceSize+" "+baseRolls.toString();//+" ("+baseSum+")";
+				String result = ":game_die: "+author.getAsMention()+" -> "+diceQuantity+"d"+diceSize+" "+baseRolls.toString();
 				
 				if(modRolls.size() > 0) {
-					result += modOP == 1 ? " + " : " - ";
+					result += modOperation == 1 ? " + " : " - ";
 					
 					if(modDiceSize > 0)
-						result += modDice+"d"+modDiceSize+" "+modRolls.toString();//+" ("+modSum+")";
+						result += modBase+"d"+modDiceSize+" "+modRolls.toString();
 					else
-						result += modDice;
+						result += modBase;
 				}
 				
 				return result+" = **"+(baseSum+modSum)+"**";

@@ -42,7 +42,7 @@ public class DropTally implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"droptally", "drop tally", "remove a tally from"};
+		return new String[] {"droptally", "drop tally", "removetally", "remove tally"};
 	}
 	
 	@Override

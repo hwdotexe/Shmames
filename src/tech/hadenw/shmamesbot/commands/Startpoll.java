@@ -32,6 +32,14 @@ public class Startpoll implements ICommand {
 			String question = m.group(3);
 			String opt = m.group(4);
 			
+			// Bugfix: replace channel names within the question.
+			Matcher bf = Pattern.compile("<#(\\d{5,})>").matcher(question);
+			
+			if(bf.find()) {
+				question = bf.replaceFirst("#"+message.getGuild().getTextChannelById(bf.group(1)).getName());
+			}
+			// End bugfix
+			
 			List<String> options = new ArrayList<String>();
 			
 			for(String s : opt.split(";")) {
