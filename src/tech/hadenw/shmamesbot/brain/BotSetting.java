@@ -1,5 +1,6 @@
 package tech.hadenw.shmamesbot.brain;
 
+import net.dv8tion.jda.core.entities.Role;
 import tech.hadenw.shmamesbot.Shmames;
 
 public class BotSetting {
@@ -32,7 +33,7 @@ public class BotSetting {
 				value = v;
 				return true;
 			}
-			value = "false";
+			
 			return false;
 		case NUMBER:
 			if(isNumber(v)) {
@@ -41,8 +42,22 @@ public class BotSetting {
 					return true;
 				}
 			}
-			value = "0";
+			
 			return false;
+		case ROLE:
+			if(v.equalsIgnoreCase("administrator") || v.equalsIgnoreCase("everyone")) {
+				value = v.toLowerCase();
+				return true;
+			}else {
+				for(Role r : Shmames.getJDA().getGuildById(b.getGuildID()).getRoles()) {
+					if(r.getName().equalsIgnoreCase(v)) {
+						value = r.getName();
+						return true;
+					}
+				}
+				
+				return false;
+			}
 		case CHANNEL:
 			if(v.startsWith("#"))
 				v = v.replace("#", ""); // Replace all occurances
@@ -51,8 +66,6 @@ public class BotSetting {
 				value = v.toLowerCase();
 				return true;
 			}
-			
-			v = "general";
 			
 			return false;
 		case EMOTE:
@@ -63,8 +76,6 @@ public class BotSetting {
 				value = v.toLowerCase();
 				return true;
 			}
-			
-			v = "dedede";
 			
 			return false;
 		default:

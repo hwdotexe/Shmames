@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
@@ -27,8 +28,13 @@ public class Modify implements ICommand {
 	
 	@Override
 	public String run(String args, User author, Message message) {
-		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		String rs = b.getSettingFor(BotSettingName.ALLOW_MODIFY).getValue();
+		
+		Role r = !rs.equals("administrator") && !rs.equals("everyone") ? Shmames.getJDA().getGuildById(b.getGuildID()).getRolesByName(rs, true).get(0) : null;
+		
+		// Allow modification by administrators, users with roles, or me (if Debug Mode).
+		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || rs.equals("everyone") || message.getGuild().getMember(author).getRoles().contains(r) || Shmames.isDebug) {
 			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			
 			if(m.find()) {
@@ -36,7 +42,13 @@ public class Modify implements ICommand {
 				String value = m.group(2);
 				
 				if(setting != null) {
-					//b.getSettings().put(setting, value.toLowerCase());
+					if(setting == BotSettingName.ALLOW_MODIFY) {
+						// This setting should only be changed by an Administrator.
+						if(!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
+							return Errors.NO_PERMISSION_USER;
+						}
+					}
+					
 					BotSetting val = b.getSettingFor(setting);
 					
 					if(val.setValue(value, b)) {
