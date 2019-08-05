@@ -2,7 +2,6 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Utils;
 
 public class WhatShouldIDo implements ICommand {
@@ -33,10 +32,7 @@ public class WhatShouldIDo implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(args.length() > 0)
-			return intros[Utils.getRandom(intros.length)]+" "+answers[Utils.getRandom(answers.length)]+"!";
-		
-		return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
+		return intros[Utils.getRandom(intros.length)]+" "+answers[Utils.getRandom(answers.length)]+"!";
 	}
 
 	@Override
