@@ -20,6 +20,7 @@ import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.Invite;
+import tech.hadenw.shmamesbot.commands.IsDevAlive;
 import tech.hadenw.shmamesbot.commands.Timer;
 import tech.hadenw.shmamesbot.commands.WhatShouldIDo;
 import tech.hadenw.shmamesbot.commands.ListEmoteStats;
@@ -58,6 +59,7 @@ public class CommandHandler {
 		commands.add(new GIF());
 		commands.add(new Help());
 		commands.add(new Invite());
+		commands.add(new IsDevAlive());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTriggers());
