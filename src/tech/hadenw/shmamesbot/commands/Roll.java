@@ -64,7 +64,7 @@ public class Roll implements ICommand {
 					}
 					
 					// Set the operation (plus or minus).
-					if(roll.group(4).substring(0,1).equals("m"))
+					if(roll.group(4).substring(0,1).equals("-"))
 						modOperation = -1;
 					
 					// Apply modifiers.
