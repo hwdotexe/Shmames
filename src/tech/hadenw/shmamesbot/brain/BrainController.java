@@ -5,9 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import com.google.gson.Gson;
 
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import tech.hadenw.shmamesbot.Poll;
+import tech.hadenw.shmamesbot.PollTask;
 import tech.hadenw.shmamesbot.Shmames;
 
 /**
@@ -27,11 +32,25 @@ public class BrainController {
 		brains = new ArrayList<Brain>();
 		globalSettingsFile = new File("brains/motherBrain.json");
 
-		// Ensure new settings are made available for the user to change.
+		// Load brains
 		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
 			brains.add(brain);
 			
+			// Activate any threads that this brain may have had.
+			if(brain.getActivePolls().size() > 0) {
+				for(Poll p : brain.getActivePolls()) {
+					// Create new task
+			        Timer t = new Timer();
+			        TextChannel ch = Shmames.getJDA().getGuildById(brain.getGuildID()).getTextChannelById(p.getChannelID());
+			        Message m = ch.getMessageById(p.getMessageID()).complete();
+			        
+			        if(m != null)
+			        	t.schedule(new PollTask(p, m), p.getExpiration());
+				}
+			}
+			
+			// Ensure new settings are made available for the user to change.
 			for(BotSetting s : Shmames.defaults) {
 				boolean exists = false;
 				

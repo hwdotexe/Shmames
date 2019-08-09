@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import tech.hadenw.shmamesbot.Poll;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TriggerType;
+import tech.hadenw.shmamesbot.Utils;
 
 public class Brain {
 	private String guildID;
@@ -15,6 +17,7 @@ public class Brain {
 	private List<Response> triggerResponses;
 	private List<BotSetting> settings;
 	private List<String> feedback;
+	private List<Poll> activePolls;
 	
 	public Brain(String gid) {
 		guildID = gid;
@@ -24,12 +27,17 @@ public class Brain {
 		triggerResponses = new ArrayList<Response>();
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
+		activePolls = new ArrayList<Poll>();
 		
 		loadDefaults();
 	}
 	
 	public String getGuildID() {
 		return guildID;
+	}
+	
+	public List<Poll> getActivePolls(){
+		return activePolls;
 	}
 	
 	public List<Response> getTriggerResponses(){
@@ -106,5 +114,17 @@ public class Brain {
 		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
 		settings.addAll(Shmames.defaults);
 		feedback.add("Example feedback");
+	}
+	
+	// Creates a random 5-character poll ID.
+	public String createPollID() {
+		final String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		String newID = "";
+		
+		for(int i=0; i<5; i++) {
+			newID += alpha.charAt(Utils.getRandom(alpha.length()));
+		}
+		
+		return newID;
 	}
 }

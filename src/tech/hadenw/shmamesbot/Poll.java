@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -16,21 +15,24 @@ import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.Brain;
 
-public class Poll extends TimerTask{
-	private Message m;
+public class Poll {
 	private String question;
 	private List<String> options;
 	private HashMap<Integer, Integer> votes;
-	private int pollID;
-	private Calendar c;
+	private String pollID;
+	private Date expires;
+	private String messageID;
+	private String channelID;
 	
-	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval) {
+	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id) {
 		question=q;
 		options=o;
-		pollID = Shmames.getPollID();
+		pollID = id;
+		messageID="";
+		channelID=ch.getId();
 		votes = new HashMap<Integer, Integer>();
 		
-		c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
     	
     	switch(interval) {
@@ -50,12 +52,14 @@ public class Poll extends TimerTask{
     		c.add(Calendar.MINUTE, time);
     	}
 		
+    	expires = c.getTime();
+    	
 		EmbedBuilder eBuilder = new EmbedBuilder();
 		
 		eBuilder.setAuthor("== POLL ==");
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
-        eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c), null);
+        eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c)+" - #"+pollID, null);
         
         for(int i=0; i<options.size(); i++) {
         	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+"\n");
@@ -65,7 +69,8 @@ public class Poll extends TimerTask{
         MessageEmbed embed = eBuilder.build();
         MessageAction ma = ch.sendMessage(embed);
         
-        m = ma.complete();
+        Message m = ma.complete();
+        messageID=m.getId();
         
         // Add reaction emotes
         for(int i=0; i<options.size(); i++) {
@@ -74,7 +79,7 @@ public class Poll extends TimerTask{
         
         // Schedule the task
         Timer t = new Timer();
-		t.schedule(this, c.getTime());
+		t.schedule(new PollTask(this, m), c.getTime());
 		
 		// Pin the message
 		Brain b = Shmames.getBrains().getBrain(m.getGuild().getId());
@@ -87,27 +92,16 @@ public class Poll extends TimerTask{
 		}
 	}
 	
-	public void run() {
-    	c.setTime(new Date());
-		
-		EmbedBuilder eBuilder = new EmbedBuilder();
-		
-		eBuilder.setAuthor("== POLL (results) ==");
-        eBuilder.setColor(Color.GRAY);
-        eBuilder.setTitle(question);
-        eBuilder.setFooter("#" + m.getChannel().getName() + " - Expired "+Utils.getFriendlyDate(c), null);
-        
-        for(int i=0; i<options.size(); i++) {
-        	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+" **("+votes.get(i)+" votes)**"+"\n");
-        }
-
-        MessageEmbed embed = eBuilder.build();
-        MessageAction ma = m.getChannel().sendMessage(embed);
-        
-        ma.complete();
-		
-		m.delete().queue();
-		Shmames.getPolls().remove(this);
+	public String getMessageID() {
+		return messageID;
+	}
+	
+	public String getChannelID() {
+		return channelID;
+	}
+	
+	public Date getExpiration() {
+		return expires;
 	}
 	
 	public HashMap<Integer, Integer> getVotes(){
@@ -122,11 +116,7 @@ public class Poll extends TimerTask{
 		return options;
 	}
 	
-	public Message getMesssage() {
-		return m;
-	}
-	
-	public int getID() {
+	public String getID() {
 		return pollID;
 	}
 	

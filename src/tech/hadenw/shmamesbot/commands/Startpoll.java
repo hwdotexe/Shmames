@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Poll;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class Startpoll implements ICommand {
 	@Override
@@ -27,6 +28,8 @@ public class Startpoll implements ICommand {
 		Matcher m = Pattern.compile("^(\\d{1,3})([dhms])? (.*\\?) ((.+); (.+))$").matcher(args);
 		
 		if(m.find()) {
+			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+			
 			int time = Integer.parseInt(m.group(1));
 			String interval = m.group(2); // Could be empty!
 			String question = m.group(3);
@@ -53,9 +56,12 @@ public class Startpoll implements ICommand {
 					// Do nothing; we don't have permission
 				}
 				
-				Shmames.getPolls().add(new Poll(message.getChannel(), question, options, time, interval));
+				b.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, b.createPollID()));
+				
+				// Save the brain file
+				Shmames.getBrains().saveBrain(b);
 			}else {
-				return "You must provide at least 2 different options, and fewer than 9!";
+				return "You must provide at least 2 different options, and fewer than 10!";
 			}
 		}else {
 			// Regex fail

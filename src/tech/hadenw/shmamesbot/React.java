@@ -22,13 +22,15 @@ public class React extends ListenerAdapter {
 	
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
-		ReactionEmote emo = e.getReaction().getReactionEmote();
-
 		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
+			ReactionEmote emo = e.getReaction().getReactionEmote();
+			Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+			
 			// Polls
-			for (Poll p : Shmames.getPolls()) {
-				if (p.getMesssage().getId().equals(e.getMessageId())) {
+			for (Poll p : b.getActivePolls()) {
+				if (p.getMessageID().equals(e.getMessageId())) {
 					int vote = -1;
+					
 
 					try {
 						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
@@ -47,7 +49,6 @@ public class React extends ListenerAdapter {
 			// Tally up the emote
 			if(emo.isEmote()) {
 				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
-					Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 					String name = emo.getName();
 					
 					if(b.getEmoteStats().containsKey(name)) {
@@ -74,11 +75,13 @@ public class React extends ListenerAdapter {
 	
 	@Override
 	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
-		ReactionEmote emo = e.getReaction().getReactionEmote();
-		
-		if(e.getUser() != Shmames.getJDA().getSelfUser()) {
-			for(Poll p : Shmames.getPolls()) {
-				if(p.getMesssage().getIdLong() == e.getMessageIdLong()) {
+		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
+			ReactionEmote emo = e.getReaction().getReactionEmote();
+			Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+			
+			// Polls
+			for (Poll p : b.getActivePolls()) {
+				if (p.getMessageID().equals(e.getMessageId())) {
 					int vote = -1;
 					
 					try {

@@ -13,7 +13,6 @@ import tech.hadenw.shmamesbot.brain.BrainController;
 
 public final class Shmames {
 	private static JDA jda;
-	private static List<Poll> polls;
 	private static BrainController brains;
 	private static boolean isOnTimeout;
 	
@@ -27,8 +26,6 @@ public final class Shmames {
 	public static void main(String[] args) {
 		setDefaults();
 		
-		polls = new ArrayList<Poll>();
-		brains = new BrainController();
 		isOnTimeout = false;
 		
 		isDebug = false;
@@ -44,6 +41,10 @@ public final class Shmames {
 				// Real Bot
 				jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.XPcHnQ.jdKNHXnS5Z3lkAy0GDwz1_6tmeA").build();
 			}
+			
+			// Load brains after the bot has initialized.
+			jda.awaitReady();
+			brains = new BrainController();
 			
 			// Set the bot's status.
 			new DailyTask();
@@ -103,27 +104,5 @@ public final class Shmames {
 	 */
 	public static JDA getJDA() {
 		return jda;
-	}
-	
-	/**
-	 * Returns a list of Poll objects currently in effect.
-	 * @return A list of Polls.
-	 */
-	public static List<Poll> getPolls() {
-		return polls;
-	}
-	
-	/**
-	 * Generates a new Poll ID.
-	 * @return An ID.
-	 */
-	public static int getPollID() {
-		int i=0;
-		
-		for(Poll p : polls) {
-			i = p.getID() + 1;
-		}
-		
-		return i;
 	}
 }
