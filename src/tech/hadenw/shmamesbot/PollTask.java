@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import tech.hadenw.shmamesbot.brain.Brain;
 
@@ -25,6 +26,15 @@ public class PollTask extends TimerTask{
 		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
 		
+    	// TODO This does not work (library bug) - try updating to beta
+    	System.out.println("Starting...");
+    	System.out.println(m.getReactions().toString());
+    	
+    	for(MessageReaction r : m.getReactions()) {
+    		System.out.println("Count: "+r.getCount());
+    		System.out.println("Emote: "+r.getReactionEmote().getName());
+    	}
+    	
 		eBuilder.setAuthor("== POLL (results) ==");
         eBuilder.setColor(Color.GRAY);
         eBuilder.setTitle(p.getQuestion());
