@@ -26,9 +26,7 @@ public class PollTask extends TimerTask{
 		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
 		
-    	// TODO This does not work (library bug) - try updating to beta
-    	System.out.println("Starting...");
-    	System.out.println(m.getReactions().toString());
+    	m = m.getChannel().getMessageById(m.getId()).complete();
     	
     	for(MessageReaction r : m.getReactions()) {
     		System.out.println("Count: "+r.getCount());
