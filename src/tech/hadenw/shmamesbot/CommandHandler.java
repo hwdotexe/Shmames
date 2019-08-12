@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.commands.AddResponse;
 import tech.hadenw.shmamesbot.commands.AddTally;
 import tech.hadenw.shmamesbot.commands.AddTrigger;
+import tech.hadenw.shmamesbot.commands.Closepoll;
 import tech.hadenw.shmamesbot.commands.CringeThat;
 import tech.hadenw.shmamesbot.commands.Dev;
 import tech.hadenw.shmamesbot.commands.DropResponse;
@@ -49,6 +50,7 @@ public class CommandHandler {
 		commands.add(new AddResponse());
 		commands.add(new AddTally());
 		commands.add(new AddTrigger());
+		commands.add(new Closepoll());
 		commands.add(new CringeThat());
 		commands.add(new Dev());
 		commands.add(new DropResponse());

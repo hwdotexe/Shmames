@@ -32,7 +32,7 @@ public class IsDevAlive implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"is the dev alive", "is the developer alive", "is cynical dead"};
+		return new String[] {"is the dev alive", "is the dev dead", "is cynical dead", "is cynical alive"};
 	}
 	
 	@Override

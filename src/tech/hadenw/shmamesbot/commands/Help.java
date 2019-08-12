@@ -83,7 +83,7 @@ public class Help implements ICommand {
 	
 	@Override
 	public String sanitize(String i) {
-		return i.replaceAll("[\\W]", "").toLowerCase();
+		return i;
 	}
 	
 	@Override

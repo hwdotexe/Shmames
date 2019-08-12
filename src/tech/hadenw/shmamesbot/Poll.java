@@ -3,7 +3,6 @@ package tech.hadenw.shmamesbot;
 import java.awt.Color;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
@@ -18,11 +17,11 @@ import tech.hadenw.shmamesbot.brain.Brain;
 public class Poll {
 	private String question;
 	private List<String> options;
-	private HashMap<Integer, Integer> votes;
 	private String pollID;
 	private Date expires;
 	private String messageID;
 	private String channelID;
+	private boolean isActive;
 	
 	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id) {
 		question=q;
@@ -30,7 +29,7 @@ public class Poll {
 		pollID = id;
 		messageID="";
 		channelID=ch.getId();
-		votes = new HashMap<Integer, Integer>();
+		isActive=true;
 		
 		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
@@ -63,7 +62,6 @@ public class Poll {
         
         for(int i=0; i<options.size(); i++) {
         	eBuilder.appendDescription("**"+(i+1)+"**: "+options.get(i)+"\n");
-        	votes.put(i, 0);
         }
 
         MessageEmbed embed = eBuilder.build();
@@ -92,6 +90,14 @@ public class Poll {
 		}
 	}
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+	
 	public String getMessageID() {
 		return messageID;
 	}
@@ -102,10 +108,6 @@ public class Poll {
 	
 	public Date getExpiration() {
 		return expires;
-	}
-	
-	public HashMap<Integer, Integer> getVotes(){
-		return votes;
 	}
 	
 	public String getQuestion() {

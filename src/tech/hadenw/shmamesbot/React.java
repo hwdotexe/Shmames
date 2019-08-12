@@ -26,26 +26,6 @@ public class React extends ListenerAdapter {
 			ReactionEmote emo = e.getReaction().getReactionEmote();
 			Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 			
-			// Polls
-			for (Poll p : b.getActivePolls()) {
-				if (p.getMessageID().equals(e.getMessageId())) {
-					int vote = -1;
-					
-
-					try {
-						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
-					} catch (Exception ex) {
-						return;
-					}
-
-					if (p.getVotes().containsKey(vote)) {
-						p.getVotes().put(vote, p.getVotes().get(vote) + 1);
-					}
-
-					return;
-				}
-			}
-			
 			// Tally up the emote
 			if(emo.isEmote()) {
 				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
@@ -77,26 +57,6 @@ public class React extends ListenerAdapter {
 	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
 		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
 			ReactionEmote emo = e.getReaction().getReactionEmote();
-			Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
-			
-			// Polls
-			for (Poll p : b.getActivePolls()) {
-				if (p.getMessageID().equals(e.getMessageId())) {
-					int vote = -1;
-					
-					try {
-						vote = Integer.parseInt(emo.getName().substring(0, 1)) - 1;
-					}catch(Exception ex) {
-						break;
-					}
-					
-					if(p.getVotes().containsKey(vote)) {
-						p.getVotes().put(vote, p.getVotes().get(vote) - 1);
-					}
-					
-					break;
-				}
-			}
 			
 			if (emo.getName().equalsIgnoreCase(Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue())) {
 				long id = e.getMessageIdLong();

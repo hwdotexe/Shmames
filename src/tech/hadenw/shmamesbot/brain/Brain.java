@@ -37,6 +37,9 @@ public class Brain {
 	}
 	
 	public List<Poll> getActivePolls(){
+		if(activePolls == null)
+			activePolls = new ArrayList<Poll>();
+		
 		return activePolls;
 	}
 	

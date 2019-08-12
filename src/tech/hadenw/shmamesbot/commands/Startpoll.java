@@ -83,6 +83,6 @@ public class Startpoll implements ICommand {
 	
 	@Override
 	public boolean requiresGuild() {
-		return false;
+		return true;
 	}
 }

@@ -18,11 +18,12 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String msg = "";
+		String msg = ":small_red_triangle: **Triggers** :small_red_triangle:";
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
 		for (String trig : b.getTriggers().keySet()) {
-			msg += "`" + trig + "`" + " (" + b.getTriggers().get(trig) + ")\n";
+			msg += "\n";
+			msg += "`" + trig + "`" + " (" + b.getTriggers().get(trig) + ")";
 		}
 
 		return msg;
