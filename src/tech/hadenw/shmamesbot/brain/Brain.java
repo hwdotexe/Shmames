@@ -18,6 +18,8 @@ public class Brain {
 	private List<BotSetting> settings;
 	private List<String> feedback;
 	private List<Poll> activePolls;
+	private boolean isReportCooldown;
+	private boolean isTimeout;
 	
 	public Brain(String gid) {
 		guildID = gid;
@@ -28,8 +30,26 @@ public class Brain {
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
 		activePolls = new ArrayList<Poll>();
+		isReportCooldown = false;
+		isTimeout = false;
 		
 		loadDefaults();
+	}
+	
+	public boolean getTimeout() {
+		return isTimeout;
+	}
+	
+	public void setTimeout(boolean t) {
+		isTimeout=t;
+	}
+	
+	public boolean getReportCooldown() {
+		return isReportCooldown;
+	}
+	
+	public void setReportCooldown(boolean cd) {
+		isReportCooldown = cd;
 	}
 	
 	public String getGuildID() {

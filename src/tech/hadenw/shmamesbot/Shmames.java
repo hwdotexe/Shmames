@@ -14,7 +14,6 @@ import tech.hadenw.shmamesbot.brain.BrainController;
 public final class Shmames {
 	private static JDA jda;
 	private static BrainController brains;
-	private static boolean isOnTimeout;
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaults;
@@ -25,8 +24,6 @@ public final class Shmames {
 	 */
 	public static void main(String[] args) {
 		setDefaults();
-		
-		isOnTimeout = false;
 		
 		isDebug = false;
 		
@@ -73,21 +70,6 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaults.add(new BotSetting(BotSettingName.APPROVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaults.add(new BotSetting(BotSettingName.ALLOW_MODIFY, BotSettingType.ROLE, "administrator"));
-	}
-	
-	/**
-	 * Returns whether the bot has been punished.
-	 * @return True if on timeout.
-	 */
-	public static boolean isOnTimeout() {
-		return isOnTimeout;
-	}
-	
-	/**
-	 * Sets whether the bot is being punished.
-	 */
-	public static void setIsOnTimeout(boolean t) {
-		isOnTimeout = t;
 	}
 	
 	/**

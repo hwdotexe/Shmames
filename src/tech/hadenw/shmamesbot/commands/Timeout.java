@@ -33,7 +33,7 @@ public class Timeout implements ICommand {
 		if (rTo.startsWith("[gif]"))
 			rTo = Utils.getGIF(rTo.split("\\[gif\\]",2)[1]);
 		
-		new TimeoutTask(rTo, message.getChannel());
+		new TimeoutTask(rTo, message.getChannel(), Shmames.getBrains().getBrain(message.getGuild().getId()));
 		
 		return rFrom;
 	}

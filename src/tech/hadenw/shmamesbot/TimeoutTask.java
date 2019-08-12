@@ -7,13 +7,16 @@ import java.util.TimerTask;
 
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class TimeoutTask extends TimerTask{
 	private String msg;
 	private MessageChannel msgch;
+	private Brain b;
 	
-	public TimeoutTask(String returnMsg, MessageChannel ch) {
+	public TimeoutTask(String returnMsg, MessageChannel ch, Brain brain) {
 		Calendar c = Calendar.getInstance();
+		b=brain;
 		Timer t = new Timer();
     	c.setTime(new Date());
     	c.add(Calendar.SECOND, 30);
@@ -21,7 +24,7 @@ public class TimeoutTask extends TimerTask{
 		t.schedule(this, c.getTime());
 		
 		Shmames.getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
-		Shmames.setIsOnTimeout(true);
+		b.setTimeout(true);
 		
 		msg = returnMsg;
 		msgch = ch;
@@ -29,7 +32,7 @@ public class TimeoutTask extends TimerTask{
 	
 	public void run() {
 		Shmames.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
-		Shmames.setIsOnTimeout(false);
+		b.setTimeout(false);
 		
 		msgch.sendMessage(msg).queue();
 	}

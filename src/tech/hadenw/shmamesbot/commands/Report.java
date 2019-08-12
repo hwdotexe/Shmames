@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
+import tech.hadenw.shmamesbot.CooldownTask;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.brain.Brain;
@@ -26,16 +27,25 @@ public class Report implements ICommand {
 		
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-			String type = m.group(1); // Could be empty!
-			String msg = m.group(4);
 			
-			if(type == null)
-				type = "UNSPECIFIED";
-			
-			b.getFeedback().add(author.getName()+" ("+message.getGuild().getName()+"): ["+type.toUpperCase()+"] "+msg);
-			Shmames.getBrains().saveBrain(b);
-			
-			return ":notepad_spiral: Your feedback has been noted. Thanks!";
+			if(!b.getReportCooldown()) {
+				String type = m.group(1); // Could be empty!
+				String msg = m.group(4);
+				
+				if(type == null)
+					type = "UNSPECIFIED";
+				
+				b.getFeedback().add(author.getName()+" ("+message.getGuild().getName()+"): ["+type.toUpperCase()+"] "+msg);
+				Shmames.getBrains().saveBrain(b);
+				
+				// Start a cooldown
+				new CooldownTask(b);
+				
+				return ":notepad_spiral: Your feedback has been noted. Thanks!";
+			}else {
+				// On cooldown
+				return "Please wait a bit before submitting more feedback.";
+			}
 		}else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 		}
