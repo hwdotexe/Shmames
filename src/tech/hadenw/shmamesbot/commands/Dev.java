@@ -44,7 +44,7 @@ public class Dev implements ICommand {
 						
 						MotherBrain b = Shmames.getBrains().getMotherBrain();
 						GameType type = GameType.valueOf(args.substring(0, args.indexOf(" ")).toUpperCase());
-						String msg = args.substring(args.indexOf(" "));
+						String msg = args.substring(args.indexOf(" ")).trim();
 						
 						b.getStatuses().put(msg, type);
 						Shmames.getJDA().getPresence().setGame(Game.of(type, msg));

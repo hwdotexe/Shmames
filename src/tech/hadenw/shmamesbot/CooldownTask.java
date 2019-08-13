@@ -15,7 +15,7 @@ public class CooldownTask extends TimerTask{
 		
 		Calendar c = Calendar.getInstance();
     	c.setTime(new Date());
-    	c.add(Calendar.MINUTE, 1);
+    	c.add(Calendar.MINUTE, 2);
     	
     	b.setReportCooldown(true);
     	
