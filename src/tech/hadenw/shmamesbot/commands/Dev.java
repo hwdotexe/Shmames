@@ -98,22 +98,28 @@ public class Dev implements ICommand {
 				        MessageEmbed embed = eBuilder.build();
 				        int success = 0;
 				        int fail = 0;
+				        int muted = 0;
 				        
 				        // Send to one channel for all guilds
 				        for(Guild g : Shmames.getJDA().getGuilds()) {
 				        	Brain b = Shmames.getBrains().getBrain(g.getId());
-				        	String channel = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL).getValue();
 				        	
-				        	try {
-								g.getTextChannelsByName(channel, true).get(0).sendMessage(embed).complete();
-								success++;
-							}catch(Exception e) {
-								// Was not able to send to this channel - add to failures.
-								fail++;
-							}
+				        	if(b.getSettingFor(BotSettingName.MUTE_DEV_ANNOUNCES).getValue().equalsIgnoreCase("false")) {
+					        	String channel = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL).getValue();
+					        	
+					        	try {
+									g.getTextChannelsByName(channel, true).get(0).sendMessage(embed).complete();
+									success++;
+								}catch(Exception e) {
+									// Was not able to send to this channel - add to failures.
+									fail++;
+								}
+				        	}else {
+				        		muted++;
+				        	}
 						}
 						
-						return ":white_check_mark: Sent the message to "+success+" guilds!\n:no_entry: Failed for "+fail+" guilds.";
+						return ":white_check_mark: Sent the message to "+success+" guilds!\n:no_entry: Failed for "+fail+" guilds.\n:hear_no_evil: "+muted+" guilds muted.";
 					} else if(args.toLowerCase().startsWith("leave")) {
 						args = args.substring("leave".length()+1).trim();
 						

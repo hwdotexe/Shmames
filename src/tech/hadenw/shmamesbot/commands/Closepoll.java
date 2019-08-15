@@ -51,7 +51,7 @@ public class Closepoll implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"closepoll", "close poll"};
+		return new String[] {"closepoll", "close poll", "endpoll", "end poll"};
 	}
 	
 	@Override
