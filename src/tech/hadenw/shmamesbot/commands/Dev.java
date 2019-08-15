@@ -66,7 +66,16 @@ public class Dev implements ICommand {
 						Shmames.getBrains().reloadBrain(args);
 						
 						return "Reloaded Guild #"+args+"'s brain";
-					}  else if(args.toLowerCase().startsWith("getmembers")) {
+					} else if(args.toLowerCase().startsWith("getcommandstats")) {
+						String answer = "**Command Usage Statistics**";
+						
+						for(String c : Shmames.getBrains().getMotherBrain().getCommandStats().keySet()) {
+							answer += "\n";
+							answer += "`"+c+"`: "+Shmames.getBrains().getMotherBrain().getCommandStats().get(c);
+						}
+						
+						return answer;
+					} else if(args.toLowerCase().startsWith("getmembers")) {
 						args = args.substring("getmembers".length()+1).trim();
 						
 						String ms = "";
@@ -184,6 +193,8 @@ public class Dev implements ICommand {
 							Shmames.getBrains().saveBrain(b);
 						}
 						
+						Shmames.getBrains().saveMotherBrain();
+						
 						return "Saved all brains to disk!";
 					} else if(args.toLowerCase().startsWith("nuke")) {
 						args = args.substring("nuke".length()+1).trim();
@@ -223,6 +234,7 @@ public class Dev implements ICommand {
 					return "**Developer Commands**\n"
 							+ "addStatus <type> <status>\n"
 							+ "getGuilds\n"
+							+ "getCommandStats\n"
 							+ "reload <guildID>\n"
 							+ "announce <message>\n"
 							+ "leave <guildID>\n"

@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.dv8tion.jda.core.entities.Guild;
@@ -101,7 +102,18 @@ public class CommandHandler {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-				//if(cmd.toLowerCase().contains(a.toLowerCase())) {
+					
+					// Log command usage
+					String alias = c.getAliases()[0].toLowerCase();
+					HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
+					
+					if(stats.containsKey(alias)) {
+						int s = stats.get(alias);
+						stats.put(alias, s+1);
+					}else {
+						stats.put(alias, 1);
+					}
+					
 					if(!(server==null && c.requiresGuild())) {
 						int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 						String args = c.sanitize(cmd.substring(position).trim());
