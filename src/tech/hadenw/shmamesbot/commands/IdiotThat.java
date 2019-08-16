@@ -34,7 +34,7 @@ public class IdiotThat implements ICommand {
 			for(String w : idiotOrig.split(" ")) {
 				idiot += w.substring(0,1).toUpperCase()+w.substring(1).toLowerCase();
 				
-				if(idiot.endsWith("s")) {
+				if(w.length()>4 && idiot.endsWith("s")) {
 					idiot = idiot.substring(0, idiot.length()-1);
 					idiot += "'s";
 				}

@@ -63,7 +63,7 @@ public final class Shmames {
 		// These can be completely removed, and existing brains should load normally.
 		defaults = new ArrayList<BotSetting>();
 		defaults.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
-		defaults.add(new BotSetting(BotSettingName.DO_PIN, BotSettingType.BOOLEAN, "true"));
+		defaults.add(new BotSetting(BotSettingName.PIN_POLLS, BotSettingType.BOOLEAN, "false"));
 		defaults.add(new BotSetting(BotSettingName.DEV_ANNOUNCE_CHANNEL, BotSettingType.CHANNEL, "general"));
 		defaults.add(new BotSetting(BotSettingName.MUTE_DEV_ANNOUNCES, BotSettingType.BOOLEAN, "false"));
 		defaults.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "roygun"));

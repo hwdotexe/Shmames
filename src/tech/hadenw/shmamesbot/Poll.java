@@ -81,7 +81,8 @@ public class Poll {
 		
 		// Pin the message
 		Brain b = Shmames.getBrains().getBrain(m.getGuild().getId());
-		if(b.getSettingFor(BotSettingName.DO_PIN).getValue().equalsIgnoreCase("true")) {
+		if(b.getSettingFor(BotSettingName.PIN_POLLS
+				).getValue().equalsIgnoreCase("true")) {
 			try {
 				m.pin().queue();
 			}catch(Exception e) {

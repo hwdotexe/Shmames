@@ -65,6 +65,21 @@ public class BrainController {
 					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getValue()));
 				}
 			}
+			
+			// Remove any settings that are no longer supported.
+			for(BotSetting bs : new ArrayList<BotSetting>(brain.getSettings())) {
+				boolean contains = false;
+				
+				for(BotSettingName s : BotSettingName.values()) {
+					if(bs.getName()==s) {
+						contains = true;
+						break;
+					}
+				}
+				
+				if(!contains)
+					brain.getSettings().remove(bs);
+			}
 		}
 
 		if (globalSettingsFile.exists()) {
