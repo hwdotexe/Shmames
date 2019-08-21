@@ -20,7 +20,7 @@ public class IsDevAlive implements ICommand {
 		int r = Integer.parseInt(Utils.sendGET("http://db.hadenw.tech:8080/JamesAPI/james/life/get?p=KeepDevAlive34"));
 		
 		if(r <= 20) {
-			return "Cynical should probably get an ambulence ("+r+"bpm)";
+			return "Cynical should probably get an ambulance ("+r+"bpm)";
 		}else if(r > 20 && r <= 50) {
 			return "He's... okay... ("+r+"bpm)";
 		}else if(r > 50 && r < 120) {
