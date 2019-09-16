@@ -24,9 +24,6 @@ import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.IdiotThat;
 import tech.hadenw.shmamesbot.commands.Invite;
-import tech.hadenw.shmamesbot.commands.IsDevAlive;
-import tech.hadenw.shmamesbot.commands.Timer;
-import tech.hadenw.shmamesbot.commands.WhatShouldIDo;
 import tech.hadenw.shmamesbot.commands.ListEmoteStats;
 import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
@@ -42,6 +39,8 @@ import tech.hadenw.shmamesbot.commands.SimonSays;
 import tech.hadenw.shmamesbot.commands.Startpoll;
 import tech.hadenw.shmamesbot.commands.Thoughts;
 import tech.hadenw.shmamesbot.commands.Timeout;
+import tech.hadenw.shmamesbot.commands.Timer;
+import tech.hadenw.shmamesbot.commands.WhatShouldIDo;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
@@ -66,7 +65,7 @@ public class CommandHandler {
 		commands.add(new Help());
 		commands.add(new IdiotThat());
 		commands.add(new Invite());
-		commands.add(new IsDevAlive());
+		//commands.add(new IsDevAlive());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTriggers());
