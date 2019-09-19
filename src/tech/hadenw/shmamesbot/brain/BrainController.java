@@ -80,6 +80,10 @@ public class BrainController {
 				if(!contains)
 					brain.getSettings().remove(bs);
 			}
+			
+			// Manually reset any cooldowns that don't have a task set up.
+			if(brain.getReportCooldown())
+				brain.setReportCooldown(false);
 		}
 
 		if (globalSettingsFile.exists()) {

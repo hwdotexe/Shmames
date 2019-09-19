@@ -117,24 +117,7 @@ public class Utils {
 	    }
 	}
 	
-	/**
-	 * Still under development (TODO)
-	 */
-	public static void updateRandomSeed() {
-		JSONObject main = new JSONObject();
-		JSONObject params = new JSONObject();
-		params.put("apiKey", "e22bb95e-e5b9-4835-955e-2749854884ff");
-		params.put("n", 1);
-		params.put("min", 100000000);
-		params.put("max", 999999999);
-		
-		main.put("jsonrpc", "2.0");
-		main.put("method", "generateIntegers");
-		main.put("params", params);
-		main.put("id", 1);
-		
-		String result = sendPOST("https://api.random.org/json-rpc/2/invoke", main);
-		
-		System.out.println(result);
+	public static Random GetRandomObj() {
+		return r;
 	}
 }

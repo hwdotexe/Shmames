@@ -29,6 +29,7 @@ import tech.hadenw.shmamesbot.commands.ListResponses;
 import tech.hadenw.shmamesbot.commands.ListTriggers;
 import tech.hadenw.shmamesbot.commands.Minesweeper;
 import tech.hadenw.shmamesbot.commands.Modify;
+import tech.hadenw.shmamesbot.commands.NewSeed;
 import tech.hadenw.shmamesbot.commands.PinThat;
 import tech.hadenw.shmamesbot.commands.React;
 import tech.hadenw.shmamesbot.commands.Report;
@@ -71,6 +72,7 @@ public class CommandHandler {
 		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
+		commands.add(new NewSeed());
 		commands.add(new PinThat());
 		commands.add(new React());
 		commands.add(new Report());
