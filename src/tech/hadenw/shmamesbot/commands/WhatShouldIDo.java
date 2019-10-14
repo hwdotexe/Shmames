@@ -16,7 +16,7 @@ public class WhatShouldIDo implements ICommand {
 				"curse at an old woman", "donate to a shady charity in Saudi Arabia",
 				"prank call insurance companies", "sell drugs to minors", "write a program in PHP",
 				"narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic",
-				"confuse someone with dimentia", "throw eggs at a flock of birds", "rent library books, and return them all sticky",
+				"confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky",
 				"create a reaction video for YouTube", "invite me to other servers >:}"};
 	}
 	

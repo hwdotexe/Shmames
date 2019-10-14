@@ -20,6 +20,7 @@ public class Brain {
 	private List<Poll> activePolls;
 	private boolean isReportCooldown;
 	private boolean isTimeout;
+	private boolean isJinping;
 	
 	public Brain(String gid) {
 		guildID = gid;
@@ -32,8 +33,17 @@ public class Brain {
 		activePolls = new ArrayList<Poll>();
 		isReportCooldown = false;
 		isTimeout = false;
+		isJinping = false;
 		
 		loadDefaults();
+	}
+	
+	public boolean getJinping() {
+		return isJinping;
+	}
+	
+	public void setJinping(boolean j) {
+		isJinping = j;
 	}
 	
 	public boolean getTimeout() {

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 public class Utils {
 	private static Random r;
+	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif"};
 	
 	public static void Init() {
 		r = new Random();
@@ -107,9 +108,26 @@ public class Utils {
 	    	gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
 	    }
 	    
-	    if(gifURLs.size() > 0)
-	    	return gifURLs.get(r.nextInt(gifURLs.size()));
-	    else {
+	    if(gifURLs.size() > 0) {
+	    	String url = "";
+	    	
+	    	// Check if the GIF is blacklisted, and if so, pick a different one.
+	    	for(int x=0; x<50; x++) {
+	    		url = gifURLs.get(r.nextInt(gifURLs.size()));
+	    		
+	    		for(int i=0; i<gifBlacklist.length; i++) {
+	    			if(gifBlacklist[i].equals(url)) {
+	    				url = "I couldn't find a GIF that _wasn't_ blacklisted...";
+	    				continue;
+	    			}
+	    		}
+	    		
+	    		break;
+	    	}
+	    	
+	    	return url;
+	    
+	    } else {
 	    	String[] keyword = new String[] {"lost", "crash", "404", "anime", "cat", "doggo", "explode"};
 	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is", "I think you'd like this instead"};	
 	    	

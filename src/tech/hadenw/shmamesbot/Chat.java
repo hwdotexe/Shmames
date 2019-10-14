@@ -29,6 +29,10 @@ public class Chat extends ListenerAdapter {
 				if(e.getChannelType() == ChannelType.TEXT) {
 					Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
 					
+					// Jinping reactions
+					if(brain.getJinping())
+						e.getMessage().addReaction("\uD83C\uDFD3").queue();
+					
 					if(!brain.getTimeout()) {
 						// Commands
 						for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {

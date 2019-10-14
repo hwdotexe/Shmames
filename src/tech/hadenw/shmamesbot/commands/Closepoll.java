@@ -26,10 +26,15 @@ public class Closepoll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^[a-zA-Z0-9]{5}$").matcher(args);
+		Matcher m = Pattern.compile("^\\#?[a-zA-Z0-9]{5}$").matcher(args);
 		
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+			
+			// Omit any # at the beginning.
+			if(args.startsWith("#")) {
+				args = args.substring(1);
+			}
 			
 			for(Poll p : b.getActivePolls()) {
 				if(p.getID().equalsIgnoreCase(args)) {
