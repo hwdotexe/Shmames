@@ -18,7 +18,7 @@ public class ListResponses implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "listResponses responseType";
+		return "listResponses <responseType>";
 	}
 
 	@Override

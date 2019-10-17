@@ -13,7 +13,7 @@ public class DropTrigger implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "removeTrigger triggerWord";
+		return "removeTrigger <triggerWord>";
 	}
 
 	@Override

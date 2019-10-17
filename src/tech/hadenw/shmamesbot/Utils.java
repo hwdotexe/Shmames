@@ -96,6 +96,7 @@ public class Utils {
 
 	}
 	
+	@SuppressWarnings("unused")
 	public static String getGIF(String search) {
 		search = search.trim().replaceAll(" ", "%20");
 		String result = sendGET("https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&contentfilter=low&limit=20");

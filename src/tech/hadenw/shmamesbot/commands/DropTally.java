@@ -14,7 +14,7 @@ public class DropTally implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "droptally tallyName";
+		return "droptally <tallyName>";
 	}
 
 	@Override

@@ -57,6 +57,10 @@ public final class Shmames {
 		}
 	}
 	
+	public static String getBotName() {
+		return getJDA().getSelfUser().getName();
+	}
+	
 	private static void setDefaults() {
 		// Default settings for the bot. New settings are inserted automatically to existing servers.
 		// To create a new default, simply add to this list or change the existing value.

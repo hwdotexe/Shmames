@@ -19,7 +19,7 @@ public class DropResponse implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "dropresponse responseType responseNumber";
+		return "dropresponse <responseType> <responseNumber>";
 	}
 
 	@Override

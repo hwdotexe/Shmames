@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.CommandHandler;
 import tech.hadenw.shmamesbot.Errors;
+import tech.hadenw.shmamesbot.Shmames;
 
 public class Help implements ICommand {
 	@Override
@@ -54,17 +55,23 @@ public class Help implements ICommand {
 				}
 			}
 		}else {
-			// Wants a list of all commands and brief help.
+			// Wants a list of all commands.
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append("**How to use Shmames in 42 easy steps:**");
+			sb.append(":small_orange_diamond: **Bot Commands** :small_orange_diamond:\nUse `"+Shmames.getBotName()+" help <command>` for more info!\n> ");
 			
+			int row = 0;
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
+				if(row==3) {
+					sb.append("\n> ");
+					row = 0;
+				}
+				
 				if(c.getDescription().length() > 0) {
-					String desc = c.getDescription().length() > 50 ? c.getDescription().substring(0, 50) + " [...]" : c.getDescription();
-					sb.append("\n");
-					sb.append("`"+c.getAliases()[0]+"` - "+desc);
+					sb.append("`"+c.getAliases()[0]+"`, ");
+					
+					row++;
 				}
 			}
 			

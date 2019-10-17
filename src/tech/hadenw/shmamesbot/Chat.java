@@ -93,8 +93,8 @@ public class Chat extends ListenerAdapter {
 						}
 					}
 				}else {
-					if (message.toLowerCase().startsWith(Shmames.getJDA().getSelfUser().getName().toLowerCase())) {
-						String command = message.substring(Shmames.getJDA().getSelfUser().getName().length()).trim();
+					if (message.toLowerCase().startsWith(Shmames.getBotName().toLowerCase())) {
+						String command = message.substring(Shmames.getBotName().length()).trim();
 						
 						System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
 						cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);

@@ -17,7 +17,12 @@ public class WhatShouldIDo implements ICommand {
 				"prank call insurance companies", "sell drugs to minors", "write a program in PHP",
 				"narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic",
 				"confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky",
-				"create a reaction video for YouTube", "invite me to other servers >:}"};
+				"create a reaction video for YouTube", "invite me to other servers >:}",
+				"sell essential oils", "demand to see the manager", "start a Flat Earth rally",
+				"uncover the truth behind 9/11", "vaguepost on Instagram for attention",
+				"play Madden", "scam impressionable old women out of their retirement funds",
+				"get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant",
+				"steal art for Karma", "sell out to EA", "text while driving"};
 	}
 	
 	@Override

@@ -17,7 +17,7 @@ public class AddTrigger implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "addtrigger triggerType triggerWord";
+		return "addtrigger <triggerType> <triggerWord>";
 	}
 
 	@Override

@@ -70,7 +70,6 @@ public class CommandHandler {
 		commands.add(new IdiotThat());
 		commands.add(new Invite());
 		commands.add(new Jinping());
-		//commands.add(new IsDevAlive());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTriggers());

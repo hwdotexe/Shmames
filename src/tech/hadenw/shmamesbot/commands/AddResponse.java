@@ -18,7 +18,7 @@ public class AddResponse implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "addresponse responseType responseText";
+		return "addresponse <responseType> <responseText>";
 	}
 
 	@Override

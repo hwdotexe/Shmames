@@ -13,7 +13,7 @@ public class AddTally implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "addtally tallyname";
+		return "addtally <tallyname>";
 	}
 
 	@Override

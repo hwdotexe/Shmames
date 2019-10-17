@@ -16,7 +16,7 @@ public class React implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "react word <^...>";
+		return "react <word> <^...>";
 	}
 
 	@Override
