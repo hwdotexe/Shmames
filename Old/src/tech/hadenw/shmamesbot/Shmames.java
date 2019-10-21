@@ -3,6 +3,10 @@ package tech.hadenw.shmamesbot;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -17,6 +21,8 @@ public final class Shmames {
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaults;
+	
+	public static AudioPlayerManager musicPlayer;
 	
 	/**
 	 * The entry point for the bot.
@@ -50,8 +56,10 @@ public final class Shmames {
 			jda.addEventListener(new Chat());
 			jda.addEventListener(new React());
 			
-			// Get a truly random seed
-			//Utils.updateRandomSeed();
+			// Prepare music playing functionality.
+			musicPlayer = new DefaultAudioPlayerManager();
+			musicPlayer.setPlayerCleanupThreshold(60000l); // 1 minute of inactivity
+			AudioSourceManagers.registerRemoteSources(musicPlayer);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,6 +67,10 @@ public final class Shmames {
 	
 	public static String getBotName() {
 		return getJDA().getSelfUser().getName();
+	}
+	
+	public static AudioPlayerManager getAudioPlayer() {
+		return musicPlayer;
 	}
 	
 	private static void setDefaults() {
