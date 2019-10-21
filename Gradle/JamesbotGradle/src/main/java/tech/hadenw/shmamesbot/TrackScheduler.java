@@ -1,18 +1,46 @@
 package tech.hadenw.shmamesbot;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
-public class TrackScheduler extends AudioEventAdapter  {
+import net.dv8tion.jda.core.entities.MessageChannel;
+
+public class TrackScheduler extends AudioEventAdapter implements AudioLoadResultHandler  {
 	
 	private AudioPlayer player;
+	private MessageChannel channel;
 	
-	public TrackScheduler(AudioPlayer p) {
+	public TrackScheduler(AudioPlayer p, MessageChannel c) {
 		player = p;
+		channel = c;
 	}
+	
+	@Override
+	  public void trackLoaded(AudioTrack track) {
+	    this.queue(track);
+	  }
+
+	  @Override
+	  public void playlistLoaded(AudioPlaylist playlist) {
+	    for (AudioTrack track : playlist.getTracks()) {
+	      this.queue(track);
+	    }
+	  }
+
+	  @Override
+	  public void noMatches() {
+		  channel.sendMessage("No matches!").queue();
+	  }
+
+	  @Override
+	  public void loadFailed(FriendlyException throwable) {
+		  channel.sendMessage("Everything Exploded:\n"+throwable.getMessage()).queue();
+	  }
 	
 	// TODO make this an actual queue sometime.
 	public void queue(AudioTrack track) {

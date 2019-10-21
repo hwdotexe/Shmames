@@ -1,15 +1,15 @@
 package tech.hadenw.shmamesbot.commands;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
-import tech.hadenw.shmamesbot.AudioPlayerSendHandler;
+import tech.hadenw.shmamesbot.JDAAudioSendHandler;
+import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.TrackScheduler;
 
@@ -26,6 +26,22 @@ public class Music implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
+		Matcher m = Pattern.compile("^(play|pause|stop|queue)\\w?(.+)?$").matcher(args.toLowerCase());
+		
+		if(m.find()) {
+			switch(m.group(1).toLowerCase()) {
+			case "play":
+				return "Under construction";
+			case "pause":
+				return "Under construction";
+			case "stop":
+				return "Under construction";
+			case "queue":
+				return "Under construction";
+			}
+		}else {
+			return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
+		}
 		// TODO: check if playing on this server already, user is in a voice channel, etc.
 		
 		// Assuming they are in a voice channel.
@@ -36,44 +52,22 @@ public class Music implements ICommand {
 		AudioPlayer player = Shmames.getAudioPlayer().createPlayer();
 		
 		// This is supposed to schedule things and listen for events
-		TrackScheduler trackScheduler = new TrackScheduler(player);
+		TrackScheduler trackScheduler = new TrackScheduler(player, message.getChannel());
 		player.addListener(trackScheduler);
 		
 		// Hook LavaPlayer handler into JDA.
-		// DO NOT have multiple of these per guild (TODO)
-		audioManager.setSendingHandler(new AudioPlayerSendHandler(player));
+		// DO NOT have multiple of these per guild
+		if(audioManager.getSendingHandler() != null)
+			((JDAAudioSendHandler)audioManager.getSendingHandler()).setAudioPlayer(player);
+		else
+			audioManager.setSendingHandler(new JDAAudioSendHandler(player));
 		
 		// Play it, baby!
 		audioManager.openAudioConnection(vchannel);
 		
-		// Not sure what this does.
-		String identifier = "https://youtube.com/watch?v=dQw4w9WgXcQ";
-		
-		// Might want to make AudioLoadResultHandler a separate class?
-		Shmames.getAudioPlayer().loadItem(identifier, new AudioLoadResultHandler() {
-			  @Override
-			  public void trackLoaded(AudioTrack track) {
-			    trackScheduler.queue(track);
-			  }
-
-			  @Override
-			  public void playlistLoaded(AudioPlaylist playlist) {
-			    for (AudioTrack track : playlist.getTracks()) {
-			      trackScheduler.queue(track);
-			    }
-			  }
-
-			  @Override
-			  public void noMatches() {
-				  message.getChannel().sendMessage("No matches!").queue();
-			  }
-
-			  @Override
-			  public void loadFailed(FriendlyException throwable) {
-			    // Notify the user that everything exploded
-				  message.getChannel().sendMessage("Everything Exploded:\n"+throwable.getMessage()).queue();
-			  }
-		});
+		// Load and play the requested item.
+		String item = "https://youtube.com/watch?v=dQw4w9WgXcQ";
+		Shmames.getAudioPlayer().loadItem(item, trackScheduler);
 		
 		return "It is done";
 	}

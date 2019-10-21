@@ -7,12 +7,19 @@ import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 
-public class AudioPlayerSendHandler implements AudioSendHandler {
-	  private final AudioPlayer audioPlayer;
+public class JDAAudioSendHandler implements AudioSendHandler {
+	  private AudioPlayer audioPlayer;
 	  private AudioFrame lastFrame;
 
-	  public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
+	  public JDAAudioSendHandler(AudioPlayer audioPlayer) {
 	    this.audioPlayer = audioPlayer;
+	  }
+	  
+	  public void setAudioPlayer(AudioPlayer audioPlayer) {
+		  // Destroy the old player and enable the new one.
+		  this.audioPlayer.destroy();
+		  
+		  this.audioPlayer = audioPlayer;
 	  }
 
 	  @Override
