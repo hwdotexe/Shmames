@@ -3,15 +3,12 @@ package tech.hadenw.shmamesbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.managers.AudioManager;
-import tech.hadenw.shmamesbot.JDAAudioSendHandler;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
-import tech.hadenw.shmamesbot.TrackScheduler;
+import tech.hadenw.shmamesbot.GuildOcarina;
 
 public class Music implements ICommand {
 	@Override
@@ -29,13 +26,29 @@ public class Music implements ICommand {
 		Matcher m = Pattern.compile("^(play|pause|stop|queue)\\w?(.+)?$").matcher(args.toLowerCase());
 		
 		if(m.find()) {
+			// Get the music handler.
+			GuildOcarina ocarina = Shmames.getOcarina(message.getGuild().getId());
+			
 			switch(m.group(1).toLowerCase()) {
 			case "play":
-				return "Under construction";
+				// Get the channel to play in.
+				VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+				
+				// Join the channel.
+				ocarina.connect(vchannel);
+				
+				// Load and play the requested item.
+				ocarina.queueTrack(m.group(2));
+				
+				return "Playing!";
 			case "pause":
-				return "Under construction";
+				ocarina.togglePause();
+				
+				return "Toggled";
 			case "stop":
-				return "Under construction";
+				ocarina.stopPlaying();
+				
+				return "Goodbye";
 			case "queue":
 				return "Under construction";
 			}
@@ -44,30 +57,7 @@ public class Music implements ICommand {
 		}
 		// TODO: check if playing on this server already, user is in a voice channel, etc.
 		
-		// Assuming they are in a voice channel.
-		VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
-		AudioManager audioManager = message.getGuild().getAudioManager();
 		
-		// Create a player for this stream
-		AudioPlayer player = Shmames.getAudioPlayer().createPlayer();
-		
-		// This is supposed to schedule things and listen for events
-		TrackScheduler trackScheduler = new TrackScheduler(player, message.getChannel());
-		player.addListener(trackScheduler);
-		
-		// Hook LavaPlayer handler into JDA.
-		// DO NOT have multiple of these per guild
-		if(audioManager.getSendingHandler() != null)
-			((JDAAudioSendHandler)audioManager.getSendingHandler()).setAudioPlayer(player);
-		else
-			audioManager.setSendingHandler(new JDAAudioSendHandler(player));
-		
-		// Play it, baby!
-		audioManager.openAudioConnection(vchannel);
-		
-		// Load and play the requested item.
-		String item = "https://youtube.com/watch?v=dQw4w9WgXcQ";
-		Shmames.getAudioPlayer().loadItem(item, trackScheduler);
 		
 		return "It is done";
 	}

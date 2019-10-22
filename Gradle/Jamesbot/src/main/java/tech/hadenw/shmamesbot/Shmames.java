@@ -1,6 +1,7 @@
 package tech.hadenw.shmamesbot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -23,6 +24,7 @@ public final class Shmames {
 	public static List<BotSetting> defaults;
 	
 	public static AudioPlayerManager musicPlayer;
+	public static HashMap<String, GuildOcarina> ocarinas;
 	
 	/**
 	 * The entry point for the bot.
@@ -57,8 +59,8 @@ public final class Shmames {
 			jda.addEventListener(new React());
 			
 			// Prepare music playing functionality.
+			ocarinas = new  HashMap<String, GuildOcarina>();
 			musicPlayer = new DefaultAudioPlayerManager();
-			musicPlayer.setPlayerCleanupThreshold(60000l); // 1 minute of inactivity
 			AudioSourceManagers.registerRemoteSources(musicPlayer);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,6 +73,17 @@ public final class Shmames {
 	
 	public static AudioPlayerManager getAudioPlayer() {
 		return musicPlayer;
+	}
+	
+	public static GuildOcarina getOcarina(String guildID) {
+		if(ocarinas.containsKey(guildID))
+			return ocarinas.get(guildID);
+		else {
+			GuildOcarina go = new GuildOcarina(jda.getGuildById(guildID).getAudioManager());
+			ocarinas.put(guildID, go);
+			
+			return go;
+		}
 	}
 	
 	private static void setDefaults() {
