@@ -3,8 +3,6 @@ package tech.hadenw.shmamesbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -36,12 +34,12 @@ public class Music implements ICommand {
 				// If we're already playing something, play this song with current settings.
 				// If we're not, we can join channel and go
 				
-				if(ocarina.isPlaying()) {
+				if(ocarina.isConnected()) {
 					// Load and play the requested item.
 					ocarina.loadTrack(m.group(2).trim());
-					AudioTrack t = ocarina.getQueue().remove(ocarina.getQueue().size()-1);
-					ocarina.getQueue().add(0, t);
-					ocarina.skipTrack();
+					
+					// TODO this may not be ready yet
+					ocarina.playTrackInQueue(ocarina.getQueue().size()-1);
 				}else {
 					// Get the channel to play in.
 					VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
@@ -51,6 +49,9 @@ public class Music implements ICommand {
 					
 					// Load and play the requested item.
 					ocarina.loadTrack(m.group(2).trim());
+					
+					// TODO this may not be ready yet
+					ocarina.playNext();
 				}
 				
 				return "Playing!";

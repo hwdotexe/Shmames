@@ -21,14 +21,12 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
-	private boolean isPlaying;
 	
 	public GuildOcarina(AudioManager am) {
 		player = Shmames.getAudioPlayer().createPlayer();
 		player.addListener(this);
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
-		isPlaying = false;
 		
 		if(manager.getSendingHandler() != null)
 			((JDAAudioSendHandler)manager.getSendingHandler()).setAudioPlayer(player);
@@ -36,8 +34,8 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			manager.setSendingHandler(new JDAAudioSendHandler(player));
 	}
 	
-	public boolean isPlaying() {
-		return isPlaying;
+	public boolean isConnected() {
+		return manager.isConnected();
 	}
 	
 	public List<AudioTrack> getQueue(){
@@ -59,7 +57,6 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			player.stopTrack();
 			manager.closeAudioConnection();
 			queue.clear();
-			isPlaying = false;
 		}
 	}
 	
@@ -71,9 +68,16 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		player.setPaused(!player.isPaused());
 	}
 	
-	public void skipTrack(){
+	public void playNext(){
 		player.playTrack(queue.get(0));
 		queue.remove(0);
+	}
+	
+	public void playTrackInQueue(int track) {
+		if(queue.get(track) != null) {
+			player.playTrack(queue.get(track));
+			queue.remove(track);
+		}
 	}
 	
 	//
@@ -83,11 +87,6 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	@Override
 	public void trackLoaded(AudioTrack track) {
 		queue.add(track);
-		
-		if(!isPlaying) {
-			player.playTrack(track);
-			isPlaying = true;
-		}
 	}
 
 	@Override
@@ -95,11 +94,6 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		for (AudioTrack track : playlist.getTracks()) {
 			queue.add(track);
 	    }
-		
-		if(!isPlaying) {
-			player.playTrack(queue.get(0));
-			isPlaying = true;
-		}
 	}
 
 	@Override
@@ -121,20 +115,23 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
 		// A track started playing
+		System.out.println("Track started");
 	}
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		if(endReason.mayStartNext) {
-			player.playTrack(queue.get(0));
-			queue.remove(0);
-		}else {
-			this.disconnect();
-		}
+		//if(endReason.mayStartNext) {
+		//	player.playTrack(queue.get(0));
+		//	queue.remove(0);
+		//}else {
+		//	this.disconnect();
+		//}
+		System.out.println("Track ended due to "+endReason);
 	}
 	
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
 		// Audio track has been unable to provide us any audio, might want to just start a new track
+		System.out.println("Track stuck");
 	}
 }
