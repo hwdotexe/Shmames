@@ -23,7 +23,7 @@ public class Music implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(play|pause|stop|queue)\\w?(.+)?$").matcher(args.toLowerCase());
+		Matcher m = Pattern.compile("^(play|pause|stop|queue)\\w?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			// Get the music handler.
@@ -38,7 +38,7 @@ public class Music implements ICommand {
 				ocarina.connect(vchannel);
 				
 				// Load and play the requested item.
-				ocarina.queueTrack(m.group(2));
+				ocarina.queueTrack(m.group(2).trim());
 				
 				return "Playing!";
 			case "pause":

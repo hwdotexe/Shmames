@@ -51,6 +51,12 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		}
 	}
 	
+	// TODO make this an actual queue sometime.
+	private void queue(AudioTrack track) {
+		player.playTrack(track);
+	}
+	
+	// AudioLoadResultHandler
 	@Override
 	public void trackLoaded(AudioTrack track) {
 		this.queue(track);
@@ -66,18 +72,16 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	@Override
 	public void noMatches() {
 		//channel.sendMessage("No matches!").queue();
+		System.out.println("No matches");
 	}
 
 	@Override
 	public void loadFailed(FriendlyException throwable) {
 		//channel.sendMessage("Everything Exploded:\n"+throwable.getMessage()).queue();
+		System.out.println("Load failed");
 	}
 	
-	// TODO make this an actual queue sometime.
-	private void queue(AudioTrack track) {
-		player.playTrack(track);
-	}
-	
+	// AudioEventAdapter
 	@Override
 	public void onPlayerPause(AudioPlayer player) {
 	  // Player was paused
@@ -98,7 +102,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		if (endReason.mayStartNext) {
 			// Start next track
 	    } else {
-	    	this.stopPlaying();
+	    	//this.stopPlaying();
 	    }
 
 	    // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
