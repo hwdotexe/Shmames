@@ -1,5 +1,8 @@
 package tech.hadenw.shmamesbot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -17,11 +20,15 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	
 	private AudioPlayer player;
 	private AudioManager manager;
+	private List<AudioTrack> queue;
+	private boolean isPlaying;
 	
 	public GuildOcarina(AudioManager am) {
 		player = Shmames.getAudioPlayer().createPlayer();
 		player.addListener(this);
 		manager = am;
+		queue = new ArrayList<AudioTrack>();
+		isPlaying = false;
 		
 		if(manager.getSendingHandler() != null)
 			((JDAAudioSendHandler)manager.getSendingHandler()).setAudioPlayer(player);
@@ -29,13 +36,34 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			manager.setSendingHandler(new JDAAudioSendHandler(player));
 	}
 	
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+	
+	public List<AudioTrack> getQueue(){
+		return queue;
+	}
+	
+	public AudioPlayer getPlayer() {
+		return player;
+	}
+	
 	public void connect(VoiceChannel vc) {
-		// TODO drop other connections first
-		// TODO check join permissions
+		this.disconnect();
+		
 		manager.openAudioConnection(vc);
 	}
 	
-	public void queueTrack(String item) {
+	public void disconnect() {
+		if(manager.isConnected()) {
+			player.stopTrack();
+			manager.closeAudioConnection();
+			queue.clear();
+			isPlaying = false;
+		}
+	}
+	
+	public void loadTrack(String item) {
 		Shmames.getAudioPlayer().loadItem(item, this);
 	}
 	
@@ -43,30 +71,35 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		player.setPaused(!player.isPaused());
 	}
 	
-	public void stopPlaying() {
-		if(manager.isConnected()) {
-			player.stopTrack();
-			//player.destroy();
-			manager.closeAudioConnection();
-		}
+	public void skipTrack(){
+		player.playTrack(queue.get(0));
+		queue.remove(0);
 	}
 	
-	// TODO make this an actual queue sometime.
-	private void queue(AudioTrack track) {
-		player.playTrack(track);
-	}
+	//
+	//AudioLoadResultHandler
+	//
 	
-	// AudioLoadResultHandler
 	@Override
 	public void trackLoaded(AudioTrack track) {
-		this.queue(track);
+		queue.add(track);
+		
+		if(!isPlaying) {
+			player.playTrack(track);
+			isPlaying = true;
+		}
 	}
 
 	@Override
 	public void playlistLoaded(AudioPlaylist playlist) {
 		for (AudioTrack track : playlist.getTracks()) {
-		  this.queue(track);
+			queue.add(track);
 	    }
+		
+		if(!isPlaying) {
+			player.playTrack(queue.get(0));
+			isPlaying = true;
+		}
 	}
 
 	@Override
@@ -81,17 +114,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		System.out.println("Load failed");
 	}
 	
+	//
 	// AudioEventAdapter
-	@Override
-	public void onPlayerPause(AudioPlayer player) {
-	  // Player was paused
-	}
-
-	@Override
-	public void onPlayerResume(AudioPlayer player) {
-		// Player was resumed
-	}
-
+	//
+	
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
 		// A track started playing
@@ -99,25 +125,14 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		if (endReason.mayStartNext) {
-			// Start next track
-	    } else {
-	    	//this.stopPlaying();
-	    }
-
-	    // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
-	    // endReason == LOAD_FAILED: Loading of a track failed (mayStartNext = true).
-	    // endReason == STOPPED: The player was stopped.
-	    // endReason == REPLACED: Another track started playing while this had not finished
-	    // endReason == CLEANUP: Player hasn't been queried for a while, if you want you can put a
-	    //                       clone of this back to your queue
+		if(endReason.mayStartNext) {
+			player.playTrack(queue.get(0));
+			queue.remove(0);
+		}else {
+			this.disconnect();
+		}
 	}
-
-	@Override
-	public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-		// An already playing track threw an exception (track end event will still be received separately)
-	}
-
+	
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
 		// Audio track has been unable to provide us any audio, might want to just start a new track

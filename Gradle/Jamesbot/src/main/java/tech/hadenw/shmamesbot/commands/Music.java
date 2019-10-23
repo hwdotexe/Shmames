@@ -3,6 +3,8 @@ package tech.hadenw.shmamesbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -31,14 +33,25 @@ public class Music implements ICommand {
 			
 			switch(m.group(1).toLowerCase()) {
 			case "play":
-				// Get the channel to play in.
-				VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+				// If we're already playing something, play this song with current settings.
+				// If we're not, we can join channel and go
 				
-				// Join the channel.
-				ocarina.connect(vchannel);
-				
-				// Load and play the requested item.
-				ocarina.queueTrack(m.group(2).trim());
+				if(ocarina.isPlaying()) {
+					// Load and play the requested item.
+					ocarina.loadTrack(m.group(2).trim());
+					AudioTrack t = ocarina.getQueue().remove(ocarina.getQueue().size()-1);
+					ocarina.getQueue().add(0, t);
+					ocarina.skipTrack();
+				}else {
+					// Get the channel to play in.
+					VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+					
+					// Join the channel.
+					ocarina.connect(vchannel);
+					
+					// Load and play the requested item.
+					ocarina.loadTrack(m.group(2).trim());
+				}
 				
 				return "Playing!";
 			case "pause":
@@ -46,7 +59,7 @@ public class Music implements ICommand {
 				
 				return "Toggled";
 			case "stop":
-				ocarina.stopPlaying();
+				ocarina.disconnect();
 				
 				return "Goodbye";
 			case "queue":
