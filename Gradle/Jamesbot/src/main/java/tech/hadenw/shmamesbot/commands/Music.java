@@ -13,7 +13,8 @@ import tech.hadenw.shmamesbot.GuildOcarina;
 public class Music implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Play music to your current voice channel.";
+		return ""; // Not ready yet
+		//return "Play music to your current voice channel.";
 	}
 	
 	@Override

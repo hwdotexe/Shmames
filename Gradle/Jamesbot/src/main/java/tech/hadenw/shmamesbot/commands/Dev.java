@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Game;
@@ -66,6 +67,20 @@ public class Dev implements ICommand {
 						Shmames.getBrains().reloadBrain(args);
 						
 						return "Reloaded Guild #"+args+"'s brain";
+					} else if(args.toLowerCase().startsWith("inviteme")) {
+						args = args.substring("inviteme".length()+1).trim();
+						
+						List<TextChannel> tc = Shmames.getJDA().getGuildById(args).getTextChannels();
+						
+						for(TextChannel c : tc) {
+							try {
+								String code = c.createInvite().complete().getCode();
+								
+								return "Here you go! "+code;
+							}catch(Exception e) {}
+						}
+						
+						return "Guess I'm not allowed to do that";
 					} else if(args.toLowerCase().startsWith("getcommandstats")) {
 						String answer = "**Command Usage Statistics**";
 						
@@ -242,6 +257,7 @@ public class Dev implements ICommand {
 							+ "clearReports\n"
 							+ "getMembers <guildID>\n"
 							+ "saveBrains\n"
+							+ "inviteme <guildID>\n"
 							+ "nuke <guildID>";
 				}
 			}else {
