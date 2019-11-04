@@ -69,8 +69,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	}
 	
 	public void playNext(){
-		player.playTrack(queue.get(0));
-		queue.remove(0);
+		if(queue.size()>0) {
+			player.playTrack(queue.get(0));
+			queue.remove(0);
+		}
 	}
 	
 	public void playTrackInQueue(int track) {
@@ -87,6 +89,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	@Override
 	public void trackLoaded(AudioTrack track) {
 		queue.add(track);
+		
+		// If there isn't a playing track, play the next in queue.
+		if(this.player.getPlayingTrack() == null)
+			this.playNext();
 	}
 
 	@Override
@@ -94,6 +100,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		for (AudioTrack track : playlist.getTracks()) {
 			queue.add(track);
 	    }
+
+		// If there isn't a playing track, play the next in queue.
+		if(this.player.getPlayingTrack() == null)
+			this.playNext();
 	}
 
 	@Override
@@ -120,13 +130,18 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		//if(endReason.mayStartNext) {
-		//	player.playTrack(queue.get(0));
-		//	queue.remove(0);
-		//}else {
-		//	this.disconnect();
-		//}
-		System.out.println("Track ended due to "+endReason);
+		System.out.println("Track ended due to "+endReason+": "+track.getInfo().title);
+		
+		/*
+		if(endReason.mayStartNext) {
+			if(queue.size() > 0) {
+				this.playNext();
+				return;
+			}
+		}
+		
+		this.disconnect();
+		*/
 	}
 	
 	@Override

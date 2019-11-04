@@ -3,6 +3,8 @@ package tech.hadenw.shmamesbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -13,34 +15,31 @@ import tech.hadenw.shmamesbot.GuildOcarina;
 public class Music implements ICommand {
 	@Override
 	public String getDescription() {
-		return ""; // Not ready yet
+		return "This command is currently in BETA and is not guaranteed to work properly in every case."; // Not ready yet
 		//return "Play music to your current voice channel.";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "music <play|pause|stop|queue> [link] [move <from> <to>|clear]";
+		return "music <add|pause|stop|queue|loop|skip> [link] [move <from> <to>|clear]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(play|pause|stop|queue)\\w?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^(add|pause|stop|queue|loop|skip)\\w?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			// Get the music handler.
 			GuildOcarina ocarina = Shmames.getOcarina(message.getGuild().getId());
 			
 			switch(m.group(1).toLowerCase()) {
-			case "play":
+			case "add":
 				// If we're already playing something, play this song with current settings.
 				// If we're not, we can join channel and go
 				
 				if(ocarina.isConnected()) {
-					// Load and play the requested item.
+					// Load the requested item.
 					ocarina.loadTrack(m.group(2).trim());
-					
-					// TODO this may not be ready yet
-					ocarina.playTrackInQueue(ocarina.getQueue().size()-1);
 				}else {
 					// Get the channel to play in.
 					VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
@@ -48,11 +47,8 @@ public class Music implements ICommand {
 					// Join the channel.
 					ocarina.connect(vchannel);
 					
-					// Load and play the requested item.
+					// Load requested item.
 					ocarina.loadTrack(m.group(2).trim());
-					
-					// TODO this may not be ready yet
-					ocarina.playNext();
 				}
 				
 				return "Playing!";
@@ -65,7 +61,23 @@ public class Music implements ICommand {
 				
 				return "Goodbye";
 			case "queue":
+				String str3 = "";
+				
+				for(AudioTrack t : ocarina.getQueue()) {
+					if(str3.length()>0)
+						str3 += "\n";
+					
+					str3 += ocarina.getQueue().indexOf(t) + 1;
+					str3 += ": "+t.getInfo().title;
+				}
+				
+				return "**The Queue:**\n"+str3;
+			case "loop":
 				return "Under construction";
+			case "skip":
+				ocarina.playNext();
+				
+				return "Skipped!";
 			}
 		}else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
