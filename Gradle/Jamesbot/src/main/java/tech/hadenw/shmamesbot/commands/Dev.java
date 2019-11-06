@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.Guild;
@@ -211,6 +212,43 @@ public class Dev implements ICommand {
 						Shmames.getBrains().saveMotherBrain();
 						
 						return "Saved all brains to disk!";
+					} else if(args.toLowerCase().startsWith("addperm")) {
+						args = args.substring("addperm".length()+1).trim();
+						String[] cmd = args.split(" ", 3);
+						String gid = cmd[0].trim();
+						String pid = cmd[1].trim();
+						String rid = cmd[2].trim();
+						
+						for(Guild g : Shmames.getJDA().getGuilds()) {
+							if(g.getId().equals(gid)) {
+								for(Role r : g.getRoles()) {
+									if(r.getName().equalsIgnoreCase(rid)) {
+										try {
+											Permission p = Permission.valueOf(pid.toUpperCase());
+											
+											r.getManager().givePermissions(p).queue();
+										}catch(Exception e) {
+											return "I don't have permission, sir.";
+										}
+										
+										return "The deed is done";
+									}
+								}
+								
+								break;
+							}
+						}
+						
+						return "Guild or Role not found";
+					} else if(args.toLowerCase().startsWith("getperms")) {
+						String s = "";
+						
+						for(Permission p : Permission.values()) {
+							s += p.toString();
+							s += "\n";
+						}
+						
+						return s;
 					} else if(args.toLowerCase().startsWith("nuke")) {
 						args = args.substring("nuke".length()+1).trim();
 						
@@ -258,6 +296,8 @@ public class Dev implements ICommand {
 							+ "getMembers <guildID>\n"
 							+ "saveBrains\n"
 							+ "inviteme <guildID>\n"
+							+ "addPerm <guildID> <permission> <role>\n"
+							+ "getperms\n"
 							+ "nuke <guildID>";
 				}
 			}else {
