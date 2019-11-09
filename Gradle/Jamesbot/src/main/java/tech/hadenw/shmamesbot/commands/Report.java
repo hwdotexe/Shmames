@@ -23,7 +23,7 @@ public class Report implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((bug)|(feature) )?(.{5,})$").matcher(args.toLowerCase());
+		Matcher m = Pattern.compile("^((bug)|(feature) )?(.{5,})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
@@ -41,7 +41,7 @@ public class Report implements ICommand {
 				// Start a cooldown
 				new CooldownTask(b);
 				
-				return ":notepad_spiral: Your feedback has been noted. Thanks!";
+				return ":notepad_spiral: Your feedback has been noted. Thanks!\nYou can report again in **2 minutes**.";
 			}else {
 				// On cooldown
 				return "Please wait a bit before submitting more feedback.";

@@ -25,7 +25,7 @@ public class Startpoll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(\\d{1,3})([dhms])? (.*\\?) ((.+); (.+))$").matcher(args);
+		Matcher m = Pattern.compile("^(\\d{1,3})([dhms])? (.+\\?) ((.+); (.+))$").matcher(args);
 		
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());

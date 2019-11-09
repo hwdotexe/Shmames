@@ -38,6 +38,7 @@ import tech.hadenw.shmamesbot.commands.React;
 import tech.hadenw.shmamesbot.commands.Report;
 import tech.hadenw.shmamesbot.commands.ResetEmoteStats;
 import tech.hadenw.shmamesbot.commands.Roll;
+import tech.hadenw.shmamesbot.commands.SetTally;
 import tech.hadenw.shmamesbot.commands.ShowTallies;
 import tech.hadenw.shmamesbot.commands.SimonSays;
 import tech.hadenw.shmamesbot.commands.Startpoll;
@@ -83,6 +84,7 @@ public class CommandHandler {
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
+		commands.add(new SetTally());
 		commands.add(new SimonSays());
 		commands.add(new ShowTallies());
 		commands.add(new Startpoll());

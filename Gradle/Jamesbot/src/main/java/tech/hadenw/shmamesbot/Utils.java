@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 public class Utils {
 	private static Random r;
-	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif"};
+	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif", "https://tenor.com/4xBX.gif"};
 	
 	public static void Init() {
 		r = new Random();
