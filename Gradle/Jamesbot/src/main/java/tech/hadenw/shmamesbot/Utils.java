@@ -129,8 +129,9 @@ public class Utils {
 	    	return url;
 	    
 	    } else {
-	    	String[] keyword = new String[] {"lost", "crash", "404", "anime", "cat", "doggo", "explode"};
-	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is", "I think you'd like this instead"};	
+	    	String[] keyword = new String[] {"lost", "crash", "404", "anime", "cat", "doggo", "explode", "dragon", "deal with it"};
+	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is",
+	    			"I think you'd like this instead", "Nah, how 'bout", "I would prefer not to"};
 	    	
 	    	return message[r.nextInt(message.length)]+": "+getGIF(keyword[r.nextInt(keyword.length)]);
 	    }
