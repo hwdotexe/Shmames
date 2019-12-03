@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -96,6 +97,20 @@ public class Utils {
 
 	}
 	
+	public static String getWA(String search) {
+		try {
+			String searchFormatted = URLEncoder.encode(search, "UTF-8");
+			String result = sendGET("http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted);
+			
+			if(result != null)
+				return result;
+			else
+				return "I'm not too sure on that one!";
+		}catch(Exception e) {
+			return "There may have been a tiny problem...";
+		}
+	}
+	
 	@SuppressWarnings("unused")
 	public static String getGIF(String search) {
 		search = search.trim().replaceAll(" ", "%20");
@@ -110,8 +125,7 @@ public class Utils {
 	    }
 	    
 	    if(gifURLs.size() > 0) {
-	    	String url = "";
-	    	
+	    	String url = "";	    	
 	    	// Check if the GIF is blacklisted, and if so, pick a different one.
 	    	for(int x=0; x<50; x++) {
 	    		url = gifURLs.get(r.nextInt(gifURLs.size()));

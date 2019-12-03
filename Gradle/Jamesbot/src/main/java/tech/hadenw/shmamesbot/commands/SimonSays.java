@@ -1,6 +1,5 @@
 package tech.hadenw.shmamesbot.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +10,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.brain.Brain;
 
 public class SimonSays implements ICommand {
 	@Override
@@ -38,21 +38,54 @@ public class SimonSays implements ICommand {
 			// Add a space at the end so we can regex correctly
 			args += " ";
 			
+			
+			// Check this server first, then check others.
 			while(m.find()) {
 				String eName = m.group(1);
-				List<Emote> e = new ArrayList<Emote>();
+				List<Emote> em = message.getGuild().getEmotesByName(eName, true);
+				
+				if(em.size() > 0) {
+					args = args.replace(":"+eName+": ", em.get(0).getAsMention());
+					
+					// Tally the emote
+					Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+					String name = em.get(0).getName();
+	
+					if(b.getEmoteStats().containsKey(name)) {
+						b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+					}else {
+						b.getEmoteStats().put(name, 1);
+					}
+				}
+			}
+			
+			// Check all servers.
+			while(m.find()) {
+				String eName = m.group(1);
+				Emote e = null;
 				
 				for(Guild g : Shmames.getJDA().getGuilds()) {
 					List<Emote> em = g.getEmotesByName(eName, true);
 					
 					if(em.size() > 0) {
-						e.add(em.get(0));
+						e = em.get(0);
+						
+						// Tally the emote
+						Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+						String name = em.get(0).getName();
+		
+						if(b.getEmoteStats().containsKey(name)) {
+							b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+						}else {
+							b.getEmoteStats().put(name, 1);
+						}
+						
 						break;
 					}
 				}
 				
-				if(e.size() > 0) {
-					args = args.replace(":"+eName+": ", e.get(0).getAsMention());
+				if(e != null) {
+					args = args.replace(":"+eName+": ", e.getAsMention());
 				}
 			}
 			
@@ -64,7 +97,7 @@ public class SimonSays implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"simonsays","simon says"};
+		return new String[] {"simonsays","simon says", "repeat"};
 	}
 	
 	@Override

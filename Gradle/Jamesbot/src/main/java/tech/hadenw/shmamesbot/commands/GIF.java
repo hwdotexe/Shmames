@@ -27,7 +27,7 @@ public class GIF implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"gif", "who is", "what is"};
+		return new String[] {"gif", "who is", "what is", "what are"};
 	}
 	
 	@Override

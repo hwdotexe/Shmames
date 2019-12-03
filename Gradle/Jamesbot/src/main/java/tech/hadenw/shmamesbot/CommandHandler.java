@@ -46,6 +46,7 @@ import tech.hadenw.shmamesbot.commands.Thoughts;
 import tech.hadenw.shmamesbot.commands.Timeout;
 import tech.hadenw.shmamesbot.commands.Timer;
 import tech.hadenw.shmamesbot.commands.WhatShouldIDo;
+import tech.hadenw.shmamesbot.commands.Wiki;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
@@ -92,6 +93,7 @@ public class CommandHandler {
 		commands.add(new Timeout());
 		commands.add(new Timer());
 		commands.add(new WhatShouldIDo());
+		commands.add(new Wiki());
 	}
 	
 	/**

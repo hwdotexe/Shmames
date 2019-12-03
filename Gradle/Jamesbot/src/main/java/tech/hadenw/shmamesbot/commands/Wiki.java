@@ -2,40 +2,32 @@ package tech.hadenw.shmamesbot.commands;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import tech.hadenw.shmamesbot.MinesweepGame;
+import tech.hadenw.shmamesbot.Errors;
+import tech.hadenw.shmamesbot.Utils;
 
-public class Minesweeper implements ICommand {
+public class Wiki implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Play a game of Minesweeper.";
+		return "Ask the oracle your question, and I shall answer.";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "minesweep <size>";
+		return "wiki <short question>";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
-			try {
-				int size = Integer.parseInt(args);
-				
-				if(size >= 6 && size <= 11) {
-					return MinesweepGame.BuildNewGame(size);
-				}else {
-					return "Valid range is 6-11.";
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		
-		return "Try `minesweep 6`!";
+			return Utils.getWA(args);
+		else {
+			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+		}
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"minesweep", "msweep"};
+		return new String[] {"wiki"};
 	}
 	
 	@Override
