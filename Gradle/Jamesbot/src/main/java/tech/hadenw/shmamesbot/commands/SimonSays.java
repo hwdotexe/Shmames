@@ -39,53 +39,35 @@ public class SimonSays implements ICommand {
 			args += " ";
 			
 			
-			// Check this server first, then check others.
+			// Check servers for the emote; this one first, then others.
 			while(m.find()) {
 				String eName = m.group(1);
-				List<Emote> em = message.getGuild().getEmotesByName(eName, true);
 				
-				if(em.size() > 0) {
-					args = args.replace(":"+eName+": ", em.get(0).getAsMention());
-					
-					// Tally the emote
-					Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-					String name = em.get(0).getName();
-	
-					if(b.getEmoteStats().containsKey(name)) {
-						b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
-					}else {
-						b.getEmoteStats().put(name, 1);
-					}
-				}
-			}
-			
-			// Check all servers.
-			while(m.find()) {
-				String eName = m.group(1);
-				Emote e = null;
-				
-				for(Guild g : Shmames.getJDA().getGuilds()) {
-					List<Emote> em = g.getEmotesByName(eName, true);
-					
-					if(em.size() > 0) {
-						e = em.get(0);
-						
-						// Tally the emote
-						Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-						String name = em.get(0).getName();
-		
-						if(b.getEmoteStats().containsKey(name)) {
-							b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
-						}else {
-							b.getEmoteStats().put(name, 1);
-						}
-						
-						break;
-					}
-				}
+				// This guild
+				Emote e = findEmote(message.getGuild(), eName);
 				
 				if(e != null) {
 					args = args.replace(":"+eName+": ", e.getAsMention());
+				} else {
+					// Check all guilds
+					for(Guild g : Shmames.getJDA().getGuilds()) {
+						e = findEmote(g, eName);
+						
+						if(e != null) {
+							args = args.replace(":"+eName+": ", e.getAsMention());
+							break;
+						}
+					}
+				}
+				
+				// Tally the emote
+				Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+				String name = e.getName();
+
+				if(b.getEmoteStats().containsKey(name)) {
+					b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+				}else {
+					b.getEmoteStats().put(name, 1);
 				}
 			}
 			
@@ -108,5 +90,14 @@ public class SimonSays implements ICommand {
 	@Override
 	public boolean requiresGuild() {
 		return false;
+	}
+	
+	private Emote findEmote(Guild g, String n) {
+		List<Emote> em = g.getEmotesByName(n, true);
+		
+		if(em.size() > 0)
+			return em.get(0);
+		
+		return null;
 	}
 }

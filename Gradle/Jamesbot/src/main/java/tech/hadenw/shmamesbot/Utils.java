@@ -5,15 +5,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -106,10 +103,7 @@ public class Utils {
 			String result = sendGET("http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted);
 			
 			if(result != null) {
-				byte[] b = result.getBytes("UTF_16");
-				result = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(b)).toString();
-				
-				return result;
+				return result.strip();
 			}else
 				return "I'm not too sure on that one!";
 		}catch(Exception e) {
