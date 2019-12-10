@@ -61,13 +61,15 @@ public class SimonSays implements ICommand {
 				}
 				
 				// Tally the emote
-				Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
-				String name = e.getName();
-
-				if(b.getEmoteStats().containsKey(name)) {
-					b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
-				}else {
-					b.getEmoteStats().put(name, 1);
+				if(e != null) {
+					Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+					String name = e.getName();
+	
+					if(b.getEmoteStats().containsKey(name)) {
+						b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+					}else {
+						b.getEmoteStats().put(name, 1);
+					}
 				}
 			}
 			

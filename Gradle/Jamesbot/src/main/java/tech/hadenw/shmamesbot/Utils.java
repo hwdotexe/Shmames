@@ -103,7 +103,7 @@ public class Utils {
 			String result = sendGET("http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted);
 			
 			if(result != null) {
-				return result.strip();
+				return result.trim();
 			}else
 				return "I'm not too sure on that one!";
 		}catch(Exception e) {
