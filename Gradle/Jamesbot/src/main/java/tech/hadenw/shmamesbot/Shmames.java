@@ -56,7 +56,7 @@ public final class Shmames {
 			
 			// Begin listening for events.
 			jda.addEventListener(new Chat());
-			jda.addEventListener(new React());
+			jda.addEventListener(new ReactListener());
 			
 			// Prepare music playing functionality.
 			ocarinas = new  HashMap<String, GuildOcarina>();

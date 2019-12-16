@@ -11,11 +11,11 @@ import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.Brain;
 import tech.hadenw.shmamesbot.commands.ICommand;
 
-public class React extends ListenerAdapter {
+public class ReactListener extends ListenerAdapter {
 	private HashMap<Long, Integer> strikes;
 	private HashMap<Long, Integer> votes;
 	
-	public React() {
+	public ReactListener() {
 		strikes = new HashMap<Long, Integer>();
 		votes = new HashMap<Long, Integer>();
 	}

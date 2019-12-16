@@ -111,6 +111,38 @@ public class Utils {
 		}
 	}
 	
+	public static String getReverseImage(String imageURL) {
+		try {
+			String searchImage = URLEncoder.encode(imageURL, "UTF-8");
+			String result = sendGET("https://app.zenserp.com/api/v2/search?hl=en&gl=US&search_engine=google.com&apikey=bf076150-2029-11ea-9962-3b4bab6b129c&image_url="+searchImage);
+			
+			JSONObject r = new JSONObject(result);
+			JSONArray a = r.getJSONObject("reverse_image_results").getJSONArray("pages_with_matching_images");
+			
+			String results = "";
+			if(!a.isEmpty()) {
+				// Grab the first 5 links
+				for(int i=0; i<5; i++) {
+					if(!a.isNull(i)) {
+						if(results.length()>0)
+							results += "\n";
+						
+						results += "**"+(i+1)+"**: "+a.getJSONObject(i).getString("url");
+					} else {
+						break;
+					}
+				}
+			}else {
+				// Nothing found, send the search query
+				results = "I couldn't find anything. Maybe you give it a shot:\n"+r.getJSONObject("query").getString("url");
+			}
+			
+			return "I found these:\n"+results;
+		}catch(Exception e) {
+			return "My mommy said I can't look that one up :(";
+		}
+	}
+	
 	@SuppressWarnings("unused")
 	public static String getGIF(String search) {
 		search = search.trim().replaceAll(" ", "%20");
