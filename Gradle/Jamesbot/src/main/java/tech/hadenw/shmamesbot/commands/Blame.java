@@ -31,7 +31,7 @@ public class Blame implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"blame"};
+		return new String[] {"blame", "why"};
 	}
 	
 	@Override

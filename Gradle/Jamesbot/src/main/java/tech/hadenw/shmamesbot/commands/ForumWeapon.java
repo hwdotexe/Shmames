@@ -17,18 +17,18 @@ public class ForumWeapon implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "fw <weapon name> [create|update|remove] [weapon link]";
+		return "fw [create|update|remove] <weapon name> [weapon link]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(\\w{3,})( (create)| (update)| (remove))? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^(((create)|(update)|(remove)) )?(\\w{3,}) ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
-		// Group 1 - name
 		// Group 2 - operation ?
-		// Group 6 - link ?
+		// Group 6 - name
+		// Group 7 - link ?
 		if(m.find()) {
-			String name = m.group(1).toLowerCase();
+			String name = m.group(6).toLowerCase();
 			
 			if(m.group(2) != null) {
 				// We want to do something
@@ -36,9 +36,9 @@ public class ForumWeapon implements ICommand {
 				
 				switch(op) {
 					case "create":
-						if(m.group(6) != null) {
+						if(m.group(7) != null) {
 							if(findFW(name) == null) {
-								ForumWeaponObj nfw = new ForumWeaponObj(name, m.group(6), message.getGuild().getId());
+								ForumWeaponObj nfw = new ForumWeaponObj(name, m.group(7), message.getGuild().getId());
 								
 								Shmames.getBrains().getMotherBrain().getForumWeapons().add(nfw);
 								
@@ -50,12 +50,12 @@ public class ForumWeapon implements ICommand {
 							return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 						}
 					case "update":
-						if(m.group(6) != null) {
+						if(m.group(7) != null) {
 							ForumWeaponObj fw = findFW(name);
 							
 							if(fw != null) {
 								if(fw.getServerID().equals(message.getGuild().getId())) {
-									fw.setItemLink(m.group(6));
+									fw.setItemLink(m.group(7));
 									
 									return "Updated item with the new link!";
 								}else {

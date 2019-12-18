@@ -21,6 +21,7 @@ import tech.hadenw.shmamesbot.commands.DropTrigger;
 import tech.hadenw.shmamesbot.commands.EightBall;
 import tech.hadenw.shmamesbot.commands.Enhance;
 import tech.hadenw.shmamesbot.commands.ForumWeapon;
+import tech.hadenw.shmamesbot.commands.ForumWeaponList;
 import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
@@ -70,6 +71,7 @@ public class CommandHandler {
 		commands.add(new DropTrigger());
 		commands.add(new EightBall());
 		commands.add(new Enhance());
+		commands.add(new ForumWeaponList());
 		commands.add(new ForumWeapon());
 		commands.add(new GIF());
 		commands.add(new Help());
