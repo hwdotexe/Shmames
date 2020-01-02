@@ -1,9 +1,6 @@
 package tech.hadenw.shmamesbot.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -11,6 +8,7 @@ import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.Utils;
 import tech.hadenw.shmamesbot.brain.Brain;
 
 public class ListEmoteStats implements ICommand {
@@ -38,7 +36,7 @@ public class ListEmoteStats implements ICommand {
 		}
 		
 		// Sort
-		LinkedHashMap<String, Integer> emotes = sortHashMapByValues(emStats);
+		LinkedHashMap<String, Integer> emotes = Utils.sortHashMap(emStats);
 		
 		// Send to the server
 		if(emotes.keySet().size() > 0) {
@@ -63,35 +61,6 @@ public class ListEmoteStats implements ICommand {
 		}
 
 		return statMsg;
-	}
-	
-	// From https://stackoverflow.com/questions/8119366/sorting-hashmap-by-values
-	private LinkedHashMap<String, Integer> sortHashMapByValues(HashMap<String, Integer> passedMap) {
-	    List<String> mapKeys = new ArrayList<>(passedMap.keySet());
-	    List<Integer> mapValues = new ArrayList<>(passedMap.values());
-	    Collections.sort(mapValues);
-	    Collections.sort(mapKeys);
-
-	    LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<>();
-
-	    Iterator<Integer> valueIt = mapValues.iterator();
-	    while (valueIt.hasNext()) {
-	        int val = valueIt.next();
-	        Iterator<String> keyIt = mapKeys.iterator();
-
-	        while (keyIt.hasNext()) {
-	            String key = keyIt.next();
-	            int comp1 = passedMap.get(key);
-	            int comp2 = val;
-
-	            if (comp1 == comp2) {
-	                keyIt.remove();
-	                sortedMap.put(key, val);
-	                break;
-	            }
-	        }
-	    }
-	    return sortedMap;
 	}
 
 	@Override

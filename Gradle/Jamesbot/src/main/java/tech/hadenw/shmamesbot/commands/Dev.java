@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -85,9 +86,12 @@ public class Dev implements ICommand {
 					} else if(args.toLowerCase().startsWith("getcommandstats")) {
 						String answer = "**Command Usage Statistics**";
 						
-						for(String c : Shmames.getBrains().getMotherBrain().getCommandStats().keySet()) {
+						// Sort
+						LinkedHashMap<String, Integer> cmdStats = Utils.sortHashMap(Shmames.getBrains().getMotherBrain().getCommandStats());
+						
+						for(String c : cmdStats.keySet()) {
 							answer += "\n";
-							answer += "`"+c+"`: "+Shmames.getBrains().getMotherBrain().getCommandStats().get(c);
+							answer += "`"+c+"`: "+cmdStats.get(c);
 						}
 						
 						return answer;
