@@ -25,23 +25,14 @@ public class ForumWeaponList implements ICommand {
 		String items = "";
 		String id = message.getGuild().getId();
 		
-		for(ForumWeaponObj fws : Shmames.getBrains().getMotherBrain().getForumWeapons()) {
-			if(fws.getServerID().equals(id)) {
-				if(items.length() > 0)
-					items += ", ";
-				// TODO add count of FW, sort by that count.
-				
-				items += fws.getItemName();
-			}
-		}
-		
 		// Create list
 		HashMap<String, Integer> fwList = new HashMap<String, Integer>();
 		
 		for(ForumWeaponObj fws : Shmames.getBrains().getMotherBrain().getForumWeapons()) {
-			fwList.put(fws.getItemName(), fws.getUses());
+			if(fws.getServerID().equals(id)) {
+				fwList.put(fws.getItemName(), fws.getUses());
+			}
 		}
-		
 		
 		// Sort
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
