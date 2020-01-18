@@ -32,4 +32,8 @@ public class ForumWeaponObj {
 	public int getUses() {
 		return this.uses;
 	}
+	
+	public void IncreaseUse() {
+		this.uses += 1;
+	}
 }

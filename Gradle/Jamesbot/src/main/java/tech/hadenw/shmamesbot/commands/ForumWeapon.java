@@ -89,6 +89,8 @@ public class ForumWeapon implements ICommand {
 				ForumWeaponObj fw = findFW(name);
 				
 				if(fw != null) {
+					fw.IncreaseUse();
+					
 					return fw.getItemLink();
 				}else {
 					// Couldn't find one
