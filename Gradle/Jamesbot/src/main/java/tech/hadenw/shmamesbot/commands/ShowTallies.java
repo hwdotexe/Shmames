@@ -1,8 +1,11 @@
 package tech.hadenw.shmamesbot.commands;
 
+import java.util.LinkedHashMap;
+
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import tech.hadenw.shmamesbot.Shmames;
+import tech.hadenw.shmamesbot.Utils;
 import tech.hadenw.shmamesbot.brain.Brain;
 
 public class ShowTallies implements ICommand {
@@ -18,14 +21,17 @@ public class ShowTallies implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String tallies = "The abacus hast recorded thusly:\n";
+		String tallies = "";
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-		for (String key : b.getTallies().keySet()) {
-			tallies += "`" + key + "`: `" + b.getTallies().get(key) + "`\n";
+		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(b.getTallies());
+		
+		for(String c : tSorted.keySet()) {
+			if(tallies.length() > 0)
+				tallies += "\n";
+			tallies += "`"+c+"`: "+tSorted.get(c);
 		}
 
-		return tallies;
+		return "**The abacus hast recorded thusly:**\n"+tallies;
 	}
 
 	@Override

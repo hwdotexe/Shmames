@@ -4,11 +4,13 @@ public class ForumWeaponObj {
 	private String itemName;
 	private String itemLink;
 	private String serverID;
+	private int uses;
 	
 	public ForumWeaponObj(String i, String l, String id) {
 		this.itemName = i;
 		this.itemLink = l;
 		this.serverID = id;
+		this.uses = 0;
 	}
 	
 	public String getItemName() {
@@ -25,5 +27,9 @@ public class ForumWeaponObj {
 	
 	public String getServerID() {
 		return serverID;
+	}
+	
+	public int getUses() {
+		return this.uses;
 	}
 }
