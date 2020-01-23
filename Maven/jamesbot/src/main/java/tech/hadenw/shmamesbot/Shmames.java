@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.Permission;
 import tech.hadenw.shmamesbot.brain.BotSetting;
 import tech.hadenw.shmamesbot.brain.BotSettingName;
 import tech.hadenw.shmamesbot.brain.BotSettingType;
@@ -62,6 +63,20 @@ public final class Shmames {
 			ocarinas = new  HashMap<String, GuildOcarina>();
 			musicPlayer = new DefaultAudioPlayerManager();
 			AudioSourceManagers.registerRemoteSources(musicPlayer);
+			
+			// Finished loading - send invite link.
+			// TODO include this with logs
+			List<Permission> botPerms = new ArrayList<Permission>();
+			botPerms.add(Permission.CREATE_INSTANT_INVITE);
+			botPerms.add(Permission.MESSAGE_ADD_REACTION);
+			botPerms.add(Permission.MESSAGE_EMBED_LINKS);
+			botPerms.add(Permission.MESSAGE_HISTORY);
+			botPerms.add(Permission.MESSAGE_MANAGE);
+			botPerms.add(Permission.MESSAGE_ATTACH_FILES);
+			botPerms.add(Permission.MESSAGE_WRITE);
+			botPerms.add(Permission.MESSAGE_READ);
+			
+			System.out.println(">>> Invite "+getBotName()+" to your server!\n"+jda.getInviteUrl(botPerms));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

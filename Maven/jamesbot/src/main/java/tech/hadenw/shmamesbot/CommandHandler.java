@@ -26,7 +26,6 @@ import tech.hadenw.shmamesbot.commands.GIF;
 import tech.hadenw.shmamesbot.commands.Help;
 import tech.hadenw.shmamesbot.commands.ICommand;
 import tech.hadenw.shmamesbot.commands.IdiotThat;
-import tech.hadenw.shmamesbot.commands.Invite;
 import tech.hadenw.shmamesbot.commands.Jinping;
 import tech.hadenw.shmamesbot.commands.ListEmoteStats;
 import tech.hadenw.shmamesbot.commands.ListResponses;
@@ -76,7 +75,6 @@ public class CommandHandler {
 		commands.add(new GIF());
 		commands.add(new Help());
 		commands.add(new IdiotThat());
-		commands.add(new Invite());
 		commands.add(new Jinping());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());

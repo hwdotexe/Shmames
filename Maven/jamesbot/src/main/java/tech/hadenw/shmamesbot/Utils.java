@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class Utils {
 	private static Random r;
-	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif", "https://tenor.com/4xBX.gif"};
+	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif", "https://tenor.com/4xBX.gif", "https://tenor.com/3RW4.gif"};
 	
 	public static void Init() {
 		r = new Random();
