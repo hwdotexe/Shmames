@@ -7,10 +7,10 @@ import java.util.TimerTask;
 
 import tech.hadenw.shmamesbot.brain.Brain;
 
-public class CooldownTask extends TimerTask{
+public class ReportCooldownTask extends TimerTask{
 	private Brain b;
 	
-	public CooldownTask(Brain brain) {
+	public ReportCooldownTask(Brain brain) {
 		b=brain;
 		
 		Calendar c = Calendar.getInstance();

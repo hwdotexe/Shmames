@@ -135,7 +135,6 @@ public class CommandHandler {
 						
 						if(r != null) {
 							if(r.length() > 0) {
-								
 								if(r.length() > 2000) {
 									String h1 = r.substring(0, 2000);
 									h1 = h1.substring(0, h1.lastIndexOf(" "));
@@ -147,7 +146,6 @@ public class CommandHandler {
 									return;
 								}
 								
-								//message.getChannel().sendMessage(r).queue();
 								new Typing(message.getChannel(), r);
 							}
 						}else {

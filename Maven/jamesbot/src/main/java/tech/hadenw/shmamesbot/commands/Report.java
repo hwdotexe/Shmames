@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import tech.hadenw.shmamesbot.CooldownTask;
+import tech.hadenw.shmamesbot.ReportCooldownTask;
 import tech.hadenw.shmamesbot.Errors;
 import tech.hadenw.shmamesbot.Shmames;
 import tech.hadenw.shmamesbot.brain.Brain;
@@ -39,7 +39,7 @@ public class Report implements ICommand {
 				Shmames.getBrains().saveBrain(b);
 				
 				// Start a cooldown
-				new CooldownTask(b);
+				new ReportCooldownTask(b);
 				
 				return ":notepad_spiral: Your feedback has been noted. Thanks!\nYou can report again in **2 minutes**.";
 			}else {

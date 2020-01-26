@@ -35,6 +35,7 @@ public class DailyTask extends TimerTask{
 		// Save all brains
 		for(Brain b : Shmames.getBrains().getBrains()) {
 			Shmames.getBrains().saveBrain(b);
+			Shmames.getBrains().saveMotherBrain();
 		}
 	}
 }

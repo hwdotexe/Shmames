@@ -19,7 +19,7 @@ public class Wiki implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
-			return Utils.getWA(args);
+			return Utils.getWolfram(args);
 		else {
 			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 		}

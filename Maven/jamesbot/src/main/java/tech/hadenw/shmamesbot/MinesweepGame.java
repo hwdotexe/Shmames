@@ -74,7 +74,6 @@ public class MinesweepGame {
 		for(int[] row : rows) {
 			for(int c : row) {
 				ms.append("||"+numberToEmoji(c)+"||");
-				//ms.append(numberToEmoji(c));
 			}
 			
 			ms.append("\n");

@@ -23,7 +23,6 @@ public class AddResponse implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		// Gross pattern: ^[a-zA-Z]{4,7} [\\w\\d:;,.!@#$%^&*(?<>`~)_+\\-= ]{3,}$
 		if(Pattern.compile("^[a-zA-Z]{4,7} [\\w\\W]{3,}$").matcher(args).matches()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newresp = args.substring(args.indexOf(" ")).trim();

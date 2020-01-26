@@ -33,7 +33,7 @@ public class Modify implements ICommand {
 		
 		Role r = !rs.equals("administrator") && !rs.equals("everyone") ? Shmames.getJDA().getGuildById(b.getGuildID()).getRolesByName(rs, true).get(0) : null;
 		
-		// Allow modification by administrators, users with roles, or me (if Debug Mode).
+		// Allow modification by administrators, users with roles, or if running in debug mode.
 		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || rs.equals("everyone") || message.getGuild().getMember(author).getRoles().contains(r) || Shmames.isDebug) {
 			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			

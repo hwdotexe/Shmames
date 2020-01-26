@@ -45,60 +45,54 @@ public class Utils {
 		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+ (hour == 0 ? "12" : hour) +":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
 	}
 	
-	public static String sendGET(String u) {
-		try {
-			URL url = new URL(u);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			
-		    conn.setRequestMethod("GET");
-		    
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
-		    String result = "";
-		    
-		    while ((line = rd.readLine()) != null) {
-		       result += line;
-		    }
-		    
-		    rd.close();
-		    
-		    return result;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
+	public enum HTTPVerb {
+		GET,
+		POST
 	}
 	
-	public static String sendPOST(String u, JSONObject body) {
+	public static String sendHTTPReq(HTTPVerb v, String fqurl, JSONObject body) {
 		try {
-			URL url = new URL(u);
+			URL url = new URL(fqurl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
-		    conn.setRequestMethod("POST");
-		    
-		    if(body != null) {
-		    	conn.setDoOutput(true);
-		    	conn.setRequestProperty("content-type", "application/json");
-		    	conn.getOutputStream().write(body.toString().getBytes());
-		    }
-		    
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
-		    String result = "";
-		    
-		    while ((line = rd.readLine()) != null) {
-		       result += line;
-		    }
-		    
-		    rd.close();
-		    
-		    return result;
-		}catch(Exception e) {
+			switch(v) {
+			case GET:
+				conn.setRequestMethod("GET");
+				
+				break;
+			case POST:
+				conn.setRequestMethod("POST");
+				
+				if(body != null) {
+			    	conn.setDoOutput(true);
+			    	conn.setRequestProperty("content-type", "application/json");
+			    	conn.getOutputStream().write(body.toString().getBytes());
+			    }
+				
+				break;
+			}
+			
+			// Retrieve data
+			if(conn.getResponseCode() == 200) {
+				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			    String line;
+			    String result = "";
+			    
+			    while ((line = rd.readLine()) != null) {
+			       result += line;
+			    }
+			    
+			    rd.close();
+			    conn.disconnect();
+			    
+			    return result;
+			} else {
+				return null;
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 	
 	// From https://stackoverflow.com/questions/8119366/sorting-hashmap-by-values
@@ -130,10 +124,10 @@ public class Utils {
 	    return sortedMap;
 	}
 	
-	public static String getWA(String search) {
+	public static String getWolfram(String search) {
 		try {
 			String searchFormatted = URLEncoder.encode(search, "UTF-8");
-			String result = sendGET("http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted);
+			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted, null);
 			
 			if(result != null) {
 				return result.trim();
@@ -147,7 +141,7 @@ public class Utils {
 	public static String getReverseImage(String imageURL) {
 		try {
 			String searchImage = URLEncoder.encode(imageURL, "UTF-8");
-			String result = sendGET("https://app.zenserp.com/api/v2/search?hl=en&gl=US&search_engine=google.com&apikey=bf076150-2029-11ea-9962-3b4bab6b129c&image_url="+searchImage);
+			String result = sendHTTPReq(HTTPVerb.GET, "https://app.zenserp.com/api/v2/search?hl=en&gl=US&search_engine=google.com&apikey=bf076150-2029-11ea-9962-3b4bab6b129c&image_url="+searchImage, null);
 			
 			JSONObject r = new JSONObject(result);
 			JSONArray a = r.getJSONObject("reverse_image_results").getJSONArray("pages_with_matching_images");
@@ -179,7 +173,7 @@ public class Utils {
 	@SuppressWarnings("unused")
 	public static String getGIF(String search) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendGET("https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&contentfilter=low&limit=20");
+		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&contentfilter=low&limit=20", null);
 		
 		JSONObject json = new JSONObject(result);
 	    JSONArray jsonArray = json.getJSONArray("results");
