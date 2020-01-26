@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>tech.hadenw</groupId>
-  <artifactId>jamesbot</artifactId>
+  <artifactId>discordbot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>jamesbot</name>
+  <name>discordbot</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -59,7 +59,7 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>tech.hadenw.shmamesbot.Shmames</mainClass>
+            <mainClass>tech.hadenw.discordbot.Shmames</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
