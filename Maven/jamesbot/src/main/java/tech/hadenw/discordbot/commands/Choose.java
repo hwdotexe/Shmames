@@ -25,14 +25,16 @@ public class Choose implements ICommand {
 		Matcher m = Pattern.compile("^(.{1,}) or (.{1,})$").matcher(args);
 		
 		if(m.find()) {
-			int choice = 1 + Utils.getRandom(3);
+			int mutator = Utils.getRandom(50);
 			
-			if(choice < 3) {
-				String c = m.group(choice);
+			if(mutator < 5) { // 10%
+				return "I choose: Neither!";
+			} else if(mutator < 10) { // 20%
+				return "I choose: Both!";
+			} else {
+				String c = m.group(1 + Utils.getRandom(2));
 				
 				return "I choose: "+c;
-			}else {
-				return "I choose: Both!";
 			}
 		}else {
 			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
