@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
-import tech.hadenw.discordbot.brain.ForumWeaponObj;
+import tech.hadenw.discordbot.storage.ForumWeaponObj;
 
 public class ForumWeaponList implements ICommand {
 	@Override

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 import tech.hadenw.discordbot.tasks.PollTask;
 
 public class Closepoll implements ICommand {

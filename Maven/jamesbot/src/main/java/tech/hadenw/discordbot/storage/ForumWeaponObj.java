@@ -1,4 +1,4 @@
-package tech.hadenw.discordbot.brain;
+package tech.hadenw.discordbot.storage;
 
 public class ForumWeaponObj {
 	private String itemName;

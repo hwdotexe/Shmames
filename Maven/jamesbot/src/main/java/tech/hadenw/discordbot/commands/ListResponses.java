@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.TriggerType;
-import tech.hadenw.discordbot.brain.Response;
+import tech.hadenw.discordbot.storage.Response;
 
 public class ListResponses implements ICommand {
 	@Override

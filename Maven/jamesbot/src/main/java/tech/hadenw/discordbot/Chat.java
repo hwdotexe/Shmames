@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import tech.hadenw.discordbot.brain.Brain;
-import tech.hadenw.discordbot.brain.Response;
+import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Response;
 
 public class Chat extends ListenerAdapter {
 	private CommandHandler cmd;

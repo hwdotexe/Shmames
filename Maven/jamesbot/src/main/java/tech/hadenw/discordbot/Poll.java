@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import tech.hadenw.discordbot.brain.BotSettingName;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.BotSettingName;
+import tech.hadenw.discordbot.storage.Brain;
 import tech.hadenw.discordbot.tasks.PollTask;
 
 public class Poll {

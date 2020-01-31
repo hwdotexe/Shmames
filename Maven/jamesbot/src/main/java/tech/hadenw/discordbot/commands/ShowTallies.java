@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class ShowTallies implements ICommand {
 	@Override

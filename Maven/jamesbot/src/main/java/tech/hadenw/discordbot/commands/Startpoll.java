@@ -11,7 +11,7 @@ import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class Startpoll implements ICommand {
 	@Override

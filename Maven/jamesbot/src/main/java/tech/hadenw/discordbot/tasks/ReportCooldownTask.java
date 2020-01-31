@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class ReportCooldownTask extends TimerTask{
 	private Brain b;

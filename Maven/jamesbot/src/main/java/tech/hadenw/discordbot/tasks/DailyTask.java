@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
-import tech.hadenw.discordbot.brain.Brain;
-import tech.hadenw.discordbot.brain.MotherBrain;
+import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.MotherBrain;
 
 /**
  * Runs this code at a daily interval. This is useful for routine tasks and

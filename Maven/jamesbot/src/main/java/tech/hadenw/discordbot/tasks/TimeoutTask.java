@@ -8,7 +8,7 @@ import java.util.TimerTask;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import tech.hadenw.discordbot.Shmames;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class TimeoutTask extends TimerTask{
 	private String msg;

@@ -12,10 +12,10 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
-import tech.hadenw.discordbot.brain.BotSetting;
-import tech.hadenw.discordbot.brain.BotSettingName;
-import tech.hadenw.discordbot.brain.BotSettingType;
-import tech.hadenw.discordbot.brain.BrainController;
+import tech.hadenw.discordbot.storage.BotSetting;
+import tech.hadenw.discordbot.storage.BotSettingName;
+import tech.hadenw.discordbot.storage.BotSettingType;
+import tech.hadenw.discordbot.storage.BrainController;
 import tech.hadenw.discordbot.tasks.DailyTask;
 
 public final class Shmames {
@@ -61,8 +61,6 @@ public final class Shmames {
 			musicPlayer = new DefaultAudioPlayerManager();
 			AudioSourceManagers.registerRemoteSources(musicPlayer);
 			
-			// Finished loading - send invite link.
-			// TODO include this with logs
 			List<Permission> botPerms = new ArrayList<Permission>();
 			botPerms.add(Permission.CREATE_INSTANT_INVITE);
 			botPerms.add(Permission.MESSAGE_ADD_REACTION);
@@ -73,7 +71,6 @@ public final class Shmames {
 			botPerms.add(Permission.MESSAGE_WRITE);
 			botPerms.add(Permission.MESSAGE_READ);
 			
-			// Output the invitation link to the console.
 			System.out.println(">>> Invite "+getBotName()+" to your server!\n"+jda.getInviteUrl(botPerms));
 		} catch (Exception e) {
 			e.printStackTrace();

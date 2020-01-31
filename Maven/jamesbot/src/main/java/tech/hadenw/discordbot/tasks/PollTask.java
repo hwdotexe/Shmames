@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class PollTask extends TimerTask{
 	private Poll p;

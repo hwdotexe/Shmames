@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import tech.hadenw.discordbot.brain.BotSettingName;
-import tech.hadenw.discordbot.brain.Brain;
 import tech.hadenw.discordbot.commands.ICommand;
+import tech.hadenw.discordbot.storage.BotSettingName;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class ReactListener extends ListenerAdapter {
 	private HashMap<Long, Integer> strikes;

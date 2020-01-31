@@ -1,4 +1,4 @@
-package tech.hadenw.discordbot.brain;
+package tech.hadenw.discordbot.storage;
 
 public enum BotSettingName {
 	PIN_CHANNEL,

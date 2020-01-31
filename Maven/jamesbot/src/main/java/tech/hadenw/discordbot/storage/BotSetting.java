@@ -1,4 +1,4 @@
-package tech.hadenw.discordbot.brain;
+package tech.hadenw.discordbot.storage;
 
 import net.dv8tion.jda.api.entities.Role;
 import tech.hadenw.discordbot.Shmames;

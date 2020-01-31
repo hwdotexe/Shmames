@@ -11,9 +11,9 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
-import tech.hadenw.discordbot.brain.BotSetting;
-import tech.hadenw.discordbot.brain.BotSettingName;
-import tech.hadenw.discordbot.brain.Brain;
+import tech.hadenw.discordbot.storage.BotSetting;
+import tech.hadenw.discordbot.storage.BotSettingName;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class Modify implements ICommand {
 	@Override
