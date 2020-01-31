@@ -2,6 +2,7 @@ package tech.hadenw.discordbot.commands;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,7 +29,9 @@ public class PinThat implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[\\^]{1,15}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("^([\\^]{1,15})$").matcher(args);
+		
+		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			
 			try {

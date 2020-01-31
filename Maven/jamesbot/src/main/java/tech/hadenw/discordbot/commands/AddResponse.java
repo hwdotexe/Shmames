@@ -1,5 +1,6 @@
 package tech.hadenw.discordbot.commands;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -23,10 +24,12 @@ public class AddResponse implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[a-zA-Z]{4,7} [\\w\\W]{3,}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) ([\\w\\W]{3,})$").matcher(args);
+		
+		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-			String newresp = args.substring(args.indexOf(" ")).trim();
-			String nrtype = args.substring(0, args.indexOf(" ")).trim();
+			String newresp = m.group(2);
+			String nrtype = m.group(1);
 	
 			if (TriggerType.byName(nrtype) != null) {
 				b.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
@@ -37,7 +40,9 @@ public class AddResponse implements ICommand {
 				String types = "";
 
 				for (TriggerType t : TriggerType.values()) {
-					types += " ";
+					if(types.length() > 0)
+						types += ", ";
+					
 					types += "`" + t.name() + "`";
 				}
 

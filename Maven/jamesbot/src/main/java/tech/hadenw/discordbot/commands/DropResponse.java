@@ -1,6 +1,7 @@
 package tech.hadenw.discordbot.commands;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -24,10 +25,12 @@ public class DropResponse implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[a-zA-Z]{4,7} \\d{1,3}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) (\\d{1,3})$").matcher(args);
+		
+		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-			int rNum = Integer.parseInt(args.substring(args.indexOf(" ")).trim());
-			String nrtype = args.substring(0, args.indexOf(" ")).trim();
+			int rNum = Integer.parseInt(m.group(2));
+			String nrtype = m.group(1);
 	
 			if (TriggerType.byName(nrtype) != null) {
 				List<Response> responses = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(nrtype));
@@ -45,7 +48,9 @@ public class DropResponse implements ICommand {
 				String types = "";
 
 				for (TriggerType t : TriggerType.values()) {
-					types += " ";
+					if(types.length() > 0)
+						types += ", ";
+					
 					types += "`" + t.name() + "`";
 				}
 

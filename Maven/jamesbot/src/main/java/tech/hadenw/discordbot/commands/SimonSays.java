@@ -31,7 +31,7 @@ public class SimonSays implements ICommand {
 			} catch(Exception e) { }
 			
 			
-			// Try to scan all servers for the emote?
+			// Try to scan all servers for the emote.
 			// :emotename:   =>   <a:emoteName:1234567890>
 			Matcher m = Pattern.compile("\\:([\\w\\d]+)\\:").matcher(args);
 			

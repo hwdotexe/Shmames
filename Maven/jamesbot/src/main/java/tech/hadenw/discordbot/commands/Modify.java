@@ -42,8 +42,9 @@ public class Modify implements ICommand {
 				String value = m.group(2);
 				
 				if(setting != null) {
+					
+					// Ensure that this setting is only changed by an Administrator.
 					if(setting == BotSettingName.ALLOW_MODIFY) {
-						// This setting should only be changed by an Administrator.
 						if(!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
 							return Errors.NO_PERMISSION_USER;
 						}
@@ -61,6 +62,7 @@ public class Modify implements ICommand {
 				        
 				        // Save the new settings
 				        Shmames.getBrains().saveBrain(b);
+				        
 						return "";
 					}else {
 						// Not successful

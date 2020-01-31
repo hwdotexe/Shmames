@@ -1,5 +1,6 @@
 package tech.hadenw.discordbot.commands;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -22,10 +23,12 @@ public class AddTrigger implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^[a-zA-Z]{3,7} [\\w \\-]{3,}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("^([a-zA-Z]{3,7}) ([\\w \\-]{3,})$").matcher(args);
+		
+		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-			String newtrigger = args.substring(args.indexOf(" ")).trim();
-			String nttype = args.substring(0, args.indexOf(" ")).trim();
+			String newtrigger = m.group(2);
+			String nttype = m.group(1);
 			
 			if (!b.getTriggers().keySet().contains(newtrigger)) {
 				if (TriggerType.byName(nttype) != null) {

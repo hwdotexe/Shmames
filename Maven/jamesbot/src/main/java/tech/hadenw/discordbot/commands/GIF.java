@@ -32,7 +32,7 @@ public class GIF implements ICommand {
 	
 	@Override
 	public String sanitize(String i) {
-		return i.replaceAll("[\\W]", "").replaceAll(" ", "_").toLowerCase();
+		return i.replaceAll("[\\W]", "").replaceAll(" ", "%20").toLowerCase();
 	}
 	
 	@Override

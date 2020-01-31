@@ -24,6 +24,7 @@ public class Roll implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		Matcher roll = Pattern.compile("^((\\d{1,3})*(d\\d{1,3}))([\\+\\-](\\d{1,3})(d\\d{1,3})*)*$").matcher(args);
+		
 		if(roll.matches()) {
 			try {
 				int diceQuantity = 1;

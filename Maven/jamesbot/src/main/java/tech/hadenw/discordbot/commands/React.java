@@ -2,6 +2,7 @@ package tech.hadenw.discordbot.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -21,10 +22,12 @@ public class React implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Pattern.compile("^\\w{2,16} [\\^]{1,15}$").matcher(args).matches()) {
+		Matcher m = Pattern.compile("(^\\w{2,16}) ([\\^]{1,15})$").matcher(args);
+		
+		if(m.find()) {
 			try {
-				int messages = args.substring(args.indexOf("^")).length();
-				String word = args.substring(0, args.indexOf(" ")).trim().toLowerCase();
+				int messages = Integer.parseInt(m.group(2));
+				String word = m.group(1);
 				
 				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
 				Message toPin = msgs.get(msgs.size()-1);
@@ -52,6 +55,7 @@ public class React implements ICommand {
 				return "";
 			}catch(Exception ex) {
 				ex.printStackTrace();
+				
 				return Errors.BOT_ERROR;
 			}
 		}

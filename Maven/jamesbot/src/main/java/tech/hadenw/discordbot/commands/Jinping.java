@@ -20,7 +20,9 @@ public class Jinping implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		
 		new JinpingTask(b);
+		
 		return "SPAM :ping_pong: THIS :ping_pong: PONG :ping_pong: TO :ping_pong: FREE :ping_pong: HONG :ping_pong: KONG";
 	}
 

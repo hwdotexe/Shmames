@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.Utils;
 public class Thoughts implements ICommand {
 	private String[] answers;
 	
-	public Thoughts() { // 6g 1n 6b
+	public Thoughts() {
 		answers = new String[] {"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", 
 				"Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.",
 				"I hate that.", "Get that garbage out of my face!"};

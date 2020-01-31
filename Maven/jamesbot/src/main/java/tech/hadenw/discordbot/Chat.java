@@ -40,6 +40,7 @@ public class Chat extends ListenerAdapter {
 							if(command.contains(" "))
 								command = command.substring(command.indexOf(" ")+1).trim();
 							
+							// TODO replace this with real logging
 							System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
 							cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							
