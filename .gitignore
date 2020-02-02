@@ -1,2 +1,4 @@
 ﻿*.prefs
 bin
+Maven/jamesbot/.idea
+Maven/jamesbot/discordbot.iml
