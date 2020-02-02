@@ -1,2 +1,4 @@
 ﻿*.prefs
 bin
+Discordbot/.idea
+Discordbot/discordbot.iml

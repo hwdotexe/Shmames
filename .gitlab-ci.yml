@@ -1,0 +1,17 @@
+variables:
+  name: "Discordbot"
+  path: "/builds/$CI_PROJECT_PATH"
+  version: "0.0.1-SNAPSHOT"
+
+image: maven:latest
+
+build:
+  stage: build
+  script:
+    - cd $name
+    - mvn clean package
+    - mv $path/$name/target/*.jar $path/
+  artifacts:
+    name: $name-$version
+    paths:
+      - "$path/*.jar"
