@@ -8,7 +8,6 @@
   <packaging>jar</packaging>
 
   <name>discordbot</name>
-  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,6 +60,6 @@
 	        </descriptorRefs>
 	      </configuration>
 	    </plugin>
-	  </plugins>
-	</build>
+      </plugins>
+  </build>
 </project>
