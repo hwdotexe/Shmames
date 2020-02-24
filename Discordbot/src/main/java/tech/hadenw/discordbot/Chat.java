@@ -42,6 +42,7 @@ public class Chat extends ListenerAdapter {
 							
 							// TODO replace this with real logging
 							System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
+
 							cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							
 							return;
