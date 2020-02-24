@@ -1,13 +1,14 @@
 package tech.hadenw.discordbot;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import tech.hadenw.discordbot.commands.*;
 import tech.hadenw.discordbot.tasks.TypingTask;
 
@@ -77,8 +78,7 @@ public class CommandHandler {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-
-					// Log command usage
+					// Record command use statistic.
 					String alias = c.getAliases()[0].toLowerCase();
 					HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
 
@@ -89,46 +89,27 @@ public class CommandHandler {
 						stats.put(alias, 1);
 					}
 
+					// Execute command.
 					if(!(server==null && c.requiresGuild())) {
-						int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
-						String args = c.sanitize(cmd.substring(position).trim());
+						Matcher m = Pattern.compile("^("+a+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
-						// Run the command async and send a message back when it finishes.
-						CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-								.thenAccept(r -> sendMessage(r, message));
+						if(m.matches()){
+							String args = c.sanitize(m.group(2) != null ? m.group(2).trim() : "");
 
+							// Run the command async and send a message back when it finishes.
+							CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+									.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
+						}
 					}else {
-						message.getChannel().sendMessage(Errors.GUILD_REQUIRED).queue();
+						sendMessageToChannel(Errors.GUILD_REQUIRED, message.getChannel());
 					}
 
 					return;
 				}
 			}
 		}
-		
-		message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
-	}
 
-	private void sendMessage(String r, Message message){
-		if(r != null) {
-			if(r.length() > 0) {
-				if(r.length() > 2000) {
-					String h1 = r.substring(0, 2000);
-					h1 = h1.substring(0, h1.lastIndexOf(" "));
-
-					String h2 = r.substring(h1.length()-1);
-
-					message.getChannel().sendMessage(h1).queue();
-					message.getChannel().sendMessage(h2).queue();
-					return;
-				}
-
-				new TypingTask(message.getChannel(), r);
-			}
-		}else {
-			// If a command returns null, send the 404 message.
-			message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
-		}
+		sendMessageToChannel(Errors.COMMAND_NOT_FOUND, message.getChannel());
 	}
 	
 	/**
@@ -137,5 +118,35 @@ public class CommandHandler {
 	 */
 	public static List<ICommand> getLoadedCommands(){
 		return commands;
+	}
+
+	private void sendMessageToChannel(String r, MessageChannel channel){
+		if(r != null) {
+			if(r.length() > 0) {
+				for(String m : splitStringEvery(r, 2000)){
+					new TypingTask(channel, m);
+				}
+			}
+		} else {
+			new TypingTask(channel, Errors.COMMAND_NOT_FOUND);
+		}
+	}
+
+	// https://stackoverflow.com/questions/12295711/split-a-string-at-every-nth-position
+	private String[] splitStringEvery(String s, int interval) {
+		int arrayLength = (int) Math.ceil(((s.length() / (double)interval)));
+		String[] result = new String[arrayLength];
+
+		int j = 0;
+		int lastIndex = result.length - 1;
+
+		for (int i = 0; i < lastIndex; i++) {
+			result[i] = s.substring(j, j + interval);
+			j += interval;
+		}
+
+		result[lastIndex] = s.substring(j);
+
+		return result;
 	}
 }

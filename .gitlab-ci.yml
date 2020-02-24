@@ -9,7 +9,7 @@ build:
   stage: build
   script:
     - cd $name
-    - mvn clean package
+    - mvn clean package assembly:single
     - mv $path/$name/target/*.jar $path/
   artifacts:
     name: $name-$version

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
 
 public class SimonSays implements ICommand {
@@ -64,12 +65,8 @@ public class SimonSays implements ICommand {
 				if(e != null) {
 					Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 					String eID = Long.toString(e.getIdLong());
-	
-					if(b.getEmoteStats().containsKey(eID)) {
-						b.getEmoteStats().put(eID, b.getEmoteStats().get(eID)+1);
-					}else {
-						b.getEmoteStats().put(eID, 1);
-					}
+
+					Utils.IncrementEmoteTally(b, eID);
 				}
 			}
 			
@@ -81,7 +78,7 @@ public class SimonSays implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"simonsays","simon says", "repeat"};
+		return new String[] {"simonsays","simon says", "repeat", "echo"};
 	}
 	
 	@Override

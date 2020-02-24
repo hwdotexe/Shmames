@@ -11,7 +11,7 @@ public class Blame implements ICommand {
 		answers = new String[] {"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom",
 				"the economy", "Big Pharma", "India", "Nigeria", "Mexico", "Chemtrails", "GMOs",
 				"vaccines", "#VapeLife", "weebs", "essential oils", "Karen", "Epic Games",
-				"video games", "hip hop", "Fortnite"};
+				"video games", "hip hop", "Fortnite", "Source Filmmaker", "Discord"};
 	}
 	
 	@Override
