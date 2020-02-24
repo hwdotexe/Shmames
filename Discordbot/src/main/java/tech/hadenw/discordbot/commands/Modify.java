@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.storage.BotSetting;
@@ -56,8 +54,7 @@ public class Modify implements ICommand {
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
 				        eBuilder.setColor(Color.ORANGE);
-				        eBuilder.appendDescription("**"+val.getName()+"** = "+val.getValue()+"\n");
-				        
+						flexValueType(eBuilder, val, message.getGuild());
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
 				        
 				        // Save the new settings
@@ -76,9 +73,10 @@ public class Modify implements ICommand {
 				
 		        eBuilder.setColor(Color.ORANGE);
 		        eBuilder.setTitle("Available settings:");
+		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols.");
 		        
 		        for(BotSetting v : b.getSettings()) {
-		        	eBuilder.appendDescription("**"+v.getName().toString()+"**:"+v.getType().toString()+" = "+v.getValue()+"\n");
+		        	flexValueType(eBuilder, v, message.getGuild());
 		        }
 		        
 		        message.getChannel().sendMessage(eBuilder.build()).queue();
@@ -87,6 +85,31 @@ public class Modify implements ICommand {
 			}
 		}else {
 			return Errors.NO_PERMISSION_USER;
+		}
+	}
+
+	private void flexValueType(EmbedBuilder eBuilder, BotSetting v, Guild g){
+		switch(v.getType()){
+			case CHANNEL:
+				try {
+					TextChannel mc = g.getTextChannelById(v.getValue());
+					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + mc.getAsMention() + "\n");
+				}catch (Exception e){
+					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + "-UNKNOWN-" + "\n");
+				}
+
+				break;
+			case EMOTE:
+				try {
+					Emote em = g.getEmoteById(v.getValue());
+					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + em.getAsMention() + "\n");
+				}catch (Exception e){
+					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + "-UNKNOWN-" + "\n");
+				}
+
+				break;
+			default:
+				eBuilder.appendDescription("**"+v.getName().toString()+"**:"+v.getType().toString()+" » "+v.getValue()+"\n");
 		}
 	}
 

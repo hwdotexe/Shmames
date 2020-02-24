@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tech.hadenw.discordbot.storage.Brain;
 
 public class Utils {
 	private static Random r;
@@ -280,5 +281,18 @@ public class Utils {
 	 */
 	public static Random GetRandomObj() {
 		return r;
+	}
+
+	/**
+	 * Increments the tally for a given emote.
+	 * @param b The Brain to tally the emote in.
+	 * @param id The Emote ID.
+	 */
+	public static void IncrementEmoteTally(Brain b, String id){
+		if(b.getEmoteStats().containsKey(id)) {
+			b.getEmoteStats().put(id, b.getEmoteStats().get(id)+1);
+		}else {
+			b.getEmoteStats().put(id, 1);
+		}
 	}
 }

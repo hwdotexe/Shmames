@@ -1,7 +1,11 @@
 package tech.hadenw.discordbot.storage;
 
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import tech.hadenw.discordbot.Shmames;
+
+import java.util.List;
 
 public class BotSetting {
 	private BotSettingName name;
@@ -60,20 +64,24 @@ public class BotSetting {
 			}
 		case CHANNEL:
 			if(v.startsWith("#"))
-				v = v.replace("#", ""); // Replace all occurances
+				v = v.replace("#", ""); // Replace all occurrences
+
+			List<TextChannel> tc = Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelsByName(v, true);
 			
-			if(Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelsByName(v, true).size() == 1) {
-				value = v.toLowerCase();
+			if(tc.size() == 1) {
+				value = tc.get(0).getId();
 				return true;
 			}
 			
 			return false;
 		case EMOTE:
 			if(v.startsWith(":"))
-				v = v.replace(":", ""); // Replace all occurances
-			
-			if(Shmames.getJDA().getGuildById(b.getGuildID()).getEmotesByName(v, true).size() == 1) {
-				value = v.toLowerCase();
+				v = v.replace(":", ""); // Replace all occurrences
+
+			List<Emote> em = Shmames.getJDA().getGuildById(b.getGuildID()).getEmotesByName(v, true);
+
+			if(em.size() == 1) {
+				value = em.get(0).getId();
 				return true;
 			}
 			

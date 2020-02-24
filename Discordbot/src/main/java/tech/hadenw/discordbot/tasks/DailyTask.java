@@ -39,5 +39,7 @@ public class DailyTask extends TimerTask{
 			Shmames.getBrains().saveBrain(b);
 			Shmames.getBrains().saveMotherBrain();
 		}
+
+		System.out.println("[ DAILY AUTOSAVE TASK RAN ]");
 	}
 }

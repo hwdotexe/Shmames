@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
+import tech.hadenw.discordbot.listeners.ChatListener;
+import tech.hadenw.discordbot.listeners.ReactListener;
 import tech.hadenw.discordbot.storage.BotSetting;
 import tech.hadenw.discordbot.storage.BotSettingName;
 import tech.hadenw.discordbot.storage.BotSettingType;
@@ -33,6 +35,7 @@ public final class Shmames {
 	 * @param args Program launch arguments.
 	 */
 	public static void main(String[] args) {
+		// Initialize bot settings and utilities.
 		loadDefaultSettings();
 		Utils.Init();
 		
@@ -53,14 +56,15 @@ public final class Shmames {
 			new DailyTask();
 			
 			// Begin listening for events.
-			jda.addEventListener(new Chat());
+			jda.addEventListener(new ChatListener());
 			jda.addEventListener(new ReactListener());
 			
 			// Prepare music playing functionality.
 			ocarinas = new  HashMap<String, GuildOcarina>();
 			musicPlayer = new DefaultAudioPlayerManager();
 			AudioSourceManagers.registerRemoteSources(musicPlayer);
-			
+
+			// Prepare invitation link for Console.
 			List<Permission> botPerms = new ArrayList<Permission>();
 			botPerms.add(Permission.CREATE_INSTANT_INVITE);
 			botPerms.add(Permission.MESSAGE_ADD_REACTION);
@@ -106,8 +110,8 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.PIN_POLLS, BotSettingType.BOOLEAN, "false"));
 		defaults.add(new BotSetting(BotSettingName.DEV_ANNOUNCE_CHANNEL, BotSettingType.CHANNEL, "general"));
 		defaults.add(new BotSetting(BotSettingName.MUTE_DEV_ANNOUNCES, BotSettingType.BOOLEAN, "false"));
-		defaults.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "roygun"));
-		defaults.add(new BotSetting(BotSettingName.APPROVAL_EMOTE, BotSettingType.EMOTE, "dedede"));
+		defaults.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "notset"));
+		defaults.add(new BotSetting(BotSettingName.APPROVAL_EMOTE, BotSettingType.EMOTE, "notset"));
 		defaults.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaults.add(new BotSetting(BotSettingName.APPROVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaults.add(new BotSetting(BotSettingName.ALLOW_MODIFY, BotSettingType.ROLE, "administrator"));
