@@ -42,6 +42,7 @@ public class Chat extends ListenerAdapter {
 							
 							// TODO replace this with real logging
 							System.out.println("[COMMAND/"+e.getAuthor().getName()+"]: "+command);
+
 							cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							
 							return;
@@ -51,13 +52,13 @@ public class Chat extends ListenerAdapter {
 					// Gather emoji stats
 					for(Emote emo : e.getMessage().getEmotes()) {
 						if(e.getGuild().getEmotes().contains(emo)) {
-							String name = emo.getName();
+							String id = Long.toString(emo.getIdLong());
 							Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 							
-							if(b.getEmoteStats().containsKey(name)) {
-								b.getEmoteStats().put(name, b.getEmoteStats().get(name)+1);
+							if(b.getEmoteStats().containsKey(id)) {
+								b.getEmoteStats().put(id, b.getEmoteStats().get(id)+1);
 							}else {
-								b.getEmoteStats().put(name, 1);
+								b.getEmoteStats().put(id, 1);
 							}
 						}
 					}

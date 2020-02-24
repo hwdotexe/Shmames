@@ -30,8 +30,8 @@ public class ListEmoteStats implements ICommand {
 		
 		// Add emotes without any uses
 		for(Emote e : message.getGuild().getEmotes()) {
-			if(!emStats.containsKey(e.getName())) {
-				emStats.put(e.getName(), 0);
+			if(!emStats.containsKey(Long.toString(e.getIdLong()))) {
+				emStats.put(Long.toString(e.getIdLong()), 0);
 			}
 		}
 		
@@ -43,9 +43,9 @@ public class ListEmoteStats implements ICommand {
 			int i = 0;
 			
 			for(String em : emotes.keySet()) {
-				List<Emote> ems = message.getGuild().getEmotesByName(em, false);
+				Emote emote = message.getGuild().getEmoteById(em);
 				
-				if(!ems.isEmpty()) {
+				if(emote != null) {
 					i++;
 					
 					if(i > 5) {
@@ -53,7 +53,7 @@ public class ListEmoteStats implements ICommand {
 						i = 1;
 					}
 					
-					statMsg += ems.get(0).getAsMention() + ": " + emotes.get(em)+"  ";
+					statMsg += emote.getAsMention() + ": " + emotes.get(em)+"  ";
 				}
 			}
 		}else {

@@ -3,52 +3,12 @@ package tech.hadenw.discordbot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import tech.hadenw.discordbot.commands.AddResponse;
-import tech.hadenw.discordbot.commands.AddTally;
-import tech.hadenw.discordbot.commands.AddTrigger;
-import tech.hadenw.discordbot.commands.Blame;
-import tech.hadenw.discordbot.commands.Choose;
-import tech.hadenw.discordbot.commands.Closepoll;
-import tech.hadenw.discordbot.commands.CringeThat;
-import tech.hadenw.discordbot.commands.Dev;
-import tech.hadenw.discordbot.commands.DropResponse;
-import tech.hadenw.discordbot.commands.DropTally;
-import tech.hadenw.discordbot.commands.DropTrigger;
-import tech.hadenw.discordbot.commands.EightBall;
-import tech.hadenw.discordbot.commands.Enhance;
-import tech.hadenw.discordbot.commands.ForumWeapon;
-import tech.hadenw.discordbot.commands.ForumWeaponList;
-import tech.hadenw.discordbot.commands.GIF;
-import tech.hadenw.discordbot.commands.Help;
-import tech.hadenw.discordbot.commands.ICommand;
-import tech.hadenw.discordbot.commands.IdiotThat;
-import tech.hadenw.discordbot.commands.Jinping;
-import tech.hadenw.discordbot.commands.ListEmoteStats;
-import tech.hadenw.discordbot.commands.ListResponses;
-import tech.hadenw.discordbot.commands.ListTriggers;
-import tech.hadenw.discordbot.commands.Minesweeper;
-import tech.hadenw.discordbot.commands.Modify;
-import tech.hadenw.discordbot.commands.Music;
-import tech.hadenw.discordbot.commands.NewSeed;
-import tech.hadenw.discordbot.commands.PinThat;
-import tech.hadenw.discordbot.commands.React;
-import tech.hadenw.discordbot.commands.Report;
-import tech.hadenw.discordbot.commands.ResetEmoteStats;
-import tech.hadenw.discordbot.commands.Roll;
-import tech.hadenw.discordbot.commands.SetTally;
-import tech.hadenw.discordbot.commands.ShowTallies;
-import tech.hadenw.discordbot.commands.SimonSays;
-import tech.hadenw.discordbot.commands.Source;
-import tech.hadenw.discordbot.commands.Startpoll;
-import tech.hadenw.discordbot.commands.Thoughts;
-import tech.hadenw.discordbot.commands.Timeout;
-import tech.hadenw.discordbot.commands.Timer;
-import tech.hadenw.discordbot.commands.WhatShouldIDo;
-import tech.hadenw.discordbot.commands.Wiki;
+import tech.hadenw.discordbot.commands.*;
 import tech.hadenw.discordbot.tasks.TypingTask;
 
 // After the bot is summoned, this is called to determine which command to run
@@ -117,52 +77,58 @@ public class CommandHandler {
 		for(ICommand c : commands) {
 			for(String a : c.getAliases()) {
 				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-					
+
 					// Log command usage
 					String alias = c.getAliases()[0].toLowerCase();
 					HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
-					
+
 					if(stats.containsKey(alias)) {
 						int s = stats.get(alias);
 						stats.put(alias, s+1);
 					}else {
 						stats.put(alias, 1);
 					}
-					
+
 					if(!(server==null && c.requiresGuild())) {
 						int position = cmd.toLowerCase().indexOf(a.toLowerCase()) + a.length();
 						String args = c.sanitize(cmd.substring(position).trim());
-						String r = c.run(args, author, message);
-						
-						if(r != null) {
-							if(r.length() > 0) {
-								if(r.length() > 2000) {
-									String h1 = r.substring(0, 2000);
-									h1 = h1.substring(0, h1.lastIndexOf(" "));
-									
-									String h2 = r.substring(h1.length()-1);
-									
-									message.getChannel().sendMessage(h1).queue();
-									message.getChannel().sendMessage(h2).queue();
-									return;
-								}
-								
-								new TypingTask(message.getChannel(), r);
-							}
-						}else {
-							// If a command returns null, send the 404 message.
-							message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
-						}
+
+						// Run the command async and send a message back when it finishes.
+						CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+								.thenAccept(r -> sendMessage(r, message));
+
 					}else {
 						message.getChannel().sendMessage(Errors.GUILD_REQUIRED).queue();
 					}
-					
+
 					return;
 				}
 			}
 		}
 		
 		message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
+	}
+
+	private void sendMessage(String r, Message message){
+		if(r != null) {
+			if(r.length() > 0) {
+				if(r.length() > 2000) {
+					String h1 = r.substring(0, 2000);
+					h1 = h1.substring(0, h1.lastIndexOf(" "));
+
+					String h2 = r.substring(h1.length()-1);
+
+					message.getChannel().sendMessage(h1).queue();
+					message.getChannel().sendMessage(h2).queue();
+					return;
+				}
+
+				new TypingTask(message.getChannel(), r);
+			}
+		}else {
+			// If a command returns null, send the 404 message.
+			message.getChannel().sendMessage(Errors.COMMAND_NOT_FOUND).queue();
+		}
 	}
 	
 	/**
