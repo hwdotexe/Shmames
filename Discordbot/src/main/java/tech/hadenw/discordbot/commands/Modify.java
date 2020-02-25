@@ -36,11 +36,10 @@ public class Modify implements ICommand {
 			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			
 			if(m.find()) {
-				BotSettingName setting = BotSettingName.valueOf(m.group(1).toUpperCase());
-				String value = m.group(2);
-				
-				if(setting != null) {
-					
+				if(BotSettingName.contains(m.group(1))) {
+					BotSettingName setting = BotSettingName.valueOf(m.group(1).toUpperCase());
+					String value = m.group(2);
+
 					// Ensure that this setting is only changed by an Administrator.
 					if(setting == BotSettingName.ALLOW_MODIFY) {
 						if(!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
@@ -63,10 +62,10 @@ public class Modify implements ICommand {
 						return "";
 					}else {
 						// Not successful
-						return Errors.WRONG_USAGE;
+						return Errors.formatUsage(Errors.WRONG_USAGE, "`modify "+val.getName().toString()+" <"+val.getType().toString()+">`");
 					}
 				}else {
-					return "I couldn't find that setting.";
+					return Errors.formatUsage(Errors.SETTING_NOT_FOUND, "`modify`");
 				}
 			} else {
 				EmbedBuilder eBuilder = new EmbedBuilder();
@@ -93,23 +92,35 @@ public class Modify implements ICommand {
 			case CHANNEL:
 				try {
 					TextChannel mc = g.getTextChannelById(v.getValue());
-					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + mc.getAsMention() + "\n");
+					eBuilder.addField("**"+v.getName().toString()+"**" + "» :tv:", mc.getAsMention(), true);
 				}catch (Exception e){
-					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + "-UNKNOWN-" + "\n");
+					eBuilder.addField("**"+v.getName().toString()+"**" + "» :tv:", ":warning: INVALID", true);
 				}
 
 				break;
 			case EMOTE:
 				try {
 					Emote em = g.getEmoteById(v.getValue());
-					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + em.getAsMention() + "\n");
+					eBuilder.addField("**"+v.getName().toString()+"**" + "» :muscle:", em.getAsMention(), true);
 				}catch (Exception e){
-					eBuilder.appendDescription("**" + v.getName().toString() + "**:" + v.getType().toString() + " » " + "-UNKNOWN-" + "\n");
+					eBuilder.addField("**"+v.getName().toString()+"**" + "» :muscle:", ":warning: INVALID", true);
 				}
 
 				break;
+			case NUMBER:
+				eBuilder.addField("**"+v.getName().toString()+"**" + "» :hash:", v.getValue(), true);
+
+				break;
+			case BOOLEAN:
+				eBuilder.addField("**"+v.getName().toString()+"**" + "» :level_slider:", v.getValue(), true);
+
+				break;
+			case ROLE:
+				eBuilder.addField("**"+v.getName().toString()+"**" + "» :tools:", v.getValue(), true);
+
+				break;
 			default:
-				eBuilder.appendDescription("**"+v.getName().toString()+"**:"+v.getType().toString()+" » "+v.getValue()+"\n");
+				eBuilder.addField("**"+v.getName().toString()+"**" + "» :gear:", v.getValue(), true);
 		}
 	}
 

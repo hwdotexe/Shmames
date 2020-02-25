@@ -9,5 +9,15 @@ public enum BotSettingName {
 	REMOVAL_THRESHOLD,
 	APPROVAL_THRESHOLD,
 	APPROVAL_EMOTE,
-	ALLOW_MODIFY
+	ALLOW_MODIFY;
+
+	public static boolean contains(String opt){
+		for(BotSettingName v : BotSettingName.values()){
+			if(v.toString().equalsIgnoreCase(opt)){
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
