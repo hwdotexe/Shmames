@@ -42,7 +42,7 @@ public class PinThat implements ICommand {
 				
 				boolean channelFound = false;
 				for(TextChannel ch : message.getGuild().getTextChannels()) {
-					if(ch.getName().equalsIgnoreCase(b.getSettingFor(BotSettingName.PIN_CHANNEL).getValue())) {
+					if(ch.getId().equalsIgnoreCase(b.getSettingFor(BotSettingName.PIN_CHANNEL).getValue())) {
 						channelFound = true;
 						
 						EmbedBuilder eBuilder = new EmbedBuilder();

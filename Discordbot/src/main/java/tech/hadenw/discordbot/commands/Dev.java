@@ -137,7 +137,7 @@ public class Dev implements ICommand {
 					        	String channel = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL).getValue();
 					        	
 					        	try {
-									g.getTextChannelsByName(channel, true).get(0).sendMessage(embed).complete();
+									g.getTextChannelById(channel).sendMessage(embed).complete();
 									success++;
 								}catch(Exception e) {
 									// Was not able to send to this channel - add to failures.
