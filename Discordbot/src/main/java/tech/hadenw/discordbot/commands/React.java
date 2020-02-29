@@ -26,7 +26,7 @@ public class React implements ICommand {
 		
 		if(m.find()) {
 			try {
-				int messages = Integer.parseInt(m.group(2));
+				int messages = m.group(2).length();
 				String word = m.group(1);
 				
 				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
