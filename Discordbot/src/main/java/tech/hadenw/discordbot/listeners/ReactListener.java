@@ -25,22 +25,22 @@ public class ReactListener extends ListenerAdapter {
 				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
 					Utils.IncrementEmoteTally(b, emo.getId());
 				}
-			}
 
-			// Removal emote.
-			String removalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
+				// Removal emote.
+				String removalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
 
-			if (emo.getId().equals(removalEmote)) {
-				badTallyMessage(removalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
-				return;
-			}
+				if (emo.getId().equals(removalEmote)) {
+					badTallyMessage(removalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
+					return;
+				}
 
-			// Approval emote.
-			String approvalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
+				// Approval emote.
+				String approvalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
 
-			if (emo.getId().equals(approvalEmote)) {
-				goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
-				return;
+				if (emo.getId().equals(approvalEmote)) {
+					goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
+					return;
+				}
 			}
 		}
 	}
