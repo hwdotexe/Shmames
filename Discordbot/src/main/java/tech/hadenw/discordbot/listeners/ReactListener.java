@@ -13,7 +13,18 @@ import tech.hadenw.discordbot.commands.ICommand;
 import tech.hadenw.discordbot.storage.BotSettingName;
 import tech.hadenw.discordbot.storage.Brain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReactListener extends ListenerAdapter {
+	private List<String> goodTallyCache;
+	private List<String> badTallyCache;
+
+	public ReactListener(){
+		goodTallyCache = new ArrayList<String>();
+		badTallyCache = new ArrayList<String>();
+	}
+
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
 		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
@@ -64,25 +75,29 @@ public class ReactListener extends ListenerAdapter {
 		}
 
 		if(votes >= threshold){
-			String name = m.getAuthor().getName();
-			name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
-			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "badbot" : "bad"+name;
+			if(!badTallyCache.contains(m.getId())) {
+				badTallyCache.add(m.getId());
 
-			// Remove the message & process
-			try {
-				m.getChannel().deleteMessageById(m.getIdLong()).queue();
+				String name = m.getAuthor().getName();
+				name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+				String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "badbot" : "bad" + name;
 
-				for(ICommand c : CommandHandler.getLoadedCommands()) {
-					for(String a : c.getAliases()) {
-						if(a.equalsIgnoreCase("addtally")) {
-							String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-							m.getChannel().sendMessage(response).queue();
-							return;
+				// Remove the message & process
+				try {
+					m.getChannel().deleteMessageById(m.getIdLong()).queue();
+
+					for (ICommand c : CommandHandler.getLoadedCommands()) {
+						for (String a : c.getAliases()) {
+							if (a.equalsIgnoreCase("addtally")) {
+								String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
+								m.getChannel().sendMessage(response).queue();
+								return;
+							}
 						}
 					}
+				} catch (Exception ex) {
+					m.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
 				}
-			}catch(Exception ex) {
-				m.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
 			}
 		}
 	}
@@ -106,17 +121,21 @@ public class ReactListener extends ListenerAdapter {
 		}
 
 		if(votes >= threshold){
-			String name = m.getAuthor().getName();
-			name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
-			String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "good"+name;
+			if(!goodTallyCache.contains(m.getId())) {
+				goodTallyCache.add(m.getId());
 
-			// Process.
-			for(ICommand c : CommandHandler.getLoadedCommands()) {
-				for(String a : c.getAliases()) {
-					if(a.equalsIgnoreCase("addtally")) {
-						String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-						m.getChannel().sendMessage(response).queue();
-						return;
+				String name = m.getAuthor().getName();
+				name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+				String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "good" + name;
+
+				// Process.
+				for (ICommand c : CommandHandler.getLoadedCommands()) {
+					for (String a : c.getAliases()) {
+						if (a.equalsIgnoreCase("addtally")) {
+							String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
+							m.getChannel().sendMessage(response).queue();
+							return;
+						}
 					}
 				}
 			}
