@@ -36,7 +36,7 @@ public class Nickname implements ICommand {
 				Member bot = message.getGuild().getMember(Shmames.getJDA().getSelfUser());
 
 				try {
-					bot.modifyNickname(m.group(1)).queue();
+					bot.modifyNickname(args).queue();
 
 					return "Nickname changed!";
 				}catch (Exception e){
