@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.BotSetting;
 import tech.hadenw.discordbot.storage.BotSettingName;
 import tech.hadenw.discordbot.storage.Brain;
@@ -27,12 +28,9 @@ public class Modify implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-		String rs = b.getSettingFor(BotSettingName.ALLOW_MODIFY).getValue();
-		
-		Role r = !rs.equals("administrator") && !rs.equals("everyone") ? Shmames.getJDA().getGuildById(b.getGuildID()).getRolesByName(rs, true).get(0) : null;
-		
-		// Allow modification by administrators, users with roles, or if running in debug mode.
-		if(message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) || rs.equals("everyone") || message.getGuild().getMember(author).getRoles().contains(r) || Shmames.isDebug) {
+		BotSetting canModify = b.getSettingFor(BotSettingName.ALLOW_MODIFY);
+
+		if(Utils.CheckUserPermission(canModify, message.getGuild().getMember(author))) {
 			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
 			
 			if(m.find()) {

@@ -45,6 +45,7 @@ public class CommandHandler {
 		commands.add(new Modify());
 		commands.add(new Music());
 		commands.add(new NewSeed());
+		commands.add(new Nickname());
 		commands.add(new PinThat());
 		commands.add(new React());
 		commands.add(new Report());

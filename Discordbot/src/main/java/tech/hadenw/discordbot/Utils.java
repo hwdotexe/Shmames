@@ -15,8 +15,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tech.hadenw.discordbot.storage.BotSetting;
+import tech.hadenw.discordbot.storage.BotSettingType;
 import tech.hadenw.discordbot.storage.Brain;
 
 public class Utils {
@@ -294,5 +300,32 @@ public class Utils {
 		}else {
 			b.getEmoteStats().put(id, 1);
 		}
+	}
+
+	/**
+	 * Checks whether the member complies with the setting's permission
+	 * requirements, if applicable.
+	 * @param setting The setting to check.
+	 * @param member The user to check.
+	 * @return A boolean representing whether the user complies.
+	 */
+	public static boolean CheckUserPermission(BotSetting setting, Member member){
+		if(setting.getType() == BotSettingType.ROLE) {
+			String sv = setting.getValue();
+			Role r = !sv.equals("administrator") && !sv.equals("everyone") ? member.getGuild().getRolesByName(sv, true).get(0) : null;
+
+			if(Shmames.isDebug)
+				return true;
+
+			if(sv.equals("everyone"))
+				return true;
+
+			if(sv.equals("administrator"))
+				return member.hasPermission(Permission.ADMINISTRATOR);
+
+			return member.getRoles().contains(r);
+		}
+
+		return false;
 	}
 }
