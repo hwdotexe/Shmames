@@ -10,14 +10,18 @@ import java.util.List;
 
 public class HangmanGame {
     private String word;
+    private String hint;
+    private String dictionary;
     private List<Character> correctGuesses;
     private List<Character> incorrectGuesses;
     private int lives;
     private long channelID;
     private long messageID;
 
-    public HangmanGame(String answer){
+    public HangmanGame(String answer, String hint, String dictionary){
         this.word = answer.toLowerCase();
+        this.hint = hint;
+        this.dictionary = dictionary;
         this.correctGuesses = new ArrayList<Character>();
         this.incorrectGuesses = new ArrayList<Character>();
         this.lives = 6;
@@ -43,6 +47,20 @@ public class HangmanGame {
 
     public String getWord(){
         return this.word;
+    }
+
+    public String getHint(){
+        if(this.hint != null)
+            return this.hint;
+
+        return "<Hint Unknown>";
+    }
+
+    public String getDictionary(){
+        if(this.dictionary != null)
+            return this.dictionary;
+
+        return "<Hint Unknown>";
     }
 
     public List<Character> getCorrectGuesses(){

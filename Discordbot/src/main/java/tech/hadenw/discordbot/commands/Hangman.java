@@ -10,23 +10,22 @@ import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.HangmanDictionary;
 import tech.hadenw.discordbot.storage.HangmanGame;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Hangman implements ICommand {
-	private String[] puzzleDict;
+	private List<HangmanDictionary> dictionaries;
 
 	public Hangman(){
-		puzzleDict = new String[] {"Warlock", "Changeling", "Dragonborn", "Mage Hand", "Prestidigitation", "Natural Twenty", "Tiefling", "King Dedede", "Princess Zelda",
-		"Ganondorf", "Bokoblin", "Triforce", "Mindflayer", "Philter of Love", "Blade Ward", "Mending", "Thunderclap", "Detect Magic", "Speak with Animals", "Ray of Enfeeblement",
-		"Gargoyle", "Archgriffin", "Godling", "Grave Hag", "Cockatrice", "Drowner", "Endrega", "Werewolf", "Nightwraith", "Marauder", "Necromancer", "Dark Brotherhood",
-		"Tetsutetsu Tetsutetsu", "Van Hohenheim", "Edward Elric", "Roy Mustang", "Shou Tucker", "Jonathan Joestar", "Dio Brando", "Jotaro Kujo", "Ludo Bagman", "Dolores Umbridge",
-		"Bellatrix Lestrange", "Braccus Rex", "Handsome Jack", "Cloud Strife", "Edelgard von Hresvelg", "Sylvain Jose Gautier", "Mike Stoklasa", "General Massive Systems",
-		"Harrison Armory", "Harrow", "Wukong", "Octavia", "Valkyr", "Dangerous Mute Lunatic", "Combustible Lemons", "Structurally Superfluous", "Mean Mother Hubbard",
-		"Song of Storms", "Your Mom"};
+		dictionaries = new ArrayList<HangmanDictionary>();
+
+		createDictionaries();
 	}
 
 	@Override
@@ -36,34 +35,68 @@ public class Hangman implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "hangman <start|guess> [letter|answer]";
+		return "hangman <start|guess|list> [dictionary|letter|answer]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((start)|(guess))( [a-z\\s]+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((start)|(guess)|(list))( [a-z\\s]+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
-			if(m.group(1).equalsIgnoreCase("start")){
+			if(m.group(1).equalsIgnoreCase("list")){
+				StringBuilder sb = new StringBuilder();
+
+				for(HangmanDictionary hd : dictionaries){
+					if(sb.length() > 0)
+						sb.append(", ");
+
+					sb.append(hd.getName());
+				}
+
+				return "Available dictionaries: "+sb.toString()+", or leave blank to use all.";
+			}else if(m.group(1).equalsIgnoreCase("start")){
 				if(b.getHangmanGame() != null) {
 					TextChannel tc = message.getGuild().getTextChannelById(b.getHangmanGame().getChannelID());
+
 					return "There is already a Hangman game running in " + tc.getAsMention();
 				}
 
-				String word = puzzleDict[Utils.getRandom(puzzleDict.length)];
-				HangmanGame newGame = new HangmanGame(word);
+				String word = "";
+				String hint = "";
+				String dictionary = "";
+
+				if(m.group(5) != null){
+					// Try using a custom dictionary
+					String dict = m.group(5).trim();
+
+					for(HangmanDictionary hd : dictionaries){
+						if(hd.getName().equalsIgnoreCase(dict)){
+							word = hd.randomWord();
+							hint = hd.getWords().get(word);
+							dictionary = hd.getName();
+							break;
+						}
+					}
+				}else{
+					HangmanDictionary hd = dictionaries.get(Utils.getRandom(dictionaries.size()));
+					word = hd.randomWord();
+					hint = hd.getWords().get(word);
+					dictionary = hd.getName();
+				}
+
+				HangmanGame newGame = new HangmanGame(word, hint, dictionary);
 
 				sendEmbeddedMessage(message.getTextChannel(), newGame);
 				b.setHangmanGame(newGame);
 			}else if(m.group(1).equalsIgnoreCase("guess")){
-				if(m.group(4) != null) {
+				if(m.group(5) != null) {
 					if (b.getHangmanGame() == null)
 						return "There isn't a Hangman game running! Try starting one.";
 
 					HangmanGame g = b.getHangmanGame();
-					String guess = m.group(4).toLowerCase().trim();
+					String guess = m.group(5).toLowerCase().trim();
 
 					if(guess.length() == 1){
 						// Make sure they haven't already guessed this one.
@@ -148,6 +181,7 @@ public class Hangman implements ICommand {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setAuthor("Let's Play Hangman!");
+		eBuilder.setTitle(g.getDictionary()+" » "+g.getHint());
 		eBuilder.setColor(Color.WHITE);
 		eBuilder.setFooter("Already guessed: "+g.getIncorrectGuesses());
 
@@ -180,6 +214,112 @@ public class Hangman implements ICommand {
 		}
 
 		return sb.toString();
+	}
+
+	private void createDictionaries(){
+		HangmanDictionary videoGames = new HangmanDictionary("VideoGames");
+		HangmanDictionary dnd = new HangmanDictionary("DnD");
+		HangmanDictionary anime = new HangmanDictionary("Anime");
+		HangmanDictionary media = new HangmanDictionary("BooksMoviesTV");
+
+		videoGames.addWord("King Dedede", "Character");
+		videoGames.addWord("Princess Zelda", "Character");
+		videoGames.addWord("Ganondorf", "Character");
+		videoGames.addWord("Bokoblin", "Creature");
+		videoGames.addWord("Triforce", "Thing");
+		videoGames.addWord("Gargoyle", "Creature");
+		videoGames.addWord("Archgriffin", "Creature");
+		videoGames.addWord("Godling", "Creature");
+		videoGames.addWord("Grave Hag", "Creature");
+		videoGames.addWord("Cockatrice", "Creature");
+		videoGames.addWord("Drowner", "Creature");
+		videoGames.addWord("Endrega", "Creature");
+		videoGames.addWord("Moblin", "Creature");
+		videoGames.addWord("Werewolf", "Creature");
+		videoGames.addWord("Nightwraith", "Creature");
+		videoGames.addWord("Necromancer", "Thing");
+		videoGames.addWord("Dark Brotherhood", "Thing");
+		videoGames.addWord("Cloud Strife", "Character");
+		videoGames.addWord("Edelgard von Hresvelg", "Character");
+		videoGames.addWord("Sylvain Jose Gautier", "Character");
+		videoGames.addWord("Harrow", "Character");
+		videoGames.addWord("Wukong", "Character");
+		videoGames.addWord("Octavia", "Character");
+		videoGames.addWord("Valkyr", "Character");
+		videoGames.addWord("Dangerous Mute Lunatic", "Quote");
+		videoGames.addWord("Combustible Lemons", "Quote");
+		videoGames.addWord("Structurally Superfluous", "Quote");
+		videoGames.addWord("Mean Mother Hubbard", "Quote");
+		videoGames.addWord("Song of Storms", "Thing");
+		videoGames.addWord("Handsome Jack", "Character");
+		videoGames.addWord("Braccus Rex", "Character");
+
+		dnd.addWord("Warlock", "Thing");
+		dnd.addWord("Changeling", "Creature");
+		dnd.addWord("Dragonborn", "Creature");
+		dnd.addWord("Mage Hand", "Spell");
+		dnd.addWord("Prestidigitation", "Spell");
+		dnd.addWord("Natural Twenty", "Thing");
+		dnd.addWord("Tiefling", "Creature");
+		dnd.addWord("Mindflayer", "Creature");
+		dnd.addWord("Beholder", "Creature");
+		dnd.addWord("Philter of Love", "Thing");
+		dnd.addWord("Blade Ward", "Spell");
+		dnd.addWord("Mending", "Spell");
+		dnd.addWord("Patron", "Thing");
+		dnd.addWord("Thunderwave", "Spell");
+		dnd.addWord("Detect Magic", "Spell");
+		dnd.addWord("Speak with Animals", "Spell");
+		dnd.addWord("Ray of Enfeeblement", "Spell");
+		dnd.addWord("Cockatrice", "Creature");
+		dnd.addWord("Werewolf", "Creature");
+		dnd.addWord("Necromancer", "Thing");
+		dnd.addWord("How do You Want to Do This", "Quote");
+		dnd.addWord("Eldritch Blast", "Spell");
+		dnd.addWord("Goblin", "Creature");
+		dnd.addWord("Tiamat", "Creature");
+
+		anime.addWord("Tetsutetsu Tetsutetsu", "Character");
+		anime.addWord("Van Hohenheim", "Character");
+		anime.addWord("Edward Elric", "Character");
+		anime.addWord("Roy Mustang", "Character");
+		anime.addWord("Shou Tucker", "Character");
+		anime.addWord("Jonathan Joestar", "Character");
+		anime.addWord("Dio Brando", "Character");
+		anime.addWord("Jotaro Kujo", "Character");
+		anime.addWord("Guren Mk II", "Thing");
+		anime.addWord("Lelouch Vi Britannia", "Character");
+		anime.addWord("Lancelot", "Thing");
+		anime.addWord("Suzaku Kururugi", "Character");
+		anime.addWord("Over Nine Thousand", "Quote");
+		anime.addWord("A Cruel Angels Thesis", "Song");
+		anime.addWord("Again", "Song");
+		anime.addWord("Rewrite", "Song");
+		anime.addWord("Stand Proud", "Song");
+
+		media.addWord("Dolores Umbridge", "Character");
+		media.addWord("Harry Potter", "Character");
+		media.addWord("Mike Stoklasa", "Person");
+		media.addWord("Nicolas Cage", "Person");
+		media.addWord("Albus Dumbledore", "Character");
+		media.addWord("Jerry Seinfeld", "Person");
+		media.addWord("Darth Vader", "Character");
+		media.addWord("Sheev Palpatine", "Character");
+		media.addWord("Jarjar Binx", "Character");
+		media.addWord("Shawshank Redemption", "Film");
+		media.addWord("Morgan Freeman", "Person");
+		media.addWord("Thanos", "Character");
+		media.addWord("Iron Man", "Character");
+		media.addWord("Peter Parker", "Character");
+		media.addWord("Rowan Atkinson", "Person");
+		media.addWord("Citizen Kane", "Film");
+		media.addWord("Inception", "Film");
+		media.addWord("The Matrix", "Film");
+
+		this.dictionaries.add(videoGames);
+		this.dictionaries.add(dnd);
+		this.dictionaries.add(anime);
+		this.dictionaries.add(media);
 	}
 
 	private String getHangmanASCII(int lives){
