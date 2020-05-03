@@ -35,6 +35,7 @@ public class CommandHandler {
 		commands.add(new ForumWeaponList());
 		commands.add(new ForumWeapon());
 		commands.add(new GIF());
+		commands.add(new Hangman());
 		commands.add(new Help());
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());

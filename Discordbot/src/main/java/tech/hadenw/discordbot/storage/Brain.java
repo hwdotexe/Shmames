@@ -20,6 +20,7 @@ public class Brain {
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
+	private HangmanGame hangmanGame;
 	
 	public Brain(String gid) {
 		guildID = gid;
@@ -33,6 +34,7 @@ public class Brain {
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
+		hangmanGame = null;
 		
 		loadFirstRunDefaults();
 	}
@@ -70,6 +72,14 @@ public class Brain {
 			activePolls = new ArrayList<Poll>();
 		
 		return activePolls;
+	}
+
+	public HangmanGame getHangmanGame(){
+		return hangmanGame;
+	}
+
+	public void setHangmanGame(HangmanGame g){
+		this.hangmanGame = g;
 	}
 	
 	/*
