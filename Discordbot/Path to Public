@@ -8,7 +8,7 @@ ADD:
         [ Admins can link servers together with a 1-time GUID sent via PM ]
         [ Command to link/view/unlink ]
     - Donate command
-    - Poll user permissions
+    [DONE] - Poll user permissions
     - Server link permissions
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents
