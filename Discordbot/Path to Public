@@ -20,10 +20,24 @@ CHANGE:
     - Move FWs to a server-specific brain
     [DONE] - Verify limits of API keys // WA-2000, Tenor-?
     [DONE] - Rename Ronald to Hate, and convert old data
-    - Don't save to disk when adding/removing tallies and triggers and things.
+    [DONE] - Don't save to disk when adding/removing tallies and triggers and things.
 
 + Can the bot write to the audit log when someone uses the Echo command?
 + Does PinThat need a permission?
 
 
 Can produce content that meets a G through PG-13 rating via Tenor
+
+
+
+=== FAMILY BREAKDOWN (lol) ===
+A Family is a connection between two or more servers. A Family is owned by one individual, who alone can generate a
+Family Join Code.
+
+To add a server to a Family, the user first creates a code on a server that's already a member of the Family. Then, that
+code can be shared with another server to add it to the group.
+
+Only server Administrators can join a server to a Family, but they don't need to be the Family owner, once a Code has been
+created. Any Administrator can remove the server from a Family at will.
+
+Codes are single-use only, and expire when used, or when a join does not complete (to avoid other users sniping).

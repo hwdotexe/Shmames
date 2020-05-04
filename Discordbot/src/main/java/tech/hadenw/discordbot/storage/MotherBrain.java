@@ -10,11 +10,13 @@ public class MotherBrain {
 	private HashMap<String, ActivityType> statuses;
 	private HashMap<String, Integer> commandStats;
 	private List<ForumWeaponObj> forumWeapons;
+	private List<Family> serverFamilies;
 	
 	public MotherBrain() {
 		statuses = new HashMap<String, ActivityType>();
 		commandStats = new HashMap<String, Integer>();
 		forumWeapons = new ArrayList<ForumWeaponObj>();
+		serverFamilies = new ArrayList<Family>();
 	}
 	
 	public HashMap<String, ActivityType> getStatuses(){
@@ -33,6 +35,13 @@ public class MotherBrain {
 			forumWeapons = new ArrayList<ForumWeaponObj>();
 		
 		return forumWeapons;
+	}
+
+	public List<Family> getServerFamilies(){
+		if(this.serverFamilies == null)
+			this.serverFamilies = new ArrayList<Family>();
+
+		return this.serverFamilies;
 	}
 	
 	/**
