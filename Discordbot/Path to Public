@@ -21,3 +21,4 @@ CHANGE:
     - Rename Ronald to Hate, and convert old data
 
 + Can the bot write to the audit log when someone uses the Echo command?
++ Does PinThat need a permission?

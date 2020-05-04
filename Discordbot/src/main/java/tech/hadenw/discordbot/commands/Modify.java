@@ -22,7 +22,7 @@ public class Modify implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "modify [<setting> <value>]";
+		return "modify [<setting> [new value]]";
 	}
 	
 	@Override
@@ -31,36 +31,50 @@ public class Modify implements ICommand {
 		BotSetting canModify = b.getSettingFor(BotSettingName.ALLOW_MODIFY);
 
 		if(Utils.CheckUserPermission(canModify, message.getGuild().getMember(author))) {
-			Matcher m = Pattern.compile("^([\\w]+) ([\\w\\-]+)$").matcher(args);
+			Matcher m = Pattern.compile("^([\\w]+)( [\\w\\-]+)?$").matcher(args);
 			
 			if(m.find()) {
 				if(BotSettingName.contains(m.group(1))) {
-					BotSettingName setting = BotSettingName.valueOf(m.group(1).toUpperCase());
-					String value = m.group(2);
+					BotSettingName settingName = BotSettingName.valueOf(m.group(1).toUpperCase());
+					BotSetting setting = b.getSettingFor(settingName);
 
-					// Ensure that this setting is only changed by an Administrator.
-					if(setting == BotSettingName.ALLOW_MODIFY) {
-						if(!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
-							return Errors.NO_PERMISSION_USER;
+					if(m.group(2) != null) {
+						// Ensure that this setting is only changed by an Administrator.
+						if (settingName == BotSettingName.ALLOW_MODIFY) {
+							if (!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
+								return Errors.NO_PERMISSION_USER;
+							}
 						}
-					}
-					
-					BotSetting val = b.getSettingFor(setting);
-					
-					if(val.setValue(value, b)) {
+
+						String value = m.group(2).trim();
+
+						if (setting.setValue(value, b)) {
+							EmbedBuilder eBuilder = new EmbedBuilder();
+
+							eBuilder.setColor(Color.ORANGE);
+							flexValueType(eBuilder, setting, message.getGuild());
+							eBuilder.addField("Status", "Setting updated successfully!", false);
+							message.getChannel().sendMessage(eBuilder.build()).queue();
+
+							// Save the new settings
+							Shmames.getBrains().saveBrain(b);
+
+							return "";
+						} else {
+							// Not successful
+							return Errors.formatUsage(Errors.WRONG_USAGE, "`modify " + setting.getName().toString() + " <" + setting.getType().toString() + ">`");
+						}
+					}else{
+						//TODO
 						EmbedBuilder eBuilder = new EmbedBuilder();
-						
-				        eBuilder.setColor(Color.ORANGE);
-						flexValueType(eBuilder, val, message.getGuild());
-				        message.getChannel().sendMessage(eBuilder.build()).queue();
-				        
-				        // Save the new settings
-				        Shmames.getBrains().saveBrain(b);
-				        
+
+						eBuilder.setColor(Color.ORANGE);
+						flexValueType(eBuilder, setting, message.getGuild());
+						eBuilder.addField("Description", settingName.getDescription(), false);
+						eBuilder.addField("Type", setting.getType().name(), false);
+						message.getChannel().sendMessage(eBuilder.build()).queue();
+
 						return "";
-					}else {
-						// Not successful
-						return Errors.formatUsage(Errors.WRONG_USAGE, "`modify "+val.getName().toString()+" <"+val.getType().toString()+">`");
 					}
 				}else {
 					return Errors.formatUsage(Errors.SETTING_NOT_FOUND, "`modify`");
@@ -70,7 +84,7 @@ public class Modify implements ICommand {
 				
 		        eBuilder.setColor(Color.ORANGE);
 		        eBuilder.setTitle("Available settings:");
-		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols.");
+		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \"modify <setting>\" for info.");
 		        
 		        for(BotSetting v : b.getSettings()) {
 		        	flexValueType(eBuilder, v, message.getGuild());
