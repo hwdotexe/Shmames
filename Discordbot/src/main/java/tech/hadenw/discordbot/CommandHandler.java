@@ -1,7 +1,7 @@
 package tech.hadenw.discordbot;
 
-import java.nio.channels.Channel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -125,7 +125,7 @@ public class CommandHandler {
 	private void sendMessageToChannel(String r, MessageChannel channel){
 		if(r != null) {
 			if(r.length() > 0) {
-				for(String m : splitStringEvery(r, 2000)){
+				for(String m : splitString(r, 2000)){
 					new TypingTask(channel, m);
 				}
 			}
@@ -134,20 +134,27 @@ public class CommandHandler {
 		}
 	}
 
-	// https://stackoverflow.com/questions/12295711/split-a-string-at-every-nth-position
-	private String[] splitStringEvery(String s, int interval) {
-		int arrayLength = (int) Math.ceil(((s.length() / (double)interval)));
-		String[] result = new String[arrayLength];
+	private String[] splitString(String s, int interval) {
+		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
+		String[] result = new String[breaks];
 
-		int j = 0;
-		int lastIndex = result.length - 1;
+		int lastIndex = 0;
+		for (int i = 0; i < breaks; i++) {
+			if (s.length() >= (lastIndex + interval)) {
+				if (s.charAt(lastIndex + interval) != ' ') {
+					String sub = s.substring(lastIndex, lastIndex + interval);
+					int lastSpace = sub.lastIndexOf(" ");
 
-		for (int i = 0; i < lastIndex; i++) {
-			result[i] = s.substring(j, j + interval);
-			j += interval;
+					result[i] = s.substring(lastIndex, lastSpace);
+					lastIndex = lastSpace;
+				} else {
+					result[i] = s.substring(lastIndex, lastIndex + interval);
+					lastIndex += interval;
+				}
+			} else {
+				result[i] = s.substring(lastIndex);
+			}
 		}
-
-		result[lastIndex] = s.substring(j);
 
 		return result;
 	}

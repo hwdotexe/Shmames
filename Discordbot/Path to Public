@@ -1,0 +1,23 @@
+== James' Path to Public ==
+
+FIX:
+    [DONE] - Fwlist and Emote Stats break when sending a long message
+ADD:
+    - Support sharding
+    - Server Families
+        [ Admins can link servers together with a 1-time GUID sent via PM ]
+        [ Command to link/view/unlink ]
+    - Donate command
+    - Poll user permissions
+    - Server link permissions
+REMOVE:
+    - Source, Music, Report commands; Dev privileged intents
+CHANGE:
+    - Use a database for storage, so all shards can be created equal
+    - FWs and Echo emotes should be Family-only
+        [ when using a Family, james will search all servers in that family after searching the current server ]
+    - Move FWs to a server-specific brain
+    - Verify limits of API keys
+    - Rename Ronald to Hate, and convert old data
+
++ Can the bot write to the audit log when someone uses the Echo command?
