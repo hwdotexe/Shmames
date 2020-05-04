@@ -56,9 +56,6 @@ public class Modify implements ICommand {
 							eBuilder.addField("Status", "Setting updated successfully!", false);
 							message.getChannel().sendMessage(eBuilder.build()).queue();
 
-							// Save the new settings
-							Shmames.getBrains().saveBrain(b);
-
 							return "";
 						} else {
 							// Not successful

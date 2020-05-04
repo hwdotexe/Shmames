@@ -24,8 +24,8 @@ public class DailyTask extends TimerTask{
 		
     	c.setTime(new Date());
     	
-    	// Run this now, and then again every 24 hours
-		t.schedule(this, c.getTime(), 86400000);
+    	// Run this now, and then again every 3 hours
+		t.schedule(this, c.getTime(), 18000000);
 	}
 	
 	public void run() {
@@ -37,9 +37,10 @@ public class DailyTask extends TimerTask{
 		// Save all brains
 		for(Brain b : Shmames.getBrains().getBrains()) {
 			Shmames.getBrains().saveBrain(b);
-			Shmames.getBrains().saveMotherBrain();
 		}
 
-		System.out.println("[ DAILY AUTOSAVE TASK RAN ]");
+		Shmames.getBrains().saveMotherBrain();
+
+		System.out.println("[ AUTOSAVE TASK RAN ]");
 	}
 }

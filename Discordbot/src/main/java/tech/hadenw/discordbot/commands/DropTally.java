@@ -26,12 +26,10 @@ public class DropTally implements ICommand {
 
 			if (tallies - 1 < 1) {
 				b.getTallies().remove(args);
-				Shmames.getBrains().saveBrain(b);
 				
 				return "`" + args + "` hast been removed, sire";
 			} else {
 				b.getTallies().put(args, tallies - 1);
-				Shmames.getBrains().saveBrain(b);
 				
 				return "Current tallies for `" + args + "`: `" + b.getTallies().get(args) + "`";
 			}

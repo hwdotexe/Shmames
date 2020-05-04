@@ -24,7 +24,6 @@ public class DropTrigger implements ICommand {
 				
 				if (b.getTriggers().containsKey(args)) {
 					b.getTriggers().remove(args);
-					Shmames.getBrains().saveBrain(b);
 	
 					return "I threw it on the **GROUND**!";
 				} else

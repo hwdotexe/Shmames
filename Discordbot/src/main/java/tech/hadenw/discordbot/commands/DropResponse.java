@@ -38,7 +38,6 @@ public class DropResponse implements ICommand {
 				if(responses.size() >= rNum) {
 					Response r = responses.get(rNum-1);
 					b.removeTriggerResponse(r);
-					Shmames.getBrains().saveBrain(b);
 					
 					return "Removed \""+r.getResponse()+"\"!";
 				}else {

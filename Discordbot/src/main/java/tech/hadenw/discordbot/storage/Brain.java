@@ -91,6 +91,9 @@ public class Brain {
 	}
 	
 	public List<Response> getTriggerResponses(){
+		if(triggerResponses == null)
+			triggerResponses = new ArrayList<Response>();
+
 		return triggerResponses;
 	}
 	

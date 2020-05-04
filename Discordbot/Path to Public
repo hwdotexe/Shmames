@@ -20,6 +20,7 @@ CHANGE:
     - Move FWs to a server-specific brain
     [DONE] - Verify limits of API keys // WA-2000, Tenor-?
     [DONE] - Rename Ronald to Hate, and convert old data
+    - Don't save to disk when adding/removing tallies and triggers and things.
 
 + Can the bot write to the audit log when someone uses the Echo command?
 + Does PinThat need a permission?

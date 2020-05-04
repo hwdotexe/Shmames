@@ -32,15 +32,12 @@ public class SetTally implements ICommand {
 			if (b.getTallies().containsKey(tally)) {
 				if(count == 0) {
 					b.getTallies().remove(tally);
-					Shmames.getBrains().saveBrain(b);
 					
 					return "`" + tally + "` hast been removed, sire";
 				}
 			}
 			
 			b.getTallies().put(tally, count);
-			
-			Shmames.getBrains().saveBrain(b);
 	
 			return "Current tally for `" + tally + "`: `"+ count + "`";
 		} else {

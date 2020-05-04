@@ -21,7 +21,6 @@ public class ResetEmoteStats implements ICommand {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 		
 		b.getEmoteStats().clear();
-		Shmames.getBrains().saveBrain(b);
 
 		return "We didn't need those anyway ;} #StatsCleared!";
 	}

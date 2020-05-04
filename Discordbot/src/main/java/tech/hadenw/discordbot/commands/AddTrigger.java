@@ -33,7 +33,6 @@ public class AddTrigger implements ICommand {
 			if (!b.getTriggers().keySet().contains(newtrigger)) {
 				if (TriggerType.byName(nttype) != null) {
 					b.getTriggers().put(newtrigger, TriggerType.byName(nttype));
-					Shmames.getBrains().saveBrain(b);
 					
 					return "I will now send a `" + TriggerType.byName(nttype).toString()+ "` response when I hear `" + newtrigger + "`!";
 				} else {

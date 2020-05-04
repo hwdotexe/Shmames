@@ -33,7 +33,6 @@ public class AddResponse implements ICommand {
 	
 			if (TriggerType.byName(nrtype) != null) {
 				b.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
-				Shmames.getBrains().saveBrain(b);
 
 				return "Added :+1:";
 			} else {

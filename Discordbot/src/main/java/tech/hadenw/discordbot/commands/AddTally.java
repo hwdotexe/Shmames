@@ -24,8 +24,6 @@ public class AddTally implements ICommand {
 		} else {
 			b.getTallies().put(args, 1);
 		}
-		
-		Shmames.getBrains().saveBrain(b);
 
 		return "Current tally for `" + args + "`: `"+ b.getTallies().get(args) + "`";
 	}
