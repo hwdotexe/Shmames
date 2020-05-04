@@ -11,7 +11,7 @@ ADD:
     - Poll user permissions
     - Server link permissions
 REMOVE:
-    - Source, Music, Report commands; Dev privileged intents
+    [DONE] - Source, Music, Report commands; Dev privileged intents
 CHANGE:
     - Use a database for storage, so all shards can be created equal
     - FWs and Echo emotes should be Family-only

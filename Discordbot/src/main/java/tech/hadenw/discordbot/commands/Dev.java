@@ -95,21 +95,6 @@ public class Dev implements ICommand {
 						}
 						
 						return answer;
-					} else if(args.toLowerCase().startsWith("getmembers")) {
-						args = args.substring("getmembers".length()+1).trim();
-						
-						String ms = "";
-						for(Member m : Shmames.getJDA().getGuildById(args).getMembers()) {
-							if(ms.length() > 0)
-								ms += ", ";
-							
-							ms += m.getUser().getName();
-						}
-						
-						if(ms.length() > 2000)
-							ms = ms.substring(0, 1997)+"...";
-						
-						return ms;
 					} else if(args.toLowerCase().startsWith("announce")) {
 						args = args.substring("announce".length()+1).trim();
 						
@@ -216,75 +201,7 @@ public class Dev implements ICommand {
 						Shmames.getBrains().saveMotherBrain();
 						
 						return "Saved all brains to disk!";
-					} else if(args.toLowerCase().startsWith("addperm")) {
-						args = args.substring("addperm".length()+1).trim();
-						String[] cmd = args.split(" ", 3);
-						String gid = cmd[0].trim();
-						String pid = cmd[1].trim();
-						String rid = cmd[2].trim();
-						
-						for(Guild g : Shmames.getJDA().getGuilds()) {
-							if(g.getId().equals(gid)) {
-								for(Role r : g.getRoles()) {
-									if(r.getName().equalsIgnoreCase(rid)) {
-										try {
-											Permission p = Permission.valueOf(pid.toUpperCase());
-											
-											r.getManager().givePermissions(p).queue();
-										}catch(Exception e) {
-											return "I don't have permission, sir.";
-										}
-										
-										return "The deed is done";
-									}
-								}
-								
-								break;
-							}
-						}
-						
-						return "Guild or Role not found";
-					} else if(args.toLowerCase().startsWith("getperms")) {
-						String s = "";
-						
-						for(Permission p : Permission.values()) {
-							s += p.toString();
-							s += "\n";
-						}
-						
-						return s;
-					} else if(args.toLowerCase().startsWith("nuke")) {
-						args = args.substring("nuke".length()+1).trim();
-						
-						for(Guild g : Shmames.getJDA().getGuilds()) {
-							if(g.getId().equals(args)) {
-								int chs = 0;
-								int rs = 0;
-								
-								for(TextChannel ch : g.getTextChannels()) {
-									try {
-										ch.delete().complete();
-										chs++;
-									}catch(Exception e) {
-										// Was not able to delete this channel.
-									}
-								}
-								
-								for(Role r : g.getRoles()) {
-									try {
-										r.delete().complete();
-										rs++;
-									}catch(Exception e) {
-										// Was not able to delete this role.
-									}
-								}
-								
-								return "Nuked "+chs+" text channels and "+rs+" roles from server \""+g.getName()+"\"";
-							}
-						}
-						
-						return "That guild wasn't found :/";
-					} else {
+					}  else {
 						return "That command wasn't recognized.";
 					}
 				} else {
@@ -297,15 +214,12 @@ public class Dev implements ICommand {
 							+ "leave <guildID>\n"
 							+ "getReports\n"
 							+ "clearReports\n"
-							+ "getMembers <guildID>\n"
 							+ "saveBrains\n"
-							+ "inviteme <guildID>\n"
-							+ "addPerm <guildID> <permission> <role>\n"
-							+ "getperms\n"
-							+ "nuke <guildID>";
+							+ "inviteme <guildID>";
 				}
-			}else {
-				return "That command is reserved for my friends _only_";
+			} else {
+				return "You cannot use the Developer command! This is used for bot maintenance tasks, and is restricted" +
+						"to the bot developer.";
 			}
 		}
 		

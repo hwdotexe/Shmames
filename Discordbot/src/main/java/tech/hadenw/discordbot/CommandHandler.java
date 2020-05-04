@@ -44,18 +44,18 @@ public class CommandHandler {
 		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
-		commands.add(new Music());
+//		commands.add(new Music());
 		commands.add(new NewSeed());
 		commands.add(new Nickname());
 		commands.add(new PinThat());
 		commands.add(new React());
-		commands.add(new Report());
+//		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
 		commands.add(new SetTally());
 		commands.add(new ShowTallies());
 		commands.add(new SimonSays());
-		commands.add(new Source());
+//		commands.add(new Source());
 		commands.add(new Startpoll());
 		commands.add(new Thoughts());
 		commands.add(new Timeout());
@@ -99,8 +99,13 @@ public class CommandHandler {
 							String args = c.sanitize(m.group(2) != null ? m.group(2).trim() : "");
 
 							// Run the command async and send a message back when it finishes.
-							CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-									.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
+							try {
+								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
+							}catch (Exception e){
+								e.printStackTrace();
+								sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());
+							}
 						}
 					}else {
 						sendMessageToChannel(Errors.GUILD_REQUIRED, message.getChannel());
