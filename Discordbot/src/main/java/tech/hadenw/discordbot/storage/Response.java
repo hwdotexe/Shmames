@@ -18,4 +18,9 @@ public class Response {
 	public String getResponse() {
 		return response;
 	}
+
+	// TODO part of a conversion effort.
+	public void setType(TriggerType t){
+		type=t;
+	}
 }

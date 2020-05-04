@@ -19,7 +19,7 @@ CHANGE:
         [ when using a Family, james will search all servers in that family after searching the current server ]
     - Move FWs to a server-specific brain
     [DONE] - Verify limits of API keys // WA-2000, Tenor-?
-    - Rename Ronald to Hate, and convert old data
+    [DONE] - Rename Ronald to Hate, and convert old data
 
 + Can the bot write to the audit log when someone uses the Echo command?
 + Does PinThat need a permission?

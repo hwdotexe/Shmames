@@ -2,7 +2,7 @@ package tech.hadenw.discordbot;
 
 public enum TriggerType {
 	LOVE,
-	RONALD,
+	HATE,
 	HELLO,
 	GOODBYE,
 	RANDOM,

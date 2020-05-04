@@ -23,7 +23,7 @@ public class Timeout implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		List<Response> r = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.RONALD); 
+		List<Response> r = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.HATE);
 		String rFrom = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 		String rTo = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 

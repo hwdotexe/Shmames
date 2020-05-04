@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.TriggerType;
 import tech.hadenw.discordbot.tasks.PollTask;
 
 /**
@@ -40,6 +41,16 @@ public class BrainController {
 		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
 			brains.add(brain);
+
+			//TODO TEMP - convert RONALD to HATE
+			for(String key : brain.getTriggers().keySet()){
+				brain.getTriggers().putIfAbsent(key, TriggerType.HATE);
+			}
+			for(Response r : brain.getTriggerResponses()){
+				if(r.getType() == null){
+					r.setType(TriggerType.HATE);
+				}
+			}
 			
 			// Activate any threads that this brain may have had.
 			// TODO this will change when we create a state.
