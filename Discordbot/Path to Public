@@ -10,6 +10,7 @@ ADD:
     - Donate command
     [DONE] - Poll user permissions
     - Server link permissions
+    - Welcome message directing them to Modify command
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents
 CHANGE:
@@ -17,8 +18,11 @@ CHANGE:
     - FWs and Echo emotes should be Family-only
         [ when using a Family, james will search all servers in that family after searching the current server ]
     - Move FWs to a server-specific brain
-    - Verify limits of API keys
+    [DONE] - Verify limits of API keys // WA-2000, Tenor-?
     - Rename Ronald to Hate, and convert old data
 
 + Can the bot write to the audit log when someone uses the Echo command?
 + Does PinThat need a permission?
+
+
+Can produce content that meets a G through PG-13 rating via Tenor

@@ -244,7 +244,7 @@ public class Utils {
 	 */
 	public static String getGIF(String search) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=1CI2O5Y3VUY1&contentfilter=low&limit=20", null);
+		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=CLEMV01ZTSAP&contentfilter=low&limit=25", null);
 		
 		JSONObject json = new JSONObject(result);
 	    JSONArray jsonArray = json.getJSONArray("results");
