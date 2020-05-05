@@ -71,14 +71,19 @@ public class Hangman implements ICommand {
 					// Try using a custom dictionary
 					String dict = m.group(5).trim();
 
+					boolean exists = false;
 					for(HangmanDictionary hd : dictionaries){
 						if(hd.getName().equalsIgnoreCase(dict)){
 							word = hd.randomWord();
 							hint = hd.getWords().get(word);
 							dictionary = hd.getName();
+							exists = true;
 							break;
 						}
 					}
+
+					if(!exists)
+						return Errors.NOT_FOUND;
 				}else{
 					HangmanDictionary hd = dictionaries.get(Utils.getRandom(dictionaries.size()));
 					word = hd.randomWord();
@@ -270,6 +275,11 @@ public class Hangman implements ICommand {
 		videoGames.addWord("Professor Layton", "Character");
 		videoGames.addWord("Lucina", "Character");
 		videoGames.addWord("Happy Mask Salesman", "Character");
+		videoGames.addWord("Sephiroth", "Character");
+		videoGames.addWord("Revolver Ocelot", "Character");
+		videoGames.addWord("Kiryu Kazuma", "Character");
+		videoGames.addWord("Darth Revan", "Character");
+		videoGames.addWord("Glory to Mankind", "Quote");
 
 		dnd.addWord("Warlock", "Thing");
 		dnd.addWord("Changeling", "Creature");
@@ -313,6 +323,9 @@ public class Hangman implements ICommand {
 		anime.addWord("Again", "Song");
 		anime.addWord("Rewrite", "Song");
 		anime.addWord("Stand Proud", "Song");
+		anime.addWord("Yang Wenli", "Character");
+		anime.addWord("Reinhard von Lohengramm", "Character");
+		anime.addWord("Hajime No Ippo", "Series");
 
 		media.addWord("Dolores Umbridge", "Character");
 		media.addWord("Harry Potter", "Character");
@@ -332,7 +345,8 @@ public class Hangman implements ICommand {
 		media.addWord("Citizen Kane", "Film");
 		media.addWord("Inception", "Film");
 		media.addWord("The Matrix", "Film");
-		media.addWord("Ricky Gervais", "Actor");
+		media.addWord("Ricky Gervais", "Person");
+		media.addWord("James Spader", "Person");
 
 		this.dictionaries.add(videoGames);
 		this.dictionaries.add(dnd);

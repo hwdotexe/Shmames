@@ -7,16 +7,22 @@ import java.util.List;
 import java.util.UUID;
 
 public class Family {
+    private int famID;
     private String famName;
     private List<Long> memberGuilds;
     private long familyOwner;
     private String joinCode;
 
-    public Family(String name, long owner){
+    public Family(int id, String name, long owner){
+        this.famID = id;
         this.famName = name;
         this.familyOwner = owner;
         this.memberGuilds = new ArrayList<Long>();
         this.joinCode = "";
+    }
+
+    public int getFamID(){
+        return this.famID;
     }
 
     public String getFamName(){
