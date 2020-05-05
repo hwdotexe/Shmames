@@ -253,6 +253,23 @@ public class Hangman implements ICommand {
 		videoGames.addWord("Song of Storms", "Thing");
 		videoGames.addWord("Handsome Jack", "Character");
 		videoGames.addWord("Braccus Rex", "Character");
+		videoGames.addWord("Solaire", "Character");
+		videoGames.addWord("Lautrec", "Character");
+		videoGames.addWord("Siegmeyer", "Character");
+		videoGames.addWord("Link", "Character");
+		videoGames.addWord("Skull Kid", "Character");
+		videoGames.addWord("Tingle", "Character");
+		videoGames.addWord("Kaepora Gaebora", "Character");
+		videoGames.addWord("Vaati", "Character");
+		videoGames.addWord("Richter Belmont", "Character");
+		videoGames.addWord("Count Dracula", "Character");
+		videoGames.addWord("Roald", "Character");
+		videoGames.addWord("Ferdinand bon Aegir", "Character");
+		videoGames.addWord("Miles Edgeworth", "Character");
+		videoGames.addWord("Phoenix Wright", "Character");
+		videoGames.addWord("Professor Layton", "Character");
+		videoGames.addWord("Lucina", "Character");
+		videoGames.addWord("Happy Mask Salesman", "Character");
 
 		dnd.addWord("Warlock", "Thing");
 		dnd.addWord("Changeling", "Creature");
@@ -315,6 +332,7 @@ public class Hangman implements ICommand {
 		media.addWord("Citizen Kane", "Film");
 		media.addWord("Inception", "Film");
 		media.addWord("The Matrix", "Film");
+		media.addWord("Ricky Gervais", "Actor");
 
 		this.dictionaries.add(videoGames);
 		this.dictionaries.add(dnd);

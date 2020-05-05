@@ -10,7 +10,9 @@ ADD:
     - Donate command
     [DONE] - Poll user permissions
     - Server link permissions
+    - Emote stat reset permissions
     - Welcome message directing them to Modify command
+    - Timer persistence
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents
 CHANGE:
