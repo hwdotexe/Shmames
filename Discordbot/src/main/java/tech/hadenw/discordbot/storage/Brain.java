@@ -17,7 +17,7 @@ public class Brain {
 	private List<BotSetting> settings;
 	private List<String> feedback;
 	private List<Poll> activePolls;
-	private List<Integer> families;
+	private List<String> families;
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
@@ -32,7 +32,7 @@ public class Brain {
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
 		activePolls = new ArrayList<Poll>();
-		families = new ArrayList<Integer>();
+		families = new ArrayList<String>();
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
@@ -162,9 +162,9 @@ public class Brain {
 		return tt;
 	}
 
-	public List<Integer> getFamilies(){
+	public List<String> getFamilies(){
 		if(this.families == null)
-			this.families = new ArrayList<Integer>();
+			this.families = new ArrayList<String>();
 
 		return this.families;
 	}

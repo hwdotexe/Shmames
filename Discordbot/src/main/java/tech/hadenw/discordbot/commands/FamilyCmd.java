@@ -1,11 +1,16 @@
 package tech.hadenw.discordbot.commands;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
+import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Family;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,30 +32,129 @@ public class FamilyCmd implements ICommand {
 		//g1 - command
 		//g6 - args
 
-		// The server will record its own families, the same object stored in Motherbrain.
-		// This should speed up searching for cross-family items.
-		// TODO ensure that we update the object reference so that both stay in sync; remove from both lists, etc.
-		// TODO problem: GSON is likely to create 2 objects at reload.
-		// How about the Family object has IDs, and the Brain has a list of Family IDs it belongs to. That'll teach 'em.
+		// The Family object has an ID
+		// Each server will record a list of IDs it belongs to
 
 		if(m.find()){
 			switch(m.group(1).toLowerCase()){
-				case "create":
-					// Allow if this person doesn't already have a family with that name.
-					// Can create multiple families with the same server.
-					// Add this server to the family if created.
-					break;
-				case "add":
-					// If no args, we want to create a new code (if possible) for other servers.
-					// If args, try it as a code. Invalidate even if user has no perm to add the server.
-					break;
-				case "view":
-					// View info on the family (Administrator)
-					break;
+				case "create": // create famName
+					if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
+						if (m.group(6) != null) {
+							String name = m.group(6).trim().toLowerCase();
+
+							for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+								if (f.getFamilyOwner() == author.getIdLong()) {
+									if (f.getFamName().equals(name)) {
+										return "You already own a family with that name! Please choose a different name.";
+									}
+								}
+							}
+
+							Family newFam = new Family(UUID.randomUUID().toString(), name, author.getIdLong());
+							newFam.addToFamily(message.getGuild());
+
+							// Add the Family to the system
+							Shmames.getBrains().getMotherBrain().getServerFamilies().add(newFam);
+							Shmames.getBrains().getBrain(message.getGuild().getId()).getFamilies().add(newFam.getFamID());
+
+							return "The Family was created! Now let's go add other servers!.";
+						} else {
+							return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						}
+					}else{
+						return Errors.NO_PERMISSION_USER;
+					}
+				case "add": // add famName|code
+					if (m.group(6) != null) {
+						String arg = m.group(6).trim().toLowerCase();
+						Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+
+						for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
+							if(f.getFamilyOwner()==author.getIdLong() && f.getFamName().equalsIgnoreCase(arg)){
+								author.openPrivateChannel().queue((c) -> c.sendMessage("**Join Code for "+f.getFamName()+"**\n" +
+										"`"+f.getNewJoinCode()+"`\n" +
+										"_Use this one-time code to join a server to the Family._").queue());
+								return "Sent a new Join Code to your DMs!";
+							}
+
+							if(f.validateCode(arg)){
+								f.clearCode();
+
+								if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
+									if(!b.getFamilies().contains(f.getFamID())){
+										f.addToFamily(message.getGuild());
+										b.getFamilies().add(f.getFamID());
+
+										return "Added **"+message.getGuild().getName()+"** to the **"+f.getFamName()+"** Family!";
+									}else{
+										return "This server is already a member of **"+f.getFamName()+"**!\n(The code has been invalidated for security purposes)";
+									}
+								}else{
+									return Errors.NO_PERMISSION_USER+"\n(The code has been invalidated for security purposes)";
+								}
+							}
+						}
+
+						return "Invalid Family name or Join Code!";
+					}else{
+						return "Use `add <family name>` to get a new Join Code.\n" +
+								"Use `add <join code>` to join a server to a Family.";
+					}
+				case "view": // [famName]
+					if (m.group(6) != null) {
+						String name = m.group(6).trim().toLowerCase();
+
+						for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+							if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
+								StringBuilder sb = new StringBuilder();
+								sb.append("**The \"");
+								sb.append(f.getFamName());
+								sb.append("\" Family contains the following servers:**");
+
+								for(long g : f.getMemberGuilds()){
+									Guild guild = Shmames.getJDA().getGuildById(g);
+
+									// Quick null check!
+									if(guild == null){
+										f.getMemberGuilds().remove(g);
+										break;
+									}
+
+									sb.append("\n> ");
+									sb.append(guild.getName());
+								}
+
+								return sb.toString();
+							}
+						}
+
+						return Errors.NOT_FOUND;
+					}else{
+						if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
+							Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+
+							StringBuilder sb = new StringBuilder();
+							sb.append("**This server belongs to the following families:**");
+
+							for(String id : b.getFamilies()){
+								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
+									if(f.getFamID().equals(id)){
+										sb.append("\n> ");
+										sb.append(f.getFamName());
+										break;
+									}
+								}
+							}
+
+							return sb.toString();
+						}else{
+							return Errors.NO_PERMISSION_USER;
+						}
+					}
 				case "remove":
 					// If no args, assume this server. User must be an Admin.
 					// If an arg, assume another server. User must be the family owner.
-					break;
+					return "Command under construction!";
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 			}

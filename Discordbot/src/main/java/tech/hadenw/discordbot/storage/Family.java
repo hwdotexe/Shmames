@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class Family {
-    private int famID;
+    private String famID;
     private String famName;
     private List<Long> memberGuilds;
     private long familyOwner;
     private String joinCode;
 
-    public Family(int id, String name, long owner){
+    public Family(String id, String name, long owner){
         this.famID = id;
         this.famName = name;
         this.familyOwner = owner;
@@ -21,7 +21,7 @@ public class Family {
         this.joinCode = "";
     }
 
-    public int getFamID(){
+    public String getFamID(){
         return this.famID;
     }
 
@@ -41,6 +41,10 @@ public class Family {
         this.joinCode = UUID.randomUUID().toString();
 
         return this.joinCode;
+    }
+
+    public void clearCode(){
+        this.joinCode = "";
     }
 
     public boolean validateCode(String attempt){
