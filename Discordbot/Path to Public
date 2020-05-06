@@ -13,6 +13,7 @@ ADD:
     - Emote stat reset permissions
     - Welcome message directing them to Modify command
     - Timer persistence
+    - If a family has 0 servers, delete the family
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents
     - FW migration code

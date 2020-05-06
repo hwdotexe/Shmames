@@ -44,6 +44,16 @@ public class MotherBrain {
 
 		return this.serverFamilies;
 	}
+
+	public Family getFamilyByID(String famID){
+		for(Family f : getServerFamilies()){
+			if(f.getFamID().equals(famID)){
+				return f;
+			}
+		}
+
+		return null;
+	}
 	
 	/**
 	 * Loads default settings into the system.

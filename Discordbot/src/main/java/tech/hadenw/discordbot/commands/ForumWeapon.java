@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Family;
 import tech.hadenw.discordbot.storage.ForumWeaponObj;
 
 public class ForumWeapon implements ICommand {
@@ -37,10 +39,10 @@ public class ForumWeapon implements ICommand {
 				switch(op) {
 					case "create":
 						if(m.group(7) != null) {
-							if(findFW(name) == null) {
+							if(findFW(name, message.getGuild().getId()) == null) {
 								ForumWeaponObj nfw = new ForumWeaponObj(name, m.group(7), message.getGuild().getId());
 								
-								Shmames.getBrains().getMotherBrain().getForumWeapons().add(nfw);
+								Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().add(nfw);
 								
 								return "Created new forum weapon: **"+name+"**";
 							} else {
@@ -51,7 +53,7 @@ public class ForumWeapon implements ICommand {
 						}
 					case "update":
 						if(m.group(7) != null) {
-							ForumWeaponObj fw = findFW(name);
+							ForumWeaponObj fw = findFW(name, message.getGuild().getId());
 							
 							if(fw != null) {
 								if(fw.getServerID().equals(message.getGuild().getId())) {
@@ -68,11 +70,11 @@ public class ForumWeapon implements ICommand {
 							return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 						}
 					case "remove":
-						ForumWeaponObj fw = findFW(name);
+						ForumWeaponObj fw = findFW(name, message.getGuild().getId());
 						
 						if(fw != null) {
 							if(fw.getServerID().equals(message.getGuild().getId())) {
-								Shmames.getBrains().getMotherBrain().getForumWeapons().remove(fw);
+								Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().remove(fw);
 								
 								return "Weapon destroyed.";
 							}else {
@@ -86,7 +88,7 @@ public class ForumWeapon implements ICommand {
 				}
 			} else {
 				// Try to send the weapon
-				ForumWeaponObj fw = findFW(name);
+				ForumWeaponObj fw = findFW(name, message.getGuild().getId());
 				
 				if(fw != null) {
 					fw.IncreaseUse();
@@ -117,10 +119,30 @@ public class ForumWeapon implements ICommand {
 		return true;
 	}
 	
-	private ForumWeaponObj findFW(String name) {
-		for(ForumWeaponObj fw : Shmames.getBrains().getMotherBrain().getForumWeapons()) {
+	private ForumWeaponObj findFW(String name, String guildID) {
+		// Check local server.
+		for(ForumWeaponObj fw : Shmames.getBrains().getBrain(guildID).getForumWeapons()) {
 			if(fw.getItemName().equals(name)) {
 				return fw;
+			}
+		}
+
+		// Check other Family servers.
+		for(String fid : Shmames.getBrains().getBrain(guildID).getFamilies()){
+			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+
+			if(f != null){
+				for(long gid : f.getMemberGuilds()){
+					if(!Long.toString(gid).equals(guildID)){
+						Brain b = Shmames.getBrains().getBrain(Long.toString(gid));
+
+						for(ForumWeaponObj fw : b.getForumWeapons()) {
+							if(fw.getItemName().equals(name)) {
+								return fw;
+							}
+						}
+					}
+				}
 			}
 		}
 		
