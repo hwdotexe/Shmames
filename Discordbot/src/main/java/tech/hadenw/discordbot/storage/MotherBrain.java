@@ -29,7 +29,8 @@ public class MotherBrain {
 		
 		return commandStats;
 	}
-	
+
+	@Deprecated
 	public List<ForumWeaponObj> getForumWeapons(){
 		if(forumWeapons == null)
 			forumWeapons = new ArrayList<ForumWeaponObj>();

@@ -15,6 +15,8 @@ ADD:
     - Timer persistence
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents
+    - FW migration code
+    - Motherbrain FW data
 CHANGE:
     - Use a database for storage, so all shards can be created equal
     - FWs and Echo emotes should be Family-only

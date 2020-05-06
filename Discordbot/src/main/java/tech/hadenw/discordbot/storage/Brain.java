@@ -18,6 +18,7 @@ public class Brain {
 	private List<String> feedback;
 	private List<Poll> activePolls;
 	private List<String> families;
+	private List<ForumWeaponObj> forumWeapons;
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
@@ -33,6 +34,7 @@ public class Brain {
 		feedback = new ArrayList<String>();
 		activePolls = new ArrayList<Poll>();
 		families = new ArrayList<String>();
+		forumWeapons = new ArrayList<ForumWeaponObj>();
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
@@ -167,6 +169,13 @@ public class Brain {
 			this.families = new ArrayList<String>();
 
 		return this.families;
+	}
+
+	public List<ForumWeaponObj> getForumWeapons(){
+		if(forumWeapons == null)
+			forumWeapons = new ArrayList<ForumWeaponObj>();
+
+		return forumWeapons;
 	}
 	
 	/**

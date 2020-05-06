@@ -40,7 +40,15 @@ public class BrainController {
 		// Load server settings files.
 		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
-			brains.add(brain);
+
+			//If this brain belongs to a deleted server, remove it and continue
+			if(Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
+				brains.add(brain);
+			}
+			else {
+				b.delete();
+				continue;
+			}
 			
 			// Activate any threads that this brain may have had.
 			// TODO this will change when we create a state.
@@ -102,6 +110,16 @@ public class BrainController {
 			mb.loadDefaults();
 			saveMotherBrain();
 		}
+
+		// TODO temporary migration of ForumWeapons
+		for(ForumWeaponObj o : new ArrayList<ForumWeaponObj>(mb.getForumWeapons())){
+			Brain b = getBrain(o.getServerID());
+
+			b.getForumWeapons().add(o);
+			mb.getForumWeapons().remove(o);
+
+			System.out.println("Moved FW \""+o.getItemName()+"\" to a brain file! ("+b.getForumWeapons().size()+")");
+		}
 	}
 
 	/**
@@ -158,7 +176,7 @@ public class BrainController {
 	 * @param b The settings object.
 	 */
 	public void saveBrain(Brain b) {
-		byte[] bytes = gson.toJson(b).toString().getBytes();
+		byte[] bytes = gson.toJson(b).getBytes();
 		
 		try {
 			File bf = new File("brains/servers/"+b.getGuildID()+".json");
@@ -204,15 +222,15 @@ public class BrainController {
 		try {
 			int data;
 			FileInputStream is = new FileInputStream(f);
-			String jsonData = "";
+			StringBuilder jsonData = new StringBuilder();
 
 			while ((data = is.read()) != -1) {
-				jsonData += (char) data;
+				jsonData.append((char) data);
 			}
 
 			is.close();
 
-			return jsonData;
+			return jsonData.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
