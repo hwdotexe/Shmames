@@ -110,16 +110,6 @@ public class BrainController {
 			mb.loadDefaults();
 			saveMotherBrain();
 		}
-
-		// TODO temporary migration of ForumWeapons
-		for(ForumWeaponObj o : new ArrayList<ForumWeaponObj>(mb.getForumWeapons())){
-			Brain b = getBrain(o.getServerID());
-
-			b.getForumWeapons().add(o);
-			mb.getForumWeapons().remove(o);
-
-			System.out.println("Moved FW \""+o.getItemName()+"\" to a brain file! ("+b.getForumWeapons().size()+")");
-		}
 	}
 
 	/**

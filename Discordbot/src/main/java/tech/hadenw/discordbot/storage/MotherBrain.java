@@ -9,13 +9,11 @@ import net.dv8tion.jda.api.entities.Activity.ActivityType;
 public class MotherBrain {
 	private HashMap<String, ActivityType> statuses;
 	private HashMap<String, Integer> commandStats;
-	private List<ForumWeaponObj> forumWeapons;
 	private List<Family> serverFamilies;
 	
 	public MotherBrain() {
 		statuses = new HashMap<String, ActivityType>();
 		commandStats = new HashMap<String, Integer>();
-		forumWeapons = new ArrayList<ForumWeaponObj>();
 		serverFamilies = new ArrayList<Family>();
 	}
 	
@@ -28,14 +26,6 @@ public class MotherBrain {
 			 commandStats = new HashMap<String, Integer>();
 		
 		return commandStats;
-	}
-
-	@Deprecated
-	public List<ForumWeaponObj> getForumWeapons(){
-		if(forumWeapons == null)
-			forumWeapons = new ArrayList<ForumWeaponObj>();
-		
-		return forumWeapons;
 	}
 
 	public List<Family> getServerFamilies(){

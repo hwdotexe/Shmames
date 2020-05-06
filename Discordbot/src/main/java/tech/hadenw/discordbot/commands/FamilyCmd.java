@@ -176,16 +176,24 @@ public class FamilyCmd implements ICommand {
 								if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
 									if (f.getMemberGuilds().size() >= server) {
 										Guild g = Shmames.getJDA().getGuildById(f.getMemberGuilds().get(server));
+										String gName = "";
 
 										if(g == null){
-											// Just remove it
+											f.getMemberGuilds().remove(f.getMemberGuilds().get(server));
+											gName = "that server";
+										}else{
+											Brain b = Shmames.getBrains().getBrain(g.getId());
+											b.getFamilies().remove(f.getFamID());
+											f.getMemberGuilds().remove(g.getIdLong());
+											gName = g.getName();
 										}
 
-										Brain b = Shmames.getBrains().getBrain(g.getId());
-										b.getFamilies().remove(f.getFamID());
-										f.getMemberGuilds().remove(g.getIdLong());
+										// Remove the family if empty
+										if(f.getMemberGuilds().size() == 0){
+											Shmames.getBrains().getMotherBrain().getServerFamilies().remove(f);
+										}
 
-										return "Removed **"+g.getName()+"** from the **"+f.getFamName()+"** Family.";
+										return "Removed **"+gName+"** from the **"+f.getFamName()+"** Family.";
 									} else {
 										return "That server doesn't exist in the Family!";
 									}
@@ -202,6 +210,11 @@ public class FamilyCmd implements ICommand {
 
 										b.getFamilies().remove(f.getFamID());
 										f.getMemberGuilds().remove(g.getIdLong());
+
+										// Remove the family if empty
+										if(f.getMemberGuilds().size() == 0){
+											Shmames.getBrains().getMotherBrain().getServerFamilies().remove(f);
+										}
 
 										return "Removed **"+g.getName()+"** from the **"+f.getFamName()+"** Family.";
 									}

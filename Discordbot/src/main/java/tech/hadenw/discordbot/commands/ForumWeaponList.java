@@ -90,14 +90,14 @@ public class ForumWeaponList implements ICommand {
 
 		sb.append("**");
 		sb.append(serverName);
-		sb.append("**\n> ");
+		sb.append("**\n");
 
 		int inRow = 0;
 		for(String fw : fws.keySet()){
 			inRow++;
 
 			if(inRow > 4) {
-				sb.append("\n> ");
+				sb.append("\n");
 				inRow = 1;
 			}
 

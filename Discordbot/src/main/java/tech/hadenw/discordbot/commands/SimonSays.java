@@ -12,6 +12,7 @@ import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Family;
 
 public class SimonSays implements ICommand {
 	@Override
@@ -31,15 +32,15 @@ public class SimonSays implements ICommand {
 				message.delete().complete();
 			} catch(Exception e) { }
 			
-			
-			// Try to scan all servers for the emote.
+
 			// :emotename:   =>   <a:emoteName:1234567890>
-			Matcher m = Pattern.compile("\\:([\\w\\d]+)\\:").matcher(args);
+			Matcher m = Pattern.compile(":([\\w\\d]+):").matcher(args);
 			
 			// Add a space at the end so we can regex correctly
 			args += " ";
-			
-			
+
+			long thisGuild = message.getGuild().getIdLong();
+
 			// Check servers for the emote; this one first, then others.
 			while(m.find()) {
 				String eName = m.group(1);
@@ -50,13 +51,27 @@ public class SimonSays implements ICommand {
 				if(e != null) {
 					args = args.replace(":"+eName+": ", e.getAsMention());
 				} else {
-					// Check all guilds
-					for(Guild g : Shmames.getJDA().getGuilds()) {
-						e = findEmote(g, eName);
-						
-						if(e != null) {
-							args = args.replace(":"+eName+": ", e.getAsMention());
-							break;
+					boolean found = false;
+
+					for(String fID : Shmames.getBrains().getBrain(message.getGuild().getId()).getFamilies()) {
+						Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fID);
+
+						if (f != null) {
+							for(long gid : f.getMemberGuilds()) {
+								if (gid != thisGuild) {
+									Guild g = Shmames.getJDA().getGuildById(gid);
+									e = findEmote(g, eName);
+
+									if(e != null) {
+										args = args.replace(":"+eName+": ", e.getAsMention());
+										found = true;
+										break;
+									}
+								}
+							}
+
+							if(found)
+								break;
 						}
 					}
 				}
