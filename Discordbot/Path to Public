@@ -10,7 +10,7 @@ ADD:
     - Donate command
     [DONE] - Poll user permissions
     [DONE] - Server link permissions
-    - Emote stat reset permissions
+    [DONE] - Emote stat reset permissions
     - Welcome message directing them to Modify command
     - Timer persistence
     [DONE] - If a family has 0 servers, delete the family

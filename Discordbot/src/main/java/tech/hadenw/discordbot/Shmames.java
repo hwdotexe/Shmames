@@ -104,6 +104,7 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.ALLOW_MODIFY, BotSettingType.ROLE, "administrator"));
 		defaults.add(new BotSetting(BotSettingName.ALLOW_NICKNAME, BotSettingType.ROLE, "everyone"));
 		defaults.add(new BotSetting(BotSettingName.ALLOW_POLLS, BotSettingType.ROLE, "everyone"));
+		defaults.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
 	}
 	
 	/**

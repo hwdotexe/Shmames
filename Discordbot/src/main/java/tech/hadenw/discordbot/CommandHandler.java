@@ -59,7 +59,7 @@ public class CommandHandler {
 //		commands.add(new Source());
 		commands.add(new Startpoll());
 		commands.add(new Thoughts());
-		commands.add(new Timeout());
+//		commands.add(new Timeout());
 		commands.add(new Timer());
 		commands.add(new WhatShouldIDo());
 		commands.add(new Wiki());

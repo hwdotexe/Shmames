@@ -11,7 +11,8 @@ public enum BotSettingName {
 	APPROVAL_EMOTE("The Emote to use as a \"Like\" button."),
 	ALLOW_MODIFY("Sets the role (other than Administrator) allowed to use the Modify command."),
 	ALLOW_NICKNAME("Sets the role (other than Administrator) allowed to change the bot's nickname."),
-	ALLOW_POLLS("Sets the role (other than Administrator) allowed to start and end Polls.");
+	ALLOW_POLLS("Sets the role (other than Administrator) allowed to start and end Polls."),
+	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts.");
 
 	private String description;
 
