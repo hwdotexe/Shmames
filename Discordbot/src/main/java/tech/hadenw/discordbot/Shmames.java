@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import tech.hadenw.discordbot.listeners.ChatListener;
+import tech.hadenw.discordbot.listeners.FirstJoinListener;
 import tech.hadenw.discordbot.listeners.ReactListener;
 import tech.hadenw.discordbot.storage.BotSetting;
 import tech.hadenw.discordbot.storage.BotSettingName;
@@ -58,6 +59,7 @@ public final class Shmames {
 			// Begin listening for events.
 			jda.addEventListener(new ChatListener());
 			jda.addEventListener(new ReactListener());
+			jda.addEventListener(new FirstJoinListener());
 			
 			// Prepare music playing functionality.
 			ocarinas = new  HashMap<String, GuildOcarina>();

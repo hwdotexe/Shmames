@@ -22,6 +22,7 @@ public class Brain {
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
+	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
 	
 	public Brain(String gid) {
@@ -38,6 +39,7 @@ public class Brain {
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
+		sentWelcome = false;
 		hangmanGame = null;
 		
 		loadFirstRunDefaults();
@@ -89,6 +91,14 @@ public class Brain {
 	/*
 	 * Permanent / Semi-permanent items
 	 */
+
+	public boolean didSendWelcome(){
+		return sentWelcome;
+	}
+
+	public void setSentWelcome(){
+		sentWelcome = true;
+	}
 	
 	public String getGuildID() {
 		return guildID;

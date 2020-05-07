@@ -81,7 +81,7 @@ public class Modify implements ICommand {
 				
 		        eBuilder.setColor(Color.ORANGE);
 		        eBuilder.setTitle("Available settings:");
-		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \"modify <setting>\" for info.");
+		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
 		        
 		        for(BotSetting v : b.getSettings()) {
 		        	flexValueType(eBuilder, v, message.getGuild());
