@@ -64,6 +64,6 @@ public class FirstJoinListener extends ListenerAdapter {
 				"the world. Thank you for installing me!\n" +
 				"\n" +
 				"For first-time setup, please take a look at the bot's\n" +
-				"settings, and tweak the values you want to change:```Use \"`"+name+" modify`\" to get started.").queue();
+				"settings, and tweak the values you want to change:```Use \"`"+name+" modify`\" to get started, and \"`"+name+" help`\" for a list of commands.").queue();
 	}
 }
