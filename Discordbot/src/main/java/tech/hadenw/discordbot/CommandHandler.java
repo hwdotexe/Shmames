@@ -1,7 +1,6 @@
 package tech.hadenw.discordbot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -42,6 +41,7 @@ public class CommandHandler {
 		commands.add(new Jinping());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
+		commands.add(new ListTallies());
 		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
@@ -54,7 +54,6 @@ public class CommandHandler {
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
 		commands.add(new SetTally());
-		commands.add(new ShowTallies());
 		commands.add(new SimonSays());
 //		commands.add(new Source());
 		commands.add(new Startpoll());

@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
 
-public class ShowTallies implements ICommand {
+public class ListTallies implements ICommand {
 	@Override
 	public String getDescription() {
 		return "Displays all the current tallie on the abacus.";
@@ -16,7 +16,7 @@ public class ShowTallies implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "showTallies";
+		return "listTallies";
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ShowTallies implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"showtallies", "show tallies", "show all the tallies", "show all tallies", "listtallies", "list tallies"};
+		return new String[] {"listtallies", "list tallies", "showtallies", "show tallies"};
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class Startpoll implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "startpoll <time>[d/h/m/s] Question? OptionA; OptionB...";
+		return "startpoll <time>[d/h/m/s] <question>? <option>; <option>;...";
 	}
 
 	@Override

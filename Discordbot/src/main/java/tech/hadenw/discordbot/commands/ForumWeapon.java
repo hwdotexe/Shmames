@@ -14,7 +14,7 @@ import tech.hadenw.discordbot.storage.ForumWeaponObj;
 public class ForumWeapon implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Engage the global meme arsenal.";
+		return "Engage the meme arsenal.";
 	}
 	
 	@Override
