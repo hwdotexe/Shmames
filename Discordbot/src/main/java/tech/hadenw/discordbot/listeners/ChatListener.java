@@ -8,10 +8,7 @@ import java.util.regex.Pattern;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import tech.hadenw.discordbot.CommandHandler;
-import tech.hadenw.discordbot.Shmames;
-import tech.hadenw.discordbot.TriggerType;
-import tech.hadenw.discordbot.Utils;
+import tech.hadenw.discordbot.*;
 import tech.hadenw.discordbot.storage.Brain;
 import tech.hadenw.discordbot.storage.Family;
 import tech.hadenw.discordbot.storage.Response;
@@ -51,7 +48,7 @@ public class ChatListener extends ListenerAdapter {
 								// Send to the command handler for further processing.
 								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							}else{
-								sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.HELLO, e.getAuthor());
+								e.getTextChannel().sendMessage(Errors.HEY_THERE).queue();
 							}
 
 							return;
@@ -129,11 +126,11 @@ public class ChatListener extends ListenerAdapter {
 	 * @param author The user who triggered this message.
 	 */
 	private void sendRandom(TextChannel c, Guild g, TriggerType t, User author) {
-		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t); 
+		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t);
 		String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
 		if (response.startsWith("[gif]"))
-			response = Utils.getGIF(response.split("\\[gif\\]",2)[1], c.isNSFW()?"low":"medium");
+			response = Utils.getGIF(response.split("\\[gif\\]",2)[1], c.isNSFW()?"low":"high");
 		
 		c.sendMessage(response).queue();
 

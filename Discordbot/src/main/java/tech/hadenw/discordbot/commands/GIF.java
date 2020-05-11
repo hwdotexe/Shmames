@@ -27,7 +27,7 @@ public class GIF implements ICommand {
 				}
 			}
 
-			return Utils.getGIF(args, "medium");
+			return Utils.getGIF(args, "high");
 		}
 		else {
 			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
