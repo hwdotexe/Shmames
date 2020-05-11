@@ -39,18 +39,27 @@ public class Timer implements ICommand {
 					
 				switch(i.charAt(0)) {
 				case 'd':
+					if(time > 90)
+						return "Please constrain your timers to 90 days or less.";
+
 					interval = 1;
 					break;
 				case 'h':
+					if(time > 999)
+						return "Please constrain your timers to 999 hours or less.";
+
 					interval = 2;
 					break;
-				case 'm':
-					interval = 3;
-					break;
 				case 's':
+					if(time > 999)
+						return "Please constrain your timers to 999 seconds or less.";
+
 					interval = 4;
 					break;
 				default:
+					if(time > 999)
+						return "Please constrain your timers to 999 minutes or less.";
+
 					interval = 3;
 				}
 

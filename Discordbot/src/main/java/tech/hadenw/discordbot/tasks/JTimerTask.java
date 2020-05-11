@@ -51,8 +51,6 @@ public class JTimerTask {
 				runTimer();
 			}
 		}, execTime);
-
-		System.out.println("Scheduled the task for: "+execTime.toString());
 	}
 
 	public void rescheduleTimer(){
