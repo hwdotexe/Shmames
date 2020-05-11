@@ -9,11 +9,14 @@ import java.util.Timer;
 
 import com.google.gson.Gson;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.TriggerType;
+import tech.hadenw.discordbot.tasks.JTimerTask;
 import tech.hadenw.discordbot.tasks.PollTask;
 
 /**
@@ -61,6 +64,12 @@ public class BrainController {
 			        
 			        if(m != null)
 			        	t.schedule(new PollTask(p, m), p.getExpiration());
+				}
+			}
+
+			if(brain.getTimers().size() > 0){
+				for(JTimerTask t : brain.getTimers()){
+					t.rescheduleTimer();
 				}
 			}
 			

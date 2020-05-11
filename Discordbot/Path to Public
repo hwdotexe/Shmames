@@ -14,7 +14,7 @@ ADD:
     [DONE] - Server link permissions
     [DONE] - Emote stat reset permissions
     [DONE] - Welcome message directing them to Modify command
-    - Timer persistence
+    [DONE] - Timer persistence
     [DONE] - If a family has 0 servers, delete the family
 REMOVE:
     [DONE] - Source, Music, Report commands; Dev privileged intents

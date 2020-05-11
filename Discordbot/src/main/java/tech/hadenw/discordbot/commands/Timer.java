@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
+import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.storage.Brain;
 import tech.hadenw.discordbot.tasks.JTimerTask;
 
 public class Timer implements ICommand {
@@ -51,10 +53,13 @@ public class Timer implements ICommand {
 				default:
 					interval = 3;
 				}
+
+				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), time, interval, rmsg);
+				Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+
+				b.getTimers().add(t);
 				
-				new JTimerTask(author, message.getChannel(), time, interval, rmsg);
-				
-				return "Started a new :alarm_clock: for **"+time+"** "+(interval==1?"Days":interval==2?"Hours":interval==3?"Minutes":interval==4?"Seconds":"");
+				return "Started a new :alarm_clock: for **" + time + "** " + (interval == 1 ? "Days" : interval == 2 ? "Hours" : interval == 3 ? "Minutes" : "Seconds");
 			}else {
 				return "Please include an actual amount of time!";
 			}
@@ -75,6 +80,6 @@ public class Timer implements ICommand {
 	
 	@Override
 	public boolean requiresGuild() {
-		return false;
+		return true;
 	}
 }

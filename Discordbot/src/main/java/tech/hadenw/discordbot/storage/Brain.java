@@ -7,6 +7,7 @@ import java.util.List;
 import tech.hadenw.discordbot.Poll;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.TriggerType;
+import tech.hadenw.discordbot.tasks.JTimerTask;
 
 public class Brain {
 	private String guildID;
@@ -19,6 +20,7 @@ public class Brain {
 	private List<Poll> activePolls;
 	private List<String> families;
 	private List<ForumWeaponObj> forumWeapons;
+	private List<JTimerTask> timers;
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
@@ -36,6 +38,7 @@ public class Brain {
 		activePolls = new ArrayList<Poll>();
 		families = new ArrayList<String>();
 		forumWeapons = new ArrayList<ForumWeaponObj>();
+		timers = new ArrayList<JTimerTask>();
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
@@ -86,6 +89,13 @@ public class Brain {
 
 	public void setHangmanGame(HangmanGame g){
 		this.hangmanGame = g;
+	}
+
+	public List<JTimerTask> getTimers(){
+		if(timers == null)
+			timers = new ArrayList<JTimerTask>();
+
+		return timers;
 	}
 	
 	/*

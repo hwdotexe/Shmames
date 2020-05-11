@@ -6,18 +6,22 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.storage.Brain;
 
-public class JTimerTask extends TimerTask{
-	private User u;
-	private MessageChannel msgch;
+public class JTimerTask {
+	private String userMention;
+	private long channelID;
 	private String message;
+	private Date execTime;
 	
-	public JTimerTask(User user, MessageChannel ch, int time, int interval, String msg) {
+	public JTimerTask(String mention, long ch, int time, int interval, String msg) {
 		Calendar c = Calendar.getInstance();
-		Timer t = new Timer();
+		message = msg;
+
     	c.setTime(new Date());
-    	message = msg;
     	
     	switch(interval) {
     	case 1:
@@ -36,17 +40,61 @@ public class JTimerTask extends TimerTask{
     		c.add(Calendar.SECOND, 5);
     	}
     	
-    	u = user;
-    	msgch = ch;
-    	
-		t.schedule(this, c.getTime());
+    	userMention = mention;
+    	channelID = ch;
+    	execTime = c.getTime();
+		Timer t = new Timer();
+
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				runTimer();
+			}
+		}, execTime);
+
+		System.out.println("Scheduled the task for: "+execTime.toString());
 	}
-	
-	public void run() {
-		String m = ":alarm_clock: ("+u.getAsMention()+"): The timer you set is finished!";
-		if(message.length() > 0)
-			m = m+"\n_"+message+"_";
-		
-		msgch.sendMessage(m).queue();
+
+	public void rescheduleTimer(){
+		Timer t = new Timer();
+
+		// Time was in the past; give the bot time to load, and then finish this timer.
+		if(execTime.getTime() <= new Date().getTime()){
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+
+			c.add(Calendar.SECOND, 10);
+
+			execTime = c.getTime();
+		}
+
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				runTimer();
+			}
+		}, execTime);
+	}
+
+	private void runTimer() {
+		try {
+			String m = ":alarm_clock: (" + userMention + "): The timer you set is finished!";
+
+			if (message.length() > 0)
+				m = m + "\n_" + message + "_";
+
+			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
+
+			if (tc != null) {
+				tc.sendMessage(m).queue();
+
+				String id = tc.getGuild().getId();
+				Brain b = Shmames.getBrains().getBrain(id);
+
+				b.getTimers().remove(this);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }
