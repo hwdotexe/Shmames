@@ -35,7 +35,7 @@ public class Hangman implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "hangman <start|guess|list> [dictionary|letter|answer]";
+		return "hangman <start|guess|list> [[!]dictionary[,dictionary]|letter|answer]";
 	}
 
 	@Override
