@@ -1,5 +1,6 @@
 package tech.hadenw.discordbot.listeners;
 
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
@@ -12,6 +13,7 @@ import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.commands.ICommand;
+import tech.hadenw.discordbot.storage.BotSetting;
 import tech.hadenw.discordbot.storage.BotSettingName;
 import tech.hadenw.discordbot.storage.Brain;
 
@@ -30,7 +32,32 @@ public class FirstJoinListener extends ListenerAdapter {
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
 		if(!b.didSendWelcome()){
+			// Try to set default values for this specific guild.
+			try{
+				List<TextChannel> general = e.getGuild().getTextChannelsByName("general", true);
 
+				if(general.size() > 0){
+					BotSetting pin = b.getSettingFor(BotSettingName.PIN_CHANNEL);
+					BotSetting dev = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL);
+					BotSetting rem = b.getSettingFor(BotSettingName.REMOVAL_EMOTE);
+					BotSetting app = b.getSettingFor(BotSettingName.APPROVAL_EMOTE);
+
+					pin.setValue(general.get(0).getName(), b);
+					dev.setValue(general.get(0).getName(), b);
+
+					List<Emote> em = e.getGuild().getEmotes();
+
+					if(em.size() > 0)
+						rem.setValue(em.get(0).getName(), b);
+
+					if(em.size() > 1)
+						app.setValue(em.get(1).getName(), b);
+				}
+			}catch (Exception ex){
+				System.out.println("Shmames could not set default bot settings.");
+			}
+
+			// Try to send a welcome message.
 			try{
 				sendMessage(e.getGuild().getDefaultChannel());
 				b.setSentWelcome();
