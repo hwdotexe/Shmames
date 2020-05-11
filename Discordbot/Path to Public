@@ -3,8 +3,8 @@
 FIX:
     [DONE] - Fwlist and Emote Stats break when sending a long message
 ADD:
-    - Hangman separate dicts with ",", exclude them by starting it with "!"
-      - Switch to csv with dynamic library names
+    [DONE] - Hangman separate dicts with ",", exclude them by starting it with "!"
+    - Switch to csv with dynamic library names
     - Support sharding
     [DONE] - Server Families
         [ Admins can link servers together with a 1-time GUID sent via PM ]
@@ -21,7 +21,7 @@ REMOVE:
     [DONE] - FW migration code
     [DONE] - Motherbrain FW data
 CHANGE:
-    - React triggers need to be family-only!
+    [DONE] - React triggers need to be family-only!
     - Use a database for storage, so all shards can be created equal
     [DONE] - FWs and Echo emotes should be Family-only
         [ when using a Family, james will search all servers in that family after searching the current server ]

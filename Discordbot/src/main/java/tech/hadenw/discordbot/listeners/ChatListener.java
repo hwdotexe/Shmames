@@ -1,5 +1,6 @@
 package tech.hadenw.discordbot.listeners;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +17,7 @@ import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.TriggerType;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Family;
 import tech.hadenw.discordbot.storage.Response;
 
 public class ChatListener extends ListenerAdapter {
@@ -74,7 +76,26 @@ public class ChatListener extends ListenerAdapter {
 									if (type != TriggerType.REACT) {
 										sendRandom(e.getChannel(), e.getGuild(), type, e.getAuthor());
 									} else {
-										List<Emote> em = Shmames.getJDA().getEmotes();
+										List<Emote> em = new ArrayList<Emote>(e.getGuild().getEmotes());
+
+										for(String s : brain.getFamilies()){
+											Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(s);
+
+											if(f != null){
+												for(long g : f.getMemberGuilds()){
+													if(e.getGuild().getIdLong() == g)
+														continue;
+
+													Guild guild = Shmames.getJDA().getGuildById(g);
+
+													if(guild == null)
+														continue;
+
+													em.addAll(guild.getEmotes());
+												}
+											}
+										}
+
 										e.getMessage().addReaction(em.get(Utils.getRandom(em.size()))).queue();
 									}
 

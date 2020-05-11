@@ -115,6 +115,7 @@ public class FamilyCmd implements ICommand {
 								sb.append(f.getFamName());
 								sb.append("\" Family contains the following servers:**");
 
+								boolean contains = false;
 								for(long g : new ArrayList<Long>(f.getMemberGuilds())){
 									Guild guild = Shmames.getJDA().getGuildById(g);
 
@@ -128,9 +129,11 @@ public class FamilyCmd implements ICommand {
 									sb.append(f.getMemberGuilds().indexOf(g)+1);
 									sb.append("**: ");
 									sb.append(guild.getName());
+
+									contains = true;
 								}
 
-								if(sb.length() == 3) {
+								if(!contains) {
 									sb.append("_This Family does not contain any servers._");
 								}
 
@@ -146,17 +149,20 @@ public class FamilyCmd implements ICommand {
 							StringBuilder sb = new StringBuilder();
 							sb.append("**This server belongs to the following families:**");
 
+							boolean contains = false;
 							for(String id : b.getFamilies()){
 								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
 									if(f.getFamID().equals(id)){
 										sb.append("\n> ");
 										sb.append(f.getFamName());
+										contains = true;
+
 										break;
 									}
 								}
 							}
 
-							if(sb.length() == 1) {
+							if(!contains) {
 								sb.append("_This server does not belong to a Family._");
 							}
 
