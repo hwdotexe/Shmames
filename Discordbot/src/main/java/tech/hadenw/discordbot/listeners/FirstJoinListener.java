@@ -30,24 +30,13 @@ public class FirstJoinListener extends ListenerAdapter {
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
 		if(!b.didSendWelcome()){
-			// Try to send a message in the #general channel; otherwise, try all text channels and stop at the first one that works.
-			List<TextChannel> general = e.getGuild().getTextChannelsByName("general", true);
 
-			if(general.size()>0){
-				try{
-					sendMessage(general.get(0));
-				}catch (Exception ex){}
-			}else{
-				// Try to send a message in each text channel, and stop when one succeeds.
-				for(TextChannel ch : e.getGuild().getTextChannels()){
-					try{
-						sendMessage(ch);
-						break;
-					}catch (Exception ex){}
-				}
+			try{
+				sendMessage(e.getGuild().getDefaultChannel());
+				b.setSentWelcome();
+			}catch (Exception ex){
+				System.out.println("Shmames could not send a welcome message.");
 			}
-
-			b.setSentWelcome();
 		}
 	}
 
