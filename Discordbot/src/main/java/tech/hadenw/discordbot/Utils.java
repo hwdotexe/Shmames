@@ -242,9 +242,9 @@ public class Utils {
 	 * @param search The query to search for.
 	 * @return A random GIF URL from the results of the search. 
 	 */
-	public static String getGIF(String search) {
+	public static String getGIF(String search, String filter) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=CLEMV01ZTSAP&contentfilter=low&limit=25", null);
+		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=CLEMV01ZTSAP&contentfilter="+filter+"&limit=25", null);
 		
 		JSONObject json = new JSONObject(result);
 	    JSONArray jsonArray = json.getJSONArray("results");
@@ -277,7 +277,7 @@ public class Utils {
 	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is",
 	    			"I think you'd like this instead", "Nah, how 'bout", "I would prefer not to"};
 	    	
-	    	return message[r.nextInt(message.length)]+": "+getGIF(keyword[r.nextInt(keyword.length)]);
+	    	return message[r.nextInt(message.length)]+": "+getGIF(keyword[r.nextInt(keyword.length)], filter);
 	    }
 	}
 	

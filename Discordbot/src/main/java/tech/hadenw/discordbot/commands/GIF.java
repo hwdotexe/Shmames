@@ -1,6 +1,8 @@
 package tech.hadenw.discordbot.commands;
 
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Utils;
@@ -18,8 +20,15 @@ public class GIF implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(args.length() > 0)
-			return Utils.getGIF(args);
+		if(args.length() > 0) {
+			if(message.getChannelType() == ChannelType.TEXT){
+				if(message.getTextChannel().isNSFW()){
+					return Utils.getGIF(args, "low");
+				}
+			}
+
+			return Utils.getGIF(args, "medium");
+		}
 		else {
 			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 		}

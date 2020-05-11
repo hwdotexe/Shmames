@@ -28,10 +28,10 @@ public class Timeout implements ICommand {
 		String rTo = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
 		if (rFrom.startsWith("[gif]"))
-			rFrom = Utils.getGIF(rFrom.split("\\[gif\\]",2)[1]);
+			rFrom = Utils.getGIF(rFrom.split("\\[gif\\]",2)[1], message.getTextChannel().isNSFW()?"low":"medium");
 		
 		if (rTo.startsWith("[gif]"))
-			rTo = Utils.getGIF(rTo.split("\\[gif\\]",2)[1]);
+			rTo = Utils.getGIF(rTo.split("\\[gif\\]",2)[1], message.getTextChannel().isNSFW()?"low":"medium");
 		
 		new TimeoutTask(rTo, message.getChannel(), Shmames.getBrains().getBrain(message.getGuild().getId()));
 		

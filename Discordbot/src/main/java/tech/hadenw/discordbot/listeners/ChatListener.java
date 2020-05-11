@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import tech.hadenw.discordbot.CommandHandler;
@@ -55,7 +51,7 @@ public class ChatListener extends ListenerAdapter {
 								// Send to the command handler for further processing.
 								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							}else{
-								sendRandom(e.getChannel(), e.getGuild(), TriggerType.HELLO, e.getAuthor());
+								sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.HELLO, e.getAuthor());
 							}
 
 							return;
@@ -78,7 +74,7 @@ public class ChatListener extends ListenerAdapter {
 							if (message.toLowerCase().contains(trigger)) {
 								if (type != TriggerType.COMMAND) {
 									if (type != TriggerType.REACT) {
-										sendRandom(e.getChannel(), e.getGuild(), type, e.getAuthor());
+										sendRandom(e.getTextChannel(), e.getGuild(), type, e.getAuthor());
 									} else {
 										List<Emote> em = new ArrayList<Emote>(e.getGuild().getEmotes());
 
@@ -111,7 +107,7 @@ public class ChatListener extends ListenerAdapter {
 
 					// Bot gives its two cents.
 					if (Utils.getRandom(130) == 0) {
-						sendRandom(e.getChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
+						sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
 					}
 				}
 			} else if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
@@ -132,12 +128,12 @@ public class ChatListener extends ListenerAdapter {
 	 * @param t The trigger type being called.
 	 * @param author The user who triggered this message.
 	 */
-	private void sendRandom(MessageChannel c, Guild g, TriggerType t, User author) {
+	private void sendRandom(TextChannel c, Guild g, TriggerType t, User author) {
 		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t); 
 		String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
 		if (response.startsWith("[gif]"))
-			response = Utils.getGIF(response.split("\\[gif\\]",2)[1]);
+			response = Utils.getGIF(response.split("\\[gif\\]",2)[1], c.isNSFW()?"low":"medium");
 		
 		c.sendMessage(response).queue();
 
