@@ -43,16 +43,20 @@ public class ChatListener extends ListenerAdapter {
 				if (!brain.getTimeout()) {
 					// Check for command triggers.
 					for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
-						Matcher m = Pattern.compile("^(" + trigger + ")(.+)$", Pattern.CASE_INSENSITIVE).matcher(message);
+						Matcher m = Pattern.compile("^(" + trigger + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(message);
 
 						if (m.matches()) {
-							String command = m.group(2).trim();
+							if(m.group(2) != null){
+								String command = m.group(2).trim();
 
-							// TODO replace this with real logging
-							System.out.println("[COMMAND/" + e.getGuild().getName() + "/" + e.getAuthor().getName() + "]: " + command);
+								// TODO replace this with real logging
+								System.out.println("[COMMAND/" + e.getGuild().getName() + "/" + e.getAuthor().getName() + "]: " + command);
 
-							// Send to the command handler for further processing.
-							cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
+								// Send to the command handler for further processing.
+								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
+							}else{
+								sendRandom(e.getChannel(), e.getGuild(), TriggerType.HELLO, e.getAuthor());
+							}
 
 							return;
 						}
