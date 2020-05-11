@@ -40,7 +40,7 @@ public class Hangman implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((start)|(guess)|(list))( [a-z\\s]+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((start)|(guess)|(list))( !?([a-z\\s],?)+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
@@ -67,29 +67,53 @@ public class Hangman implements ICommand {
 				String hint = "";
 				String dictionary = "";
 
-				if(m.group(5) != null){
-					// Try using a custom dictionary
-					String dict = m.group(5).trim();
+				HangmanDictionary hd = null;
 
-					boolean exists = false;
-					for(HangmanDictionary hd : dictionaries){
-						if(hd.getName().equalsIgnoreCase(dict)){
-							word = hd.randomWord();
-							hint = hd.getWords().get(word);
-							dictionary = hd.getName();
-							exists = true;
-							break;
+				if(m.group(5) != null){
+					// Try using a custom dictionary, or exclude certain dictionaries, if specified.
+					String dictCmd = m.group(5).trim();
+
+					List<HangmanDictionary> specified = new ArrayList<HangmanDictionary>();
+
+					for(String n : dictCmd.split(",")){
+						if(n.startsWith("!"))
+							n = n.substring(1);
+
+						// Find the dictionary, if it exists.
+						for(HangmanDictionary d1 : dictionaries){
+							if(d1.getName().equalsIgnoreCase(n)){
+								specified.add(d1);
+								break;
+							}
 						}
 					}
 
-					if(!exists)
+					if(specified.size() == 0)
 						return Errors.NOT_FOUND;
+
+					if(dictCmd.startsWith("!")){
+						List<HangmanDictionary> drawPool = new ArrayList<HangmanDictionary>(dictionaries);
+
+						for(HangmanDictionary s : specified){
+							if(drawPool.contains(s)){
+								drawPool.remove(s);
+							}
+						}
+
+						if(drawPool.size() == 0)
+							return Errors.NOT_FOUND;
+
+						hd = drawPool.get(Utils.getRandom(drawPool.size()));
+					}else{
+						hd = specified.get(Utils.getRandom(specified.size()));
+					}
 				}else{
-					HangmanDictionary hd = dictionaries.get(Utils.getRandom(dictionaries.size()));
-					word = hd.randomWord();
-					hint = hd.getWords().get(word);
-					dictionary = hd.getName();
+					hd = dictionaries.get(Utils.getRandom(dictionaries.size()));
 				}
+
+				word = hd.randomWord();
+				hint = hd.getWords().get(word);
+				dictionary = hd.getName();
 
 				HangmanGame newGame = new HangmanGame(word, hint, dictionary);
 
