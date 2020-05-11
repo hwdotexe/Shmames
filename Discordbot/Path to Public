@@ -3,6 +3,8 @@
 FIX:
     [DONE] - Fwlist and Emote Stats break when sending a long message
 ADD:
+    - Hangman separate dicts with ",", exclude them by starting it with "!"
+      - Switch to csv with dynamic library names
     - Support sharding
     [DONE] - Server Families
         [ Admins can link servers together with a 1-time GUID sent via PM ]

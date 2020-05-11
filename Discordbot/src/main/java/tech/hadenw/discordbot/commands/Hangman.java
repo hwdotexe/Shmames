@@ -226,6 +226,7 @@ public class Hangman implements ICommand {
 		HangmanDictionary dnd = new HangmanDictionary("DnD");
 		HangmanDictionary anime = new HangmanDictionary("Anime");
 		HangmanDictionary media = new HangmanDictionary("BooksMoviesTV");
+		HangmanDictionary lancer = new HangmanDictionary("Lancer");
 
 		videoGames.addWord("King Dedede", "Character");
 		videoGames.addWord("Princess Zelda", "Character");
@@ -348,10 +349,65 @@ public class Hangman implements ICommand {
 		media.addWord("Ricky Gervais", "Person");
 		media.addWord("James Spader", "Person");
 
+		lancer.addWord("Sparri", "Faction");
+		lancer.addWord("Albatross", "Faction");
+		lancer.addWord("Ungratefuls", "Faction");
+		lancer.addWord("Voladores", "Faction");
+		lancer.addWord("Union", "Faction");
+		lancer.addWord("Horizon Collective", "Faction");
+		lancer.addWord("Mirrorsmoke Mercenary Company", "Faction");
+		lancer.addWord("Karrakin Trade Baronies", "Faction");
+		lancer.addWord("Second Committee", "Faction");
+		lancer.addWord("Third Committee", "Faction");
+		lancer.addWord("Blackbeard", "Frame");
+		lancer.addWord("Drake", "Frame");
+		lancer.addWord("Lancaster", "Frame");
+		lancer.addWord("Nelson", "Frame");
+		lancer.addWord("Raleigh", "Frame");
+		lancer.addWord("Tortuga", "Frame");
+		lancer.addWord("Vlad", "Frame");
+		lancer.addWord("Caliban", "Frame");
+		lancer.addWord("Zheng", "Frame");
+		lancer.addWord("Black Witch", "Frame");
+		lancer.addWord("Deaths Head", "Frame");
+		lancer.addWord("Dusk Wing", "Frame");
+		lancer.addWord("Metalmark", "Frame");
+		lancer.addWord("Monarch", "Frame");
+		lancer.addWord("Mourning Cloak", "Frame");
+		lancer.addWord("Swallowtail", "Frame");
+		lancer.addWord("White Witch", "Frame");
+		lancer.addWord("Emperor", "Frame");
+		lancer.addWord("Atlas", "Frame");
+		lancer.addWord("Balor", "Frame");
+		lancer.addWord("Goblin", "Frame");
+		lancer.addWord("Gorgon", "Frame");
+		lancer.addWord("Genghis", "Frame");
+		lancer.addWord("Hydra", "Frame");
+		lancer.addWord("Manticore", "Frame");
+		lancer.addWord("Minotaur", "Frame");
+		lancer.addWord("Pegasus", "Frame");
+		lancer.addWord("Kobold", "Frame");
+		lancer.addWord("Lich", "Frame");
+		lancer.addWord("Iskander", "Frame");
+		lancer.addWord("Saladin", "Frame");
+		lancer.addWord("Tokugawa", "Frame");
+		lancer.addWord("Sunzi", "Frame");
+		lancer.addWord("Smith Shimano Corporation", "Manufacturer");
+		lancer.addWord("Harrison Armory", "Manufacturer");
+		lancer.addWord("General Massive Systems", "Manufacturer");
+		lancer.addWord("Interplanetary Shipping NorthStar", "Manufacturer");
+		lancer.addWord("Horus", "Manufacturer");
+		lancer.addWord("Non Human Person", "Thing");
+		lancer.addWord("Galsim", "Thing");
+		lancer.addWord("Blinkspace", "Thing");
+		lancer.addWord("Core Power", "Thing");
+		lancer.addWord("The Hercynian Crisis", "Thing");
+
 		this.dictionaries.add(videoGames);
 		this.dictionaries.add(dnd);
 		this.dictionaries.add(anime);
 		this.dictionaries.add(media);
+		this.dictionaries.add(lancer);
 	}
 
 	private String getHangmanASCII(int lives){
