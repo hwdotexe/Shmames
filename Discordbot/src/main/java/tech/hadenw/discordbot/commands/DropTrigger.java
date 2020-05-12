@@ -19,7 +19,7 @@ public class DropTrigger implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
-			if (!args.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName().toLowerCase())) {
+			if (!args.equalsIgnoreCase(Shmames.getBotName())) {
 				Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 				
 				if (b.getTriggers().containsKey(args)) {
@@ -29,7 +29,7 @@ public class DropTrigger implements ICommand {
 				} else
 					return "While I'd love to do that, it doesn't exist in my brain, so, I can't...";
 			} else {
-				return "Sorry, ya can't delete that trigger. It's stuck here like the gum on my shoe #ThanksCarly";
+				return "Sorry, ya can't delete that trigger. It's stuck here like the gum on my shoe.";
 			}
 		}else {
 			return "Hey! You gotta tell me what you want to delete...";

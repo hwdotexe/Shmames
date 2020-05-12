@@ -127,13 +127,16 @@ public class ChatListener extends ListenerAdapter {
 	 */
 	private void sendRandom(TextChannel c, Guild g, TriggerType t, User author) {
 		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t);
-		String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
-		if (response.startsWith("[gif]"))
-			response = Utils.getGIF(response.split("\\[gif\\]",2)[1], c.isNSFW()?"low":"high");
-		
-		c.sendMessage(response).queue();
+		if(r.size() > 0) {
+			String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
 
-		return;
+			if (response.startsWith("[gif]"))
+				response = Utils.getGIF(response.split("\\[gif\\]", 2)[1], c.isNSFW() ? "low" : "high");
+
+			c.sendMessage(response).queue();
+		}else{
+			c.sendMessage("There are no responses saved for the "+t.name()+" type!").queue();
+		}
 	}
 }

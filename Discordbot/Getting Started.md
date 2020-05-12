@@ -6,17 +6,16 @@ Shmames is a utility and meme bot, giving your Discord server a little more flav
 by creating polls, automating responses, and tracking tallies, or have some fun with playing
 hangman, minesweeper, and rolling dice. Shmames can send random GIFs for you, or let you create
 shortcuts to your own. It even keeps track of which custom emoji get used the most on your server,
-making it easier to know which ones to get rid of.
+making it easier to know which ones you can get rid of.
 
-Shmames is feature-rich, quirky, and a fun new way to interact with your Discord server, and it's
-100% free.
+Shmames is feature-rich, quirky, and a fun new way to interact with your Discord server, and it's 100% free.
 
 ### Features
 * Create polls with up to 9 different options
 * Customize random responses based on keywords
 * Track custom tallies
 * Create shortcuts to URL links, and send them in a snap
-* Send a random GIF, based on search keywords
+* Send a random GIF based on search keywords
 * Play a game of Hangman or Minesweeper
 * View usage stats on your custom Emoji
 * Let your users pin messages to a specialized channel
@@ -41,8 +40,16 @@ data between them in a secure way. Families currently allow you to use ForumWeap
 on multiple servers? Shmames is here to the rescue! Check out the new command `shmames family`
 for more details.
 
+#### Note: NSFW Content
+> Shmames does not inherently contain any "NSFW" (18+) content. However, he can still search the web via 
+Tenor for GIFs based on an "NSFW" keyword. As such, these kinds of searches are limited to Discord channels with the
+NSFW flag turned on. If a channel has this setting turned off, Shmames will poll the Tenor API with Tenor's filter
+set to `high` (G-rated content only).
+
+> Shmames and its developer are not responsible for content that bypasses or circumvents Tenor's third-party content filter.
+
 ### Commands
-Below is a list of Shmames commands, and a short definition of what it does. You can also view command
+Below is a list of Shmames commands, and a short definition of what they do. You can also view command
 information in Discord, using `shmames help` or `shmames help <command>`!
 
 **How to read command arguments**
