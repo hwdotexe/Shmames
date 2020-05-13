@@ -3,6 +3,7 @@ package tech.hadenw.discordbot.commands;
 import java.awt.Color;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.CommandHandler;
@@ -29,24 +30,26 @@ public class Help implements ICommand {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
 						// Create list of aliases
-						StringBuilder alsb = new StringBuilder();
+						StringBuilder aliasesSB = new StringBuilder();
 						
 						for(String al : c.getAliases()) {
-							if(alsb.length() > 0) {
-								alsb.append(", ");
+							if(aliasesSB.length() > 0) {
+								aliasesSB.append(", ");
 							}
 							
-							alsb.append("`"+al+"`");
+							aliasesSB.append("`");
+							aliasesSB.append(al);
+							aliasesSB.append("`");
 						}
 						 
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
-						eBuilder.setAuthor("== Command Help ==");
-				        eBuilder.setColor(Color.MAGENTA);
-				        eBuilder.setTitle(c.getDescription());
-				        eBuilder.appendDescription("**Aliases:** "+alsb.toString()+"\n");
-				        eBuilder.appendDescription("**Usage:** `"+c.getUsage()+"`\n");
-				        eBuilder.appendDescription("**Server-Only:** `"+(c.requiresGuild() ? "Yes" : "No")+"`\n");
+						eBuilder.setAuthor("Help » "+c.getAliases()[0]);
+						eBuilder.setColor(Color.MAGENTA);
+						eBuilder.addField("Description", c.getDescription(), false);
+						eBuilder.addField("Aliases", aliasesSB.toString(), true);
+						eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
+						eBuilder.addField("Usage", c.getUsage(), false);
 						
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
 				        
@@ -56,28 +59,35 @@ public class Help implements ICommand {
 			}
 		}else {
 			// Wants a list of all commands.
-			
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append(":small_orange_diamond: **Bot Commands** :small_orange_diamond:\nUse `"+Shmames.getBotName()+" help <command>` for more info!\n> ");
-			
-			int row = 0;
+			StringBuilder cmdList = new StringBuilder();
+
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
-				if(row==3) {
-					sb.append("\n> ");
-					row = 0;
-				}
-				
 				if(c.getDescription().length() > 0) {
-					sb.append("`"+c.getAliases()[0]+"`, ");
-					
-					row++;
+					if (cmdList.length() > 0)
+						cmdList.append(", ");
+
+					cmdList.append("`");
+					cmdList.append(c.getAliases()[0]);
+					cmdList.append("`");
 				}
 			}
-			
-			author.openPrivateChannel().queue((c) -> c.sendMessage(sb.toString()).queue());
-		
-			return "PM'd you the deets :punch:";
+
+			EmbedBuilder eBuilder = new EmbedBuilder();
+
+			eBuilder.setColor(Color.MAGENTA);
+			eBuilder.setTitle("Command Help for "+Shmames.getBotName());
+			eBuilder.addField("All Commands", cmdList.toString(), false);
+			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
+
+			if(message.getChannelType() == ChannelType.TEXT){
+				author.openPrivateChannel().queue((c) -> c.sendMessage(eBuilder.build()).queue());
+
+				return "PM'd you the deets :punch:";
+			}else{
+				message.getChannel().sendMessage(eBuilder.build()).queue();
+
+				return "";
+			}
 		}
 		
 		return Errors.COMMAND_NOT_FOUND;

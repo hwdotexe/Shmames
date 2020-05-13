@@ -92,7 +92,7 @@ Removes the trigger specified, so that it won't be used anymore.
 Removes the random response, so that it won't be sent anymore. `<number>` can be found by listing the
 existing responses.
 
-> ##### listResponses &lvt;type&gt;
+> ##### listResponses &lt;type&gt;
 Get a list of all random responses currently saved for the `<type>` category. 
 
 > ##### listTriggers

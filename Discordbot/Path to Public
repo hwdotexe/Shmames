@@ -3,6 +3,10 @@
 FIX:
     [DONE] - Fwlist and Emote Stats break when sending a long message
 ADD:
+    - reset to factory command
+    - increase help desc
+    - use `` when listing responses so the link doesn't generate a preview
+    [DONE] - redo the help layout, I still hate it
     [DONE] - Hangman separate dicts with ",", exclude them by starting it with "!"
     - Switch to csv with dynamic library names
     - Support sharding
@@ -38,18 +42,10 @@ CHANGE:
 + Does PinThat need a permission?
 
 
-Can produce content that meets a G through PG-13 rating via Tenor
+== THE DATABASE UPDATE ==
+Need:   Database for persistence
+        Cache API (makes DB ops, otherwise caches Brain files)
 
+        Shmames shards will call API when accessing Shmames.getBrains().getBrain(...)
 
-
-=== FAMILY BREAKDOWN (lol) ===
-A Family is a connection between two or more servers. A Family is owned by one individual, who alone can generate a
-Family Join Code.
-
-To add a server to a Family, the user first creates a code on a server that's already a member of the Family. Then, that
-code can be shared with another server to add it to the group.
-
-Only server Administrators can join a server to a Family, but they don't need to be the Family owner, once a Code has been
-created. Any Administrator can remove the server from a Family at will.
-
-Codes are single-use only, and expire when used, or when a join does not complete (to avoid other users sniping).
+        (maybe)

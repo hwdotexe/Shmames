@@ -30,6 +30,8 @@ public final class Shmames {
 	
 	public static AudioPlayerManager musicPlayer;
 	public static HashMap<String, GuildOcarina> ocarinas;
+
+	private static String botName;
 	
 	/**
 	 * The entry point for the bot.
@@ -55,6 +57,9 @@ public final class Shmames {
 			
 			// Set the bot's status.
 			new DailyTask();
+
+			// Set the bot name.
+			botName = getJDA().getSelfUser().getName();
 			
 			// Begin listening for events.
 			jda.addEventListener(new ChatListener());
@@ -71,7 +76,7 @@ public final class Shmames {
 	}
 	
 	public static String getBotName() {
-		return getJDA().getSelfUser().getName();
+		return botName;
 	}
 	
 	public static AudioPlayerManager getAudioPlayer() {
