@@ -271,6 +271,8 @@ public class Utils {
 	    		
 	    		break;
 	    	}
+
+	    	System.out.println("[GIF Search: "+search+" @ "+filter+"]");
 	    	
 	    	return url;
 	    
@@ -357,6 +359,7 @@ public class Utils {
 			}
 
 			if(numbered) {
+				list.append("> ");
 				list.append(items.indexOf(i)+1);
 				list.append(": ");
 			}

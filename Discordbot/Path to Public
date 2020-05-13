@@ -5,7 +5,7 @@ FIX:
 ADD:
     - reset to factory command
     - increase help desc
-    - use `` when listing responses so the link doesn't generate a preview
+    [DONE] - use `` when listing responses so the link doesn't generate a preview
     [DONE] - redo the help layout, I still hate it
     [DONE] - Hangman separate dicts with ",", exclude them by starting it with "!"
     - Switch to csv with dynamic library names
@@ -25,7 +25,7 @@ REMOVE:
     [DONE] - FW migration code
     [DONE] - Motherbrain FW data
 CHANGE:
-    - Listing stuff is weak (i.e. responses)
+    - Listing stuff is weak (triggers, tallies, etc. - use Util or make a new one)
     - Add a way to see trigger/response types?
     - Move all error messages out to Errors.java
     [DONE] - Automatically set defaults when first joining (modify)
