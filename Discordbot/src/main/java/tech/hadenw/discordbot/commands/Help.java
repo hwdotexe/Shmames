@@ -1,6 +1,9 @@
 package tech.hadenw.discordbot.commands;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -9,6 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.CommandHandler;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.Utils;
 
 public class Help implements ICommand {
 	@Override
@@ -30,24 +34,14 @@ public class Help implements ICommand {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
 						// Create list of aliases
-						StringBuilder aliasesSB = new StringBuilder();
-						
-						for(String al : c.getAliases()) {
-							if(aliasesSB.length() > 0) {
-								aliasesSB.append(", ");
-							}
-							
-							aliasesSB.append("`");
-							aliasesSB.append(al);
-							aliasesSB.append("`");
-						}
+						String list = Utils.GenerateList(Arrays.asList(c.getAliases()), -1);
 						 
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
 						eBuilder.setAuthor("Help » "+c.getAliases()[0]);
 						eBuilder.setColor(Color.MAGENTA);
 						eBuilder.addField("Description", c.getDescription(), false);
-						eBuilder.addField("Aliases", aliasesSB.toString(), true);
+						eBuilder.addField("Aliases", list, true);
 						eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
 						eBuilder.addField("Usage", c.getUsage(), false);
 						
@@ -59,24 +53,21 @@ public class Help implements ICommand {
 			}
 		}else {
 			// Wants a list of all commands.
-			StringBuilder cmdList = new StringBuilder();
+			List<String> cmds = new ArrayList<String>();
 
 			for(ICommand c : CommandHandler.getLoadedCommands()) {
 				if(c.getDescription().length() > 0) {
-					if (cmdList.length() > 0)
-						cmdList.append(", ");
-
-					cmdList.append("`");
-					cmdList.append(c.getAliases()[0]);
-					cmdList.append("`");
+					cmds.add(c.getAliases()[0]);
 				}
 			}
+
+			String list = Utils.GenerateList(cmds, -1);
 
 			EmbedBuilder eBuilder = new EmbedBuilder();
 
 			eBuilder.setColor(Color.MAGENTA);
 			eBuilder.setTitle("Command Help for "+Shmames.getBotName());
-			eBuilder.addField("All Commands", cmdList.toString(), false);
+			eBuilder.addField("All Commands", list, false);
 			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
 
 			if(message.getChannelType() == ChannelType.TEXT){

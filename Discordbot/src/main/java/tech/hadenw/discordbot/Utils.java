@@ -328,4 +328,35 @@ public class Utils {
 
 		return false;
 	}
+
+	/**
+	 * Creates a list of items in a standardized, visually-appealing way.
+	 * @param items The items to list out.
+	 * @param perRow The number of items to have per row.
+	 * @return The generated list.
+	 */
+	public static String GenerateList(List<String> items, int perRow){
+		StringBuilder list = new StringBuilder();
+
+		int inRow = 0;
+		for(String i : items){
+			if(list.length() > 0)
+				list.append(", ");
+
+			if(perRow > 0) {
+				inRow++;
+
+				if (inRow > perRow) {
+					list.append("\n");
+					inRow = 1;
+				}
+			}
+
+			list.append("`");
+			list.append(i);
+			list.append("`");
+		}
+
+		return list.toString();
+	}
 }
