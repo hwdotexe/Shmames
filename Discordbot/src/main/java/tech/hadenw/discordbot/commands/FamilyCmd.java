@@ -11,6 +11,7 @@ import tech.hadenw.discordbot.storage.Brain;
 import tech.hadenw.discordbot.storage.Family;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -114,9 +115,11 @@ public class FamilyCmd implements ICommand {
 								StringBuilder sb = new StringBuilder();
 								sb.append("**The \"");
 								sb.append(f.getFamName());
-								sb.append("\" Family contains the following servers:**");
+								sb.append("\" Family contains the following servers:**\n");
 
 								boolean contains = false;
+								List<String> memberGuilds = new ArrayList<String>();
+
 								for(long g : new ArrayList<Long>(f.getMemberGuilds())){
 									Guild guild = Shmames.getJDA().getGuildById(g);
 
@@ -126,15 +129,13 @@ public class FamilyCmd implements ICommand {
 										continue;
 									}
 
-									sb.append("\n> **");
-									sb.append(f.getMemberGuilds().indexOf(g)+1);
-									sb.append("**: ");
-									sb.append(guild.getName());
-
+									memberGuilds.add(guild.getName());
 									contains = true;
 								}
 
-								if(!contains) {
+								if(contains) {
+									sb.append(Utils.GenerateList(memberGuilds, -1, true));
+								}else{
 									sb.append("_This Family does not contain any servers._");
 								}
 
@@ -148,14 +149,15 @@ public class FamilyCmd implements ICommand {
 							Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
 							StringBuilder sb = new StringBuilder();
-							sb.append("**This server belongs to the following families:**");
+							sb.append("**This server belongs to the following families:**\n");
 
 							boolean contains = false;
+							List<String> families = new ArrayList<String>();
+
 							for(String id : b.getFamilies()){
 								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
 									if(f.getFamID().equals(id)){
-										sb.append("\n> ");
-										sb.append(f.getFamName());
+										families.add(f.getFamName());
 										contains = true;
 
 										break;
@@ -163,7 +165,9 @@ public class FamilyCmd implements ICommand {
 								}
 							}
 
-							if(!contains) {
+							if(contains) {
+								sb.append(Utils.GenerateList(families, 3, false));
+							}else{
 								sb.append("_This server does not belong to a Family._");
 							}
 
@@ -177,7 +181,7 @@ public class FamilyCmd implements ICommand {
 						String name = m.group(6).trim().toLowerCase();
 
 						if (m.group(7) != null) {
-							int server = Integer.parseInt(m.group(7).trim());
+							int server = Integer.parseInt(m.group(7).trim())-1;
 
 							for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
 								if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {

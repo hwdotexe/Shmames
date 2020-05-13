@@ -21,17 +21,12 @@ public class ListTallies implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String tallies = "";
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(b.getTallies());
 		
-		for(String c : tSorted.keySet()) {
-			if(tallies.length() > 0)
-				tallies += "\n";
-			tallies += "`"+c+"`: "+tSorted.get(c);
-		}
+		String tallies = Utils.GenerateList(tSorted, -1);
 
-		return "**The abacus hast recorded thusly:**\n"+tallies;
+		return "**Here's what I have written down:**\n"+tallies;
 	}
 
 	@Override

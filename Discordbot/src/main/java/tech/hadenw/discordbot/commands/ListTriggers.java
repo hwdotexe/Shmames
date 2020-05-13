@@ -3,6 +3,7 @@ package tech.hadenw.discordbot.commands;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.Brain;
 
 public class ListTriggers implements ICommand {
@@ -19,15 +20,10 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String msg = ":small_red_triangle: **Triggers** :small_red_triangle:";
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		String list = Utils.GenerateList(b.getTriggers(), -1);
 
-		for (String trig : b.getTriggers().keySet()) {
-			msg += "\n";
-			msg += "`" + trig + "`" + " (" + b.getTriggers().get(trig) + ")";
-		}
-
-		return msg;
+		return "**I'll respond to these things:**\n"+list;
 	}
 
 	@Override

@@ -25,7 +25,7 @@ REMOVE:
     [DONE] - FW migration code
     [DONE] - Motherbrain FW data
 CHANGE:
-    - Listing stuff is weak (triggers, tallies, etc. - use Util or make a new one)
+    [DONE] - Listing stuff is weak (triggers, tallies, families, etc. - use Util or make a new one)
     - Add a way to see trigger/response types?
     - Move all error messages out to Errors.java
     - Use a database for storage, so all shards can be created equal

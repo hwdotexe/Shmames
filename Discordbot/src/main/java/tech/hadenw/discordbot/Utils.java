@@ -376,4 +376,45 @@ public class Utils {
 
 		return list.toString();
 	}
+
+	/**
+	 * Creates a list of items in a standardized, visually-appealing way.
+	 * @param items A map of items to list.
+	 * @param perRow The number of items to have per row.
+	 * @return The generated list.
+	 */
+	public static <T> String GenerateList(HashMap<String, T> items, int perRow){
+		StringBuilder list = new StringBuilder();
+
+		int inRow = 0;
+		for(String i : items.keySet()){
+			if(perRow > 0) {
+				inRow++;
+
+				if (inRow > perRow) {
+					list.append("\n> ");
+					inRow = 1;
+				}else{
+					if(list.length() > 0)
+						list.append("  ");
+					else
+						list.append("> ");
+				}
+			}else{
+				if(list.length() > 0)
+					list.append("  ");
+				else
+					list.append("> ");
+			}
+
+			list.append("`");
+			list.append(i);
+			list.append("`");
+			list.append(": [");
+			list.append(items.get(i));
+			list.append("]");
+		}
+
+		return list.toString();
+	}
 }

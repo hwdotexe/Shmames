@@ -103,7 +103,7 @@ public class ChatListener extends ListenerAdapter {
 					}
 
 					// Bot gives its two cents.
-					if (Utils.getRandom(130) == 0) {
+					if (Utils.getRandom(150) == 0) {
 						sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
 					}
 				}
@@ -136,7 +136,8 @@ public class ChatListener extends ListenerAdapter {
 
 			c.sendMessage(response).queue();
 		}else{
-			c.sendMessage("There are no responses saved for the "+t.name()+" type!").queue();
+			if(t != TriggerType.RANDOM)
+				c.sendMessage("There are no responses saved for the "+t.name()+" type!").queue();
 		}
 	}
 }

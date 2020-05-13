@@ -82,35 +82,6 @@ public class ForumWeaponList implements ICommand {
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
 
-		return buildListDisplay(g.getName(), fwSorted);
-	}
-
-	private String buildListDisplay(String serverName, LinkedHashMap<String, Integer> fws){
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("**");
-		sb.append(serverName);
-		sb.append("**\n");
-
-		int inRow = 0;
-		for(String fw : fws.keySet()){
-			inRow++;
-
-			if(inRow > 4) {
-				sb.append("\n");
-				inRow = 1;
-			}
-
-			sb.append("`");
-			sb.append(fw);
-			sb.append("`: ");
-			sb.append(fws.get(fw));
-			sb.append("  ");
-		}
-
-		if(fws.size() == 0)
-			sb.append("No weapons found.");
-
-		return sb.toString();
+		return "**"+g.getName()+"**\n"+Utils.GenerateList(fwSorted, -1);
 	}
 }
