@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -335,21 +337,33 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static String GenerateList(List<String> items, int perRow){
+	public static String GenerateList(List<String> items, int perRow, boolean numbered){
 		StringBuilder list = new StringBuilder();
+		Pattern emote = Pattern.compile("(<(:[a-z]+:)\\d+>)", Pattern.CASE_INSENSITIVE);
 
 		int inRow = 0;
 		for(String i : items){
-			if(list.length() > 0)
-				list.append(", ");
+			if(list.length() > 0) {
+				list.append(numbered ? "\n" : ", ");
+			}
 
-			if(perRow > 0) {
+			if(!numbered && perRow > 0) {
 				inRow++;
 
 				if (inRow > perRow) {
 					list.append("\n");
 					inRow = 1;
 				}
+			}
+
+			if(numbered) {
+				list.append(items.indexOf(i)+1);
+				list.append(": ");
+			}
+
+			Matcher eMatcher = emote.matcher(i);
+			while(eMatcher.find()){
+				i = i.replaceFirst(eMatcher.group(1), eMatcher.group(2));
 			}
 
 			list.append("`");

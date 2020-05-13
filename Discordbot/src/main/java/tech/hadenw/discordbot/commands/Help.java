@@ -34,7 +34,7 @@ public class Help implements ICommand {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
 						// Create list of aliases
-						String list = Utils.GenerateList(Arrays.asList(c.getAliases()), -1);
+						String list = Utils.GenerateList(Arrays.asList(c.getAliases()), -1, false);
 						 
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
@@ -61,7 +61,7 @@ public class Help implements ICommand {
 				}
 			}
 
-			String list = Utils.GenerateList(cmds, -1);
+			String list = Utils.GenerateList(cmds, -1, false);
 
 			EmbedBuilder eBuilder = new EmbedBuilder();
 
