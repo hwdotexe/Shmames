@@ -18,7 +18,7 @@ import tech.hadenw.discordbot.tasks.PollTask;
 public class Closepoll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Close a poll early";
+		return "End a Poll early (before its deadline), using the Poll's ID.";
 	}
 	
 	@Override

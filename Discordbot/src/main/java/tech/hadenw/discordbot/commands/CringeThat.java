@@ -14,7 +14,8 @@ import tech.hadenw.discordbot.Utils;
 public class CringeThat implements ICommand {
 	@Override
 	public String getDescription() {
-		return "*is kawaii* UwU";
+		return "Rewrite a previous message in a cringy way. Use `^` symbols to specify the " +
+				"message to rewrite.";
 	}
 	
 	@Override

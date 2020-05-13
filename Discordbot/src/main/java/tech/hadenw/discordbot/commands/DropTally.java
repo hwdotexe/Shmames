@@ -9,7 +9,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class DropTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Decrements a tally on the abacus.";
+		return "Decrements a tally, or removes it if the tally reaches 0.";
 	}
 	
 	@Override

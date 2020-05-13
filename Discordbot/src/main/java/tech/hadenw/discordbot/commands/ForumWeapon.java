@@ -14,7 +14,8 @@ import tech.hadenw.discordbot.storage.ForumWeaponObj;
 public class ForumWeapon implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Engage the meme arsenal.";
+		return "Engage the meme arsenal. Create shorthand names for your favorite GIFs, " +
+				"videos, links, and more. Then, use them in chat whenever you need!";
 	}
 	
 	@Override

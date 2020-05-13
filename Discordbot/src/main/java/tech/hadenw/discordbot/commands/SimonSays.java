@@ -17,7 +17,7 @@ import tech.hadenw.discordbot.storage.Family;
 public class SimonSays implements ICommand {
 	@Override
 	public String getDescription() {
-		return "I say what you say, eh?";
+		return "I'll repeat after you! Send messages, links, or server emotes!";
 	}
 	
 	@Override

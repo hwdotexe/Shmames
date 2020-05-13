@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.Utils;
 public class Wiki implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Ask the oracle your question, and I shall answer.";
+		return "Ask the oracle your question, and I shall answer. That, or the Internet will.";
 	}
 	
 	@Override

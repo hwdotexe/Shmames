@@ -18,7 +18,8 @@ import java.util.regex.Pattern;
 public class FamilyCmd implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Manage your "+ Shmames.getBotName() + " Family";
+		return "Manage your "+ Shmames.getBotName() + " Family! Families share Shmames " +
+				"Forum Weapons, and can even use each others' server emotes in `simonSays` commands!";
 	}
 	
 	@Override

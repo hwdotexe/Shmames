@@ -12,7 +12,8 @@ import tech.hadenw.discordbot.Errors;
 public class React implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Reacts to a message with emojis to spell a word.";
+		return "Reacts to the specified message with emoji that spell out your word. Works " +
+				"best with shorter words.";
 	}
 	
 	@Override

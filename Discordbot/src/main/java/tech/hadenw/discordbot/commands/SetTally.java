@@ -12,7 +12,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class SetTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Sets and overrides the value of a tally.";
+		return "Overrides a tally with a new value, creating it if it didn't already exist.";
 	}
 	
 	@Override

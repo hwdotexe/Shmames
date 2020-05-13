@@ -16,7 +16,7 @@ import tech.hadenw.discordbot.storage.Response;
 public class ListResponses implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Lists the random responses and their types.";
+		return "Displays the list of random responses for the specified trigger type.";
 	}
 	
 	@Override

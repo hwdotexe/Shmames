@@ -7,7 +7,7 @@ import tech.hadenw.discordbot.MinesweepGame;
 public class Minesweeper implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Play a game of Minesweeper.";
+		return "Play a game of Minesweeper, using a grid size of 6 through 11.";
 	}
 	
 	@Override

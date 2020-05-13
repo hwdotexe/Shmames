@@ -13,7 +13,7 @@ import tech.hadenw.discordbot.Utils;
 public class Roll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Just roll some dice.";
+		return "Roll some dice! Try `roll a d20`, or `roll 2d8+1d4`!";
 	}
 	
 	@Override

@@ -17,7 +17,8 @@ import tech.hadenw.discordbot.storage.Brain;
 public class Startpoll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Starts a new poll in the current channel.";
+		return "Starts a new poll in the current channel, and pins it if configured. Example: " +
+				"`startpoll 3h What is your favorite color? Red; Blue; Green`";
 	}
 	
 	@Override

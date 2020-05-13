@@ -13,7 +13,8 @@ import tech.hadenw.discordbot.storage.Brain;
 public class AddTrigger implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Adds a message trigger to send a random response.";
+		return "Creates a new trigger word or phrase, which then sends a response for the " +
+				"given type.";
 	}
 	
 	@Override

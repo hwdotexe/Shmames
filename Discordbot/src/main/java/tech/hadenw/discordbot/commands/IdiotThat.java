@@ -11,7 +11,8 @@ import tech.hadenw.discordbot.Errors;
 public class IdiotThat implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Make them sound like an idiot.";
+		return "Rewrite a previous message with poor grammar. Use `^` symbols to specify the " +
+				"message to rewrite.";
 	}
 	
 	@Override

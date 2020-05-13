@@ -14,7 +14,8 @@ import tech.hadenw.discordbot.storage.Response;
 public class AddResponse implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Adds a new response to the random pool.";
+		return "Adds a new response to the list for the chosen response type. These are " +
+				"chosen at random.";
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import tech.hadenw.discordbot.tasks.JTimerTask;
 public class Timer implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Start a timer.";
+		return "Start a timer, and "+Shmames.getBotName()+" will alert you when it's ready.";
 	}
 	
 	@Override

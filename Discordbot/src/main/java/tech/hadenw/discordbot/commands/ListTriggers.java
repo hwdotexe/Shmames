@@ -8,7 +8,8 @@ import tech.hadenw.discordbot.storage.Brain;
 public class ListTriggers implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Lists all the message triggers.";
+		return "Displays all the current message trigger words or phrases, along with " +
+				"their types.";
 	}
 	
 	@Override

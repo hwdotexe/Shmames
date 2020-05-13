@@ -19,7 +19,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class PinThat implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Echoes a message to another channel.";
+		return "Sends a copy of the specified message over to the Pin Channel, if configured.";
 	}
 	
 	@Override

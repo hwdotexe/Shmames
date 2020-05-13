@@ -11,7 +11,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class ListTallies implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Displays all the current tallie on the abacus.";
+		return "Displays all the current tallies.";
 	}
 	
 	@Override

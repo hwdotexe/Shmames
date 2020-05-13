@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.Utils;
 public class NewSeed implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Reset the bot's random seed.";
+		return "";
 	}
 	
 	@Override

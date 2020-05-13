@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class AddTally implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Increments a tally on the abacus.";
+		return "Increments a tally, or creates one if it doesn't exist.";
 	}
 	
 	@Override

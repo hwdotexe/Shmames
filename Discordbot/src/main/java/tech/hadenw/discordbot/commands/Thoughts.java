@@ -16,7 +16,7 @@ public class Thoughts implements ICommand {
 	
 	@Override
 	public String getDescription() {
-		return "Get my opinion.";
+		return "Get my randomized opinion on something.";
 	}
 	
 	@Override

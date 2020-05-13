@@ -15,7 +15,8 @@ import tech.hadenw.discordbot.storage.Response;
 public class DropResponse implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Removes a response from the pool.";
+		return "Removes an existing response from the list for the specified type. Use the `listResponses` command " +
+				"to view response numbers.";
 	}
 	
 	@Override

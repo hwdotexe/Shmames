@@ -27,7 +27,7 @@ public class WhatShouldIDo implements ICommand {
 	
 	@Override
 	public String getDescription() {
-		return "I give you quality suggestions.";
+		return "Get a randomized, possibly sarcastic suggestion to cure your boredom.";
 	}
 	
 	@Override

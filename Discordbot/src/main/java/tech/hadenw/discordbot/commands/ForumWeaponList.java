@@ -16,7 +16,7 @@ import tech.hadenw.discordbot.storage.ForumWeaponObj;
 public class ForumWeaponList implements ICommand {
 	@Override
 	public String getDescription() {
-		return "List all the forum weapons available to this server.";
+		return "List all the Forum Weapons available to this server.";
 	}
 	
 	@Override

@@ -17,7 +17,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class Modify implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Change some of the bot's settings.";
+		return "The Administrator's command to customize bot settings and behavior.";
 	}
 	
 	@Override

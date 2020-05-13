@@ -10,7 +10,7 @@ import tech.hadenw.discordbot.Utils;
 public class GIF implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Send a super :sunglasses: GIF.";
+		return "Send an awesome, randomly-selected GIF based on a search term.";
 	}
 	
 	@Override

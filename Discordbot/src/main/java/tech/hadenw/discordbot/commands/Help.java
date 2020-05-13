@@ -17,7 +17,7 @@ import tech.hadenw.discordbot.Utils;
 public class Help implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Shows help & additional information";
+		return "Shows help & additional information.";
 	}
 	
 	@Override

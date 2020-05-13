@@ -15,8 +15,7 @@ import tech.hadenw.discordbot.Shmames;
 public class Music implements ICommand {
 	@Override
 	public String getDescription() {
-		return "This command is currently in BETA and is not guaranteed to work properly in every case."; // Not ready yet
-		//return "Play music to your current voice channel.";
+		return "This command is currently in BETA and is not guaranteed to work properly in every case.";
 	}
 	
 	@Override

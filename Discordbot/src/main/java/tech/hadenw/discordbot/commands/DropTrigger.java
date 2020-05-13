@@ -8,7 +8,7 @@ import tech.hadenw.discordbot.storage.Brain;
 public class DropTrigger implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Removes an existing trigger from the bot.";
+		return "Removes an existing trigger word or phrase.";
 	}
 	
 	@Override
