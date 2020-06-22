@@ -150,7 +150,7 @@ public class CommandHandler {
 					String sub = s.substring(lastIndex, lastIndex + interval);
 					int lastSpace = sub.lastIndexOf(" ");
 
-					result[i] = s.substring(lastIndex, lastSpace);
+					result[i] = s.substring(lastIndex, lastIndex + lastSpace);
 					lastIndex = lastSpace;
 				} else {
 					result[i] = s.substring(lastIndex, lastIndex + interval);

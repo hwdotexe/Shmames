@@ -203,7 +203,7 @@ public class Brain {
 	 * run when this object is first created.
 	 */
 	public void loadFirstRunDefaults() {
-		triggers.put(Shmames.getJDA().getSelfUser().getName().toLowerCase(), TriggerType.COMMAND);
+		triggers.put(Shmames.getBotName(), TriggerType.COMMAND);
 		settings.addAll(Shmames.defaults);
 		feedback.add("Example feedback");
 	}
