@@ -131,7 +131,8 @@ public class CommandHandler {
 		if(r != null) {
 			if(r.length() > 0) {
 				for(String m : splitString(r, 2000)){
-					new TypingTask(channel, m);
+//					new TypingTask(channel, m);
+					channel.sendMessage(m).queue();
 				}
 			}
 		} else {
