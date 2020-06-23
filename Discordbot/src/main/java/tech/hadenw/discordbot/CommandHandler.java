@@ -100,11 +100,8 @@ public class CommandHandler {
 
 							// Run the command async and send a message back when it finishes.
 							try {
-								String r = c.run(args, author, message);
-								sendMessageToChannel(r, message.getChannel());
-
-//								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-//										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
+								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
 							}catch (Exception e){
 								e.printStackTrace();
 								sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());
