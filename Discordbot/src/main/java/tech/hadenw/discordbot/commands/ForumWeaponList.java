@@ -81,7 +81,8 @@ public class ForumWeaponList implements ICommand {
 		}
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
+		String list = Utils.GenerateList(fwSorted, -1);
 
-		return "**"+g.getName()+"**\n"+Utils.GenerateList(fwSorted, -1);
+		return "**"+g.getName()+"**\n"+list.substring(2);
 	}
 }

@@ -100,8 +100,11 @@ public class CommandHandler {
 
 							// Run the command async and send a message back when it finishes.
 							try {
-								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
+								String r = c.run(args, author, message);
+								sendMessageToChannel(r, message.getChannel());
+
+//								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+//										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()));
 							}catch (Exception e){
 								e.printStackTrace();
 								sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());
@@ -144,22 +147,24 @@ public class CommandHandler {
 		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
 		String[] result = new String[breaks];
 
-		int lastIndex = 0;
-		for (int i = 0; i < breaks; i++) {
-			if (s.length() >= (lastIndex + interval)) {
-				if (s.charAt(lastIndex + interval) != ' ') {
-					String sub = s.substring(lastIndex, lastIndex + interval);
+		if(s.length() > interval) {
+			int lastIndex = 0;
+			for (int i = 0; i < breaks; i++) {
+
+				String sub = s.length()>= lastIndex+interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
+
+				if (sub.charAt(sub.length()-1) == ' ' || sub.length() < interval) {
+					result[i] = sub;
+					lastIndex += interval;
+				} else {
 					int lastSpace = sub.lastIndexOf(" ");
 
-					result[i] = s.substring(lastIndex, lastIndex + lastSpace);
-					lastIndex = lastSpace;
-				} else {
-					result[i] = s.substring(lastIndex, lastIndex + interval);
-					lastIndex += interval;
+					result[i] = sub.substring(0, lastSpace);
+					lastIndex = s.indexOf(result[i])+result[i].length();
 				}
-			} else {
-				result[i] = s.substring(lastIndex);
 			}
+		}else{
+			result[0] = s;
 		}
 
 		return result;
