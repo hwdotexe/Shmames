@@ -75,7 +75,7 @@ public class ForumWeaponList implements ICommand {
 
 								if (g != null) {
 									sb.append("\n\n");
-									sb.append(searchServerList(thisG, name));
+									sb.append(searchServerList(g, name));
 								}
 							}
 						}
