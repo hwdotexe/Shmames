@@ -249,7 +249,7 @@ public class Hangman implements ICommand {
 		HangmanDictionary videoGames = new HangmanDictionary("VideoGames");
 		HangmanDictionary dnd = new HangmanDictionary("DnD");
 		HangmanDictionary anime = new HangmanDictionary("Anime");
-		HangmanDictionary media = new HangmanDictionary("BooksMoviesTV");
+		HangmanDictionary media = new HangmanDictionary("Media");
 		HangmanDictionary lancer = new HangmanDictionary("Lancer");
 
 		videoGames.addWord("King Dedede", "Character");
@@ -330,6 +330,23 @@ public class Hangman implements ICommand {
 		dnd.addWord("Eldritch Blast", "Spell");
 		dnd.addWord("Goblin", "Creature");
 		dnd.addWord("Tiamat", "Creature");
+		dnd.addWord("Book of Shadows", "Thing");
+		dnd.addWord("Sneak Attack", "Thing");
+		dnd.addWord("Bag of Holding", "Thing");
+		dnd.addWord("Armor Class", "Thing");
+		dnd.addWord("Light Crossbow", "Thing");
+		dnd.addWord("War Caster", "Thing");
+		dnd.addWord("Eldritch Knight", "Thing");
+		dnd.addWord("Tarrasque", "Creature");
+		dnd.addWord("Flameskull", "Creature");
+		dnd.addWord("Pseudodragon", "Creature");
+		dnd.addWord("Crawling Claw", "Creature");
+		dnd.addWord("Medusa", "Creature");
+		dnd.addWord("Warforged", "Creature");
+		dnd.addWord("Dragonmark", "Thing");
+		dnd.addWord("Charlatan", "Thing");
+		dnd.addWord("Folk Hero", "Thing");
+		dnd.addWord("Multiclass", "Thing");
 
 		anime.addWord("Tetsutetsu Tetsutetsu", "Character");
 		anime.addWord("Van Hohenheim", "Character");
@@ -351,6 +368,10 @@ public class Hangman implements ICommand {
 		anime.addWord("Yang Wenli", "Character");
 		anime.addWord("Reinhard von Lohengramm", "Character");
 		anime.addWord("Hajime No Ippo", "Series");
+		anime.addWord("NERV", "Thing");
+		anime.addWord("Shinji Ikari", "Character");
+		anime.addWord("Rin Okumura", "Character");
+		anime.addWord("Eijiro Kirishima", "Character");
 
 		media.addWord("Dolores Umbridge", "Character");
 		media.addWord("Harry Potter", "Character");
@@ -372,6 +393,23 @@ public class Hangman implements ICommand {
 		media.addWord("The Matrix", "Film");
 		media.addWord("Ricky Gervais", "Person");
 		media.addWord("James Spader", "Person");
+		media.addWord("A Clockwork Orange", "Book");
+		media.addWord("The Hobbit", "Book");
+		media.addWord("The Lion The Witch and the Wardrobe", "Book");
+		media.addWord("The Da Vinci Code", "Book");
+		media.addWord("To Kill a Mockingbird", "Book");
+		media.addWord("War and Peace", "Book");
+		media.addWord("The Diary of Anne Frank", "Book");
+		media.addWord("Gone with the Wind", "Book");
+		media.addWord("The Great Gatsby", "Book");
+		media.addWord("Oliver Twist", "Book");
+		media.addWord("A Christmas Carol", "Book");
+		media.addWord("The Hound of the Baskervilles", "Book");
+		media.addWord("Twenty Thousand Leagues Under the Sea", "Book");
+		media.addWord("The Hunger Games", "Book");
+		media.addWord("Charlie and the Chocolate Factory", "Book");
+		media.addWord("Treasure Island", "Book");
+		media.addWord("Harry Potter and the Sorcerers Stone", "Book");
 
 		lancer.addWord("Sparri", "Faction");
 		lancer.addWord("Albatross", "Faction");
