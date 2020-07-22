@@ -22,7 +22,9 @@ public class WhatShouldIDo implements ICommand {
 				"uncover the truth behind 9/11", "vaguepost on Instagram for attention",
 				"play Madden", "scam impressionable old women out of their retirement funds",
 				"get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant",
-				"steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "write a furry comic"};
+				"steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "write a furry comic",
+				"protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner",
+				"drink questionable chemicals", "throw a prom in the McDonalds Playplace"};
 	}
 	
 	@Override
