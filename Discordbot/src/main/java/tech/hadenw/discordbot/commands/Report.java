@@ -13,7 +13,7 @@ import tech.hadenw.discordbot.tasks.ReportCooldownTask;
 public class Report implements ICommand {
 	@Override
 	public String getDescription() {
-		return "File a Secret Police report";
+		return "Send feedback about "+Shmames.getBotName()+" to the developer. Your username, server's name, and message will be recorded.";
 	}
 	
 	@Override
@@ -23,7 +23,7 @@ public class Report implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((bug)|(feature) )?(.{5,})$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((bug)|(feature))?\\s?(.{10,})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
@@ -33,15 +33,14 @@ public class Report implements ICommand {
 				String msg = m.group(4);
 				
 				if(type == null)
-					type = "UNSPECIFIED";
+					type = "GENERIC";
 				
 				b.getFeedback().add(author.getName()+" ("+message.getGuild().getName()+"): ["+type.toUpperCase()+"] "+msg);
-				Shmames.getBrains().saveBrain(b);
 				
 				// Start a cooldown
 				new ReportCooldownTask(b);
 				
-				return ":notepad_spiral: Your feedback has been noted. Thanks!\nYou can report again in **2 minutes**.";
+				return ":notepad_spiral: Your feedback has been noted. Thanks!\nYou can report again in **5 minutes**.";
 			}else {
 				// On cooldown
 				return "Please wait a bit before submitting more feedback.";
@@ -53,7 +52,7 @@ public class Report implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"report", "feedback"};
+		return new String[] {"report", "feedback", "suggestion"};
 	}
 	
 	@Override

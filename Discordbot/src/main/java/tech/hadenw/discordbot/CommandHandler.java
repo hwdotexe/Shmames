@@ -49,7 +49,7 @@ public class CommandHandler {
 		commands.add(new Nickname());
 		commands.add(new PinThat());
 		commands.add(new React());
-//		commands.add(new Report());
+		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
 		commands.add(new SetTally());
