@@ -57,7 +57,7 @@ public class React implements ICommand {
 			}catch(Exception ex) {
 				ex.printStackTrace();
 				
-				return Errors.BOT_ERROR;
+				return Errors.NO_PERMISSION_BOT;
 			}
 		}
 		

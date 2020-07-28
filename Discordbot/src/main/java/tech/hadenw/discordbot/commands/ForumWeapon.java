@@ -40,6 +40,10 @@ public class ForumWeapon implements ICommand {
 				case "create":
 					if(getFWCount(message.getGuild().getId()) < 100) {
 						if (optFWName != null) {
+							if(optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")){
+								return "Sorry, you can't create a Forum Weapon with that name!";
+							}
+
 							if (findFW(optFWName, message.getGuild().getId()) == null) {
 								ForumWeaponObj nfw = new ForumWeaponObj(optFWName, m.group(9), message.getGuild().getId());
 
@@ -184,10 +188,6 @@ public class ForumWeapon implements ICommand {
 	}
 	
 	private ForumWeaponObj findFW(String name, String guildID) {
-		if(name.equals("create") || name.equals("update") || name.equals("remove") || name.equals("list") || name.equals("search")){
-			return null;
-		}
-
 		// Check local server.
 		for(ForumWeaponObj fw : Shmames.getBrains().getBrain(guildID).getForumWeapons()) {
 			if(fw.getItemName().equals(name)) {
