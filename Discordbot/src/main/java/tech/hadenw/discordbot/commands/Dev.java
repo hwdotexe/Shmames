@@ -12,16 +12,8 @@ import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import tech.hadenw.discordbot.Shmames;
 import tech.hadenw.discordbot.Utils;
 import tech.hadenw.discordbot.storage.BotSettingName;
@@ -66,7 +58,7 @@ public class Dev implements ICommand {
 						case "leave":
 							return leave(m.group(2)) ? "Successfully left the server!" : "Could not leave that server.";
 						case "getreports":
-							getReports(message.getTextChannel());
+							getReports(message.getChannel());
 							return "";
 						case "savebrains":
 							saveBrains();
@@ -244,7 +236,7 @@ public class Dev implements ICommand {
 		return false;
 	}
 
-	private void getReports(TextChannel c) {
+	private void getReports(MessageChannel c) {
 		StringBuilder reports = new StringBuilder("== User Reports ==");
 
 		// Build list of reports.
