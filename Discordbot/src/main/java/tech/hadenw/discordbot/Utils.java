@@ -29,7 +29,6 @@ import tech.hadenw.discordbot.storage.Brain;
 
 public class Utils {
 	private static Random r;
-	private static String[] gifBlacklist = new String[] {"https://tenor.com/4xEs.gif", "https://tenor.com/4xBX.gif", "https://tenor.com/3RW4.gif"};
 	
 	/**
 	 * Prepare variables for use.
@@ -189,7 +188,7 @@ public class Utils {
 	public static String getWolfram(String search) {
 		try {
 			String searchFormatted = URLEncoder.encode(search, "UTF-8");
-			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=7YX496-E2479K2AE6&i="+searchFormatted, null);
+			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid="+Shmames.getBrains().getMotherBrain().getWolframAPIKey()+"&i="+searchFormatted, null);
 			
 			if(result != null) {
 				return result.trim();
@@ -201,43 +200,6 @@ public class Utils {
 		}
 	}
 	
-	/**
-	 * Makes a request to Zenserp to search for an image, and returns possible sources.
-	 * @param imageURL The URL of the image to search for.
-	 * @return A list of 5 maximum results.
-	 */
-	public static String getReverseImage(String imageURL) {
-		try {
-			String searchImage = URLEncoder.encode(imageURL, "UTF-8");
-			String result = sendHTTPReq(HTTPVerb.GET, "https://app.zenserp.com/api/v2/search?hl=en&gl=US&search_engine=google.com&apikey=bf076150-2029-11ea-9962-3b4bab6b129c&image_url="+searchImage, null);
-			
-			JSONObject r = new JSONObject(result);
-			JSONArray a = r.getJSONObject("reverse_image_results").getJSONArray("pages_with_matching_images");
-			
-			String results = "";
-			if(!a.isEmpty()) {
-				// Grab the first 5 links
-				for(int i=0; i<5; i++) {
-					if(!a.isNull(i)) {
-						if(results.length()>0)
-							results += "\n";
-						
-						results += "**"+(i+1)+"**: "+a.getJSONObject(i).getString("url");
-					} else {
-						break;
-					}
-				}
-			}else {
-				// Nothing found, send the search query
-				results = "I couldn't find anything. Maybe you give it a shot:\n"+r.getJSONObject("query").getString("url");
-			}
-			
-			return "I found these:\n"+results;
-		}catch(Exception e) {
-			return "My mommy said I can't look that one up :(";
-		}
-	}
-	
 	@SuppressWarnings("unused")
 	/**
 	 * Makes a request to Tenor and returns a random result.
@@ -246,7 +208,7 @@ public class Utils {
 	 */
 	public static String getGIF(String search, String filter) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key=CLEMV01ZTSAP&contentfilter="+filter+"&limit=25", null);
+		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key="+Shmames.getBrains().getMotherBrain().getTenorAPIKey()+"&contentfilter="+filter+"&limit=25", null);
 		
 		JSONObject json = new JSONObject(result);
 	    JSONArray jsonArray = json.getJSONArray("results");
@@ -257,20 +219,7 @@ public class Utils {
 	    }
 	    
 	    if(gifURLs.size() > 0) {
-	    	String url = "";	    	
-	    	// Check if the GIF is blacklisted, and if so, pick a different one.
-	    	for(int x=0; x<50; x++) {
-	    		url = gifURLs.get(r.nextInt(gifURLs.size()));
-	    		
-	    		for(int i=0; i<gifBlacklist.length; i++) {
-	    			if(gifBlacklist[i].equals(url)) {
-	    				url = "I couldn't find a GIF that _wasn't_ blacklisted...";
-	    				continue;
-	    			}
-	    		}
-	    		
-	    		break;
-	    	}
+	    	String url = gifURLs.get(r.nextInt(gifURLs.size()));
 
 	    	System.out.println("[GIF Search: "+search+" @ "+filter+"]");
 	    	

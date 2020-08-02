@@ -10,11 +10,19 @@ public class MotherBrain {
 	private HashMap<String, ActivityType> statuses;
 	private HashMap<String, Integer> commandStats;
 	private List<Family> serverFamilies;
+	private String botAPIKey;
+	private String botAPIKeySecondary;
+	private String tenorAPIKey;
+	private String wolframAPIKey;
 	
 	public MotherBrain() {
 		statuses = new HashMap<String, ActivityType>();
 		commandStats = new HashMap<String, Integer>();
 		serverFamilies = new ArrayList<Family>();
+		botAPIKey = "API_KEY_HERE";
+		botAPIKeySecondary = "API_KEY_HERE";
+		tenorAPIKey = "API_KEY_HERE";
+		wolframAPIKey = "API_KEY_HERE";
 	}
 	
 	public HashMap<String, ActivityType> getStatuses(){
@@ -43,6 +51,34 @@ public class MotherBrain {
 		}
 
 		return null;
+	}
+
+	public String getBotAPIKey(){
+		if(botAPIKey == null)
+			botAPIKey = "API_KEY_HERE";
+
+		return botAPIKey;
+	}
+
+	public String getBotAPIKeySecondary() {
+		if(botAPIKeySecondary == null)
+			botAPIKeySecondary = "API_KEY_HERE";
+
+		return botAPIKeySecondary;
+	}
+
+	public String getTenorAPIKey() {
+		if(tenorAPIKey == null)
+			tenorAPIKey = "API_KEY_HERE";
+
+		return tenorAPIKey;
+	}
+
+	public String getWolframAPIKey() {
+		if(wolframAPIKey == null)
+			wolframAPIKey = "API_KEY_HERE";
+
+		return wolframAPIKey;
 	}
 	
 	/**

@@ -39,37 +39,51 @@ public final class Shmames {
 	 */
 	public static void main(String[] args) {
 		// Initialize bot settings and utilities.
+		brains = new BrainController();
+
 		loadDefaultSettings();
 		Utils.Init();
+		brains.loadMotherBrain();
 		
 		try {
-			if(args.length > 0 && args[0].toLowerCase().equals("-debug")) {
-				jda = new JDABuilder(AccountType.BOT).setToken("NTI4MDc4MjI5MTYxMTE1Njcx.DztlbA.eIbCOJcRZX1ZpJ5aQ7ot8nYGmzI").build();
-				isDebug = true;
-			} else {
-				jda = new JDABuilder(AccountType.BOT).setToken("Mzc3NjM5MDQ4NTczMDkxODYw.XPcHnQ.jdKNHXnS5Z3lkAy0GDwz1_6tmeA").build();
-				isDebug = false;
-			}
-			
-			// Load brains after the bot has initialized.
-			jda.awaitReady();
-			brains = new BrainController();
-			
-			// Set the bot's status.
-			new DailyTask();
+			if(!brains.getMotherBrain().getBotAPIKey().equals("API_KEY_HERE")) {
+				if (args.length > 0 && args[0].toLowerCase().equals("-debug")) {
+					jda = new JDABuilder(AccountType.BOT).setToken(brains.getMotherBrain().getBotAPIKeySecondary()).build();
+					isDebug = true;
+				} else {
+					jda = new JDABuilder(AccountType.BOT).setToken(brains.getMotherBrain().getBotAPIKey()).build();
+					isDebug = false;
+				}
 
-			// Set the bot name.
-			botName = getJDA().getSelfUser().getName();
-			
-			// Begin listening for events.
-			jda.addEventListener(new ChatListener());
-			jda.addEventListener(new ReactListener());
-			jda.addEventListener(new FirstJoinListener());
-			
-			// Prepare music playing functionality.
-			ocarinas = new  HashMap<String, GuildOcarina>();
-			musicPlayer = new DefaultAudioPlayerManager();
-			AudioSourceManagers.registerRemoteSources(musicPlayer);
+				// Load server brains after the bot has initialized.
+				jda.awaitReady();
+				brains.loadServerBrains();
+
+				// Set the bot's status.
+				new DailyTask();
+
+				// Set the bot name.
+				botName = getJDA().getSelfUser().getName();
+
+				// Begin listening for events.
+				jda.addEventListener(new ChatListener());
+				jda.addEventListener(new ReactListener());
+				jda.addEventListener(new FirstJoinListener());
+
+				// Prepare music playing functionality.
+				ocarinas = new HashMap<String, GuildOcarina>();
+				musicPlayer = new DefaultAudioPlayerManager();
+				AudioSourceManagers.registerRemoteSources(musicPlayer);
+			}else{
+				// Retrieve all keys to generate the values, and then save the motherbrain.
+				brains.getMotherBrain().getTenorAPIKey();
+				brains.getMotherBrain().getBotAPIKey();
+				brains.getMotherBrain().getBotAPIKeySecondary();
+				brains.getMotherBrain().getWolframAPIKey();
+				brains.saveMotherBrain();
+
+				System.out.println("Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

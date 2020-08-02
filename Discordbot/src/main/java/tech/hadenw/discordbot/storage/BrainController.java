@@ -39,7 +39,19 @@ public class BrainController {
 		gson = new Gson();
 		brains = new ArrayList<Brain>();
 		mbFile = new File("brains/motherBrain.json");
+	}
 
+	public void loadMotherBrain(){
+		if (mbFile.exists()) {
+			mb = gson.fromJson(loadJSONFile(mbFile), MotherBrain.class);
+		} else {
+			mb = new MotherBrain();
+			mb.loadDefaults();
+			saveMotherBrain();
+		}
+	}
+
+	public void loadServerBrains(){
 		// Load server settings files.
 		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
@@ -47,23 +59,23 @@ public class BrainController {
 			//If this brain belongs to a deleted server, remove it and continue
 			if(Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
 				brains.add(brain);
-			}
-			else {
+			} else {
 				b.delete();
 				continue;
 			}
-			
+
 			// Activate any threads that this brain may have had.
 			// TODO this will change when we create a state.
 			if(brain.getActivePolls().size() > 0) {
 				for(Poll p : brain.getActivePolls()) {
 					// Create new task
-			        Timer t = new Timer();
-			        TextChannel ch = Shmames.getJDA().getGuildById(brain.getGuildID()).getTextChannelById(p.getChannelID());
-			        Message m = ch.retrieveMessageById(p.getMessageID()).complete();
-			        
-			        if(m != null)
-			        	t.schedule(new PollTask(p, m), p.getExpiration());
+					Timer t = new Timer();
+					TextChannel ch = Shmames.getJDA().getGuildById(brain.getGuildID()).getTextChannelById(p.getChannelID());
+					Message m = ch.retrieveMessageById(p.getMessageID()).complete();
+
+					if(m != null) {
+						t.schedule(new PollTask(p, m), p.getExpiration());
+					}
 				}
 			}
 
@@ -72,52 +84,44 @@ public class BrainController {
 					t.rescheduleTimer();
 				}
 			}
-			
+
 			// Ensure new settings are made available for the user to change.
 			for(BotSetting s : Shmames.defaults) {
 				boolean exists = false;
-				
+
 				for(BotSetting bs : brain.getSettings()) {
 					if(bs.getName() == s.getName()) {
 						exists = true;
 						break;
 					}
 				}
-				
+
 				if(!exists) {
 					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getValue()));
 				}
 			}
-			
+
 			// Remove any settings that are no longer supported.
 			for(BotSetting bs : new ArrayList<BotSetting>(brain.getSettings())) {
 				boolean contains = false;
-				
+
 				for(BotSettingName s : BotSettingName.values()) {
 					if(bs.getName()==s) {
 						contains = true;
 						break;
 					}
 				}
-				
+
 				if(!contains)
 					brain.getSettings().remove(bs);
 			}
-			
+
 			// Manually reset any cooldowns that don't have a task set up.
 			if(brain.getReportCooldown())
 				brain.setReportCooldown(false);
-			
+
 			if(brain.getJinping())
 				brain.setJinping(false);
-		}
-
-		if (mbFile.exists()) {
-			mb = gson.fromJson(loadJSONFile(mbFile), MotherBrain.class);
-		} else {
-			mb = new MotherBrain();
-			mb.loadDefaults();
-			saveMotherBrain();
 		}
 	}
 
