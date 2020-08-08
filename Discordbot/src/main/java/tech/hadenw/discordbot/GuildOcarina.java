@@ -1,6 +1,7 @@
 package tech.hadenw.discordbot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -14,6 +15,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
+import javax.annotation.Nullable;
+
 // A Guild-specific object created when music has been requested.
 // One per server.
 public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHandler  {
@@ -21,20 +24,23 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
+	private boolean isLoop;
 	
 	public GuildOcarina(AudioManager am) {
 		player = Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
 		player.addListener(this);
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
+		isLoop = false;
 		
-		if(manager.getSendingHandler() != null)
-			((JDAAudioSendHandler)manager.getSendingHandler()).setAudioPlayer(player);
-		else
+		if(manager.getSendingHandler() != null) {
+			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
+		} else {
 			manager.setSendingHandler(new JDAAudioSendHandler(player));
+		}
 	}
 	
-	public boolean isConnected() {
+	public boolean isInVoiceChannel() {
 		return manager.isConnected();
 	}
 	
@@ -42,25 +48,36 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		return queue;
 	}
 	
-	public AudioPlayer getPlayer() {
-		return player;
-	}
-	
 	public void connect(VoiceChannel vc) {
-		this.disconnect();
+		this.stop();
 		
 		manager.openAudioConnection(vc);
 	}
 	
-	public void disconnect() {
-		if(manager.isConnected()) {
+	public void stop() {
+		if(isInVoiceChannel()) {
 			player.stopTrack();
 			manager.closeAudioConnection();
 			queue.clear();
 		}
 	}
-	
-	public void loadTrack(String item) {
+
+	@Nullable
+	public AudioTrack getNowPlaying() {
+		return player.getPlayingTrack();
+	}
+
+	public boolean toggleLoop() {
+		isLoop = !isLoop;
+
+		return isLoop;
+	}
+
+	public void shuffleQueue() {
+		Collections.shuffle(queue);
+	}
+
+	public void queueItem(String item) {
 		Shmames.getMusicManager().getAudioPlayerManager().loadItem(item, this);
 	}
 	
@@ -68,47 +85,43 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		player.setPaused(!player.isPaused());
 	}
 	
-	public void playNext(){
+	public void skip(){
 		if(queue.size()>0) {
+			isLoop = false;
 			player.playTrack(queue.get(0));
 			queue.remove(0);
-		}
-	}
-	
-	public void playTrackInQueue(int track) {
-		if(queue.get(track) != null) {
-			player.playTrack(queue.get(track));
-			queue.remove(track);
 		}
 	}
 	
 	//
 	//AudioLoadResultHandler
 	//
-	
+
+	@Override
 	public void trackLoaded(AudioTrack track) {
 		queue.add(track);
-		
-		// If there isn't a playing track, play the next in queue.
-		if(this.player.getPlayingTrack() == null)
-			this.playNext();
+
+		if(this.player.getPlayingTrack() == null) {
+			this.skip();
+		}
 	}
 
+	@Override
 	public void playlistLoaded(AudioPlaylist playlist) {
-		for (AudioTrack track : playlist.getTracks()) {
-			queue.add(track);
-	    }
+		queue.addAll(playlist.getTracks());
 
 		// If there isn't a playing track, play the next in queue.
 		if(this.player.getPlayingTrack() == null)
-			this.playNext();
+			this.skip();
 	}
 
+	@Override
 	public void noMatches() {
 		//channel.sendMessage("No matches!").queue();
 		System.out.println("No matches");
 	}
 
+	@Override
 	public void loadFailed(FriendlyException throwable) {
 		//channel.sendMessage("Everything Exploded:\n"+throwable.getMessage()).queue();
 		System.out.println("Load failed");
@@ -124,20 +137,34 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		System.out.println("Track started");
 	}
 
+	// This might get called when the user tries to skip a song.
+	// This should cover song looping, disconnecting if empty queue,
+	// etc.
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
 		System.out.println("Track ended due to "+endReason+": "+track.getInfo().title);
-		
-		/*
+
 		if(endReason.mayStartNext) {
-			if(queue.size() > 0) {
-				this.playNext();
-				return;
+			if(track.getPosition() == track.getDuration()){
+				// Song ended naturally. Loop or skip?
+				if(isLoop) {
+					player.playTrack(track);
+				}else{
+					if(queue.size() > 0){
+						this.skip();
+					}else{
+						this.stop();
+					}
+				}
+			}else{
+				// Probably got skipped. Do nothing if there are additional songs.
+				if(queue.size() == 0){
+					stop();
+				}
 			}
+		}else{
+			this.stop();
 		}
-		
-		this.disconnect();
-		*/
 	}
 	
 	@Override

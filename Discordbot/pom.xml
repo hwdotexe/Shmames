@@ -19,7 +19,7 @@
     <dependency>
         <groupId>net.dv8tion</groupId>
         <artifactId>JDA</artifactId>
-        <version>4.2.0_181</version>
+        <version>4.2.0_188</version>
     </dependency>
     <dependency>
         <groupId>com.google.code.gson</groupId>
@@ -29,7 +29,7 @@
     <dependency>
         <groupId>com.sedmelluq</groupId>
         <artifactId>lavaplayer</artifactId>
-        <version>1.3.33</version>
+        <version>1.3.50</version>
     </dependency>
     <dependency>
         <groupId>org.json</groupId>

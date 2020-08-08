@@ -44,7 +44,7 @@ public class CommandHandler {
 		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
-//		commands.add(new Music());
+		commands.add(new Music());
 		commands.add(new NewSeed());
 		commands.add(new Nickname());
 		commands.add(new PinThat());
