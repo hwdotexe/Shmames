@@ -28,7 +28,7 @@ public class Music implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(.+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^([a-z]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
 			String mainCmd = m.group(1);
@@ -36,19 +36,20 @@ public class Music implements ICommand {
 
 			switch(mainCmd) {
 				case "play":
-					if(ocarina.isInVoiceChannel()) {
-						// Load the requested item.
-						ocarina.queueItem(m.group(2).trim());
-					}else {
-						// Get the channel to play in.
-						VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+					if(message.getMember().getVoiceState() != null){
+						if(!ocarina.isInVoiceChannel()) {
+							// Get the channel to play in.
+							VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
 
-						// Join the channel.
-						ocarina.connect(vchannel);
+							// Join the channel.
+							ocarina.connect(vchannel);
+						}
 
-						// Load requested item.
 						ocarina.queueItem(m.group(2).trim());
+					}else{
+						return "Please join a voice channel and run this command again.";
 					}
+
 					break;
 				case "pause":
 				case "resume":
@@ -87,65 +88,9 @@ public class Music implements ICommand {
 			// TODO send command help
 		}
 
-		if(m.find()) {
-			// Get the music handler.
-			GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(message.getGuild().getId());
-			
-			switch(m.group(1).toLowerCase()) {
-			case "add":
-				// If we're already playing something, play this song with current settings.
-				// If we're not, we can join channel and go
-				
-				if(ocarina.isInVoiceChannel()) {
-					// Load the requested item.
-					ocarina.queueItem(m.group(2).trim());
-				}else {
-					// Get the channel to play in.
-					VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
-					
-					// Join the channel.
-					ocarina.connect(vchannel);
-					
-					// Load requested item.
-					ocarina.queueItem(m.group(2).trim());
-				}
-				
-				return "Playing!";
-			case "pause":
-				ocarina.togglePause();
-				
-				return "Toggled";
-			case "stop":
-				ocarina.stop();
-				
-				return "Goodbye";
-			case "queue":
-				StringBuilder qsb = new StringBuilder();
-				
-				for(AudioTrack t : ocarina.getQueue()) {
-					if(qsb.length()>0)
-						qsb.append("\n");
-					
-					qsb.append(ocarina.getQueue().indexOf(t) + 1);
-					qsb.append(": ").append(t.getInfo().title);
-				}
-				
-				return "**The Queue:**\n"+qsb;
-			case "loop":
-				return "Under construction";
-			case "skip":
-				ocarina.skip();
-				
-				return "Skipped!";
-			}
-		}else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
-		}
 		// TODO: check if playing on this server already, user is in a voice channel, etc.
-		
-		
-		
-		return "It is done";
+
+		return "";
 	}
 
 	@Override
@@ -174,8 +119,8 @@ public class Music implements ICommand {
 	}
 
 	private String getHumanTimeCode(long timeInMS) {
-		double minutes = Math.floor((timeInMS/1000d)/60d);
-		double seconds = (timeInMS/1000d) - (minutes*60);
+		int minutes = (int)Math.floor((timeInMS/1000d)/60d);
+		int seconds = (int)((timeInMS/1000) - (minutes*60));
 
 		return minutes+":"+seconds;
 	}

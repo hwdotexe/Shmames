@@ -31,12 +31,21 @@ public class MusicManager {
         Guild guild = Shmames.getJDA().getGuildById(guildID);
 
         if(guild != null) {
-            GuildOcarina ocarina = new GuildOcarina(guild.getAudioManager());
+            GuildOcarina ocarina = new GuildOcarina(this, guild.getAudioManager());
 
             ocarinas.put(guildID, ocarina);
             return ocarina;
         }else{
             return null;
+        }
+    }
+
+    public void removeGuildOcarina(GuildOcarina guildOcarina) {
+        for(String key : ocarinas.keySet()) {
+            if(ocarinas.get(key).equals(guildOcarina)){
+                ocarinas.remove(key);
+                break;
+            }
         }
     }
 }

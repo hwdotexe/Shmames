@@ -20,13 +20,15 @@ import javax.annotation.Nullable;
 // A Guild-specific object created when music has been requested.
 // One per server.
 public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHandler  {
-	
+
+	private MusicManager musicManager;
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
 	private boolean isLoop;
 	
-	public GuildOcarina(AudioManager am) {
+	public GuildOcarina(MusicManager mm, AudioManager am) {
+		musicManager = mm;
 		player = Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
 		player.addListener(this);
 		manager = am;
@@ -59,6 +61,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			player.stopTrack();
 			manager.closeAudioConnection();
 			queue.clear();
+			musicManager.removeGuildOcarina(this);
 		}
 	}
 
@@ -90,6 +93,8 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			isLoop = false;
 			player.playTrack(queue.get(0));
 			queue.remove(0);
+		} else {
+			stop();
 		}
 	}
 	
@@ -133,20 +138,19 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
-		// A track started playing
-		System.out.println("Track started");
+
 	}
 
-	// This might get called when the user tries to skip a song.
-	// This should cover song looping, disconnecting if empty queue,
-	// etc.
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		System.out.println("Track ended due to "+endReason+": "+track.getInfo().title);
+		switch(endReason) {
+			case STOPPED:
+				if(queue.size() == 0) {
+					stop();
+				}
 
-		if(endReason.mayStartNext) {
-			if(track.getPosition() == track.getDuration()){
-				// Song ended naturally. Loop or skip?
+				break;
+			case FINISHED:
 				if(isLoop) {
 					player.playTrack(track);
 				}else{
@@ -156,14 +160,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 						this.stop();
 					}
 				}
-			}else{
-				// Probably got skipped. Do nothing if there are additional songs.
-				if(queue.size() == 0){
-					stop();
-				}
-			}
-		}else{
-			this.stop();
+
+				break;
+			default:
+				break;
 		}
 	}
 	
