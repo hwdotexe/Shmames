@@ -24,14 +24,11 @@ import tech.hadenw.discordbot.tasks.DailyTask;
 public final class Shmames {
 	private static JDA jda;
 	private static BrainController brains;
+	private static String botName;
+	private static MusicManager musicManager;
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaults;
-	
-	public static AudioPlayerManager musicPlayer;
-	public static HashMap<String, GuildOcarina> ocarinas;
-
-	private static String botName;
 	
 	/**
 	 * The entry point for the bot.
@@ -71,9 +68,8 @@ public final class Shmames {
 				jda.addEventListener(new FirstJoinListener());
 
 				// Prepare music playing functionality.
-				ocarinas = new HashMap<String, GuildOcarina>();
-				musicPlayer = new DefaultAudioPlayerManager();
-				AudioSourceManagers.registerRemoteSources(musicPlayer);
+				musicManager = new MusicManager();
+				AudioSourceManagers.registerRemoteSources(musicManager.getAudioPlayerManager());
 			}else{
 				// Retrieve all keys to generate the values, and then save the motherbrain.
 				brains.getMotherBrain().getTenorAPIKey();
@@ -92,20 +88,9 @@ public final class Shmames {
 	public static String getBotName() {
 		return botName;
 	}
-	
-	public static AudioPlayerManager getAudioPlayer() {
-		return musicPlayer;
-	}
-	
-	public static GuildOcarina getOcarina(String guildID) {
-		if(ocarinas.containsKey(guildID)) {
-			return ocarinas.get(guildID);
-		} else {
-			GuildOcarina go = new GuildOcarina(jda.getGuildById(guildID).getAudioManager());
-			ocarinas.put(guildID, go);
-			
-			return go;
-		}
+
+	public static MusicManager getMusicManager() {
+		return musicManager;
 	}
 	
 	/**

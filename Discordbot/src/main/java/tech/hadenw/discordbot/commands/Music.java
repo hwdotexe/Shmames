@@ -29,7 +29,7 @@ public class Music implements ICommand {
 		
 		if(m.find()) {
 			// Get the music handler.
-			GuildOcarina ocarina = Shmames.getOcarina(message.getGuild().getId());
+			GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(message.getGuild().getId());
 			
 			switch(m.group(1).toLowerCase()) {
 			case "add":

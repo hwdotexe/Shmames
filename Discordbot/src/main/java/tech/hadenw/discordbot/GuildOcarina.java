@@ -23,7 +23,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private List<AudioTrack> queue;
 	
 	public GuildOcarina(AudioManager am) {
-		player = Shmames.getAudioPlayer().createPlayer();
+		player = Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
 		player.addListener(this);
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
@@ -61,7 +61,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	}
 	
 	public void loadTrack(String item) {
-		Shmames.getAudioPlayer().loadItem(item, this);
+		Shmames.getMusicManager().getAudioPlayerManager().loadItem(item, this);
 	}
 	
 	public void togglePause() {
