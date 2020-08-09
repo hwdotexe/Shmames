@@ -38,14 +38,12 @@ public class Music implements ICommand {
 				case "play":
 					if(message.getMember().getVoiceState() != null){
 						if(!ocarina.isInVoiceChannel()) {
-							// Get the channel to play in.
 							VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
 
-							// Join the channel.
 							ocarina.connect(vchannel);
 						}
 
-						ocarina.queueItem(m.group(2).trim());
+						ocarina.loadTrack(m.group(2), false);
 					}else{
 						return "Please join a voice channel and run this command again.";
 					}
@@ -71,15 +69,54 @@ public class Music implements ICommand {
 					AudioTrack track = ocarina.getNowPlaying();
 
 					if(track != null){
-						showTrackData(track, message.getChannel());
+						showTrackData(track, message.getChannel(), ocarina);
 					}else{
 						return "Nothing is currently playing.";
 					}
 
 					break;
 				case "playlist":
-					break;
+					// Create <name>, Add <name> <url>, Delete <name>, Remove <name> <item#>, List [name]
+					return "This is still under construction";
 				case "queue":
+					// TODO check group 2 null
+
+					if(m.group(2).equalsIgnoreCase("show")){
+						// TODO check if connected
+						// TODO default answer if empty queue
+						StringBuilder sb = new StringBuilder();
+
+						for(AudioTrack t : ocarina.getQueue()){
+							if(sb.length() > 0) {
+								sb.append("\n");
+							}
+
+							sb.append(ocarina.getQueue().indexOf(t)+1);
+							sb.append(": ");
+							sb.append("`");
+							sb.append(t.getInfo().title);
+							sb.append("`");
+						}
+
+						if(sb.length() == 0){
+							sb.append("There are no tracks in the queue.");
+						}
+
+						showQueue(sb.toString(), message.getChannel());
+						return "";
+					}
+
+					// Adds the selected item to the queue
+					if(message.getMember().getVoiceState() != null){
+						if(ocarina.isInVoiceChannel()) {
+							// TODO is James Playlist or other?
+							ocarina.loadTrack(m.group(2), true);
+						}else{
+							return "A track needs to be playing before you can add songs to the queue.";
+						}
+					}else{
+						return "Please join a voice channel and run this command again.";
+					}
 					break;
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -108,13 +145,26 @@ public class Music implements ICommand {
 		return true;
 	}
 
-	private void showTrackData(AudioTrack t, MessageChannel c) {
+	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(Color.blue);
 		eBuilder.setAuthor(Shmames.getBotName()+" Music", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
-		eBuilder.addField("Currently Playing", t.getInfo().title, false);
+		eBuilder.setTitle(t.getInfo().title, t.getInfo().uri);
+		eBuilder.setThumbnail(t.getInfo().uri);
+		eBuilder.addField("Looping", o.isLooping() ? "Yes" : "No", true);
 		eBuilder.addField("Position", getHumanTimeCode(t.getPosition()) + " / " + getHumanTimeCode(t.getDuration()), true);
+
+		c.sendMessage(eBuilder.build()).queue();
+	}
+
+	private void showQueue(String queue, MessageChannel c) {
+		EmbedBuilder eBuilder = new EmbedBuilder();
+
+		eBuilder.setColor(Color.blue);
+		eBuilder.setAuthor(Shmames.getBotName()+" Music Queue", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.addField("Up Next", queue, false);
+
 		c.sendMessage(eBuilder.build()).queue();
 	}
 
@@ -122,6 +172,6 @@ public class Music implements ICommand {
 		int minutes = (int)Math.floor((timeInMS/1000d)/60d);
 		int seconds = (int)((timeInMS/1000) - (minutes*60));
 
-		return minutes+":"+seconds;
+		return minutes+":"+(seconds < 10 ? "0" + seconds : seconds);
 	}
 }

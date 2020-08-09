@@ -26,6 +26,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private AudioManager manager;
 	private List<AudioTrack> queue;
 	private boolean isLoop;
+	private boolean queueNextTrack;
 	
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
@@ -34,6 +35,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
 		isLoop = false;
+		queueNextTrack = false;
 		
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
@@ -76,12 +78,17 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		return isLoop;
 	}
 
+	public boolean isLooping() {
+		return isLoop;
+	}
+
 	public void shuffleQueue() {
 		Collections.shuffle(queue);
 	}
 
-	public void queueItem(String item) {
-		Shmames.getMusicManager().getAudioPlayerManager().loadItem(item, this);
+	public void loadTrack(String url, boolean addToQueue) {
+		queueNextTrack = addToQueue;
+		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, this);
 	}
 	
 	public void togglePause() {
@@ -104,9 +111,14 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void trackLoaded(AudioTrack track) {
-		queue.add(track);
+		if(queueNextTrack){
+			queue.add(track);
 
-		if(this.player.getPlayingTrack() == null) {
+			if(this.player.getPlayingTrack() == null) {
+				this.skip();
+			}
+		} else {
+			queue.add(0, track);
 			this.skip();
 		}
 	}
