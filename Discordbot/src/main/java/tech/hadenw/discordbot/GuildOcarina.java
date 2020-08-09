@@ -97,7 +97,6 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	
 	public void skip(){
 		if(queue.size()>0) {
-			isLoop = false;
 			player.playTrack(queue.get(0));
 			queue.remove(0);
 		} else {
@@ -125,6 +124,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void playlistLoaded(AudioPlaylist playlist) {
+		// TODO copy trackLoaded()'s logic for play vs. queue
 		queue.addAll(playlist.getTracks());
 
 		// If there isn't a playing track, play the next in queue.
@@ -164,8 +164,8 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 				break;
 			case FINISHED:
 				if(isLoop) {
-					player.playTrack(track);
-				}else{
+					loadTrack(track.getInfo().uri, false);
+				} else {
 					if(queue.size() > 0){
 						this.skip();
 					}else{

@@ -36,17 +36,17 @@ public class Music implements ICommand {
 
 			switch(mainCmd) {
 				case "play":
-					if(message.getMember().getVoiceState() != null){
-						if(!ocarina.isInVoiceChannel()) {
+					if(!ocarina.isInVoiceChannel()) {
+						if(message.getMember().getVoiceState() != null){
 							VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
 
 							ocarina.connect(vchannel);
+						} else {
+							return "Please join a voice channel and run this command again.";
 						}
-
-						ocarina.loadTrack(m.group(2), false);
-					}else{
-						return "Please join a voice channel and run this command again.";
 					}
+
+					ocarina.loadTrack(m.group(2), false);
 
 					break;
 				case "pause":
@@ -58,7 +58,8 @@ public class Music implements ICommand {
 					break;
 				case "shuffle":
 					ocarina.shuffleQueue();
-					break;
+
+					return "Shuffled the music queue!";
 				case "stop":
 					ocarina.stop();
 					break;
@@ -79,53 +80,50 @@ public class Music implements ICommand {
 					// Create <name>, Add <name> <url>, Delete <name>, Remove <name> <item#>, List [name]
 					return "This is still under construction";
 				case "queue":
-					// TODO check group 2 null
+					if(ocarina.isInVoiceChannel()) {
+						if (m.group(2) != null) {
+							if (m.group(2).equalsIgnoreCase("show")) {
+								StringBuilder sb = new StringBuilder();
 
-					if(m.group(2).equalsIgnoreCase("show")){
-						// TODO check if connected
-						// TODO default answer if empty queue
-						StringBuilder sb = new StringBuilder();
+								for (AudioTrack t : ocarina.getQueue()) {
+									if (sb.length() > 0) {
+										sb.append("\n");
+									}
 
-						for(AudioTrack t : ocarina.getQueue()){
-							if(sb.length() > 0) {
-								sb.append("\n");
+									sb.append(ocarina.getQueue().indexOf(t) + 1);
+									sb.append(": ");
+									sb.append("`");
+									sb.append(t.getInfo().title);
+									sb.append("`");
+								}
+
+								if (sb.length() == 0) {
+									sb.append("There are no tracks in the queue.");
+								}
+
+								showQueue(sb.toString(), message.getChannel());
+								return "";
+							} else if (isUrl(m.group(2))) {
+								// TODO is James Playlist or other?
+								ocarina.loadTrack(m.group(2), true);
+								break;
+							} else {
+								return Errors.WRONG_USAGE;
 							}
-
-							sb.append(ocarina.getQueue().indexOf(t)+1);
-							sb.append(": ");
-							sb.append("`");
-							sb.append(t.getInfo().title);
-							sb.append("`");
-						}
-
-						if(sb.length() == 0){
-							sb.append("There are no tracks in the queue.");
-						}
-
-						showQueue(sb.toString(), message.getChannel());
-						return "";
-					}
-
-					// Adds the selected item to the queue
-					if(message.getMember().getVoiceState() != null){
-						if(ocarina.isInVoiceChannel()) {
-							// TODO is James Playlist or other?
-							ocarina.loadTrack(m.group(2), true);
-						}else{
-							return "A track needs to be playing before you can add songs to the queue.";
+						} else {
+							return Errors.WRONG_USAGE;
 						}
 					}else{
-						return "Please join a voice channel and run this command again.";
+						return "I have to be connected to a voice channel in order to do that!";
 					}
-					break;
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 			}
 		}else{
-			// TODO send command help
-		}
+			sendCommandHelp(message.getChannel());
 
-		// TODO: check if playing on this server already, user is in a voice channel, etc.
+			return "";
+		}
 
 		return "";
 	}
@@ -147,11 +145,15 @@ public class Music implements ICommand {
 
 	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
 		EmbedBuilder eBuilder = new EmbedBuilder();
+		String videoID = extractVideoID(t.getInfo().uri);
 
-		eBuilder.setColor(Color.blue);
+		if(videoID != null) {
+			eBuilder.setThumbnail("http://img.youtube.com/vi/"+videoID+"/2.jpg");
+		}
+
+		eBuilder.setColor(new Color(43, 164, 188));
 		eBuilder.setAuthor(Shmames.getBotName()+" Music", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 		eBuilder.setTitle(t.getInfo().title, t.getInfo().uri);
-		eBuilder.setThumbnail(t.getInfo().uri);
 		eBuilder.addField("Looping", o.isLooping() ? "Yes" : "No", true);
 		eBuilder.addField("Position", getHumanTimeCode(t.getPosition()) + " / " + getHumanTimeCode(t.getDuration()), true);
 
@@ -161,9 +163,30 @@ public class Music implements ICommand {
 	private void showQueue(String queue, MessageChannel c) {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
-		eBuilder.setColor(Color.blue);
+		eBuilder.setColor(new Color(43, 164, 188));
 		eBuilder.setAuthor(Shmames.getBotName()+" Music Queue", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 		eBuilder.addField("Up Next", queue, false);
+
+		c.sendMessage(eBuilder.build()).queue();
+	}
+
+	private void sendCommandHelp(MessageChannel c) {
+		StringBuilder sb = new StringBuilder();
+		EmbedBuilder eBuilder = new EmbedBuilder();
+
+		sb.append("`play <url|playlist>` - Begin playing a track or playlist.");
+		sb.append("`pause` - Toggle pause.");
+		sb.append("`shuffle` - Shuffles tracks in the queue.");
+		sb.append("`skip` - Skip the current track.");
+		sb.append("`stop` - Stop playing and disconnect from the channel.");
+		sb.append("`loop` - Toggle track looping.");
+		sb.append("`playing` - See details about the current track.");
+		sb.append("`queue <show|url|playlist>` - Show the queue, or add an item to the queue.");
+		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
+
+		eBuilder.setColor(new Color(43, 164, 188));
+		eBuilder.setAuthor(Shmames.getBotName()+" Music", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.addField("Commands", sb.toString(), false);
 
 		c.sendMessage(eBuilder.build()).queue();
 	}
@@ -173,5 +196,21 @@ public class Music implements ICommand {
 		int seconds = (int)((timeInMS/1000) - (minutes*60));
 
 		return minutes+":"+(seconds < 10 ? "0" + seconds : seconds);
+	}
+
+	private String extractVideoID(String url) {
+		Matcher m = Pattern.compile(".+v=([a-z0-9\\-]+)(&.+)?", Pattern.CASE_INSENSITIVE).matcher(url);
+
+		if(m.find()){
+			return m.group(1);
+		}else{
+			return null;
+		}
+	}
+
+	private boolean isUrl(String test) {
+		Matcher m = Pattern.compile("^https?:\\/\\/.+$", Pattern.CASE_INSENSITIVE).matcher(test);
+
+		return m.find();
 	}
 }
