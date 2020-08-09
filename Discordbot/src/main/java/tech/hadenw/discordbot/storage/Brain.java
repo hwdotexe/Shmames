@@ -21,6 +21,7 @@ public class Brain {
 	private List<String> families;
 	private List<ForumWeaponObj> forumWeapons;
 	private List<JTimerTask> timers;
+	private List<Playlist> playlists;
 	private boolean isReportCooldown;
 	private boolean isTimeout;
 	private boolean isJinping;
@@ -39,6 +40,7 @@ public class Brain {
 		families = new ArrayList<String>();
 		forumWeapons = new ArrayList<ForumWeaponObj>();
 		timers = new ArrayList<JTimerTask>();
+		playlists = new ArrayList<Playlist>();
 		isReportCooldown = false;
 		isTimeout = false;
 		isJinping = false;
@@ -77,9 +79,6 @@ public class Brain {
 	}
 	
 	public List<Poll> getActivePolls(){
-		if(activePolls == null)
-			activePolls = new ArrayList<Poll>();
-		
 		return activePolls;
 	}
 
@@ -92,15 +91,19 @@ public class Brain {
 	}
 
 	public List<JTimerTask> getTimers(){
-		if(timers == null)
-			timers = new ArrayList<JTimerTask>();
-
 		return timers;
 	}
 	
 	/*
 	 * Permanent / Semi-permanent items
 	 */
+
+	public List<Playlist> getPlaylists() {
+		if(playlists == null)
+			playlists = new ArrayList<Playlist>();
+
+		return playlists;
+	}
 
 	public boolean didSendWelcome(){
 		return sentWelcome;
@@ -115,9 +118,6 @@ public class Brain {
 	}
 	
 	public List<Response> getTriggerResponses(){
-		if(triggerResponses == null)
-			triggerResponses = new ArrayList<Response>();
-
 		return triggerResponses;
 	}
 	
@@ -155,9 +155,6 @@ public class Brain {
 	}
 	
 	public HashMap<String, Integer> getEmoteStats(){
-		if(emoteStats == null)
-			emoteStats = new HashMap<String, Integer>();
-		
 		return emoteStats;
 	}
 	
@@ -166,9 +163,6 @@ public class Brain {
 	}
 	
 	public List<String> getFeedback(){
-		if(feedback == null)
-			feedback = new ArrayList<String>();
-		
 		return feedback;
 	}
 	
@@ -185,16 +179,10 @@ public class Brain {
 	}
 
 	public List<String> getFamilies(){
-		if(this.families == null)
-			this.families = new ArrayList<String>();
-
 		return this.families;
 	}
 
 	public List<ForumWeaponObj> getForumWeapons(){
-		if(forumWeapons == null)
-			forumWeapons = new ArrayList<ForumWeaponObj>();
-
 		return forumWeapons;
 	}
 	
@@ -205,6 +193,5 @@ public class Brain {
 	public void loadFirstRunDefaults() {
 		triggers.put(Shmames.getBotName(), TriggerType.COMMAND);
 		settings.addAll(Shmames.defaults);
-		feedback.add("Example feedback");
 	}
 }

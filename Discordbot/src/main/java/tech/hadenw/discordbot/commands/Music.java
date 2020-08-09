@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import tech.hadenw.discordbot.Errors;
 import tech.hadenw.discordbot.GuildOcarina;
 import tech.hadenw.discordbot.Shmames;
+import tech.hadenw.discordbot.storage.Brain;
+import tech.hadenw.discordbot.storage.Playlist;
 
 public class Music implements ICommand {
 	@Override
@@ -78,7 +80,7 @@ public class Music implements ICommand {
 					break;
 				case "playlist":
 					if (m.group(2) != null) {
-						return playlist(m.group(2));
+						return playlist(m.group(2), message.getGuild().getId());
 					}else{
 						return Errors.WRONG_USAGE;
 					}
@@ -146,32 +148,112 @@ public class Music implements ICommand {
 		return true;
 	}
 
-	private String playlist(String args) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s([a-z0-9]+)\\s?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+	private String playlist(String args, String guildID, MessageChannel c) {
+		Matcher m = Pattern.compile("^([a-z]+)\\s([a-z0-9]+)\\s?(https?:\\/\\/.+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
 			String cmd = m.group(1).toLowerCase();
 			String listName = m.group(2).toLowerCase();
+			Brain b = Shmames.getBrains().getBrain(guildID);
 
 			switch(cmd) {
 				case "create":
-					break;
+
+					if(getPlaylist(listName, b) == null) {
+						b.getPlaylists().add(new Playlist(listName));
+						return "Playlist `"+listName+"` created!";
+					} else {
+						return "A playlist with that name already exists on this server!";
+					}
 				case "add":
-					break;
+					if(m.group(3) != null) {
+						Playlist p = getPlaylist(listName, b);
+
+						if (p != null) {
+							if(p.getTracks().size() < 50) {
+								p.addTrack(m.group(3));
+								return "Added track to playlist!";
+							}else{
+								return "Playlists currently support a max of 50 tracks!";
+							}
+						} else {
+							return "That playlist doesn't exist!";
+						}
+					}else{
+						return Errors.WRONG_USAGE;
+					}
 				case "list":
-					break;
+					Playlist pList = getPlaylist(listName, b);
+
+					if (pList != null) {
+						StringBuilder sb = new StringBuilder();
+						EmbedBuilder eBuilder = buildBasicEmbed();
+
+						for(String url : pList.getTracks()){
+							if(sb.length() > 0) {
+								sb.append("\n");
+							}
+
+							sb.append(pList.getTracks().indexOf(url));
+							sb.append(": `");
+							sb.append(url);
+							sb.append("`");
+						}
+
+						if(sb.length() == 0){
+							sb.append("There aren't any tracks in this playlist yet.");
+						}
+
+						eBuilder.addField("Playlist Tracks", sb.toString(), false);
+						c.sendMessage(eBuilder.build()).queue();
+
+						return "";
+					} else {
+						return "That playlist doesn't exist!";
+					}
 				case "remove":
-					break;
+					if(m.group(4) != null){
+						Playlist pRemove = getPlaylist(listName, b);
+
+						if (pRemove != null) {
+							int pos = Integer.parseInt(m.group(4))-1;
+
+							if(pRemove.removeTrack(pos)){
+								return "Track removed!";
+							}else{
+								return "That item doesn't exist!";
+							}
+						} else {
+							return "That playlist doesn't exist!";
+						}
+					}else{
+						return Errors.WRONG_USAGE;
+					}
 				case "delete":
-					break;
+					Playlist pDelete = getPlaylist(listName, b);
+
+					if (pDelete != null) {
+						b.getPlaylists().remove(pDelete);
+						return "Playlist deleted!";
+					}else{
+						return "That playlist doesn't exist!";
+					}
 				default:
 					return Errors.COMMAND_NOT_FOUND;
 			}
 		} else {
 			return Errors.WRONG_USAGE;
 		}
+	}
 
-		return "";
+	private Playlist getPlaylist(String name, Brain b) {
+		for(Playlist p : b.getPlaylists()){
+			if(p.getName().equalsIgnoreCase(name)){
+				return p;
+			}
+		}
+
+		return null;
 	}
 
 	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
