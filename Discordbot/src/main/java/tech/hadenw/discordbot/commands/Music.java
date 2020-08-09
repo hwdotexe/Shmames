@@ -77,8 +77,11 @@ public class Music implements ICommand {
 
 					break;
 				case "playlist":
-					// Create <name>, Add <name> <url>, Delete <name>, Remove <name> <item#>, List [name]
-					return "This is still under construction";
+					if (m.group(2) != null) {
+						return playlist(m.group(2));
+					}else{
+						return Errors.WRONG_USAGE;
+					}
 				case "queue":
 					if(ocarina.isInVoiceChannel()) {
 						if (m.group(2) != null) {
@@ -143,16 +146,42 @@ public class Music implements ICommand {
 		return true;
 	}
 
+	private String playlist(String args) {
+		Matcher m = Pattern.compile("^([a-z]+)\\s([a-z0-9]+)\\s?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+
+		if(m.find()){
+			String cmd = m.group(1).toLowerCase();
+			String listName = m.group(2).toLowerCase();
+
+			switch(cmd) {
+				case "create":
+					break;
+				case "add":
+					break;
+				case "list":
+					break;
+				case "remove":
+					break;
+				case "delete":
+					break;
+				default:
+					return Errors.COMMAND_NOT_FOUND;
+			}
+		} else {
+			return Errors.WRONG_USAGE;
+		}
+
+		return "";
+	}
+
 	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
+		EmbedBuilder eBuilder = buildBasicEmbed();
 		String videoID = extractVideoID(t.getInfo().uri);
 
 		if(videoID != null) {
-			eBuilder.setThumbnail("http://img.youtube.com/vi/"+videoID+"/2.jpg");
+			eBuilder.setThumbnail("http://img.youtube.com/vi/"+videoID+"/1.jpg");
 		}
 
-		eBuilder.setColor(new Color(43, 164, 188));
-		eBuilder.setAuthor(Shmames.getBotName()+" Music", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 		eBuilder.setTitle(t.getInfo().title, t.getInfo().uri);
 		eBuilder.addField("Looping", o.isLooping() ? "Yes" : "No", true);
 		eBuilder.addField("Position", getHumanTimeCode(t.getPosition()) + " / " + getHumanTimeCode(t.getDuration()), true);
@@ -161,10 +190,9 @@ public class Music implements ICommand {
 	}
 
 	private void showQueue(String queue, MessageChannel c) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
+		EmbedBuilder eBuilder = buildBasicEmbed();
 
-		eBuilder.setColor(new Color(43, 164, 188));
-		eBuilder.setAuthor(Shmames.getBotName()+" Music Queue", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setTitle("Music Queue");
 		eBuilder.addField("Up Next", queue, false);
 
 		c.sendMessage(eBuilder.build()).queue();
@@ -172,7 +200,7 @@ public class Music implements ICommand {
 
 	private void sendCommandHelp(MessageChannel c) {
 		StringBuilder sb = new StringBuilder();
-		EmbedBuilder eBuilder = new EmbedBuilder();
+		EmbedBuilder eBuilder = buildBasicEmbed();
 
 		sb.append("`play <url|playlist>` - Begin playing a track or playlist.");
 		sb.append("`pause` - Toggle pause.");
@@ -184,11 +212,19 @@ public class Music implements ICommand {
 		sb.append("`queue <show|url|playlist>` - Show the queue, or add an item to the queue.");
 		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
 
-		eBuilder.setColor(new Color(43, 164, 188));
-		eBuilder.setAuthor(Shmames.getBotName()+" Music", null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 		eBuilder.addField("Commands", sb.toString(), false);
 
 		c.sendMessage(eBuilder.build()).queue();
+	}
+
+	private EmbedBuilder buildBasicEmbed() {
+		EmbedBuilder eBuilder = new EmbedBuilder();
+
+		eBuilder.setColor(new Color(43, 164, 188));
+		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setFooter("Music is in Beta. Some features may not work as intended.");
+
+		return eBuilder;
 	}
 
 	private String getHumanTimeCode(long timeInMS) {
