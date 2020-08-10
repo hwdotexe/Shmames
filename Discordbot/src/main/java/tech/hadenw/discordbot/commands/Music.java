@@ -80,7 +80,7 @@ public class Music implements ICommand {
 					break;
 				case "playlist":
 					if (m.group(2) != null) {
-						return playlist(m.group(2), message.getGuild().getId());
+						return playlist(m.group(2), message.getGuild().getId(), message.getChannel());
 					}else{
 						return Errors.WRONG_USAGE;
 					}
@@ -194,7 +194,7 @@ public class Music implements ICommand {
 								sb.append("\n");
 							}
 
-							sb.append(pList.getTracks().indexOf(url));
+							sb.append(pList.getTracks().indexOf(url)+1);
 							sb.append(": `");
 							sb.append(url);
 							sb.append("`");
@@ -284,14 +284,14 @@ public class Music implements ICommand {
 		StringBuilder sb = new StringBuilder();
 		EmbedBuilder eBuilder = buildBasicEmbed();
 
-		sb.append("`play <url|playlist>` - Begin playing a track or playlist.");
-		sb.append("`pause` - Toggle pause.");
-		sb.append("`shuffle` - Shuffles tracks in the queue.");
-		sb.append("`skip` - Skip the current track.");
-		sb.append("`stop` - Stop playing and disconnect from the channel.");
-		sb.append("`loop` - Toggle track looping.");
-		sb.append("`playing` - See details about the current track.");
-		sb.append("`queue <show|url|playlist>` - Show the queue, or add an item to the queue.");
+		sb.append("`play <url|playlist>` - Begin playing a track or playlist.\n");
+		sb.append("`pause` - Toggle pause.\n");
+		sb.append("`shuffle` - Shuffles tracks in the queue.\n");
+		sb.append("`skip` - Skip the current track.\n");
+		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
+		sb.append("`loop` - Toggle track looping.\n");
+		sb.append("`playing` - See details about the current track.\n");
+		sb.append("`queue <show|url|playlist>` - Show the queue, or add an item to the queue.\n");
 		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
