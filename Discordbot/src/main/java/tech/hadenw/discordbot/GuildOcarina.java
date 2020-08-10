@@ -90,6 +90,11 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		queueNextTrack = addToQueue;
 		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, this);
 	}
+
+	public void loadTrackOrdered(String url, long order, boolean addToQueue) {
+		queueNextTrack = addToQueue;
+		Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, this);
+	}
 	
 	public void togglePause() {
 		player.setPaused(!player.isPaused());

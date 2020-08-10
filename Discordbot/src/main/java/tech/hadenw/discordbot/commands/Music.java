@@ -39,30 +39,36 @@ public class Music implements ICommand {
 
 			switch(mainCmd) {
 				case "play":
-					if(!ocarina.isInVoiceChannel()) {
-						if(message.getMember().getVoiceState() != null){
-							VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+					if (m.group(2) != null) {
+						if (!ocarina.isInVoiceChannel()) {
+							if (message.getMember().getVoiceState() != null) {
+								VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
 
-							ocarina.connect(vchannel);
-						} else {
-							return "Please join a voice channel and run this command again.";
-						}
-					}
-
-					if(isUrl(m.group(2))) {
-						ocarina.loadTrack(m.group(2), false);
-					} else {
-						for(Playlist p : b.getPlaylists()) {
-							if(p.getName().equalsIgnoreCase(m.group(2))){
-								for(String url : p.getTracks()) {
-									ocarina.loadTrack(url, true);
-								}
-
-								return "Playing the `"+p.getName()+"` playlist!";
+								ocarina.connect(vchannel);
+							} else {
+								return "Please join a voice channel and run this command again.";
 							}
 						}
 
-						return "Please provide a media URL or Playlist name!";
+						if (isUrl(m.group(2))) {
+							ocarina.loadTrack(m.group(2), false);
+						} else {
+							for (Playlist p : b.getPlaylists()) {
+								if (p.getName().equalsIgnoreCase(m.group(2))) {
+									long time = System.currentTimeMillis();
+
+									for (String url : p.getTracks()) {
+										ocarina.loadTrackOrdered(url, time,true);
+									}
+
+									return "Playing the `" + p.getName() + "` playlist!";
+								}
+							}
+
+							return "No playlists were found with that name.";
+						}
+					}else{
+						return "Please enter a media URL or playlist name!";
 					}
 
 					break;
@@ -83,6 +89,7 @@ public class Music implements ICommand {
 				case "loop":
 					boolean isLoop = ocarina.toggleLoop();
 					return "Music looping is now **"+(isLoop ? "ON" : "OFF")+"**";
+				case "np":
 				case "playing":
 					AudioTrack track = ocarina.getNowPlaying();
 
@@ -93,44 +100,27 @@ public class Music implements ICommand {
 					}
 
 					break;
+				case "pl":
 				case "playlist":
 					if (m.group(2) != null) {
 						return playlist(m.group(2), b, message.getChannel());
 					}else{
 						return Errors.WRONG_USAGE;
 					}
+				case "q":
 				case "queue":
 					if(ocarina.isInVoiceChannel()) {
 						if (m.group(2) != null) {
-							if (m.group(2).equalsIgnoreCase("list")) {
-								StringBuilder sb = new StringBuilder();
-
-								for (AudioTrack t : ocarina.getQueue()) {
-									if (sb.length() > 0) {
-										sb.append("\n");
-									}
-
-									sb.append(ocarina.getQueue().indexOf(t) + 1);
-									sb.append(": ");
-									sb.append("`");
-									sb.append(t.getInfo().title);
-									sb.append("`");
-								}
-
-								if (sb.length() == 0) {
-									sb.append("There are no tracks in the queue.");
-								}
-
-								showQueue(sb.toString(), message.getChannel());
-								return "";
-							} else if (isUrl(m.group(2))) {
+							if (isUrl(m.group(2))) {
 								ocarina.loadTrack(m.group(2), true);
 								break;
 							} else {
 								for(Playlist p : b.getPlaylists()) {
 									if(p.getName().equalsIgnoreCase(m.group(2))){
-										for(String url : p.getTracks()) {
-											ocarina.loadTrack(url, true);
+										long time = System.currentTimeMillis();
+
+										for (String url : p.getTracks()) {
+											ocarina.loadTrackOrdered(url, time,true);
 										}
 
 										return "Queued the `"+p.getName()+"` playlist!";
@@ -140,7 +130,26 @@ public class Music implements ICommand {
 								return Errors.WRONG_USAGE;
 							}
 						} else {
-							return Errors.WRONG_USAGE;
+							StringBuilder sb = new StringBuilder();
+
+							for (AudioTrack t : ocarina.getQueue()) {
+								if (sb.length() > 0) {
+									sb.append("\n");
+								}
+
+								sb.append(ocarina.getQueue().indexOf(t) + 1);
+								sb.append(": ");
+								sb.append("`");
+								sb.append(t.getInfo().title);
+								sb.append("`");
+							}
+
+							if (sb.length() == 0) {
+								sb.append("There are no tracks in the queue.");
+							}
+
+							showQueue(sb.toString(), message.getChannel());
+							return "";
 						}
 					}else{
 						return "I have to be connected to a voice channel in order to do that!";
@@ -180,6 +189,7 @@ public class Music implements ICommand {
 			String listName = m.group(2) != null ? m.group(2).toLowerCase() : "";
 
 			switch(cmd) {
+				case "c":
 				case "create":
 
 					if(getPlaylist(listName, b) == null) {
@@ -188,6 +198,7 @@ public class Music implements ICommand {
 					} else {
 						return "A playlist with that name already exists on this server!";
 					}
+				case "a":
 				case "add":
 					if(m.group(3) != null) {
 						Playlist p = getPlaylist(listName, b);
@@ -205,6 +216,7 @@ public class Music implements ICommand {
 					}else{
 						return Errors.WRONG_USAGE;
 					}
+				case "l":
 				case "list":
 					if(listName.length() > 0) {
 						Playlist pList = getPlaylist(listName, b);
@@ -253,6 +265,7 @@ public class Music implements ICommand {
 
 						return "";
 					}
+				case "r":
 				case "remove":
 					if(m.group(4) != null){
 						Playlist pRemove = getPlaylist(listName, b);
@@ -271,6 +284,7 @@ public class Music implements ICommand {
 					}else{
 						return Errors.WRONG_USAGE;
 					}
+				case "d":
 				case "delete":
 					Playlist pDelete = getPlaylist(listName, b);
 
@@ -335,7 +349,7 @@ public class Music implements ICommand {
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
 		sb.append("`playing` - See details about the current track.\n");
-		sb.append("`queue <list|url|playlist>` - Show the queue, or add an item to the queue.\n");
+		sb.append("`queue [url|playlist]` - Show the queue, or add an item to the queue.\n");
 		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
