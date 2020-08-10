@@ -157,7 +157,7 @@ public class Music implements ICommand {
 				case "convert":
 					// Whatever's in the queue becomes a playlist
 					if(m.group(2) != null){
-						Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+						Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(m.group(2));
 
 						if(conv.find()) {
 							String name = conv.group(1).toLowerCase();
