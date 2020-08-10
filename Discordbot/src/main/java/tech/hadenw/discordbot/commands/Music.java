@@ -20,12 +20,12 @@ import tech.hadenw.discordbot.storage.Playlist;
 public class Music implements ICommand {
 	@Override
 	public String getDescription() {
-		return "";
+		return "Play music, create playlists, and chill out.";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "TBD";
+		return "music";
 	}
 
 	@Override
@@ -154,6 +154,33 @@ public class Music implements ICommand {
 					}else{
 						return "I have to be connected to a voice channel in order to do that!";
 					}
+				case "convert":
+					// Whatever's in the queue becomes a playlist
+					if(m.group(2) != null){
+						Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+
+						if(conv.find()) {
+							String name = conv.group(1).toLowerCase();
+
+							if(getPlaylist(name, b) == null) {
+								Playlist p = new Playlist(name);
+
+								for(AudioTrack t : ocarina.getQueue()) {
+									p.addTrack(t.getInfo().uri);
+								}
+
+								b.getPlaylists().add(p);
+
+								return "Created a new playlist `"+name+"` with `"+p.getTracks().size()+"` tracks!";
+							} else {
+								return "A playlist with that name already exists on this server!";
+							}
+						}else{
+							return "Playlist names must be alphanumeric!";
+						}
+					}else{
+						return "Please enter a name for the new playlist.";
+					}
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 			}
@@ -191,7 +218,6 @@ public class Music implements ICommand {
 			switch(cmd) {
 				case "c":
 				case "create":
-
 					if(getPlaylist(listName, b) == null) {
 						b.getPlaylists().add(new Playlist(listName));
 						return "Playlist `"+listName+"` created!";
@@ -350,6 +376,7 @@ public class Music implements ICommand {
 		sb.append("`loop` - Toggle track looping.\n");
 		sb.append("`playing` - See details about the current track.\n");
 		sb.append("`queue [url|playlist]` - Show the queue, or add an item to the queue.\n");
+		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
 		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
