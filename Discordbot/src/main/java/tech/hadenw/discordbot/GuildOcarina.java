@@ -117,12 +117,12 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	public void trackLoaded(AudioTrack track) {
 		if(queueNextTrack){
 			queue.add(track);
-
-			if(this.player.getPlayingTrack() == null) {
-				this.skip();
-			}
 		} else {
 			queue.add(0, track);
+		}
+
+		// TODO James Playlists loaded here will play the last element first, if no other track is playing.
+		if(this.player.getPlayingTrack() == null) {
 			this.skip();
 		}
 	}
@@ -131,12 +131,11 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	public void playlistLoaded(AudioPlaylist playlist) {
 		if(queueNextTrack){
 			queue.addAll(playlist.getTracks());
-
-			if(this.player.getPlayingTrack() == null) {
-				this.skip();
-			}
 		} else {
 			queue.addAll(0,playlist.getTracks());
+		}
+
+		if(this.player.getPlayingTrack() == null) {
 			this.skip();
 		}
 	}

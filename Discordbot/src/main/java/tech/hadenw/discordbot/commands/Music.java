@@ -1,6 +1,9 @@
 package tech.hadenw.discordbot.commands;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,8 +60,11 @@ public class Music implements ICommand {
 								if (p.getName().equalsIgnoreCase(m.group(2))) {
 									long time = System.currentTimeMillis();
 
-									for (String url : p.getTracks()) {
-										ocarina.loadTrackOrdered(url, time,true);
+									List<String> playlistReversed = new ArrayList<String>(p.getTracks());
+									Collections.reverse(playlistReversed);
+
+									for (String url : playlistReversed) {
+										ocarina.loadTrackOrdered(url, time,false);
 									}
 
 									return "Playing the `" + p.getName() + "` playlist!";
@@ -114,6 +120,9 @@ public class Music implements ICommand {
 							if (isUrl(m.group(2))) {
 								ocarina.loadTrack(m.group(2), true);
 								break;
+							} if (m.group(2).equalsIgnoreCase("clear")) {
+								ocarina.getQueue().clear();
+								return "Cleared the queue!";
 							} else {
 								for(Playlist p : b.getPlaylists()) {
 									if(p.getName().equalsIgnoreCase(m.group(2))){
@@ -166,7 +175,9 @@ public class Music implements ICommand {
 								Playlist p = new Playlist(name);
 
 								for(AudioTrack t : ocarina.getQueue()) {
-									p.addTrack(t.getInfo().uri);
+									if(p.getTracks().size() < 50) {
+										p.addTrack(t.getInfo().uri, t.getInfo().title);
+									}
 								}
 
 								b.getPlaylists().add(p);
@@ -209,7 +220,7 @@ public class Music implements ICommand {
 	}
 
 	private String playlist(String args, Brain b, MessageChannel c) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?:\\/\\/.+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?:\\/\\/[./\\w\\d-_&?=*%]+)?\\s?(\\d{1,3})?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
 			String cmd = m.group(1).toLowerCase();
@@ -231,7 +242,7 @@ public class Music implements ICommand {
 
 						if (p != null) {
 							if(p.getTracks().size() < 50) {
-								p.addTrack(m.group(3));
+								p.addTrack(m.group(3), m.group(5));
 								return "Added track to playlist!";
 							}else{
 								return "Playlists currently support a max of 50 tracks!";
@@ -257,7 +268,15 @@ public class Music implements ICommand {
 								}
 
 								sb.append(pList.getTracks().indexOf(url) + 1);
-								sb.append(": `");
+								sb.append(": ");
+
+								String memo = pList.getMemo(url);
+								if(memo != null){
+									sb.append(memo);
+									sb.append(" - ");
+								}
+
+								sb.append("`");
 								sb.append(url);
 								sb.append("`");
 							}
@@ -375,9 +394,9 @@ public class Music implements ICommand {
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
 		sb.append("`playing` - See details about the current track.\n");
-		sb.append("`queue [url|playlist]` - Show the queue, or add an item to the queue.\n");
+		sb.append("`queue [url|playlist|clear]` - Show the queue, add an item to the queue, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
-		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
+		sb.append("`playlist <create|add|list|remove|delete> [name] [url]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
 
