@@ -35,6 +35,7 @@ public class Music implements ICommand {
 		if(m.find()){
 			String mainCmd = m.group(1);
 			GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(message.getGuild().getId());
+			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
 			switch(mainCmd) {
 				case "play":
@@ -48,7 +49,21 @@ public class Music implements ICommand {
 						}
 					}
 
-					ocarina.loadTrack(m.group(2), false);
+					if(isUrl(m.group(2))) {
+						ocarina.loadTrack(m.group(2), false);
+					} else {
+						for(Playlist p : b.getPlaylists()) {
+							if(p.getName().equalsIgnoreCase(m.group(2))){
+								for(String url : p.getTracks()) {
+									ocarina.loadTrack(url, true);
+								}
+
+								return "Playing the `"+p.getName()+"` playlist!";
+							}
+						}
+
+						return "Please provide a media URL or Playlist name!";
+					}
 
 					break;
 				case "pause":
@@ -80,14 +95,14 @@ public class Music implements ICommand {
 					break;
 				case "playlist":
 					if (m.group(2) != null) {
-						return playlist(m.group(2), message.getGuild().getId(), message.getChannel());
+						return playlist(m.group(2), b, message.getChannel());
 					}else{
 						return Errors.WRONG_USAGE;
 					}
 				case "queue":
 					if(ocarina.isInVoiceChannel()) {
 						if (m.group(2) != null) {
-							if (m.group(2).equalsIgnoreCase("show")) {
+							if (m.group(2).equalsIgnoreCase("list")) {
 								StringBuilder sb = new StringBuilder();
 
 								for (AudioTrack t : ocarina.getQueue()) {
@@ -109,10 +124,19 @@ public class Music implements ICommand {
 								showQueue(sb.toString(), message.getChannel());
 								return "";
 							} else if (isUrl(m.group(2))) {
-								// TODO is James Playlist or other?
 								ocarina.loadTrack(m.group(2), true);
 								break;
 							} else {
+								for(Playlist p : b.getPlaylists()) {
+									if(p.getName().equalsIgnoreCase(m.group(2))){
+										for(String url : p.getTracks()) {
+											ocarina.loadTrack(url, true);
+										}
+
+										return "Queued the `"+p.getName()+"` playlist!";
+									}
+								}
+
 								return Errors.WRONG_USAGE;
 							}
 						} else {
@@ -148,13 +172,12 @@ public class Music implements ICommand {
 		return true;
 	}
 
-	private String playlist(String args, String guildID, MessageChannel c) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s([a-z0-9]+)\\s?(https?:\\/\\/.+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(args);
+	private String playlist(String args, Brain b, MessageChannel c) {
+		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?:\\/\\/.+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
 			String cmd = m.group(1).toLowerCase();
-			String listName = m.group(2).toLowerCase();
-			Brain b = Shmames.getBrains().getBrain(guildID);
+			String listName = m.group(2) != null ? m.group(2).toLowerCase() : "";
 
 			switch(cmd) {
 				case "create":
@@ -183,33 +206,52 @@ public class Music implements ICommand {
 						return Errors.WRONG_USAGE;
 					}
 				case "list":
-					Playlist pList = getPlaylist(listName, b);
+					if(listName.length() > 0) {
+						Playlist pList = getPlaylist(listName, b);
 
-					if (pList != null) {
+						if (pList != null) {
+							StringBuilder sb = new StringBuilder();
+							EmbedBuilder eBuilder = buildBasicEmbed();
+
+							for (String url : pList.getTracks()) {
+								if (sb.length() > 0) {
+									sb.append("\n");
+								}
+
+								sb.append(pList.getTracks().indexOf(url) + 1);
+								sb.append(": `");
+								sb.append(url);
+								sb.append("`");
+							}
+
+							if (sb.length() == 0) {
+								sb.append("There aren't any tracks in this playlist yet.");
+							}
+
+							eBuilder.addField("Playlist Tracks", sb.toString(), false);
+							c.sendMessage(eBuilder.build()).queue();
+
+							return "";
+						} else {
+							return "That playlist doesn't exist!";
+						}
+					}else{
 						StringBuilder sb = new StringBuilder();
 						EmbedBuilder eBuilder = buildBasicEmbed();
 
-						for(String url : pList.getTracks()){
-							if(sb.length() > 0) {
-								sb.append("\n");
-							}
+						for(Playlist p : b.getPlaylists()) {
+							if(sb.length() > 0)
+								sb.append(", ");
 
-							sb.append(pList.getTracks().indexOf(url)+1);
-							sb.append(": `");
-							sb.append(url);
+							sb.append("`");
+							sb.append(p.getName());
 							sb.append("`");
 						}
 
-						if(sb.length() == 0){
-							sb.append("There aren't any tracks in this playlist yet.");
-						}
-
-						eBuilder.addField("Playlist Tracks", sb.toString(), false);
+						eBuilder.addField("Playlists", sb.toString(), false);
 						c.sendMessage(eBuilder.build()).queue();
 
 						return "";
-					} else {
-						return "That playlist doesn't exist!";
 					}
 				case "remove":
 					if(m.group(4) != null){
@@ -247,9 +289,11 @@ public class Music implements ICommand {
 	}
 
 	private Playlist getPlaylist(String name, Brain b) {
-		for(Playlist p : b.getPlaylists()){
-			if(p.getName().equalsIgnoreCase(name)){
-				return p;
+		if(name.length() > 0) {
+			for (Playlist p : b.getPlaylists()) {
+				if (p.getName().equalsIgnoreCase(name)) {
+					return p;
+				}
 			}
 		}
 
@@ -291,7 +335,7 @@ public class Music implements ICommand {
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
 		sb.append("`playing` - See details about the current track.\n");
-		sb.append("`queue <show|url|playlist>` - Show the queue, or add an item to the queue.\n");
+		sb.append("`queue <list|url|playlist>` - Show the queue, or add an item to the queue.\n");
 		sb.append("`playlist <create|add|list|remove|delete> <name> [url]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);

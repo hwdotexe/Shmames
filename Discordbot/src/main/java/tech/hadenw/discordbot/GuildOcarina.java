@@ -124,13 +124,16 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void playlistLoaded(AudioPlaylist playlist) {
-		// TODO copy trackLoaded()'s logic for play vs. queue
-		// TODO if voice channel is empty, stop()
-		queue.addAll(playlist.getTracks());
+		if(queueNextTrack){
+			queue.addAll(playlist.getTracks());
 
-		// If there isn't a playing track, play the next in queue.
-		if(this.player.getPlayingTrack() == null)
+			if(this.player.getPlayingTrack() == null) {
+				this.skip();
+			}
+		} else {
+			queue.addAll(0,playlist.getTracks());
 			this.skip();
+		}
 	}
 
 	@Override
@@ -156,6 +159,12 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+		// Leave the channel if nobody's here.
+		if(manager.getConnectedChannel().getMembers().size() == 1) {
+			this.stop();
+			return;
+		}
+
 		switch(endReason) {
 			case STOPPED:
 				if(queue.size() == 0) {
