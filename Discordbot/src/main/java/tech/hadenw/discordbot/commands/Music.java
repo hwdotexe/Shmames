@@ -396,7 +396,7 @@ public class Music implements ICommand {
 		sb.append("`playing` - See details about the current track.\n");
 		sb.append("`queue [url|playlist|clear]` - Show the queue, add an item to the queue, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
-		sb.append("`playlist <create|add|list|remove|delete> [name] [url]` - Manage a playlist.");
+		sb.append("`playlist <create|add|list|remove|delete> [name] [url] [memo]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
 
