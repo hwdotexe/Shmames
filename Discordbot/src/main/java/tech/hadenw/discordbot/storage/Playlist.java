@@ -35,6 +35,8 @@ public class Playlist {
 
         if(memo != null) {
             memos.put(urls.indexOf(url), memo);
+        }else{
+            memos.put(urls.indexOf(url), "");
         }
     }
 

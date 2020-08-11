@@ -221,7 +221,13 @@ public class Music implements ICommand {
 				case "c":
 				case "create":
 					if(getPlaylist(listName, b) == null) {
-						b.getPlaylists().add(new Playlist(listName));
+						Playlist newList = new Playlist(listName);
+
+						if(m.group(3) != null) {
+							newList.addTrack(m.group(3), m.group(5));
+						}
+
+						b.getPlaylists().add(newList);
 						return "Playlist `"+listName+"` created!";
 					} else {
 						return "A playlist with that name already exists on this server!";
@@ -384,10 +390,10 @@ public class Music implements ICommand {
 		sb.append("`skip` - Skip the current track.\n");
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
-		sb.append("`playing` - See details about the current track.\n");
-		sb.append("`queue [url|playlist|clear]` - Show the queue, add an item to the queue, or clear it.\n");
+		sb.append("`playing`|`np` - See details about the current track.\n");
+		sb.append("`(q)ueue [url|playlist|clear]` - Show the queue, add items, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
-		sb.append("`playlist <create|add|list|remove|delete> [name] [url] [memo]` - Manage a playlist.");
+		sb.append("`(pl)aylist <(c)reate|(a)dd|(l)ist|(r)emove|(d)elete> [name] [url] [memo]` - Manage a playlist.");
 
 		eBuilder.addField("Commands", sb.toString(), false);
 
