@@ -3,6 +3,7 @@ package tech.hadenw.discordbot.commands;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,7 +95,7 @@ public class Roll implements ICommand {
 
 				if(isDice){
 					// Random
-					List<Integer> rolls = new ArrayList<Integer>();
+					HashMap<Integer, Integer> rolls = new HashMap<Integer,Integer>();
 
 					diceSB.append(diceToRoll);
 					diceSB.append("d");
@@ -104,7 +105,7 @@ public class Roll implements ICommand {
 					for(int i=0; i<diceToRoll; i++){
 						int roll = Utils.getRandom(diceSizeOrFlat)+1;
 
-						rolls.add(roll);
+						rolls.put(i, roll);
 					}
 
 					switch(takeHighLow) {
@@ -114,23 +115,27 @@ public class Roll implements ICommand {
 								if(rolls.size() < takeHighLowCount)
 									takeHighLowCount = rolls.size();
 
-								List<Integer> tempInts = new ArrayList<Integer>(rolls);
-								List<Integer> indexesOfHighestInts = new ArrayList<Integer>();
+								List<Integer> highestRolls = new ArrayList<Integer>();
+								HashMap<Integer, Integer> tempRolls = new HashMap<Integer,Integer>(rolls);
 
 								for(int i=0; i<takeHighLowCount; i++){
-									int max = Collections.max(tempInts);
-									indexesOfHighestInts.add(rolls.indexOf(max));
-									tempInts.remove(tempInts.indexOf(max));
+									int max = Collections.max(tempRolls.values());
+									int roll = getMapKeyFromValue(tempRolls, max);
+
+									highestRolls.add(roll);
+									tempRolls.remove(roll);
 
 									subTotal += max;
 								}
 
-								diceSB.append(drawRollResults(rolls, indexesOfHighestInts, diceSizeOrFlat));
+								diceSB.append(drawRollResults(rolls, highestRolls, diceSizeOrFlat));
 							} else {
 								// Take highest
-								int max = Collections.max(rolls);
+								int max = Collections.max(rolls.values());
+								int roll = getMapKeyFromValue(rolls, max);
+
 								List<Integer> indexes = new ArrayList<Integer>();
-								indexes.add(rolls.indexOf(max));
+								indexes.add(roll);
 
 								subTotal += max;
 								diceSB.append(drawRollResults(rolls, indexes, diceSizeOrFlat));
@@ -142,30 +147,34 @@ public class Roll implements ICommand {
 								if(rolls.size() < takeHighLowCount)
 									takeHighLowCount = rolls.size();
 
-								List<Integer> tempInts = new ArrayList<Integer>(rolls);
-								List<Integer> indexesOfLowestInts = new ArrayList<Integer>();
+								List<Integer> lowestRolls = new ArrayList<Integer>();
+								HashMap<Integer, Integer> tempRolls = new HashMap<Integer,Integer>(rolls);
 
 								for(int i=0; i<takeHighLowCount; i++){
-									int min = Collections.min(tempInts);
-									indexesOfLowestInts.add(rolls.indexOf(min));
-									tempInts.remove(tempInts.indexOf(min));
+									int min = Collections.min(tempRolls.values());
+									int roll = getMapKeyFromValue(tempRolls, min);
+
+									lowestRolls.add(roll);
+									tempRolls.remove(roll);
 
 									subTotal += min;
 								}
 
-								diceSB.append(drawRollResults(rolls, indexesOfLowestInts, diceSizeOrFlat));
+								diceSB.append(drawRollResults(rolls, lowestRolls, diceSizeOrFlat));
 							} else {
 								// Take lowest
-								int min = Collections.min(rolls);
+								int min = Collections.min(rolls.values());
+								int roll = getMapKeyFromValue(rolls, min);
+
 								List<Integer> indexes = new ArrayList<Integer>();
-								indexes.add(rolls.indexOf(min));
+								indexes.add(roll);
 
 								subTotal += min;
 								diceSB.append(drawRollResults(rolls, indexes, diceSizeOrFlat));
 							}
 							break;
 						default:
-							for(int roll : rolls){
+							for(int roll : rolls.values()){
 								subTotal += roll;
 							}
 
@@ -210,17 +219,27 @@ public class Roll implements ICommand {
 		return rollSB.toString();
 	}
 
-	private String drawRollResults(List<Integer> rolls, List<Integer> keepRolls, int toBold) {
+	private int getMapKeyFromValue(HashMap<Integer, Integer> map, int check) {
+		for(int key : map.keySet()) {
+			if(map.get(key) == check){
+				return key;
+			}
+		}
+
+		return -1;
+	}
+
+	private String drawRollResults(HashMap<Integer, Integer> rolls, List<Integer> keepRolls, int toBold) {
 		StringBuilder sb = new StringBuilder();
 
-		for(int rollIndex = 0; rollIndex < rolls.size(); rollIndex++){
-			int roll = rolls.get(rollIndex);
+		for(int rollNum : rolls.keySet()) {
+			int roll = rolls.get(rollNum);
 
 			if(sb.length() > 0){
 				sb.append(", ");
 			}
 
-			if(keepRolls != null && !keepRolls.contains(rollIndex)){
+			if(keepRolls != null && !keepRolls.contains(rollNum)){
 				sb.append("~~");
 			}
 
@@ -232,11 +251,10 @@ public class Roll implements ICommand {
 				sb.append(roll);
 			}
 
-			if(keepRolls != null && !keepRolls.contains(rollIndex)){
+			if(keepRolls != null && !keepRolls.contains(rollNum)){
 				sb.append("~~");
 			}
 		}
-
 		return sb.toString();
 	}
 }
