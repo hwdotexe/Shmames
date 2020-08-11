@@ -27,6 +27,9 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private List<AudioTrack> queue;
 	private boolean isLoop;
 	private boolean queueNextTrack;
+	private boolean isLoadingPlaylist;
+	private int loadingPlaylistSize;
+	private int loadingPlaylistCounter;
 	
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
@@ -36,6 +39,9 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		queue = new ArrayList<AudioTrack>();
 		isLoop = false;
 		queueNextTrack = false;
+		isLoadingPlaylist = false;
+		loadingPlaylistSize = 0;
+		loadingPlaylistCounter = 0;
 		
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
@@ -88,12 +94,20 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 
 	public void loadTrack(String url, boolean addToQueue) {
 		queueNextTrack = addToQueue;
+		isLoadingPlaylist = false;
 		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, this);
 	}
 
-	public void loadTrackOrdered(String url, long order, boolean addToQueue) {
+	public void loadCustomPlaylist(List<String> urls, boolean addToQueue, int playlistLength) {
 		queueNextTrack = addToQueue;
-		Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, this);
+		isLoadingPlaylist = true;
+		loadingPlaylistSize = playlistLength;
+		loadingPlaylistCounter = 0;
+		long order = System.currentTimeMillis();
+
+		for(String url : urls) {
+			Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, this);
+		}
 	}
 	
 	public void togglePause() {
@@ -121,9 +135,18 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			queue.add(0, track);
 		}
 
-		// TODO James Playlists loaded here will play the last element first, if no other track is playing.
-		if(this.player.getPlayingTrack() == null) {
-			this.skip();
+		if(isLoadingPlaylist) {
+			loadingPlaylistCounter++;
+
+			if(loadingPlaylistCounter == loadingPlaylistSize) {
+				if(!queueNextTrack) {
+					this.skip();
+				}
+			}
+		}else{
+			if(!queueNextTrack) {
+				this.skip();
+			}
 		}
 	}
 

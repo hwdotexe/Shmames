@@ -58,14 +58,9 @@ public class Music implements ICommand {
 						} else {
 							for (Playlist p : b.getPlaylists()) {
 								if (p.getName().equalsIgnoreCase(m.group(2))) {
-									long time = System.currentTimeMillis();
-
 									List<String> playlistReversed = new ArrayList<String>(p.getTracks());
 									Collections.reverse(playlistReversed);
-
-									for (String url : playlistReversed) {
-										ocarina.loadTrackOrdered(url, time,false);
-									}
+									ocarina.loadCustomPlaylist(playlistReversed,false, playlistReversed.size());
 
 									return "Playing the `" + p.getName() + "` playlist!";
 								}
@@ -126,11 +121,7 @@ public class Music implements ICommand {
 							} else {
 								for(Playlist p : b.getPlaylists()) {
 									if(p.getName().equalsIgnoreCase(m.group(2))){
-										long time = System.currentTimeMillis();
-
-										for (String url : p.getTracks()) {
-											ocarina.loadTrackOrdered(url, time,true);
-										}
+										ocarina.loadCustomPlaylist(p.getTracks(),true, p.getTracks().size());
 
 										return "Queued the `"+p.getName()+"` playlist!";
 									}
