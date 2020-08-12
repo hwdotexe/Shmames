@@ -1,5 +1,5 @@
 ﻿*.prefs
 bin
-Discordbot/.idea
 Discordbot/discordbot.iml
 Discordbot/brains
+Discordbot/.idea/libraries
