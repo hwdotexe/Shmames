@@ -1,6 +1,8 @@
 package tech.hadenw.discordbot.listeners;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,8 +44,13 @@ public class ChatListener extends ListenerAdapter {
 							if(m.group(2) != null){
 								String command = m.group(2).trim();
 
-								// TODO replace this with real logging
-								System.out.println("[COMMAND/" + e.getGuild().getName() + "/" + e.getAuthor().getName() + "]: " + command);
+								Calendar cal = Calendar.getInstance();
+								cal.setTime(new Date());
+
+								int minute = cal.get(Calendar.MINUTE);
+								String timestamp = "["+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DAY_OF_MONTH)+" "+cal.get(Calendar.HOUR)+":"+(minute < 10 ? "0"+minute : minute)+"]";
+
+								System.out.println(timestamp+"[COMMAND/" + e.getGuild().getId() + "/" + e.getAuthor().getName() + "]: " + command);
 
 								// Send to the command handler for further processing.
 								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
