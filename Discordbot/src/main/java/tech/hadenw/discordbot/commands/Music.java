@@ -302,6 +302,10 @@ public class Music implements ICommand {
 							sb.append("`");
 						}
 
+						if (sb.length() == 0) {
+							sb.append("There aren't any playlists yet.");
+						}
+
 						eBuilder.addField("Playlists", sb.toString(), false);
 						c.sendMessage(eBuilder.build()).queue();
 
