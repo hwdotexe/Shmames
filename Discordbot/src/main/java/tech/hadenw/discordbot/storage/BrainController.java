@@ -45,6 +45,11 @@ public class BrainController {
 		if (mbFile.exists()) {
 			mb = gson.fromJson(loadJSONFile(mbFile), MotherBrain.class);
 		} else {
+			File dir = new File("brains");
+
+			if (!dir.exists())
+				dir.mkdirs();
+
 			mb = new MotherBrain();
 			mb.loadDefaults();
 			saveMotherBrain();
@@ -205,7 +210,7 @@ public class BrainController {
 		try {
 			FileOutputStream os = new FileOutputStream(mbFile);
 			
-			if(!mbFile.exists()) 
+			if(!mbFile.exists())
 				mbFile.createNewFile();
 			
 			os.write(bytes);
