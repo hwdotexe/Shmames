@@ -115,9 +115,12 @@ public class Music implements ICommand {
 							if (isUrl(m.group(2))) {
 								ocarina.loadTrack(m.group(2), true);
 								break;
-							} if (m.group(2).equalsIgnoreCase("clear")) {
+							} else if (m.group(2).equalsIgnoreCase("clear")) {
 								ocarina.getQueue().clear();
 								return "Cleared the queue!";
+							} else if (isInt(m.group(2))) {
+								showQueue(ocarina.getQueue(), message.getChannel(), Integer.parseInt(m.group(2)));
+								break;
 							} else {
 								for(Playlist p : b.getPlaylists()) {
 									if(p.getName().equalsIgnoreCase(m.group(2))){
@@ -130,25 +133,7 @@ public class Music implements ICommand {
 								return Errors.WRONG_USAGE;
 							}
 						} else {
-							StringBuilder sb = new StringBuilder();
-
-							for (AudioTrack t : ocarina.getQueue()) {
-								if (sb.length() > 0) {
-									sb.append("\n");
-								}
-
-								sb.append(ocarina.getQueue().indexOf(t) + 1);
-								sb.append(": ");
-								sb.append("`");
-								sb.append(t.getInfo().title);
-								sb.append("`");
-							}
-
-							if (sb.length() == 0) {
-								sb.append("There are no tracks in the queue.");
-							}
-
-							showQueue(sb.toString(), message.getChannel());
+							showQueue(ocarina.getQueue(), message.getChannel(), 1);
 							return "";
 						}
 					}else{
@@ -375,11 +360,43 @@ public class Music implements ICommand {
 		c.sendMessage(eBuilder.build()).queue();
 	}
 
-	private void showQueue(String queue, MessageChannel c) {
+	private void showQueue(List<AudioTrack> queue, MessageChannel c, int page) {
+		// Build the page.
+		StringBuilder sb = new StringBuilder();
+		page = Math.max(page, 1)-1;
+		int totalPages = (int)Math.ceil(queue.size()/10d);
+
+		for(int i=(page*10); i<(page*10)+10; i++) {
+			if(queue.size() > i) {
+				if(sb.length() > 0) {
+					sb.append("\n");
+				}
+
+				sb.append(i + 1);
+				sb.append(": ");
+				sb.append("`");
+				sb.append(queue.get(i).getInfo().title);
+				sb.append("`");
+			}
+		}
+
 		EmbedBuilder eBuilder = buildBasicEmbed();
 
-		eBuilder.setTitle("Music Queue");
-		eBuilder.addField("Up Next", queue, false);
+		if(sb.length() == 0) {
+			if(page == 0) {
+				sb.append("There are no tracks in the queue.");
+			} else {
+				sb.append("There are no tracks in the queue on this page.");
+			}
+		}
+
+		if ((page+1) > totalPages) {
+			eBuilder.setTitle("Music Queue");
+		} else {
+			eBuilder.setTitle("Music Queue (page "+(page+1)+" of "+totalPages+")");
+		}
+
+		eBuilder.addField("Up Next", sb.toString(), false);
 
 		c.sendMessage(eBuilder.build()).queue();
 	}
@@ -435,5 +452,14 @@ public class Music implements ICommand {
 		Matcher m = Pattern.compile("^https?:\\/\\/.+$", Pattern.CASE_INSENSITIVE).matcher(test);
 
 		return m.find();
+	}
+
+	private boolean isInt(String test) {
+		try {
+			Integer.parseInt(test);
+			return true;
+		} catch (Exception ignored) {}
+
+		return false;
 	}
 }
