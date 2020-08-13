@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.Utils;
+import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.GuildOcarina;
 import com.hadenwatne.discordbot.Shmames;
@@ -42,34 +41,38 @@ public class Music implements ICommand {
 
 			switch(mainCmd) {
 				case "play":
-					if (m.group(2) != null) {
-						if (!ocarina.isInVoiceChannel()) {
-							if (message.getMember().getVoiceState() != null) {
-								VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
+					if (canUse(b, message.getMember())) {
+						if (m.group(2) != null) {
+							if (!ocarina.isInVoiceChannel()) {
+								if (message.getMember().getVoiceState() != null) {
+									VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
 
-								ocarina.connect(vchannel);
-							} else {
-								return "Please join a voice channel and run this command again.";
-							}
-						}
-
-						if (isUrl(m.group(2))) {
-							ocarina.loadTrack(m.group(2), false);
-						} else {
-							for (Playlist p : b.getPlaylists()) {
-								if (p.getName().equalsIgnoreCase(m.group(2))) {
-									List<String> playlistReversed = new ArrayList<String>(p.getTracks());
-									Collections.reverse(playlistReversed);
-									ocarina.loadCustomPlaylist(playlistReversed,false, playlistReversed.size());
-
-									return "Playing the `" + p.getName() + "` playlist!";
+									ocarina.connect(vchannel);
+								} else {
+									return "Please join a voice channel and run this command again.";
 								}
 							}
 
-							return "No playlists were found with that name.";
+							if (isUrl(m.group(2))) {
+								ocarina.loadTrack(m.group(2), false);
+							} else {
+								for (Playlist p : b.getPlaylists()) {
+									if (p.getName().equalsIgnoreCase(m.group(2))) {
+										List<String> playlistReversed = new ArrayList<>(p.getTracks());
+										Collections.reverse(playlistReversed);
+										ocarina.loadCustomPlaylist(playlistReversed, false, playlistReversed.size());
+
+										return "Playing the `" + p.getName() + "` playlist!";
+									}
+								}
+
+								return "No playlists were found with that name.";
+							}
+						} else {
+							return "Please enter a media URL or playlist name!";
 						}
-					}else{
-						return "Please enter a media URL or playlist name!";
+					} else {
+						return Errors.NO_PERMISSION_USER;
 					}
 
 					break;
@@ -78,18 +81,46 @@ public class Music implements ICommand {
 					ocarina.togglePause();
 					break;
 				case "skip":
-					ocarina.skip();
+					if(ocarina.getNowPlaying() != null) {
+						if (canUse(b, message.getMember())) {
+							ocarina.skip();
+						} else {
+							return Errors.NO_PERMISSION_USER;
+						}
+					}else{
+						return Errors.TRACK_NOT_PLAYING;
+					}
 					break;
 				case "shuffle":
-					ocarina.shuffleQueue();
+					if(ocarina.getNowPlaying() != null) {
+						if (canUse(b, message.getMember())) {
+							ocarina.shuffleQueue();
 
-					return "Shuffled the music queue!";
+							return "Shuffled the music queue!";
+						} else {
+							return Errors.NO_PERMISSION_USER;
+						}
+					}else{
+						return Errors.TRACK_NOT_PLAYING;
+					}
 				case "stop":
-					ocarina.stop();
+					if(ocarina.getNowPlaying() != null) {
+						if (canUse(b, message.getMember())) {
+							ocarina.stop();
+						} else {
+							return Errors.NO_PERMISSION_USER;
+						}
+					}else{
+						return Errors.TRACK_NOT_PLAYING;
+					}
 					break;
 				case "loop":
-					boolean isLoop = ocarina.toggleLoop();
-					return "Music looping is now **"+(isLoop ? "ON" : "OFF")+"**";
+					if (canUse(b, message.getMember())) {
+						boolean isLoop = ocarina.toggleLoop();
+						return "Music looping is now **" + (isLoop ? "ON" : "OFF") + "**";
+					}else{
+						return Errors.NO_PERMISSION_USER;
+					}
 				case "np":
 				case "playing":
 					AudioTrack track = ocarina.getNowPlaying();
@@ -97,76 +128,93 @@ public class Music implements ICommand {
 					if(track != null){
 						showTrackData(track, message.getChannel(), ocarina);
 					}else{
-						return "Nothing is currently playing.";
+						return Errors.TRACK_NOT_PLAYING;
 					}
 
 					break;
 				case "pl":
 				case "playlist":
-					if (m.group(2) != null) {
-						return playlist(m.group(2), b, message.getChannel());
+					if (canUse(b, message.getMember())) {
+						if (m.group(2) != null) {
+							return playlist(m.group(2), b, message.getChannel());
+						} else {
+							return Errors.WRONG_USAGE;
+						}
 					}else{
-						return Errors.WRONG_USAGE;
+						return Errors.NO_PERMISSION_USER;
 					}
 				case "q":
 				case "queue":
-					if(ocarina.isInVoiceChannel()) {
-						if (m.group(2) != null) {
-							if (isUrl(m.group(2))) {
-								ocarina.loadTrack(m.group(2), true);
-								break;
-							} else if (m.group(2).equalsIgnoreCase("clear")) {
-								ocarina.getQueue().clear();
-								return "Cleared the queue!";
-							} else if (isInt(m.group(2))) {
-								showQueue(ocarina.getQueue(), message.getChannel(), Integer.parseInt(m.group(2)));
-								break;
-							} else {
-								for(Playlist p : b.getPlaylists()) {
-									if(p.getName().equalsIgnoreCase(m.group(2))){
-										ocarina.loadCustomPlaylist(p.getTracks(),true, p.getTracks().size());
+					if (canUse(b, message.getMember())) {
+						if (ocarina.isInVoiceChannel()) {
+							if (m.group(2) != null) {
+								if (isUrl(m.group(2))) {
+									ocarina.loadTrack(m.group(2), true);
+									break;
+								} else if (m.group(2).equalsIgnoreCase("clear")) {
+									ocarina.getQueue().clear();
+									return "Cleared the queue!";
+								} else if (isInt(m.group(2))) {
+									showQueue(ocarina.getQueue(), message.getChannel(), Integer.parseInt(m.group(2)));
+									break;
+								} else {
+									for (Playlist p : b.getPlaylists()) {
+										if (p.getName().equalsIgnoreCase(m.group(2))) {
+											ocarina.loadCustomPlaylist(p.getTracks(), true, p.getTracks().size());
 
-										return "Queued the `"+p.getName()+"` playlist!";
+											return "Queued the `" + p.getName() + "` playlist!";
+										}
 									}
-								}
 
-								return Errors.WRONG_USAGE;
+									return Errors.WRONG_USAGE;
+								}
+							} else {
+								showQueue(ocarina.getQueue(), message.getChannel(), 1);
+								return "";
 							}
 						} else {
-							showQueue(ocarina.getQueue(), message.getChannel(), 1);
-							return "";
+							return "I have to be connected to a voice channel in order to do that!";
 						}
 					}else{
-						return "I have to be connected to a voice channel in order to do that!";
+						return Errors.NO_PERMISSION_USER;
 					}
 				case "convert":
-					// Whatever's in the queue becomes a playlist
-					if(m.group(2) != null){
-						Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(m.group(2));
+					if (canUse(b, message.getMember())) {
+						if (ocarina.getNowPlaying() != null) {
+							if (m.group(2) != null) {
+								Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(m.group(2));
 
-						if(conv.find()) {
-							String name = conv.group(1).toLowerCase();
+								if (conv.find()) {
+									String name = conv.group(1).toLowerCase();
 
-							if(getPlaylist(name, b) == null) {
-								Playlist p = new Playlist(name);
+									if (getPlaylist(name, b) == null) {
+										Playlist p = new Playlist(name);
 
-								for(AudioTrack t : ocarina.getQueue()) {
-									if(p.getTracks().size() < 50) {
-										p.addTrack(t.getInfo().uri, t.getInfo().title);
+										p.addTrack(ocarina.getNowPlaying().getInfo().uri, ocarina.getNowPlaying().getInfo().title);
+
+										for (AudioTrack t : ocarina.getQueue()) {
+											if (p.getTracks().size() < 50) {
+												p.addTrack(t.getInfo().uri, t.getInfo().title);
+											}
+										}
+
+										b.getPlaylists().add(p);
+
+										return "Created a new playlist `" + name + "` with `" + p.getTracks().size() + "` tracks!";
+									} else {
+										return "A playlist with that name already exists on this server!";
 									}
+								} else {
+									return "Playlist names must be alphanumeric!";
 								}
-
-								b.getPlaylists().add(p);
-
-								return "Created a new playlist `"+name+"` with `"+p.getTracks().size()+"` tracks!";
 							} else {
-								return "A playlist with that name already exists on this server!";
+								return "Please enter a name for the new playlist.";
 							}
-						}else{
-							return "Playlist names must be alphanumeric!";
+						} else {
+							return Errors.TRACK_NOT_PLAYING;
 						}
 					}else{
-						return "Please enter a name for the new playlist.";
+						return Errors.NO_PERMISSION_USER;
 					}
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -196,7 +244,7 @@ public class Music implements ICommand {
 	}
 
 	private String playlist(String args, Brain b, MessageChannel c) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?:\\/\\/[./\\w\\d-_&?=*%]+)?\\s?(\\d{1,3})?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?://[./\\w\\d-_&?=*%]+)?\\s?(\\d{1,3})?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
 			String cmd = m.group(1).toLowerCase();
@@ -449,7 +497,7 @@ public class Music implements ICommand {
 	}
 
 	private boolean isUrl(String test) {
-		Matcher m = Pattern.compile("^https?:\\/\\/.+$", Pattern.CASE_INSENSITIVE).matcher(test);
+		Matcher m = Pattern.compile("^https?://.+$", Pattern.CASE_INSENSITIVE).matcher(test);
 
 		return m.find();
 	}
@@ -461,5 +509,9 @@ public class Music implements ICommand {
 		} catch (Exception ignored) {}
 
 		return false;
+	}
+
+	private boolean canUse(Brain b, Member m) {
+		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.RESET_EMOTE_STATS), m);
 	}
 }

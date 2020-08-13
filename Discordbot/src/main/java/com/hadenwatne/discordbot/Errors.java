@@ -12,6 +12,7 @@ public class Errors {
 	public static final String CHANNEL_NOT_FOUND = "I can't find the correct channel for that. _[Channel Not Found]_";
 	public static final String INCOMPLETE = "I'm gonna need a few more details. _[Incomplete Command]_";
 	public static final String SETTING_NOT_FOUND = "I couldn't find that setting. _[Not Found]_";
+	public static final String TRACK_NOT_PLAYING = "There isn't a track playing right now. _[Not Found]_";
 
 	public static String formatUsage(String error, String usage) {
 		return error+"\nGive this a try: `"+usage+"`";

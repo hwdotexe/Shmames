@@ -12,7 +12,8 @@ public enum BotSettingName {
 	ALLOW_MODIFY("Sets the role (other than Administrator) allowed to use the Modify command."),
 	ALLOW_NICKNAME("Sets the role (other than Administrator) allowed to change the bot's nickname."),
 	ALLOW_POLLS("Sets the role (other than Administrator) allowed to start and end Polls."),
-	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts.");
+	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts."),
+	MANAGE_MUSIC("Sets the role (other than Administrator) allowed to play and manage music.");
 
 	private String description;
 
