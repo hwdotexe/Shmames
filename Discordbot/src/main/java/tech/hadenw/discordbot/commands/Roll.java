@@ -26,7 +26,7 @@ public class Roll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Pattern dicePattern = Pattern.compile("(([+\\-*/]?)(\\d{1,3})?(d?(\\d{1,3}))(\\^[tk]([hl])(\\d)?)?)", Pattern.CASE_INSENSITIVE);
+		Pattern dicePattern = Pattern.compile("([+\\-*/])?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
 		Matcher cmdFormat = Pattern.compile("^([+\\-*/\\d ()d\\^tkhl]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
 		Matcher dice = dicePattern.matcher(args);
 
@@ -34,7 +34,7 @@ public class Roll implements ICommand {
 			List<String> diceOps = new ArrayList<String>();
 
 			while(dice.find()){
-				diceOps.add(dice.group(1));
+				diceOps.add(dice.group());
 			}
 
 			try {
@@ -73,16 +73,15 @@ public class Roll implements ICommand {
 			Matcher m = p.matcher(dRollString);
 
 			if(m.find()) {
-				String opGroup = m.group(2);
+				String opGroup = m.group(1);
 				String diceGroup = m.group(3);
-				String diceIndicatorGroup = m.group(4);
-				String takeHighLowGroup = m.group(7);
-				String takeHighLowCountGroup = m.group(8);
+				String takeHighLowGroup = m.group(6);
+				String takeHighLowCountGroup = m.group(7);
 
 				char operation = opGroup != null && opGroup.length() > 0 ? opGroup.charAt(0) : '+';
 				int diceToRoll = diceGroup != null ? Integer.parseInt(diceGroup) : 1;
-				boolean isDice = diceIndicatorGroup.startsWith("d");
-				int diceSizeOrFlat = Integer.parseInt(m.group(5));
+				boolean isDice = m.group(2) != null && m.group(2).endsWith("d");
+				int diceSizeOrFlat = Integer.parseInt(m.group(4));
 				char takeHighLow = takeHighLowGroup != null ? takeHighLowGroup.charAt(0) : 'a';
 				int takeHighLowCount = takeHighLowCountGroup != null ? Integer.parseInt(takeHighLowCountGroup) : 0;
 
