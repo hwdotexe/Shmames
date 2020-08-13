@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
 
-<groupId>tech.hadenw</groupId>
+<groupId>com.hadenwatne</groupId>
 <artifactId>discordbot</artifactId>
 <version>0.0.1-SNAPSHOT</version>
 <packaging>jar</packaging>
@@ -52,7 +52,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>tech.hadenw.discordbot.Shmames</mainClass>
+                        <mainClass>com.hadenwatne.discordbot.Shmames</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>

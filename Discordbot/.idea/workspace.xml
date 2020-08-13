@@ -1,10 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="8309eb34-24f5-460f-ae72-fe4d8a072244" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/listeners/ChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/listeners/ChatListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/Errors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/Errors.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/GuildOcarina.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/GuildOcarina.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/JDAAudioSendHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/JDAAudioSendHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/MinesweepGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/MinesweepGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/MusicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/MusicManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/Poll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/Poll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/Shmames.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/Shmames.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/TriggerType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/TriggerType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/AddResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/AddResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/AddTally.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/AddTally.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/AddTrigger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/AddTrigger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Blame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Blame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Choose.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Choose.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Closepoll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Closepoll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/CringeThat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/CringeThat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Dev.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Dev.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/DropResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/DropResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/DropTally.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/DropTally.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/DropTrigger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/DropTrigger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/EightBall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/EightBall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Enhance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Enhance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/FamilyCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/FamilyCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ForumWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ForumWeapon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/GIF.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/GIF.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Hangman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Hangman.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Help.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Help.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ICommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ICommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/IdiotThat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/IdiotThat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Jinping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Jinping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ListEmoteStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ListEmoteStats.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ListResponses.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ListResponses.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ListTallies.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ListTallies.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ListTriggers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ListTriggers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Minesweeper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Minesweeper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Modify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Modify.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Music.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Music.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/NewSeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/NewSeed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Nickname.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Nickname.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/PinThat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/PinThat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/React.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/React.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Report.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/ResetEmoteStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/ResetEmoteStats.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Roll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Roll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/SetTally.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/SetTally.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/SimonSays.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/SimonSays.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Startpoll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Startpoll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Thoughts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Thoughts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Timeout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Timeout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Timer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/WhatShouldIDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/WhatShouldIDo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/commands/Wiki.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/commands/Wiki.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/listeners/ChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/listeners/ChatListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/listeners/FirstJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/listeners/FirstJoinListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/listeners/ReactListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/listeners/ReactListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/BotSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/BotSetting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/BotSettingName.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/BotSettingName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/BotSettingType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/BotSettingType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/Brain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/Brain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/BrainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/BrainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/Family.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/Family.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/ForumWeaponObj.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/ForumWeaponObj.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/HangmanDictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/HangmanDictionary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/HangmanGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/HangmanGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/MotherBrain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/MotherBrain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/Playlist.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/Playlist.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/storage/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/storage/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/DailyTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/DailyTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/JTimerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/JTimerTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/JinpingTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/JinpingTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/PollTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/PollTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/ReportCooldownTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/ReportCooldownTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/TimeoutTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/TimeoutTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tech/hadenw/discordbot/tasks/TypingTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hadenwatne/discordbot/tasks/TypingTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,10 +118,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectId" id="1XECcME97HxwU6TIksLKq95lbTN" />
@@ -35,11 +130,12 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
@@ -49,7 +145,7 @@
       <recent name="tech.hadenw.discordbot.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.Discordbot">
+  <component name="RunManager" selected="Maven.Debug Discordbot">
     <configuration name="Debug Discordbot" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -64,7 +160,7 @@
                 <option value="clean" />
                 <option value="package" />
                 <option value="exec:java" />
-                <option value="-Dexec.mainClass=tech.hadenw.discordbot.Shmames" />
+                <option value="-Dexec.mainClass=com.hadenwatne.discordbot.Shmames" />
                 <option value="-Dexec.args=-debug" />
               </list>
             </option>
@@ -111,6 +207,7 @@
       <item itemvalue="Maven.Debug Discordbot" />
     </list>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -124,17 +221,29 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="552" y="236" width="1092" height="776" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595961405155">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state x="362" y="196" width="966" height="570" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597350390762">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="552" y="236" width="1092" height="776" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1595961405155" />
     <state x="3112" y="236" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400/2560.0.2560.1400@2560.0.2560.1400" timestamp="1595387377534" />
+    <state x="362" y="196" width="966" height="570" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1597350390762" />
     <state x="3112" y="236" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.0.2560.1400/0.0.2560.1400@2560.0.2560.1400" timestamp="1589826348187" />
     <state width="956" height="466" key="DebuggerActiveHint" timestamp="1597166028843">
       <screen x="0" y="0" width="2560" height="1400" />
@@ -145,58 +254,67 @@
     </state>
     <state x="987" y="370" key="FileChooserDialogImpl/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1591286393350" />
     <state x="3547" y="370" key="FileChooserDialogImpl/2560.0.2560.1400/0.0.2560.1400@2560.0.2560.1400" timestamp="1589826203738" />
-    <state width="2517" height="281" key="GridCell.Tab.0.bottom" timestamp="1597253417063">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.0.bottom" timestamp="1597350366183">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="281" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417063" />
     <state width="1337" height="306" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.0.2560.1400@2560.0.2560.1400" timestamp="1595387394340" />
+    <state width="1638" height="157" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1597350366183" />
     <state width="1877" height="215" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1588800444141" />
     <state width="1877" height="217" key="GridCell.Tab.0.bottom/1920.0.1920.1050/0.0.1920.1050@0.0.1920.1050" timestamp="1588882997639" />
     <state width="2517" height="307" key="GridCell.Tab.0.bottom/2560.0.2560.1400/0.0.2560.1400@0.0.2560.1400" timestamp="1589407712075" />
-    <state width="2517" height="281" key="GridCell.Tab.0.center" timestamp="1597253417063">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.0.center" timestamp="1597350366183">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="281" key="GridCell.Tab.0.center/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417063" />
     <state width="1337" height="306" key="GridCell.Tab.0.center/0.0.2560.1400/2560.0.2560.1400@2560.0.2560.1400" timestamp="1595387394340" />
+    <state width="1638" height="157" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1597350366183" />
     <state width="1877" height="215" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1588800444141" />
     <state width="1877" height="217" key="GridCell.Tab.0.center/1920.0.1920.1050/0.0.1920.1050@0.0.1920.1050" timestamp="1588882997639" />
     <state width="2517" height="307" key="GridCell.Tab.0.center/2560.0.2560.1400/0.0.2560.1400@0.0.2560.1400" timestamp="1589407712075" />
-    <state width="2517" height="281" key="GridCell.Tab.0.left" timestamp="1597253417063">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.0.left" timestamp="1597350366182">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="281" key="GridCell.Tab.0.left/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417063" />
     <state width="1337" height="306" key="GridCell.Tab.0.left/0.0.2560.1400/2560.0.2560.1400@2560.0.2560.1400" timestamp="1595387394340" />
+    <state width="1638" height="157" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1597350366182" />
     <state width="1877" height="215" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1588800444141" />
     <state width="1877" height="217" key="GridCell.Tab.0.left/1920.0.1920.1050/0.0.1920.1050@0.0.1920.1050" timestamp="1588882997639" />
     <state width="2517" height="307" key="GridCell.Tab.0.left/2560.0.2560.1400/0.0.2560.1400@0.0.2560.1400" timestamp="1589407712075" />
-    <state width="2517" height="281" key="GridCell.Tab.0.right" timestamp="1597253417063">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.0.right" timestamp="1597350366183">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="281" key="GridCell.Tab.0.right/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417063" />
     <state width="1337" height="306" key="GridCell.Tab.0.right/0.0.2560.1400/2560.0.2560.1400@2560.0.2560.1400" timestamp="1595387394340" />
+    <state width="1638" height="157" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1597350366183" />
     <state width="1877" height="215" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1588800444141" />
     <state width="1877" height="217" key="GridCell.Tab.0.right/1920.0.1920.1050/0.0.1920.1050@0.0.1920.1050" timestamp="1588882997639" />
     <state width="2517" height="307" key="GridCell.Tab.0.right/2560.0.2560.1400/0.0.2560.1400@0.0.2560.1400" timestamp="1589407712075" />
-    <state width="2517" height="317" key="GridCell.Tab.1.bottom" timestamp="1597253417060">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.1.bottom" timestamp="1597350365927">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="317" key="GridCell.Tab.1.bottom/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417060" />
-    <state width="2517" height="317" key="GridCell.Tab.1.center" timestamp="1597253417060">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.1.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1597350365927" />
+    <state width="1638" height="157" key="GridCell.Tab.1.center" timestamp="1597350365926">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="317" key="GridCell.Tab.1.center/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417060" />
-    <state width="2517" height="317" key="GridCell.Tab.1.left" timestamp="1597253417060">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.1.center/0.23.1680.1027@0.23.1680.1027" timestamp="1597350365926" />
+    <state width="1638" height="157" key="GridCell.Tab.1.left" timestamp="1597350365926">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="317" key="GridCell.Tab.1.left/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417060" />
-    <state width="2517" height="317" key="GridCell.Tab.1.right" timestamp="1597253417060">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.1.left/0.23.1680.1027@0.23.1680.1027" timestamp="1597350365926" />
+    <state width="1638" height="157" key="GridCell.Tab.1.right" timestamp="1597350365927">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state width="2517" height="317" key="GridCell.Tab.1.right/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1597253417060" />
-    <state x="976" y="298" width="607" height="804" key="find.popup" timestamp="1595952802383">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1638" height="157" key="GridCell.Tab.1.right/0.23.1680.1027@0.23.1680.1027" timestamp="1597350365927" />
+    <state x="641" y="242" width="574" height="590" key="find.popup" timestamp="1597350321103">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="976" y="298" width="607" height="804" key="find.popup/0.0.2560.1400/2560.0.2560.1400@0.0.2560.1400" timestamp="1595952802383" />
+    <state x="641" y="242" width="574" height="590" key="find.popup/0.23.1680.1027@0.23.1680.1027" timestamp="1597350321103" />
     <state x="3222" y="395" key="new project wizard" timestamp="1589826123108">
       <screen x="2560" y="0" width="2560" height="1400" />
     </state>

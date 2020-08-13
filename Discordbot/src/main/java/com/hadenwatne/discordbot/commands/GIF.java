@@ -1,0 +1,50 @@
+package com.hadenwatne.discordbot.commands;
+
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.Utils;
+
+public class GIF implements ICommand {
+	@Override
+	public String getDescription() {
+		return "Send an awesome, randomly-selected GIF based on a search term.";
+	}
+	
+	@Override
+	public String getUsage() {
+		return "gif <search>";
+	}
+
+	@Override
+	public String run(String args, User author, Message message) {
+		if(args.length() > 0) {
+			if(message.getChannelType() == ChannelType.TEXT){
+				if(message.getTextChannel().isNSFW()){
+					return Utils.getGIF(args, "low");
+				}
+			}
+
+			return Utils.getGIF(args, "high");
+		}
+		else {
+			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+		}
+	}
+
+	@Override
+	public String[] getAliases() {
+		return new String[] {"gif", "who is", "what is", "what are"};
+	}
+	
+	@Override
+	public String sanitize(String i) {
+		return i.replaceAll("[\\W]", "").replaceAll(" ", "%20").toLowerCase();
+	}
+	
+	@Override
+	public boolean requiresGuild() {
+		return false;
+	}
+}
