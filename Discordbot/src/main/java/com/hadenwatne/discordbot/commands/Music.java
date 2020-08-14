@@ -19,6 +19,8 @@ import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Playlist;
 
+import javax.annotation.Nullable;
+
 public class Music implements ICommand {
 	@Override
 	public String getDescription() {
@@ -28,6 +30,21 @@ public class Music implements ICommand {
 	@Override
 	public String getUsage() {
 		return "music";
+	}
+
+	@Override
+	public String[] getAliases() {
+		return new String[] {"music", "bops"};
+	}
+
+	@Override
+	public String sanitize(String i) {
+		return i;
+	}
+
+	@Override
+	public boolean requiresGuild() {
+		return true;
 	}
 
 	@Override
@@ -42,51 +59,15 @@ public class Music implements ICommand {
 			switch(mainCmd) {
 				case "play":
 					if (canUse(b, message.getMember())) {
-						if (m.group(2) != null) {
-							if (!ocarina.isInVoiceChannel()) {
-								if (message.getMember().getVoiceState() != null) {
-									VoiceChannel vchannel = message.getMember().getVoiceState().getChannel();
-
-									ocarina.connect(vchannel);
-								} else {
-									return "Please join a voice channel and run this command again.";
-								}
-							}
-
-							if (isUrl(m.group(2))) {
-								ocarina.loadTrack(m.group(2), false);
-							} else {
-								for (Playlist p : b.getPlaylists()) {
-									if (p.getName().equalsIgnoreCase(m.group(2))) {
-										List<String> playlistReversed = new ArrayList<>(p.getTracks());
-										String track = "";
-
-										if(playlistReversed.size() > 0) {
-											track = playlistReversed.get(0);
-											playlistReversed.remove(0);
-										}
-
-										Collections.reverse(playlistReversed);
-										ocarina.loadTrack(track, false);
-										ocarina.loadCustomPlaylist(playlistReversed, false, playlistReversed.size());
-
-										return "Playing the `" + p.getName() + "` playlist!";
-									}
-								}
-
-								return "No playlists were found with that name.";
-							}
-						} else {
-							return "Please enter a media URL or playlist name!";
-						}
+						return cmdPlay(b, message.getMember(), ocarina, m.group(2));
 					} else {
 						return Errors.NO_PERMISSION_USER;
 					}
-
-					break;
 				case "pause":
+					ocarina.togglePause(true);
+					break;
 				case "resume":
-					ocarina.togglePause();
+					ocarina.togglePause(false);
 					break;
 				case "skip":
 					if(ocarina.getNowPlaying() != null) {
@@ -143,92 +124,28 @@ public class Music implements ICommand {
 				case "pl":
 				case "playlist":
 					if (canUse(b, message.getMember())) {
-						if (m.group(2) != null) {
-							return playlist(m.group(2), b, message.getChannel());
-						} else {
-							return Errors.WRONG_USAGE;
-						}
+						return cmdPlaylist(b, message.getChannel(), m.group(2));
 					}else{
 						return Errors.NO_PERMISSION_USER;
 					}
 				case "q":
 				case "queue":
 					if (canUse(b, message.getMember())) {
-						if (ocarina.isInVoiceChannel()) {
-							if (m.group(2) != null) {
-								if (isUrl(m.group(2))) {
-									ocarina.loadTrack(m.group(2), true);
-									return "Added to queue!";
-								} else if (m.group(2).equalsIgnoreCase("clear")) {
-									ocarina.getQueue().clear();
-									return "Cleared the queue!";
-								} else if (isInt(m.group(2))) {
-									showQueue(ocarina.getQueue(), message.getChannel(), Integer.parseInt(m.group(2)));
-									break;
-								} else {
-									for (Playlist p : b.getPlaylists()) {
-										if (p.getName().equalsIgnoreCase(m.group(2))) {
-											ocarina.loadCustomPlaylist(p.getTracks(), true, p.getTracks().size());
-
-											return "Queued the `" + p.getName() + "` playlist!";
-										}
-									}
-
-									return Errors.WRONG_USAGE;
-								}
-							} else {
-								showQueue(ocarina.getQueue(), message.getChannel(), 1);
-								break;
-							}
-						} else {
-							return "I have to be connected to a voice channel in order to do that!";
-						}
-					}else{
+						return cmdQueue(b, message.getMember(), ocarina, message.getChannel(), m.group(2));
+					} else {
 						return Errors.NO_PERMISSION_USER;
 					}
 				case "convert":
 					if (canUse(b, message.getMember())) {
-						if (ocarina.getNowPlaying() != null) {
-							if (m.group(2) != null) {
-								Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(m.group(2));
-
-								if (conv.find()) {
-									String name = conv.group(1).toLowerCase();
-
-									if (getPlaylist(name, b) == null) {
-										Playlist p = new Playlist(name);
-
-										p.addTrack(ocarina.getNowPlaying().getInfo().uri, ocarina.getNowPlaying().getInfo().title);
-
-										for (AudioTrack t : ocarina.getQueue()) {
-											if (p.getTracks().size() < 50) {
-												p.addTrack(t.getInfo().uri, t.getInfo().title);
-											}
-										}
-
-										b.getPlaylists().add(p);
-
-										return "Created a new playlist `" + name + "` with `" + p.getTracks().size() + "` tracks!";
-									} else {
-										return "A playlist with that name already exists on this server!";
-									}
-								} else {
-									return "Playlist names must be alphanumeric!";
-								}
-							} else {
-								return "Please enter a name for the new playlist.";
-							}
-						} else {
-							return Errors.TRACK_NOT_PLAYING;
-						}
-					}else{
+						return cmdConvert(b, message.getMember(), ocarina, m.group(2));
+					} else {
 						return Errors.NO_PERMISSION_USER;
 					}
 				default:
 					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 			}
 		}else{
-			sendCommandHelp(message.getChannel());
+			sendMusicCmdHelp(message.getChannel());
 
 			return "";
 		}
@@ -236,156 +153,307 @@ public class Music implements ICommand {
 		return "";
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"music", "bops"};
-	}
-	
-	@Override
-	public String sanitize(String i) {
-		return i;
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return true;
-	}
+	private String cmdPlay(Brain b, Member m, GuildOcarina ocarina, @Nullable String args) {
+		if (args != null) {
+			if (!ocarina.isInVoiceChannel()) {
+				if (m.getVoiceState() != null) {
+					VoiceChannel vchannel = m.getVoiceState().getChannel();
 
-	private String playlist(String args, Brain b, MessageChannel c) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s?([a-z0-9]+)?\\s?(https?://[./\\w\\d-_&?=*%]+)?\\s?(\\d{1,3})?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+					ocarina.connect(vchannel);
+				} else {
+					return "Please join a voice channel and run this command again.";
+				}
+			}
 
-		if(m.find()){
-			String cmd = m.group(1).toLowerCase();
-			String listName = m.group(2) != null ? m.group(2).toLowerCase() : "";
+			if (isUrl(args)) {
+				ocarina.loadTrack(args, false);
 
-			switch(cmd) {
-				case "c":
-				case "create":
-					if(getPlaylist(listName, b) == null) {
-						Playlist newList = new Playlist(listName);
+				return "";
+			} else {
+				for (Playlist p : b.getPlaylists()) {
+					if (p.getName().equalsIgnoreCase(args)) {
+						List<String> playlistReversed = new ArrayList<>(p.getTracks());
+						String firstTrack = "";
 
-						if(m.group(3) != null) {
-							newList.addTrack(m.group(3), m.group(5));
+						if (playlistReversed.size() > 0) {
+							firstTrack = playlistReversed.get(0);
+							playlistReversed.remove(0);
 						}
 
-						b.getPlaylists().add(newList);
-						return "Playlist `"+listName+"` created!";
+						Collections.reverse(playlistReversed);
+						ocarina.loadTrack(firstTrack, false);
+						ocarina.loadCustomPlaylist(playlistReversed, false, playlistReversed.size());
+
+						return "Playing the `" + p.getName() + "` playlist!";
+					}
+				}
+
+				return "No playlists were found with that name.";
+			}
+		} else {
+			if (ocarina.isPaused()) {
+				ocarina.togglePause(false);
+
+				return "";
+			} else {
+				return "Please enter a media URL or playlist name!";
+			}
+		}
+	}
+
+	private String cmdQueue(Brain b, Member m, GuildOcarina ocarina, MessageChannel c, @Nullable String args) {
+		if (ocarina.isInVoiceChannel()) {
+			if (args != null) {
+				if (isUrl(args)) {
+					ocarina.loadTrack(args, true);
+
+					return "Added to queue!";
+				} else if (args.equalsIgnoreCase("clear")) {
+					ocarina.getQueue().clear();
+
+					return "Cleared the queue!";
+				} else if (isInt(args)) {
+					showQueue(ocarina.getQueue(), c, Integer.parseInt(args));
+
+					return "";
+				} else {
+					for (Playlist p : b.getPlaylists()) {
+						if (p.getName().equalsIgnoreCase(args)) {
+							ocarina.loadCustomPlaylist(p.getTracks(), true, p.getTracks().size());
+
+							return "Queued the `" + p.getName() + "` playlist!";
+						}
+					}
+
+					return Errors.WRONG_USAGE;
+				}
+			} else {
+				showQueue(ocarina.getQueue(), c, 1);
+
+				return "";
+			}
+		} else {
+			return "I have to be connected to a voice channel in order to do that!";
+		}
+	}
+
+	private String cmdConvert(Brain b, Member m, GuildOcarina ocarina, @Nullable String args) {
+		if (ocarina.getNowPlaying() != null) {
+			if (args != null) {
+				Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+
+				if (conv.find()) {
+					String name = conv.group(1).toLowerCase();
+
+					if (getPlaylist(name, b) == null) {
+						Playlist p = new Playlist(name);
+
+						p.addTrack(ocarina.getNowPlaying().getInfo().uri, ocarina.getNowPlaying().getInfo().title);
+
+						for (AudioTrack t : ocarina.getQueue()) {
+							if (p.getTracks().size() < 50) {
+								p.addTrack(t.getInfo().uri, t.getInfo().title);
+							}
+						}
+
+						b.getPlaylists().add(p);
+
+						return "Created a new playlist `" + name + "` with `" + p.getTracks().size() + "` tracks!";
 					} else {
 						return "A playlist with that name already exists on this server!";
 					}
-				case "a":
-				case "add":
-					if(m.group(3) != null) {
-						Playlist p = getPlaylist(listName, b);
-
-						if (p != null) {
-							if(p.getTracks().size() < 50) {
-								p.addTrack(m.group(3), m.group(5));
-								return "Added track to playlist!";
-							}else{
-								return "Playlists currently support a max of 50 tracks!";
-							}
-						} else {
-							return "That playlist doesn't exist!";
-						}
-					}else{
-						return Errors.WRONG_USAGE;
-					}
-				case "l":
-				case "list":
-					if(listName.length() > 0) {
-						Playlist pList = getPlaylist(listName, b);
-
-						if (pList != null) {
-							StringBuilder sb = new StringBuilder();
-							EmbedBuilder eBuilder = buildBasicEmbed();
-
-							for (String url : pList.getTracks()) {
-								if (sb.length() > 0) {
-									sb.append("\n");
-								}
-
-								sb.append(pList.getTracks().indexOf(url) + 1);
-								sb.append(": ");
-
-								String memo = pList.getMemo(url);
-								if(memo != null){
-									sb.append(memo);
-									sb.append(" - ");
-								}
-
-								sb.append("`");
-								sb.append(url);
-								sb.append("`");
-							}
-
-							if (sb.length() == 0) {
-								sb.append("There aren't any tracks in this playlist yet.");
-							}
-
-							eBuilder.addField("Playlist Tracks", sb.toString(), false);
-							c.sendMessage(eBuilder.build()).queue();
-
-							return "";
-						} else {
-							return "That playlist doesn't exist!";
-						}
-					}else{
-						StringBuilder sb = new StringBuilder();
-						EmbedBuilder eBuilder = buildBasicEmbed();
-
-						for(Playlist p : b.getPlaylists()) {
-							if(sb.length() > 0)
-								sb.append(", ");
-
-							sb.append("`");
-							sb.append(p.getName());
-							sb.append("`");
-						}
-
-						if (sb.length() == 0) {
-							sb.append("There aren't any playlists yet.");
-						}
-
-						eBuilder.addField("Playlists", sb.toString(), false);
-						c.sendMessage(eBuilder.build()).queue();
-
-						return "";
-					}
-				case "r":
-				case "remove":
-					if(m.group(4) != null){
-						Playlist pRemove = getPlaylist(listName, b);
-
-						if (pRemove != null) {
-							int pos = Integer.parseInt(m.group(4))-1;
-
-							if(pRemove.removeTrack(pos)){
-								return "Track removed!";
-							}else{
-								return "That item doesn't exist!";
-							}
-						} else {
-							return "That playlist doesn't exist!";
-						}
-					}else{
-						return Errors.WRONG_USAGE;
-					}
-				case "d":
-				case "delete":
-					Playlist pDelete = getPlaylist(listName, b);
-
-					if (pDelete != null) {
-						b.getPlaylists().remove(pDelete);
-						return "Playlist deleted!";
-					}else{
-						return "That playlist doesn't exist!";
-					}
-				default:
-					return Errors.COMMAND_NOT_FOUND;
+				} else {
+					return "Playlist names must be alphanumeric!";
+				}
+			} else {
+				return "Please enter a name for the new playlist.";
 			}
 		} else {
-			return Errors.WRONG_USAGE;
+			return Errors.TRACK_NOT_PLAYING;
+		}
+	}
+
+	private String cmdPlaylist(Brain b, MessageChannel c, @Nullable String args) {
+		if(args != null) {
+			Matcher m = Pattern.compile("^([a-z]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+
+			if (m.find()) {
+				String subCmd = m.group(1).toLowerCase();
+				String subArgs = m.group(2) != null ? m.group(2) : "";
+
+				switch (subCmd) {
+					case "c":
+					case "create":
+						Matcher create = Pattern.compile("^([a-z0-9_]+)\\s?(https?://[./\\w\\d-_&?=*%]+)?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+						if (create.find()) {
+							return cmdPlaylistCreate(b, create.group(1), create.group(2), create.group(3));
+						} else {
+							return Errors.WRONG_USAGE;
+						}
+					case "a":
+					case "add":
+						Matcher add = Pattern.compile("^([a-z0-9_]+)\\s(https?://[./\\w\\d-_&?=*%]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+						if (add.find()) {
+							return cmdPlaylistAdd(b, add.group(1), add.group(2), add.group(3));
+						} else {
+							return Errors.WRONG_USAGE;
+						}
+					case "l":
+					case "list":
+						Matcher list = Pattern.compile("^([a-z0-9_]+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+						if (list.find()) {
+							return cmdPlaylistList(b, list.group(1), c);
+						} else {
+							return Errors.WRONG_USAGE;
+						}
+					case "r":
+					case "remove":
+						Matcher remove = Pattern.compile("^([a-z0-9_]+)\\s(\\d{1,2})$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+						if (remove.find()) {
+							String listName = remove.group(1);
+							int position = Integer.parseInt(remove.group(2));
+							Playlist pRemove = getPlaylist(listName, b);
+
+							if (pRemove != null) {
+								if (pRemove.removeTrack(position - 1)) {
+									return "Track removed!";
+								} else {
+									return "That item doesn't exist!";
+								}
+							} else {
+								return "That playlist doesn't exist!";
+							}
+						} else {
+							return Errors.WRONG_USAGE;
+						}
+					case "d":
+					case "delete":
+						Matcher delete = Pattern.compile("^([a-z0-9_]+)$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+						if (delete.find()) {
+							String listName = delete.group(1);
+							Playlist pDelete = getPlaylist(listName, b);
+
+							if (pDelete != null) {
+								b.getPlaylists().remove(pDelete);
+								return "Playlist deleted!";
+							} else {
+								return "That playlist doesn't exist!";
+							}
+						} else {
+							return Errors.WRONG_USAGE;
+						}
+					default:
+						return Errors.COMMAND_NOT_FOUND;
+				}
+			} else {
+				return Errors.WRONG_USAGE;
+			}
+		} else {
+			sendPlaylistCmdHelp(c);
+
+			return "";
+		}
+	}
+
+	private String cmdPlaylistCreate(Brain b, String listName, @Nullable String url, @Nullable String memo) {
+		if(getPlaylist(listName, b) == null) {
+			Playlist newList = new Playlist(listName);
+
+			if(url != null) {
+				newList.addTrack(url, memo);
+			}
+
+			b.getPlaylists().add(newList);
+
+			return "Playlist `"+listName+"` created!";
+		} else {
+			return "A playlist with that name already exists on this server!";
+		}
+	}
+
+	private String cmdPlaylistAdd(Brain b, String listName, String url, @Nullable String memo) {
+		Playlist p = getPlaylist(listName, b);
+
+		if (p != null) {
+			if(p.getTracks().size() < 50) {
+				p.addTrack(url, memo);
+
+				return "Added track to playlist!";
+			}else{
+				return "Playlists currently support a max of 50 tracks!";
+			}
+		} else {
+			return Errors.NOT_FOUND;
+		}
+	}
+
+	// TODO This may not work if the value exceeds 1024 characters.
+	private String cmdPlaylistList(Brain b, String listName, MessageChannel c) {
+		if (listName != null) {
+			Playlist pList = getPlaylist(listName, b);
+
+			if (pList != null) {
+				StringBuilder sb = new StringBuilder();
+				EmbedBuilder eBuilder = buildBasicEmbed();
+
+				for(int i=0; i<pList.getTracks().size(); i++) {
+					String url = pList.getTracks().get(i);
+
+					if (sb.length() > 0) {
+						sb.append("\n");
+					}
+
+					sb.append(i + 1);
+					sb.append(": ");
+
+					String memo = pList.getMemo(url);
+					if (memo != null) {
+						sb.append(memo);
+						sb.append(" - ");
+					}
+
+					sb.append("`");
+					sb.append(url);
+					sb.append("`");
+				}
+
+				if (sb.length() == 0) {
+					sb.append("There aren't any tracks in this playlist yet.");
+				}
+
+				eBuilder.addField("Playlist Tracks", sb.toString(), false);
+				c.sendMessage(eBuilder.build()).queue();
+
+				return "";
+			} else {
+				return Errors.NOT_FOUND;
+			}
+		} else {
+			StringBuilder sb = new StringBuilder();
+			EmbedBuilder eBuilder = buildBasicEmbed();
+
+			for (Playlist p : b.getPlaylists()) {
+				if (sb.length() > 0)
+					sb.append(", ");
+
+				sb.append("`");
+				sb.append(p.getName());
+				sb.append("`");
+			}
+
+			if (sb.length() == 0) {
+				sb.append("There aren't any playlists yet.");
+			}
+
+			eBuilder.addField("Playlists", sb.toString(), false);
+			c.sendMessage(eBuilder.build()).queue();
+
+			return "";
 		}
 	}
 
@@ -457,7 +525,7 @@ public class Music implements ICommand {
 		c.sendMessage(eBuilder.build()).queue();
 	}
 
-	private void sendCommandHelp(MessageChannel c) {
+	private void sendMusicCmdHelp(MessageChannel c) {
 		StringBuilder sb = new StringBuilder();
 		EmbedBuilder eBuilder = buildBasicEmbed();
 
@@ -467,10 +535,25 @@ public class Music implements ICommand {
 		sb.append("`skip` - Skip the current track.\n");
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
-		sb.append("`playing`|`np` - See details about the current track.\n");
+		sb.append("`playing|np` - See details about the current track.\n");
 		sb.append("`(q)ueue [url|playlist|clear]` - Show the queue, add items, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
-		sb.append("`(pl)aylist <(c)reate|(a)dd|(l)ist|(r)emove|(d)elete> [name] [url] [memo]` - Manage a playlist.");
+		sb.append("`(pl)aylist` - Manage a playlist.");
+
+		eBuilder.addField("Commands", sb.toString(), false);
+
+		c.sendMessage(eBuilder.build()).queue();
+	}
+
+	private void sendPlaylistCmdHelp(MessageChannel c) {
+		StringBuilder sb = new StringBuilder();
+		EmbedBuilder eBuilder = buildBasicEmbed();
+
+		sb.append("`(c)reate <name> [track url] [track memo]` - Create a new playlist with an optional track and memo.\n");
+		sb.append("`(a)dd <playlist> <track url> [memo]` - Add a new track to a playlist with an optional memo.\n");
+		sb.append("`(l)ist [playlist]` - List all playlists or all tracks in a playlist.\n");
+		sb.append("`(r)emove <playlist> <track number>` - Remove a track from a playlist.\n");
+		sb.append("`(d)elete <playlist>` - Delete a playlist and all tracks it contains.\n");
 
 		eBuilder.addField("Commands", sb.toString(), false);
 

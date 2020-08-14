@@ -110,8 +110,12 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		}
 	}
 	
-	public void togglePause() {
-		player.setPaused(!player.isPaused());
+	public void togglePause(boolean paused) {
+		player.setPaused(paused);
+	}
+
+	public boolean isPaused() {
+		return player.isPaused();
 	}
 	
 	public void skip(){
