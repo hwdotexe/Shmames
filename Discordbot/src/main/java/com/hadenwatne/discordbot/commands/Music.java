@@ -59,7 +59,15 @@ public class Music implements ICommand {
 								for (Playlist p : b.getPlaylists()) {
 									if (p.getName().equalsIgnoreCase(m.group(2))) {
 										List<String> playlistReversed = new ArrayList<>(p.getTracks());
+										String track = "";
+
+										if(playlistReversed.size() > 0) {
+											track = playlistReversed.get(0);
+											playlistReversed.remove(0);
+										}
+
 										Collections.reverse(playlistReversed);
+										ocarina.loadTrack(track, false);
 										ocarina.loadCustomPlaylist(playlistReversed, false, playlistReversed.size());
 
 										return "Playing the `" + p.getName() + "` playlist!";
@@ -150,7 +158,7 @@ public class Music implements ICommand {
 							if (m.group(2) != null) {
 								if (isUrl(m.group(2))) {
 									ocarina.loadTrack(m.group(2), true);
-									break;
+									return "Added to queue!";
 								} else if (m.group(2).equalsIgnoreCase("clear")) {
 									ocarina.getQueue().clear();
 									return "Cleared the queue!";
@@ -170,7 +178,7 @@ public class Music implements ICommand {
 								}
 							} else {
 								showQueue(ocarina.getQueue(), message.getChannel(), 1);
-								return "";
+								break;
 							}
 						} else {
 							return "I have to be connected to a voice channel in order to do that!";
