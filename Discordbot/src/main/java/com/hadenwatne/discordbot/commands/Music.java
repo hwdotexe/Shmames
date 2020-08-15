@@ -302,10 +302,10 @@ public class Music implements ICommand {
 						}
 					case "l":
 					case "list":
-						Matcher list = Pattern.compile("^([a-z0-9_]+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+						Matcher list = Pattern.compile("^([a-z0-9_]+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
 
 						if (list.find()) {
-							return cmdPlaylistList(b, list.group(1), c);
+							return cmdPlaylistList(b, list.group(1), c, list.group(2));
 						} else {
 							return Errors.WRONG_USAGE;
 						}
@@ -392,42 +392,14 @@ public class Music implements ICommand {
 		}
 	}
 
-	// TODO This may not work if the value exceeds 1024 characters.
-	private String cmdPlaylistList(Brain b, String listName, MessageChannel c) {
+	private String cmdPlaylistList(Brain b, @Nullable String listName, MessageChannel c, @Nullable String p) {
 		if (listName != null) {
 			Playlist pList = getPlaylist(listName, b);
 
 			if (pList != null) {
-				StringBuilder sb = new StringBuilder();
-				EmbedBuilder eBuilder = buildBasicEmbed();
+				int page = p != null ? Math.max(Integer.parseInt(p), 1) : 1;
 
-				for(int i=0; i<pList.getTracks().size(); i++) {
-					String url = pList.getTracks().get(i);
-
-					if (sb.length() > 0) {
-						sb.append("\n");
-					}
-
-					sb.append(i + 1);
-					sb.append(": ");
-
-					String memo = pList.getMemo(url);
-					if (memo != null) {
-						sb.append(memo);
-						sb.append(" - ");
-					}
-
-					sb.append("`");
-					sb.append(url);
-					sb.append("`");
-				}
-
-				if (sb.length() == 0) {
-					sb.append("There aren't any tracks in this playlist yet.");
-				}
-
-				eBuilder.addField("Playlist Tracks", sb.toString(), false);
-				c.sendMessage(eBuilder.build()).queue();
+				showList(pList, c, page);
 
 				return "";
 			} else {
@@ -437,12 +409,12 @@ public class Music implements ICommand {
 			StringBuilder sb = new StringBuilder();
 			EmbedBuilder eBuilder = buildBasicEmbed();
 
-			for (Playlist p : b.getPlaylists()) {
+			for (Playlist pl : b.getPlaylists()) {
 				if (sb.length() > 0)
 					sb.append(", ");
 
 				sb.append("`");
-				sb.append(p.getName());
+				sb.append(pl.getName());
 				sb.append("`");
 			}
 
@@ -521,6 +493,57 @@ public class Music implements ICommand {
 		}
 
 		eBuilder.addField("Up Next", sb.toString(), false);
+
+		c.sendMessage(eBuilder.build()).queue();
+	}
+
+	private void showList(Playlist playlist, MessageChannel c, int page) {
+		// Build the page.
+		StringBuilder sb = new StringBuilder();
+		page = Math.max(page, 1)-1;
+		int perPage = 7;
+		int totalPages = (int)Math.ceil(playlist.getTracks().size()/(double)perPage);
+
+		for(int i=(page*perPage); i<(page*perPage)+perPage; i++) {
+			if(playlist.getTracks().size() > i) {
+				if(sb.length() > 0) {
+					sb.append("\n");
+				}
+
+				sb.append(i + 1);
+				sb.append(": ");
+
+				String url = playlist.getTracks().get(i);
+				String memo = playlist.getMemo(url);
+
+				if (memo != null && memo.length() > 0) {
+					sb.append(memo);
+					sb.append(" - ");
+				}
+
+				sb.append("`");
+				sb.append(url);
+				sb.append("`");
+			}
+		}
+
+		EmbedBuilder eBuilder = buildBasicEmbed();
+
+		if(sb.length() == 0) {
+			if(page == 0) {
+				sb.append("There are no tracks in that playlist.");
+			} else {
+				sb.append("There are no tracks in that playlist on this page.");
+			}
+		}
+
+		if ((page+1) > totalPages) {
+			eBuilder.setTitle("Playlist \""+playlist.getName()+"\"");
+		} else {
+			eBuilder.setTitle("Playlist \""+playlist.getName()+"\" (page "+(page+1)+" of "+totalPages+")");
+		}
+
+		eBuilder.addField("Tracks", sb.toString(), false);
 
 		c.sendMessage(eBuilder.build()).queue();
 	}
