@@ -20,18 +20,15 @@ import javax.annotation.Nullable;
 
 // A Guild-specific object created when music has been requested.
 // One per server.
-public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHandler  {
+public class GuildOcarina extends AudioEventAdapter {
 
 	private MusicManager musicManager;
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
 	private TextChannel msgChannel;
+	private GuildOcarinaResultHandler loader;
 	private boolean isLoop;
-	private boolean queueNextTrack;
-	private boolean isLoadingPlaylist;
-	private int loadingPlaylistSize;
-	private int loadingPlaylistCounter;
 	
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
@@ -39,11 +36,8 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		player.addListener(this);
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
+		loader = new GuildOcarinaResultHandler(this);
 		isLoop = false;
-		queueNextTrack = false;
-		isLoadingPlaylist = false;
-		loadingPlaylistSize = 0;
-		loadingPlaylistCounter = 0;
 		
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
@@ -94,20 +88,17 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	}
 
 	public void loadTrack(String url, boolean addToQueue) {
-		queueNextTrack = addToQueue;
-		isLoadingPlaylist = false;
-		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, this);
+		loader.prepareLoadingTrack(addToQueue);
+		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, loader);
 	}
 
 	public void loadCustomPlaylist(List<String> urls, boolean addToQueue) {
-		queueNextTrack = addToQueue;
-		isLoadingPlaylist = true;
-		loadingPlaylistSize = urls.size();
-		loadingPlaylistCounter = 0;
 		long order = System.currentTimeMillis();
 
+		loader.prepareLoadingPlaylist(addToQueue);
+
 		for(String url : urls) {
-			Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, this);
+			Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, loader);
 		}
 	}
 	
@@ -127,67 +118,11 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			stop();
 		}
 	}
-	
-	//
-	//AudioLoadResultHandler
-	//
 
-	@Override
-	public void trackLoaded(AudioTrack track) {
-		if(queueNextTrack){
-			queue.add(track);
-		} else {
-			queue.add(0, track);
+	public void sendMessageToChannel(String msg) {
+		if(msg != null && msg.length() > 0) {
+			msgChannel.sendMessage(msg).queue();
 		}
-
-		if(isLoadingPlaylist) {
-			loadingPlaylistCounter++;
-
-			if(loadingPlaylistCounter == loadingPlaylistSize) {
-				if(!queueNextTrack) {
-					this.skip();
-				}
-			}
-		}else{
-			if(!queueNextTrack) {
-				this.skip();
-			}
-		}
-	}
-
-	@Override
-	public void playlistLoaded(AudioPlaylist playlist) {
-		if(queueNextTrack){
-			queue.addAll(playlist.getTracks());
-		} else {
-			queue.addAll(0,playlist.getTracks());
-		}
-
-		if(isLoadingPlaylist) {
-			loadingPlaylistCounter++;
-
-			if(loadingPlaylistCounter == loadingPlaylistSize) {
-				if(!queueNextTrack) {
-					this.skip();
-				}
-			}
-		}else{
-			if(!queueNextTrack) {
-				this.skip();
-			}
-		}
-	}
-
-	@Override
-	public void noMatches() {
-		//channel.sendMessage("No matches!").queue();
-		msgChannel.sendMessage("A track was queued, but returned 0 matches.").queue();
-	}
-
-	@Override
-	public void loadFailed(FriendlyException throwable) {
-		msgChannel.sendMessage("Loading failed for a track.\n> "+throwable.getMessage()).queue();
-		throwable.printStackTrace();
 	}
 	
 	//
