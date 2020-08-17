@@ -153,6 +153,7 @@ public class Music implements ICommand {
 		return "";
 	}
 
+	// TODO check if user is in voice!
 	private String cmdPlay(Brain b, Member m, GuildOcarina ocarina, @Nullable String args) {
 		if (args != null) {
 			if (!ocarina.isInVoiceChannel()) {
@@ -180,9 +181,12 @@ public class Music implements ICommand {
 							playlistReversed.remove(0);
 						}
 
-						Collections.reverse(playlistReversed);
 						ocarina.loadTrack(firstTrack, false);
-						ocarina.loadCustomPlaylist(playlistReversed, false, playlistReversed.size());
+
+						if (playlistReversed.size() > 0) {
+							Collections.reverse(playlistReversed);
+							ocarina.loadCustomPlaylist(playlistReversed, false);
+						}
 
 						return "Playing the `" + p.getName() + "` playlist!";
 					}
@@ -219,7 +223,7 @@ public class Music implements ICommand {
 				} else {
 					for (Playlist p : b.getPlaylists()) {
 						if (p.getName().equalsIgnoreCase(args)) {
-							ocarina.loadCustomPlaylist(p.getTracks(), true, p.getTracks().size());
+							ocarina.loadCustomPlaylist(p.getTracks(), true);
 
 							return "Queued the `" + p.getName() + "` playlist!";
 						}

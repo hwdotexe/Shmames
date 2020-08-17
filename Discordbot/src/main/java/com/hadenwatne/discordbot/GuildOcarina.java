@@ -98,10 +98,10 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, this);
 	}
 
-	public void loadCustomPlaylist(List<String> urls, boolean addToQueue, int playlistLength) {
+	public void loadCustomPlaylist(List<String> urls, boolean addToQueue) {
 		queueNextTrack = addToQueue;
 		isLoadingPlaylist = true;
-		loadingPlaylistSize = playlistLength;
+		loadingPlaylistSize = urls.size();
 		loadingPlaylistCounter = 0;
 		long order = System.currentTimeMillis();
 
@@ -162,8 +162,18 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 			queue.addAll(0,playlist.getTracks());
 		}
 
-		if(this.player.getPlayingTrack() == null) {
-			this.skip();
+		if(isLoadingPlaylist) {
+			loadingPlaylistCounter++;
+
+			if(loadingPlaylistCounter == loadingPlaylistSize) {
+				if(!queueNextTrack) {
+					this.skip();
+				}
+			}
+		}else{
+			if(!queueNextTrack) {
+				this.skip();
+			}
 		}
 	}
 
