@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -25,6 +26,7 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
+	private TextChannel msgChannel;
 	private boolean isLoop;
 	private boolean queueNextTrack;
 	private boolean isLoadingPlaylist;
@@ -58,9 +60,8 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 		return queue;
 	}
 	
-	public void connect(VoiceChannel vc) {
-		this.stop();
-		
+	public void connect(VoiceChannel vc, TextChannel ch) {
+		msgChannel = ch;
 		manager.openAudioConnection(vc);
 	}
 	
@@ -180,13 +181,13 @@ public class GuildOcarina extends AudioEventAdapter implements AudioLoadResultHa
 	@Override
 	public void noMatches() {
 		//channel.sendMessage("No matches!").queue();
-		System.out.println("No matches");
+		msgChannel.sendMessage("A track was queued, but returned 0 matches.").queue();
 	}
 
 	@Override
 	public void loadFailed(FriendlyException throwable) {
-		//channel.sendMessage("Everything Exploded:\n"+throwable.getMessage()).queue();
-		System.out.println("Load failed");
+		msgChannel.sendMessage("Loading failed for a track.\n> "+throwable.getMessage()).queue();
+		throwable.printStackTrace();
 	}
 	
 	//

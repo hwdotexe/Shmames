@@ -59,7 +59,7 @@ public class Music implements ICommand {
 			switch(mainCmd) {
 				case "play":
 					if (canUse(b, message.getMember())) {
-						return cmdPlay(b, message.getMember(), ocarina, m.group(2));
+						return cmdPlay(b, message.getMember(), message.getTextChannel(), ocarina, m.group(2));
 					} else {
 						return Errors.NO_PERMISSION_USER;
 					}
@@ -154,13 +154,13 @@ public class Music implements ICommand {
 	}
 
 	// TODO check if user is in voice!
-	private String cmdPlay(Brain b, Member m, GuildOcarina ocarina, @Nullable String args) {
+	private String cmdPlay(Brain b, Member m, TextChannel c, GuildOcarina ocarina, @Nullable String args) {
 		if (args != null) {
 			if (!ocarina.isInVoiceChannel()) {
 				if (m.getVoiceState() != null) {
 					VoiceChannel vchannel = m.getVoiceState().getChannel();
 
-					ocarina.connect(vchannel);
+					ocarina.connect(vchannel, c);
 				} else {
 					return "Please join a voice channel and run this command again.";
 				}
@@ -563,7 +563,7 @@ public class Music implements ICommand {
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop` - Toggle track looping.\n");
 		sb.append("`playing|np` - See details about the current track.\n");
-		sb.append("`(q)ueue [url|playlist|clear]` - Show the queue, add items, or clear it.\n");
+		sb.append("`(q)ueue [url|playlist|clear|page]` - Show the queue, add items, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
 		sb.append("`(pl)aylist` - Manage a playlist.");
 
@@ -578,7 +578,7 @@ public class Music implements ICommand {
 
 		sb.append("`(c)reate <name> [track url] [track memo]` - Create a new playlist with an optional track and memo.\n");
 		sb.append("`(a)dd <playlist> <track url> [memo]` - Add a new track to a playlist with an optional memo.\n");
-		sb.append("`(l)ist [playlist]` - List all playlists or all tracks in a playlist.\n");
+		sb.append("`(l)ist [playlist] [page]` - List all playlists or all tracks in a playlist.\n");
 		sb.append("`(r)emove <playlist> <track number>` - Remove a track from a playlist.\n");
 		sb.append("`(d)elete <playlist>` - Delete a playlist and all tracks it contains.\n");
 
