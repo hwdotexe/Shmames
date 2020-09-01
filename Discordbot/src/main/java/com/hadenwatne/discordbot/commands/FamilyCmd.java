@@ -73,10 +73,14 @@ public class FamilyCmd implements ICommand {
 
 						for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
 							if(f.getFamilyOwner()==author.getIdLong() && f.getFamName().equalsIgnoreCase(arg)){
-								author.openPrivateChannel().queue((c) -> c.sendMessage("**Join Code for "+f.getFamName()+"**\n" +
-										"`"+f.getNewJoinCode()+"`\n" +
-										"_Use this one-time code to join a server to the Family._").queue());
-								return "Sent a new Join Code to your DMs!";
+								if(f.getMemberGuilds().size() < 7) {
+									author.openPrivateChannel().queue((c) -> c.sendMessage("**Join Code for " + f.getFamName() + "**\n" +
+											"`" + f.getNewJoinCode() + "`\n" +
+											"_Use this one-time code to join a server to the Family._").queue());
+									return "Sent a new Join Code to your DMs!";
+								} else {
+									return "Families have a maximum of 7 servers. I can't add any more to `"+f.getFamName()+"`!";
+								}
 							}
 
 							if(f.validateCode(arg)){
