@@ -24,7 +24,7 @@ public class ForumWeapon implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "fw [create|update|remove|list|search] [weapon name] [weapon link]";
+		return "fw [create|update|remove|list|search] [weapon name] [weapon alias] [weapon link]";
 	}
 
 	@Override
