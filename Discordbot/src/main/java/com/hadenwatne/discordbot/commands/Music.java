@@ -156,7 +156,7 @@ public class Music implements ICommand {
 	private String cmdPlay(Brain b, Member m, TextChannel c, GuildOcarina ocarina, @Nullable String args) {
 		if (args != null) {
 			if (!ocarina.isInVoiceChannel()) {
-				if (m.getVoiceState() != null) {
+				if (m.getVoiceState() != null && m.getVoiceState().inVoiceChannel()) {
 					VoiceChannel vchannel = m.getVoiceState().getChannel();
 
 					ocarina.connect(vchannel, c);
@@ -168,7 +168,7 @@ public class Music implements ICommand {
 			if (isUrl(args)) {
 				ocarina.loadTrack(args, false);
 
-				return "";
+				return "Playing!";
 			} else {
 				for (Playlist p : b.getPlaylists()) {
 					if (p.getName().equalsIgnoreCase(args)) {

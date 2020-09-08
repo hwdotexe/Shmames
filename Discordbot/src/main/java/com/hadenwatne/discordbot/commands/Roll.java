@@ -14,12 +14,12 @@ import com.hadenwatne.discordbot.Utils;
 public class Roll implements ICommand {
 	@Override
 	public String getDescription() {
-		return "Roll some dice! Try `roll a d20`, or `roll 2d8+1d4`!";
+		return "Roll some dice!\n1. Use `roll 1d20` to roll a 20-sided die.\n2. `^kh3` will keep the highest 3 rolls.\n3. `^kl` will keep the lowest roll.\n4. String together several rolls and modifiers: `1d20+4d6^kh3*2`\n**Each operation is done to the result of the previous.**";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "roll a d<#>[+#]";
+		return "roll a d# [+|-|*|/#[d#]]";
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class Roll implements ICommand {
 
 			return resultMessage;
 		}else{
-			return "Try `roll a d20`!";
+			return "Try `roll a d20`, or use `help roll` for more details!";
 		}
 	}
 

@@ -30,6 +30,9 @@ public class AddTrigger implements ICommand {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newtrigger = m.group(2);
 			String nttype = m.group(1);
+
+			// Easter egg: "ronald" -> "hate"
+			nttype = nttype.toLowerCase().equals("ronald") ? "HATE" : nttype;
 			
 			if (!b.getTriggers().keySet().contains(newtrigger)) {
 				if (TriggerType.byName(nttype) != null) {

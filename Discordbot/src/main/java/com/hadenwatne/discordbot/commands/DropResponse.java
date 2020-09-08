@@ -32,6 +32,9 @@ public class DropResponse implements ICommand {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			int rNum = Integer.parseInt(m.group(2));
 			String nrtype = m.group(1);
+
+			// Easter egg: "ronald" -> "hate"
+			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
 	
 			if (TriggerType.byName(nrtype) != null) {
 				List<Response> responses = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(nrtype));

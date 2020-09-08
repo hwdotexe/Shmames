@@ -29,35 +29,39 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(list)|(search)|(\\w{3,})) ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(destroy)|(list)|(search)|(\\w{3,})) ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()) {
 			String nameOrOp = m.group(1).toLowerCase();
-			String optFWName = m.group(8) != null ?  m.group(8).toLowerCase() : null;
-			String optURL = m.group(9) != null ?  m.group(9).toLowerCase() : null;
+			String optFWName = m.group(9) != null ?  m.group(9).toLowerCase() : null;
+			String optURL = m.group(10) != null ?  m.group(10).toLowerCase() : null;
 
 			switch(nameOrOp) {
 				case "create":
-					if(getFWCount(message.getGuild().getId()) < 100) {
-						if (optFWName != null) {
-							if(optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")){
-								return "Sorry, you can't create a Forum Weapon with that name!";
-							}
+					if(optURL != null) {
+						if (getFWCount(message.getGuild().getId()) < 100) {
+							if (optFWName != null) {
+								if (optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")) {
+									return "Sorry, you can't create a Forum Weapon with that name!";
+								}
 
-							if (findFW(optFWName, message.getGuild().getId()) == null) {
-								ForumWeaponObj nfw = new ForumWeaponObj(optFWName, m.group(9), message.getGuild().getId());
+								if (findFW(optFWName, message.getGuild().getId()) == null) {
+									ForumWeaponObj nfw = new ForumWeaponObj(optFWName, optURL, message.getGuild().getId());
 
-								Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().add(nfw);
+									Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().add(nfw);
 
-								return "Created new forum weapon: **" + optFWName + "**";
+									return "Created new forum weapon: **" + optFWName + "**";
+								} else {
+									return "An item with that name already exists!";
+								}
 							} else {
-								return "An item with that name already exists!";
+								return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 							}
 						} else {
-							return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+							return "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more.";
 						}
 					}else{
-						return "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more.";
+						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 					}
 				case "update":
 					if(optFWName != null && optURL != null) {
@@ -77,6 +81,7 @@ public class ForumWeapon implements ICommand {
 					} else {
 						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 					}
+				case "destroy":
 				case "remove":
 					if(optFWName != null) {
 						ForumWeaponObj fwr = findFW(optFWName, message.getGuild().getId());

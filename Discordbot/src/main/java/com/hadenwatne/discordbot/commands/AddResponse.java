@@ -31,6 +31,9 @@ public class AddResponse implements ICommand {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newresp = m.group(2);
 			String nrtype = m.group(1);
+
+			// Easter egg: "ronald" -> "hate"
+			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
 	
 			if (TriggerType.byName(nrtype) != null) {
 				b.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
