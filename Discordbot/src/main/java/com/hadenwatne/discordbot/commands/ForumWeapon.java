@@ -29,12 +29,13 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(destroy)|(list)|(search)|(\\w{3,})) ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(destroy)|(list)|(search)|(alias)|(\\w{3,})) ?(\\w{3,})? ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()) {
 			String nameOrOp = m.group(1).toLowerCase();
-			String optFWName = m.group(9) != null ?  m.group(9).toLowerCase() : null;
-			String optURL = m.group(10) != null ?  m.group(10).toLowerCase() : null;
+			String optFWName = m.group(10) != null ?  m.group(10).toLowerCase() : null;
+			String optFWAlias = m.group(11) != null ?  m.group(11).toLowerCase() : null;
+			String optURL = m.group(12) != null ?  m.group(12).toLowerCase() : null;
 
 			switch(nameOrOp) {
 				case "create":
@@ -97,7 +98,7 @@ public class ForumWeapon implements ICommand {
 						} else {
 							return Errors.NOT_FOUND;
 						}
-					}else {
+					} else {
 						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 					}
 				case "list":
@@ -159,6 +160,30 @@ public class ForumWeapon implements ICommand {
 					}else{
 						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 					}
+				case "alias":
+					if(optFWName != null && optFWAlias != null) {
+						ForumWeaponObj fwa = findFW(optFWName, message.getGuild().getId());
+
+						if(fwa != null) {
+							if(!fwa.getAliases().contains(optFWAlias)) {
+								ForumWeaponObj fwother = findFW(optFWAlias, message.getGuild().getId());
+
+								if(fwother == null) {
+									fwa.getAliases().add(optFWAlias);
+
+									return "Alias added!";
+								}else{
+									return "A weapon with that name already exists!";
+								}
+							}else{
+								return "That weapon already has that alias!";
+							}
+						}else{
+							return Errors.NOT_FOUND;
+						}
+					}else{
+						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+					}
 				default:
 					// Try to send the weapon
 					ForumWeaponObj fws = findFW(nameOrOp, message.getGuild().getId());
@@ -195,7 +220,7 @@ public class ForumWeapon implements ICommand {
 	private ForumWeaponObj findFW(String name, String guildID) {
 		// Check local server.
 		for(ForumWeaponObj fw : Shmames.getBrains().getBrain(guildID).getForumWeapons()) {
-			if(fw.getItemName().equals(name)) {
+			if(fw.getItemName().equals(name) || fw.getAliases().contains(name)) {
 				return fw;
 			}
 		}
@@ -210,7 +235,7 @@ public class ForumWeapon implements ICommand {
 						Brain b = Shmames.getBrains().getBrain(Long.toString(gid));
 
 						for(ForumWeaponObj fw : b.getForumWeapons()) {
-							if(fw.getItemName().equals(name)) {
+							if(fw.getItemName().equals(name) || fw.getAliases().contains(name)) {
 								return fw;
 							}
 						}
