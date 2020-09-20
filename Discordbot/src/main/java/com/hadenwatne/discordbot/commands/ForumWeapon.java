@@ -48,10 +48,11 @@ public class ForumWeapon implements ICommand {
 
 								if (findFW(optFWName, message.getGuild().getId()) == null) {
 									ForumWeaponObj nfw = new ForumWeaponObj(optFWName, optURL, message.getGuild().getId());
+									ForumWeaponObj existingUrl = findFWByURL(optURL, message.getGuild().getId());
 
 									Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().add(nfw);
 
-									return "Created new forum weapon: **" + optFWName + "**";
+									return "Created new forum weapon: **" + optFWName + "**" + (existingUrl != null ? "\n> :warning: Found existing ForumWeapon with that link: **"+existingUrl.getItemName()+"**" : "");
 								} else {
 									return "An item with that name already exists!";
 								}
@@ -244,6 +245,36 @@ public class ForumWeapon implements ICommand {
 			}
 		}
 		
+		return null;
+	}
+
+	private ForumWeaponObj findFWByURL(String url, String guildID) {
+		// Check local server.
+		for(ForumWeaponObj fw : Shmames.getBrains().getBrain(guildID).getForumWeapons()) {
+			if(fw.getItemLink().equals(url)) {
+				return fw;
+			}
+		}
+
+		// Check other Family servers.
+		for(String fid : Shmames.getBrains().getBrain(guildID).getFamilies()){
+			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+
+			if(f != null){
+				for(long gid : f.getMemberGuilds()){
+					if(!Long.toString(gid).equals(guildID)){
+						Brain b = Shmames.getBrains().getBrain(Long.toString(gid));
+
+						for(ForumWeaponObj fw : b.getForumWeapons()) {
+							if(fw.getItemLink().equals(url)) {
+								return fw;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return null;
 	}
 

@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.BotSettingName;
+import com.hadenwatne.discordbot.storage.*;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,8 +16,6 @@ import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.GuildOcarina;
 import com.hadenwatne.discordbot.Shmames;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Playlist;
 
 import javax.annotation.Nullable;
 
@@ -170,15 +168,15 @@ public class Music implements ICommand {
 
 				return "Playing!";
 			} else {
-				for (Playlist p : b.getPlaylists()) {
-					if (p.getName().equalsIgnoreCase(args)) {
-						ocarina.loadCustomPlaylist(p.getTracks(), false);
+				Playlist pl = findPlaylist(args, b);
 
-						return "Playing the `" + p.getName() + "` playlist!";
-					}
+				if(pl != null) {
+					ocarina.loadCustomPlaylist(pl.getTracks(), false);
+
+					return "Playing the `" + pl.getName() + "` playlist!";
+				} else {
+					return "No playlists were found with that name.";
 				}
-
-				return "No playlists were found with that name.";
 			}
 		} else {
 			if (ocarina.isPaused()) {
@@ -207,15 +205,15 @@ public class Music implements ICommand {
 
 					return "";
 				} else {
-					for (Playlist p : b.getPlaylists()) {
-						if (p.getName().equalsIgnoreCase(args)) {
-							ocarina.loadCustomPlaylist(p.getTracks(), true);
+					Playlist pl = findPlaylist(args, b);
 
-							return "Queued the `" + p.getName() + "` playlist!";
-						}
+					if(pl != null) {
+						ocarina.loadCustomPlaylist(pl.getTracks(), true);
+
+						return "Queued the `" + pl.getName() + "` playlist!";
+					} else {
+						return "No playlists were found with that name.";
 					}
-
-					return Errors.WRONG_USAGE;
 				}
 			} else {
 				showQueue(ocarina.getQueue(), c, 1);
@@ -383,40 +381,96 @@ public class Music implements ICommand {
 	}
 
 	private String cmdPlaylistList(Brain b, @Nullable String listName, MessageChannel c, @Nullable String p) {
-		if (listName != null) {
-			Playlist pList = getPlaylist(listName, b);
+		if(listName != null) {
+			if(listName.equalsIgnoreCase("all")) {
+				// List families' playlists
+				StringBuilder sb = new StringBuilder();
+				EmbedBuilder eBuilder = buildBasicEmbed();
 
-			if (pList != null) {
-				int page = p != null ? Math.max(Integer.parseInt(p), 1) : 1;
+				// Add this server's to the embed
+				for (Playlist pl : b.getPlaylists()) {
+					if (sb.length() > 0)
+						sb.append(", ");
 
-				showList(pList, c, page);
+					sb.append("`");
+					sb.append(pl.getName());
+					sb.append("`");
+				}
+
+				if (sb.length() == 0) {
+					sb.append("There aren't any playlists yet.");
+				}
+
+				eBuilder.addField(Shmames.getJDA().getGuildById(b.getGuildID()).getName(), sb.toString(), false);
+
+				// Then add each server in our family's playlists
+				for(String fid : b.getFamilies()) {
+					Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+
+					if(f != null){
+						for(long gid : f.getMemberGuilds()){
+							if(!Long.toString(gid).equals(b.getGuildID())){
+								Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
+								StringBuilder obsb = new StringBuilder();
+
+								for (Playlist pl : ob.getPlaylists()) {
+									if (obsb.length() > 0)
+										obsb.append(", ");
+
+									obsb.append("`");
+									obsb.append(pl.getName());
+									obsb.append("`");
+								}
+
+								if (obsb.length() == 0) {
+									obsb.append("There aren't any playlists yet.");
+								}
+
+								eBuilder.addField(Shmames.getJDA().getGuildById(ob.getGuildID()).getName(), obsb.toString(), false);
+							}
+						}
+					}
+				}
+
+				c.sendMessage(eBuilder.build()).queue();
 
 				return "";
-			} else {
-				return Errors.NOT_FOUND;
+			}else{
+				Playlist pList = getPlaylist(listName, b);
+
+				if (pList != null) {
+					int page = p != null ? Math.max(Integer.parseInt(p), 1) : 1;
+
+					showList(pList, c, page);
+
+					return "";
+				} else {
+					return Errors.NOT_FOUND;
+				}
 			}
-		} else {
-			StringBuilder sb = new StringBuilder();
-			EmbedBuilder eBuilder = buildBasicEmbed();
-
-			for (Playlist pl : b.getPlaylists()) {
-				if (sb.length() > 0)
-					sb.append(", ");
-
-				sb.append("`");
-				sb.append(pl.getName());
-				sb.append("`");
-			}
-
-			if (sb.length() == 0) {
-				sb.append("There aren't any playlists yet.");
-			}
-
-			eBuilder.addField("Playlists", sb.toString(), false);
-			c.sendMessage(eBuilder.build()).queue();
-
-			return "";
 		}
+
+		// Just list out this server's playlists
+		StringBuilder sb = new StringBuilder();
+		EmbedBuilder eBuilder = buildBasicEmbed();
+
+		for (Playlist pl : b.getPlaylists()) {
+			if (sb.length() > 0)
+				sb.append(", ");
+
+			sb.append("`");
+			sb.append(pl.getName());
+			sb.append("`");
+		}
+
+		if (sb.length() == 0) {
+			sb.append("There aren't any playlists yet.");
+		}
+
+		eBuilder.addField("Playlists", sb.toString(), false);
+		c.sendMessage(eBuilder.build()).queue();
+
+		return "";
 	}
 
 	private Playlist getPlaylist(String name, Brain b) {
@@ -564,7 +618,7 @@ public class Music implements ICommand {
 
 		sb.append("`(c)reate <name> [track url] [track memo]` - Create a new playlist with an optional track and memo.\n");
 		sb.append("`(a)dd <playlist> <track url> [memo]` - Add a new track to a playlist with an optional memo.\n");
-		sb.append("`(l)ist [playlist] [page]` - List all playlists or all tracks in a playlist.\n");
+		sb.append("`(l)ist [playlist|all] [page]` - List all playlists or all tracks in a playlist.\n");
 		sb.append("`(r)emove <playlist> <track number>` - Remove a track from a playlist.\n");
 		sb.append("`(d)elete <playlist>` - Delete a playlist and all tracks it contains.\n");
 
@@ -617,5 +671,35 @@ public class Music implements ICommand {
 
 	private boolean canUse(Brain b, Member m) {
 		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.RESET_EMOTE_STATS), m);
+	}
+
+	private Playlist findPlaylist(String name, Brain b) {
+		// Check local server.
+		for(Playlist pl : b.getPlaylists()) {
+			if(pl.getName().equalsIgnoreCase(name)) {
+				return pl;
+			}
+		}
+
+		// Check other Family servers.
+		for(String fid : b.getFamilies()){
+			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+
+			if(f != null){
+				for(long gid : f.getMemberGuilds()){
+					if(!Long.toString(gid).equals(b.getGuildID())){
+						Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
+
+						for(Playlist pl : ob.getPlaylists()) {
+							if(pl.getName().equalsIgnoreCase(name)) {
+								return pl;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

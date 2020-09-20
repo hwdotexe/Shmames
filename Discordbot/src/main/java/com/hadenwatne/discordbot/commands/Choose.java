@@ -22,7 +22,7 @@ public class Choose implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(.{1,}) or (.{1,})$").matcher(args);
+		Matcher m = Pattern.compile("^(.{1,}) or (.{1,})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			int mutator = Utils.getRandom(50);

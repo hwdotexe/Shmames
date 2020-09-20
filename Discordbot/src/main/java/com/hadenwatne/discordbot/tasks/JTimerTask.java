@@ -77,7 +77,7 @@ public class JTimerTask {
 			String m = ":alarm_clock: (" + userMention + "): The timer you set is finished!";
 
 			if (message.length() > 0)
-				m = m + "\n_" + message + "_";
+				m = m + "\n> " + message;
 
 			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
 

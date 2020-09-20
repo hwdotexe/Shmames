@@ -240,7 +240,7 @@ public class Roll implements ICommand {
 				sb.append("~~");
 			}
 
-			if(roll == toBold){
+			if(roll == toBold || (toBold == 20 && roll == 1)){
 				sb.append("**");
 				sb.append(roll);
 				sb.append("**");

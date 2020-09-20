@@ -69,7 +69,7 @@ public class GuildOcarinaResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void loadFailed(FriendlyException throwable) {
-        ocarina.sendMessageToChannel("Loading failed for a track.\n> "+throwable.getMessage());
+        ocarina.sendMessageToChannel("Loading failed for a track.");
         throwable.printStackTrace();
     }
 }
