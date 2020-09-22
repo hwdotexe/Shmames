@@ -365,4 +365,37 @@ public class Utils {
 
 		return list.toString();
 	}
+
+	/**
+	 * Splits a string into multiple strings on the given length, taking care to split on whitespaces.
+	 * @param s The string to split.
+	 * @param interval The number of characters to split on.
+	 * @return An array of split strings.
+	 */
+	public static String[] splitString(String s, int interval) {
+		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
+		String[] result = new String[breaks];
+
+		if(s.length() > interval) {
+			int lastIndex = 0;
+			for (int i = 0; i < breaks; i++) {
+
+				String sub = s.length()>= lastIndex+interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
+
+				if (sub.charAt(sub.length()-1) == ' ' || sub.length() < interval) {
+					result[i] = sub;
+					lastIndex += interval;
+				} else {
+					int lastSpace = sub.lastIndexOf(" ");
+
+					result[i] = sub.substring(0, lastSpace);
+					lastIndex = s.indexOf(result[i])+result[i].length();
+				}
+			}
+		}else{
+			result[0] = s;
+		}
+
+		return result;
+	}
 }

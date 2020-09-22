@@ -27,7 +27,6 @@ public class GuildOcarina extends AudioEventAdapter {
 	private TextChannel msgChannel;
 	private GuildOcarinaResultHandler loader;
 	private boolean isLoop;
-	private int trackErrorCount;
 	
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
@@ -37,7 +36,6 @@ public class GuildOcarina extends AudioEventAdapter {
 		queue = new ArrayList<AudioTrack>();
 		loader = new GuildOcarinaResultHandler(this);
 		isLoop = false;
-		trackErrorCount = 0;
 		
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
@@ -114,7 +112,6 @@ public class GuildOcarina extends AudioEventAdapter {
 		if(queue.size()>0) {
 			player.playTrack(queue.get(0));
 			queue.remove(0);
-			trackErrorCount = 0;
 		} else {
 			stop();
 		}
@@ -172,21 +169,4 @@ public class GuildOcarina extends AudioEventAdapter {
 		// Audio track has been unable to provide us any audio, might want to just start a new track
 		System.out.println("Track stuck");
 	}
-
-	// This was intended to solve an issue with loading tracks, but seems to only apply to playing tracks.
-//	@Override
-//	public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-//		trackErrorCount++;
-//
-//		// Try to play the track now.
-//		loadTrack(track.getInfo().uri, false);
-//
-//		if(trackErrorCount >= 3) {
-//			sendMessageToChannel("A track failed to load 3 times, so it was skipped.\n> "+track.getInfo().title);
-//			exception.printStackTrace();
-//			this.skip();
-//		}else{
-//			sendMessageToChannel("A track caused an exception. Retrying...");
-//		}
-//	}
 }

@@ -135,7 +135,7 @@ public class CommandHandler {
 	private void sendMessageToChannel(String r, MessageChannel channel){
 		if(r != null) {
 			if(r.length() > 0) {
-				for(String m : splitString(r, 2000)){
+				for(String m : Utils.splitString(r, 2000)){
 //					new TypingTask(channel, m);
 					channel.sendMessage(m).queue();
 				}
@@ -145,30 +145,5 @@ public class CommandHandler {
 		}
 	}
 
-	private String[] splitString(String s, int interval) {
-		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
-		String[] result = new String[breaks];
 
-		if(s.length() > interval) {
-			int lastIndex = 0;
-			for (int i = 0; i < breaks; i++) {
-
-				String sub = s.length()>= lastIndex+interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
-
-				if (sub.charAt(sub.length()-1) == ' ' || sub.length() < interval) {
-					result[i] = sub;
-					lastIndex += interval;
-				} else {
-					int lastSpace = sub.lastIndexOf(" ");
-
-					result[i] = sub.substring(0, lastSpace);
-					lastIndex = s.indexOf(result[i])+result[i].length();
-				}
-			}
-		}else{
-			result[0] = s;
-		}
-
-		return result;
-	}
 }
