@@ -35,7 +35,7 @@ public class ForumWeapon implements ICommand {
 			String nameOrOp = m.group(1).toLowerCase();
 			String optFWName = m.group(10) != null ?  m.group(10).toLowerCase() : null;
 			String optFWAlias = m.group(11) != null ?  m.group(11).toLowerCase() : null;
-			String optURL = m.group(12) != null ?  m.group(12).toLowerCase() : null;
+			String optURL = m.group(12);
 
 			switch(nameOrOp) {
 				case "create":
