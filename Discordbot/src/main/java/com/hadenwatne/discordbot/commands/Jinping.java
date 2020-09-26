@@ -1,10 +1,13 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.tasks.JinpingTask;
+
+import javax.annotation.Nullable;
 
 public class Jinping implements ICommand {
 	@Override
@@ -30,10 +33,10 @@ public class Jinping implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"jinping"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

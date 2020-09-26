@@ -36,8 +36,9 @@ public class Music implements ICommand {
 	}
 
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		// TODO this command can benefit from Brain injection, but needs to be cautious of methods that use the brains
+		// TODO of other servers.
 	}
 
 	@Override

@@ -1,10 +1,14 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Utils;
+
+import javax.annotation.Nullable;
 
 public class GIF implements ICommand {
 	@Override
@@ -27,8 +31,7 @@ public class GIF implements ICommand {
 			}
 
 			return Utils.getGIF(args, "high");
-		}
-		else {
+		} else {
 			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
 		}
 	}
@@ -37,10 +40,10 @@ public class GIF implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"gif", "who is", "what is", "what are"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i.replaceAll("[\\W]", "").replaceAll(" ", "%20").toLowerCase();
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

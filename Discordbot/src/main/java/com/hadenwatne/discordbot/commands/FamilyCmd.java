@@ -1,5 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -10,6 +11,7 @@ import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Family;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -257,10 +259,10 @@ public class FamilyCmd implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"family"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

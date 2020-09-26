@@ -1,5 +1,7 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -8,7 +10,12 @@ import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class ResetEmoteStats implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Reset emote usage statistics.";
@@ -21,12 +28,10 @@ public class ResetEmoteStats implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
+			brain.getEmoteStats().clear();
 
-		if(Utils.CheckUserPermission(b.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
-			b.getEmoteStats().clear();
-
-			return "We didn't need those anyway ;} #StatsCleared!";
+			return locale.getMsg(Locales.RESET_EMOTE_STATS);
 		}else{
 			return Errors.NO_PERMISSION_USER;
 		}
@@ -36,10 +41,11 @@ public class ResetEmoteStats implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"resetemotestats", "reset emote stats"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

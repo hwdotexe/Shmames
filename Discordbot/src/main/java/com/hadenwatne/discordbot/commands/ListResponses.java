@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -13,7 +16,12 @@ import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Response;
 
+import javax.annotation.Nullable;
+
 public class ListResponses implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Displays the list of random responses for the specified trigger type.";
@@ -36,8 +44,7 @@ public class ListResponses implements ICommand {
 				sb.append(args.toUpperCase());
 				sb.append(" Responses:**\n");
 		
-				List<Response> rs = Shmames.getBrains().getBrain(message.getGuild().getId())
-						.getResponsesFor(TriggerType.byName(args));
+				List<Response> rs = brain.getResponsesFor(TriggerType.byName(args));
 
 				List<String> rsText = new ArrayList<String>();
 
@@ -65,7 +72,7 @@ public class ListResponses implements ICommand {
 					types.append("`");
 				}
 
-				return ":scream: Invalid trigger type! Your options are:" + types;
+				return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -76,10 +83,11 @@ public class ListResponses implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"listresponses", "list responses"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -14,6 +15,8 @@ import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Family;
 import com.hadenwatne.discordbot.storage.ForumWeaponObj;
+
+import javax.annotation.Nullable;
 
 public class ForumWeapon implements ICommand {
 	@Override
@@ -207,10 +210,10 @@ public class ForumWeapon implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"fw", "forumweapon", "link"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

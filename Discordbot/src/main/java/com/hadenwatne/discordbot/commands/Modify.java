@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -14,7 +15,11 @@ import com.hadenwatne.discordbot.storage.BotSetting;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class Modify implements ICommand {
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "The Administrator's command to customize bot settings and behavior.";
@@ -27,8 +32,7 @@ public class Modify implements ICommand {
 	
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-		BotSetting canModify = b.getSettingFor(BotSettingName.ALLOW_MODIFY);
+		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);
 
 		if(Utils.CheckUserPermission(canModify, message.getGuild().getMember(author))) {
 			Matcher m = Pattern.compile("^([\\w]+)( [\\w\\-]+)?$").matcher(args);
@@ -36,7 +40,7 @@ public class Modify implements ICommand {
 			if(m.find()) {
 				if(BotSettingName.contains(m.group(1))) {
 					BotSettingName settingName = BotSettingName.valueOf(m.group(1).toUpperCase());
-					BotSetting setting = b.getSettingFor(settingName);
+					BotSetting setting = brain.getSettingFor(settingName);
 
 					if(m.group(2) != null) {
 						// Ensure that this setting is only changed by an Administrator.
@@ -48,7 +52,7 @@ public class Modify implements ICommand {
 
 						String value = m.group(2).trim();
 
-						if (setting.setValue(value, b)) {
+						if (setting.setValue(value, brain)) {
 							EmbedBuilder eBuilder = new EmbedBuilder();
 
 							eBuilder.setColor(Color.ORANGE);
@@ -62,7 +66,6 @@ public class Modify implements ICommand {
 							return Errors.formatUsage(Errors.WRONG_USAGE, "`modify " + setting.getName().toString() + " <" + setting.getType().toString() + ">`");
 						}
 					}else{
-						//TODO
 						EmbedBuilder eBuilder = new EmbedBuilder();
 
 						eBuilder.setColor(Color.ORANGE);
@@ -83,7 +86,7 @@ public class Modify implements ICommand {
 		        eBuilder.setTitle("Available settings:");
 		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
 		        
-		        for(BotSetting v : b.getSettings()) {
+		        for(BotSetting v : brain.getSettings()) {
 		        	flexValueType(eBuilder, v, message.getGuild());
 		        }
 		        
@@ -137,10 +140,10 @@ public class Modify implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"modify"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.brain = brain;
 	}
 	
 	@Override

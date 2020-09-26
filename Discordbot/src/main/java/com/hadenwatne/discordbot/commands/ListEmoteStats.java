@@ -3,6 +3,7 @@ package com.hadenwatne.discordbot.commands;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -10,7 +11,11 @@ import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class ListEmoteStats implements ICommand {
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "View emote usage statistics.";
@@ -23,9 +28,8 @@ public class ListEmoteStats implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 		String statMsg = "**Thus sayeth the Shmames:**\n";
-		HashMap<String, Integer> emStats = new HashMap<String, Integer>(b.getEmoteStats());
+		HashMap<String, Integer> emStats = new HashMap<String, Integer>(brain.getEmoteStats());
 		
 		// Add emotes without any uses
 		for(Emote e : message.getGuild().getEmotes()) {
@@ -66,10 +70,10 @@ public class ListEmoteStats implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"listemotestats", "list emote stats"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.brain = brain;
 	}
 	
 	@Override

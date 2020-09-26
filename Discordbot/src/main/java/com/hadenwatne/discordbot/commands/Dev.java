@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
@@ -18,6 +19,8 @@ import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.MotherBrain;
+
+import javax.annotation.Nullable;
 
 public class Dev implements ICommand {
 	@Override
@@ -91,10 +94,10 @@ public class Dev implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"developer"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

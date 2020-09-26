@@ -1,13 +1,19 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class Blame implements ICommand {
 	private String[] answers;
+	private Locale locale;
+	private @Nullable Brain brain;
 	
 	public Blame() {
 		answers = new String[] {"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom",
@@ -29,25 +35,24 @@ public class Blame implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(message.isFromGuild()){
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-			if(b.getJinping()){
-				return "I blame Jinping";
+		if(brain != null) {
+			if(brain.getJinping()) {
+				return locale.getMsg(Locales.BLAME, new String[]{ "Jinping" });
 			}
 		}
 
-		return "I blame "+answers[Utils.getRandom(answers.length)];
+		return locale.getMsg(Locales.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
 	}
 
 	@Override
 	public String[] getAliases() {
 		return new String[] {"blame", "why"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

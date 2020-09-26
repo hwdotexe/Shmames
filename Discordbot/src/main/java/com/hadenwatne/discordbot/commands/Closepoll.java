@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -15,7 +16,11 @@ import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.tasks.PollTask;
 
+import javax.annotation.Nullable;
+
 public class Closepoll implements ICommand {
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "End a Poll early (before its deadline), using the Poll's ID.";
@@ -28,9 +33,7 @@ public class Closepoll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-		if(Utils.CheckUserPermission(b.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
+		if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
 			Matcher m = Pattern.compile("^\\#?[a-zA-Z0-9]{5}$").matcher(args);
 
 			if (m.find()) {
@@ -39,7 +42,7 @@ public class Closepoll implements ICommand {
 					args = args.substring(1);
 				}
 
-				for (Poll p : b.getActivePolls()) {
+				for (Poll p : brain.getActivePolls()) {
 					if (p.getID().equalsIgnoreCase(args)) {
 						// Start a PollTask that ends early
 						Timer t = new Timer();
@@ -64,10 +67,10 @@ public class Closepoll implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"closepoll", "close poll", "endpoll", "end poll"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.brain = brain;
 	}
 	
 	@Override

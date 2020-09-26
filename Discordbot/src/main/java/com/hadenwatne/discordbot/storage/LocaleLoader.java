@@ -18,19 +18,18 @@ public class LocaleLoader {
 	}
 
 	public void loadLocales() {
-		List<File> localeFiles = discoverLocales();
+		File folder = new File("locales");
 
-		if(localeFiles.size() > 0) {
-			for (File l : localeFiles) {
-				Locale locale = gson.fromJson(loadJSONFile(l), Locale.class);
+		createDirectory(folder);
 
-				locales.add(locale);
-			}
-		} else {
-			Locale def = new Locale("default");
+		// Always save default in case of new changes.
+		saveLocale(new Locale("default"));
 
-			locales.add(def);
-			saveLocale(def);
+		// Discover locale files and add to system.
+		for(File l : discoverLocales(folder)) {
+			Locale locale = gson.fromJson(loadJSONFile(l), Locale.class);
+
+			locales.add(locale);
 		}
 	}
 
@@ -75,12 +74,7 @@ public class LocaleLoader {
 		return "";
 	}
 
-	private List<File> discoverLocales() {
-		File dir = new File("locales");
-
-		if (!dir.exists())
-			dir.mkdirs();
-
+	private List<File> discoverLocales(File dir) {
 		File[] files = dir.listFiles();
 		List<File> locs = new ArrayList<File>();
 
@@ -110,6 +104,12 @@ public class LocaleLoader {
 			os.close();
 		}catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void createDirectory(File dir) {
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
 	}
 }

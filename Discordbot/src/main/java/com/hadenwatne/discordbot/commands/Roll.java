@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Utils;
+
+import javax.annotation.Nullable;
 
 public class Roll implements ICommand {
 	@Override
@@ -40,9 +44,8 @@ public class Roll implements ICommand {
 			} catch (Exception ignored) {}
 
 			String rollResult = processRoll(dicePattern, diceOps);
-			String resultMessage = ":game_die: "+author.getAsMention()+"\n> "+rollResult;
 
-			return resultMessage;
+			return ":game_die: "+author.getAsMention()+"\n> "+rollResult;
 		}else{
 			return "Try `roll a d20`, or use `help roll` for more details!";
 		}
@@ -52,10 +55,10 @@ public class Roll implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"roll a", "roll"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

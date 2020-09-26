@@ -1,7 +1,11 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+
+import javax.annotation.Nullable;
 
 public interface ICommand {
 	/**
@@ -20,7 +24,7 @@ public interface ICommand {
 	 * Runs the command code.
 	 * @param args Command arguments.
 	 * @param author The user trying to run the command.
-	 * @param server The server this command is running on.
+	 * @param message The message that triggered this command.
 	 * @return A string response, if applicable.
 	 */
 	String run(String args, User author, Message message);
@@ -32,10 +36,9 @@ public interface ICommand {
 	String[] getAliases();
 	
 	/**
-	 * Sanitizes (or doesn't) the argument string.
-	 * @return A sanitized version of the argument string.
+	 * Used to provide context data to the command.
 	 */
-	String sanitize(String args);
+	void setRunContext(Locale locale, @Nullable Brain brain);
 	
 	/**
 	 * Sets whether this command must be run in a Guild.

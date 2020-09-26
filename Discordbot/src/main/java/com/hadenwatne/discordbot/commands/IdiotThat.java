@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
+
+import javax.annotation.Nullable;
 
 public class IdiotThat implements ICommand {
 	@Override
@@ -77,10 +81,10 @@ public class IdiotThat implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"idiotthat"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

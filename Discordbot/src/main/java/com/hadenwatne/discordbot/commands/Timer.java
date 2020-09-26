@@ -3,6 +3,7 @@ package com.hadenwatne.discordbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -10,7 +11,11 @@ import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.tasks.JTimerTask;
 
+import javax.annotation.Nullable;
+
 public class Timer implements ICommand {
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Start a timer, and "+Shmames.getBotName()+" will alert you when it's ready.";
@@ -64,9 +69,8 @@ public class Timer implements ICommand {
 				}
 
 				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), time, interval, rmsg);
-				Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
-				b.getTimers().add(t);
+				brain.getTimers().add(t);
 				
 				return "Started a new :alarm_clock: for **" + time + "** " + (interval == 1 ? "Days" : interval == 2 ? "Hours" : interval == 3 ? "Minutes" : "Seconds");
 			}else {
@@ -81,10 +85,10 @@ public class Timer implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"timer", "remind me in", "alert"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.brain = brain;
 	}
 	
 	@Override

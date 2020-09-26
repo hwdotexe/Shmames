@@ -3,15 +3,21 @@ package com.hadenwatne.discordbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Response;
 
+import javax.annotation.Nullable;
+
 public class AddResponse implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Adds a new response to the list for the chosen response type. These are " +
@@ -28,7 +34,6 @@ public class AddResponse implements ICommand {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) ([\\w\\W]{3,})$").matcher(args);
 		
 		if(m.find()) {
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			String newresp = m.group(2);
 			String nrtype = m.group(1);
 
@@ -36,20 +41,20 @@ public class AddResponse implements ICommand {
 			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
 	
 			if (TriggerType.byName(nrtype) != null) {
-				b.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
+				brain.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
 
-				return "Added :+1:";
+				return locale.getMsg(Locales.ITEM_ADDED);
 			} else {
-				String types = "";
+				StringBuilder types = new StringBuilder();
 
 				for (TriggerType t : TriggerType.values()) {
 					if(types.length() > 0)
-						types += ", ";
+						types.append(", ");
 					
-					types += "`" + t.name() + "`";
+					types.append("`").append(t.name()).append("`");
 				}
 
-				return ":scream: Invalid trigger type! Your options are:" + types;
+				return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -60,10 +65,11 @@ public class AddResponse implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"addresponse", "add response"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i.replace("@", "");
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

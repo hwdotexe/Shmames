@@ -1,16 +1,22 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class ListTriggers implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
-		return "Displays all the current message trigger words or phrases, along with " +
-				"their types.";
+		return "Displays all the current message trigger words or phrases, along with their types.";
 	}
 	
 	@Override
@@ -20,20 +26,20 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-		String list = Utils.GenerateList(b.getTriggers(), -1);
+		String list = Utils.GenerateList(brain.getTriggers(), -1);
 
-		return "**I'll respond to these things:**\n"+list;
+		return locale.getMsg(Locales.TALLY_LIST, new String[]{ list });
 	}
 
 	@Override
 	public String[] getAliases() {
 		return new String[] {"listtriggers", "list triggers"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

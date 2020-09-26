@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.Utils;
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -12,7 +15,12 @@ import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Response;
 
+import javax.annotation.Nullable;
+
 public class DropResponse implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Removes an existing response from the list for the specified type. Use the `listResponses` command " +
@@ -29,7 +37,6 @@ public class DropResponse implements ICommand {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) (\\d{1,3})$").matcher(args);
 		
 		if(m.find()) {
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 			int rNum = Integer.parseInt(m.group(2));
 			String nrtype = m.group(1);
 
@@ -37,27 +44,27 @@ public class DropResponse implements ICommand {
 			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
 	
 			if (TriggerType.byName(nrtype) != null) {
-				List<Response> responses = Shmames.getBrains().getBrain(message.getGuild().getId()).getResponsesFor(TriggerType.byName(nrtype));
+				List<Response> responses = brain.getResponsesFor(TriggerType.byName(nrtype));
 				
 				if(responses.size() >= rNum) {
 					Response r = responses.get(rNum-1);
-					b.removeTriggerResponse(r);
-					
-					return "Removed \""+r.getResponse()+"\"!";
+					brain.removeTriggerResponse(r);
+
+					return locale.getMsg(Locales.BLAME, new String[]{ r.getResponse() });
 				}else {
-					return "I couldn't find that response .-.";
+					return Errors.NOT_FOUND;
 				}
 			} else {
-				String types = "";
+				StringBuilder types = new StringBuilder();
 
 				for (TriggerType t : TriggerType.values()) {
 					if(types.length() > 0)
-						types += ", ";
+						types.append(", ");
 					
-					types += "`" + t.name() + "`";
+					types.append("`").append(t.name()).append("`");
 				}
 
-				return ":scream: Invalid trigger type! Your options are:" + types;
+				return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -68,10 +75,11 @@ public class DropResponse implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"dropresponse", "drop response", "removeresponse", "remove response"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i.replace("@", "");
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

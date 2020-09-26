@@ -8,8 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.commands.*;
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.discordbot.commands.*;
 import com.hadenwatne.discordbot.tasks.TypingTask;
 
 // After the bot is summoned, this is called to determine which command to run
@@ -96,11 +97,19 @@ public class CommandHandler {
 						Matcher m = Pattern.compile("^("+a+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
 						if(m.matches()){
-							String args = c.sanitize(m.group(2) != null ? m.group(2).trim() : "");
+							Brain brain = null;
+							Locale locale = Shmames.getDefaultLocale();
+
+							if(message.isFromGuild()) {
+								brain = Shmames.getBrains().getBrain(message.getGuild().getId());
+								locale = Shmames.getLocaleFor(brain);
+							}
+
+							c.setRunContext(locale, brain);
 
 							// Run the command async and send a message back when it finishes.
 							try {
-								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
+								CompletableFuture.supplyAsync(() -> c.run(m.group(2).trim(), author, message))
 										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()))
 								.exceptionally(exception -> {
 									sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());

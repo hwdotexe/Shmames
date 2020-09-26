@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hadenwatne.discordbot.CommandHandler;
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Locales;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
@@ -14,7 +17,11 @@ import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
+import javax.annotation.Nullable;
+
 public class Help implements ICommand {
+	private Locale locale;
+
 	@Override
 	public String getDescription() {
 		return "Shows help & additional information.";
@@ -73,7 +80,7 @@ public class Help implements ICommand {
 			if(message.getChannelType() == ChannelType.TEXT){
 				author.openPrivateChannel().queue((c) -> c.sendMessage(eBuilder.build()).queue());
 
-				return "PM'd you the deets :punch:";
+				return locale.getMsg(Locales.SENT_PRIVATE_MESSAGE);
 			}else{
 				message.getChannel().sendMessage(eBuilder.build()).queue();
 
@@ -88,10 +95,10 @@ public class Help implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"help", "how do you use", "how do I use"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
 	}
 	
 	@Override

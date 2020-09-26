@@ -1,8 +1,12 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.MinesweepGame;
+
+import javax.annotation.Nullable;
 
 public class Minesweeper implements ICommand {
 	@Override
@@ -37,10 +41,10 @@ public class Minesweeper implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"minesweep", "msweep"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

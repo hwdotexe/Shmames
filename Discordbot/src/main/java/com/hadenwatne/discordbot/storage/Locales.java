@@ -1,0 +1,18 @@
+package com.hadenwatne.discordbot.storage;
+
+public enum Locales {
+    ADD_TRIGGER_SUCCESS,
+    BLAME,
+    CHOOSE,
+    FEEDBACK_COOLDOWN,
+    FEEDBACK_SENT,
+    INVALID_TRIGGER_TYPE,
+    ITEM_ADDED,
+    ITEM_REMOVED,
+    RESET_EMOTE_STATS,
+    SENT_PRIVATE_MESSAGE,
+    TALLY_CURRENT_VALUE,
+    TALLY_LIST,
+    TALLY_REMOVED,
+    TRIGGER_LIST
+}

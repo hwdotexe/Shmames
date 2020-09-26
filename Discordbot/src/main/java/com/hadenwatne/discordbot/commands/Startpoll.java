@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -14,7 +15,12 @@ import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
+
 public class Startpoll implements ICommand {
+	private Locale locale;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Starts a new poll in the current channel, and pins it if configured. Example: " +
@@ -28,9 +34,7 @@ public class Startpoll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-		if(Utils.CheckUserPermission(b.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
+		if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
 			Matcher m = Pattern.compile("^(\\d{1,3})([dhms])? (.+\\?) ((.+); (.+))$").matcher(args);
 
 			if (m.find()) {
@@ -60,12 +64,9 @@ public class Startpoll implements ICommand {
 						// Do nothing; we don't have permission
 					}
 
-					b.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID()));
-
-					// Save the brain file
-					Shmames.getBrains().saveBrain(b);
+					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID()));
 				} else {
-					return "You must provide at least 2 different options, and fewer than 10!";
+					return Errors.INCORRECT_ITEM_COUNT;
 				}
 			} else {
 				// Regex fail
@@ -82,10 +83,11 @@ public class Startpoll implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"startpoll", "start poll"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.locale = locale;
+		this.brain = brain;
 	}
 	
 	@Override

@@ -1,9 +1,13 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Utils;
+
+import javax.annotation.Nullable;
 
 public class Wiki implements ICommand {
 	@Override
@@ -29,10 +33,10 @@ public class Wiki implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"wiki"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+
 	}
 	
 	@Override

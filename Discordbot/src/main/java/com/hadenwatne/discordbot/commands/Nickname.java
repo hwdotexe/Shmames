@@ -1,5 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
+import com.hadenwatne.discordbot.storage.Locale;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -10,10 +11,13 @@ import com.hadenwatne.discordbot.storage.BotSetting;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 
+import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Nickname implements ICommand {
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Change the bot's nickname.";
@@ -26,8 +30,7 @@ public class Nickname implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-		BotSetting canChangeNickname = b.getSettingFor(BotSettingName.ALLOW_NICKNAME);
+		BotSetting canChangeNickname = brain.getSettingFor(BotSettingName.ALLOW_NICKNAME);
 
 		if(Utils.CheckUserPermission(canChangeNickname, message.getGuild().getMember(author))) {
 			Matcher m = Pattern.compile("^[\\w\\s]{3,}$").matcher(args);
@@ -54,10 +57,10 @@ public class Nickname implements ICommand {
 	public String[] getAliases() {
 		return new String[] {"nickname", "nick"};
 	}
-	
+
 	@Override
-	public String sanitize(String i) {
-		return i;
+	public void setRunContext(Locale locale, @Nullable Brain brain) {
+		this.brain = brain;
 	}
 	
 	@Override

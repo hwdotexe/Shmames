@@ -129,6 +129,14 @@ public final class Shmames {
 	}
 
 	/**
+	 * Gets the default Locale file.
+	 * @return The default Locale.
+	 */
+	public static Locale getDefaultLocale() {
+		return locales.getLocale("default");
+	}
+
+	/**
 	 * Gets the Locale for a server.
 	 * @return The server's desired Locale, or default if none.
 	 */
@@ -136,7 +144,7 @@ public final class Shmames {
 		if(b != null){
 			return locales.getLocale(b.getLocaleName());
 		} else {
-			return locales.getLocale("default");
+			return getDefaultLocale();
 		}
 	}
 	
