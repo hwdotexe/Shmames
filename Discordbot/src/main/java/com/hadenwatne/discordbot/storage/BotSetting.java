@@ -88,7 +88,7 @@ public class BotSetting {
 			return false;
 		default:
 			if(v.length() > 0) {
-				value = v;
+				value = v.toLowerCase();
 				return true;
 			} else {
 				value = null;

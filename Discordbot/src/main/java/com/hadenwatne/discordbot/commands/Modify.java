@@ -1,6 +1,7 @@
 package com.hadenwatne.discordbot.commands;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +44,8 @@ public class Modify implements ICommand {
 					BotSetting setting = brain.getSettingFor(settingName);
 
 					if(m.group(2) != null) {
+						String value = m.group(2).trim();
+
 						// Ensure that this setting is only changed by an Administrator.
 						if (settingName == BotSettingName.ALLOW_MODIFY) {
 							if (!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
@@ -50,7 +53,21 @@ public class Modify implements ICommand {
 							}
 						}
 
-						String value = m.group(2).trim();
+						// Ensure that this setting is only changed to an existing Locale.
+						if (settingName == BotSettingName.SERVER_LOCALE) {
+							boolean found = false;
+
+							for(Locale l : Shmames.getLocales().getAllLocales()) {
+								if(l.getLocaleName().equalsIgnoreCase(value)){
+									found=true;
+									break;
+								}
+							}
+
+							if(!found) {
+								return Errors.NOT_FOUND;
+							}
+						}
 
 						if (setting.setValue(value, brain)) {
 							EmbedBuilder eBuilder = new EmbedBuilder();
@@ -129,6 +146,10 @@ public class Modify implements ICommand {
 				break;
 			case ROLE:
 				eBuilder.addField("**"+v.getName().toString()+"**" + "» :tools:", v.getValue(), true);
+
+				break;
+			case TEXT:
+				eBuilder.addField("**"+v.getName().toString()+"**" + "» :capital_abcd:", v.getValue(), true);
 
 				break;
 			default:

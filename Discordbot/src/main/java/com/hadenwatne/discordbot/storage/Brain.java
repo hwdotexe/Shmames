@@ -11,7 +11,6 @@ import com.hadenwatne.discordbot.tasks.JTimerTask;
 
 public class Brain {
 	private String guildID;
-	private String localeName;
 	private HashMap<String, Integer> tallies;
 	private HashMap<String, Integer> emoteStats;
 	private HashMap<String, TriggerType> triggers;
@@ -31,7 +30,6 @@ public class Brain {
 	
 	public Brain(String gid) {
 		guildID = gid;
-		localeName = "default";
 		tallies = new HashMap<String, Integer>();
 		emoteStats = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
@@ -117,14 +115,6 @@ public class Brain {
 	
 	public String getGuildID() {
 		return guildID;
-	}
-
-	public String getLocaleName() {
-		if(localeName == null) {
-			localeName = "default";
-		}
-
-		return localeName;
 	}
 	
 	public List<Response> getTriggerResponses(){

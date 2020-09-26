@@ -110,6 +110,7 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.ALLOW_POLLS, BotSettingType.ROLE, "everyone"));
 		defaults.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
 		defaults.add(new BotSetting(BotSettingName.MANAGE_MUSIC, BotSettingType.ROLE, "administrator"));
+		defaults.add(new BotSetting(BotSettingName.SERVER_LOCALE, BotSettingType.TEXT, "default"));
 	}
 	
 	/**
@@ -142,7 +143,7 @@ public final class Shmames {
 	 */
 	public static Locale getLocaleFor(@Nullable Brain b) {
 		if(b != null){
-			Locale l = locales.getLocale(b.getLocaleName());
+			Locale l = locales.getLocale(b.getSettingFor(BotSettingName.SERVER_LOCALE).getValue());
 
 			if(l == null){
 				l = locales.getLocale("default");

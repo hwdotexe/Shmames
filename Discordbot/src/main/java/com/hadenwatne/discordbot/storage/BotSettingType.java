@@ -5,5 +5,6 @@ public enum BotSettingType {
 	CHANNEL,
 	NUMBER,
 	EMOTE,
-	ROLE
+	ROLE,
+	TEXT
 }
