@@ -39,18 +39,11 @@ public class LocaleLoader {
 				return l;
 			}
 		}
-
-		// One wasn't found with the given name, so we return the default.
-		for (Locale l : locales) {
-			if (l.getLocaleName().equalsIgnoreCase("default")) {
-				return l;
-			}
-		}
 		
 		return null;
 	}
 
-	public List<Locale> getLocales() {
+	public List<Locale> getAllLocales() {
 		return locales;
 	}
 

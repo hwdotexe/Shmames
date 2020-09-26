@@ -32,7 +32,7 @@ public class ListTallies implements ICommand {
 		
 		String tallies = Utils.GenerateList(tSorted, -1);
 
-		return locale.getMsg(Locales.TALLY_LIST, new String[]{ tallies });
+		return locale.getMsg(Locales.TALLY_LIST)+"\n"+tallies;
 	}
 
 	@Override

@@ -97,6 +97,7 @@ public class CommandHandler {
 						Matcher m = Pattern.compile("^("+a+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
 						if(m.matches()){
+							String args = m.group(2) != null ? m.group(2).trim() : "";
 							Brain brain = null;
 							Locale locale = Shmames.getDefaultLocale();
 
@@ -109,7 +110,7 @@ public class CommandHandler {
 
 							// Run the command async and send a message back when it finishes.
 							try {
-								CompletableFuture.supplyAsync(() -> c.run(m.group(2).trim(), author, message))
+								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
 										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()))
 								.exceptionally(exception -> {
 									sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());

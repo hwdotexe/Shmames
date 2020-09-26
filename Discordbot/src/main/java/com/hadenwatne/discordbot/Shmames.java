@@ -121,11 +121,11 @@ public final class Shmames {
 	}
 
 	/**
-	 * Gets a list of language files for the bot.
+	 * Gets the Locale Loader for more localization options.
 	 * @return A LocaleLoader object.
 	 */
-	public static List<Locale> getLocales() {
-		return locales.getLocales();
+	public static LocaleLoader getLocales() {
+		return locales;
 	}
 
 	/**
@@ -142,7 +142,13 @@ public final class Shmames {
 	 */
 	public static Locale getLocaleFor(@Nullable Brain b) {
 		if(b != null){
-			return locales.getLocale(b.getLocaleName());
+			Locale l = locales.getLocale(b.getLocaleName());
+
+			if(l == null){
+				l = locales.getLocale("default");
+			}
+
+			return l;
 		} else {
 			return getDefaultLocale();
 		}

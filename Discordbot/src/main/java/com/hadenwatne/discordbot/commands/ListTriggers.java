@@ -28,7 +28,7 @@ public class ListTriggers implements ICommand {
 	public String run(String args, User author, Message message) {
 		String list = Utils.GenerateList(brain.getTriggers(), -1);
 
-		return locale.getMsg(Locales.TALLY_LIST, new String[]{ list });
+		return locale.getMsg(Locales.TRIGGER_LIST)+"\n"+list;
 	}
 
 	@Override
