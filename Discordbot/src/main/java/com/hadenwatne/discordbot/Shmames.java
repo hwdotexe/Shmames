@@ -6,10 +6,7 @@ import java.util.List;
 import com.hadenwatne.discordbot.listeners.ChatListener;
 import com.hadenwatne.discordbot.listeners.FirstJoinListener;
 import com.hadenwatne.discordbot.listeners.ReactListener;
-import com.hadenwatne.discordbot.storage.BotSetting;
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.BotSettingType;
-import com.hadenwatne.discordbot.storage.BrainController;
+import com.hadenwatne.discordbot.storage.*;
 import com.hadenwatne.discordbot.tasks.DailyTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
@@ -17,9 +14,12 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
+import javax.annotation.Nullable;
+
 public final class Shmames {
 	private static JDA jda;
 	private static BrainController brains;
+	private static LocaleLoader locales;
 	private static String botName;
 	private static MusicManager musicManager;
 	
@@ -33,7 +33,9 @@ public final class Shmames {
 	public static void main(String[] args) {
 		// Initialize bot settings and utilities.
 		brains = new BrainController();
+		locales = new LocaleLoader();
 
+		locales.loadLocales();
 		loadDefaultSettings();
 		Utils.Init();
 		brains.loadMotherBrain();
@@ -116,6 +118,26 @@ public final class Shmames {
 	 */
 	public static BrainController getBrains() {
 		return brains;
+	}
+
+	/**
+	 * Gets a list of language files for the bot.
+	 * @return A LocaleLoader object.
+	 */
+	public static List<Locale> getLocales() {
+		return locales.getLocales();
+	}
+
+	/**
+	 * Gets the Locale for a server.
+	 * @return The server's desired Locale, or default if none.
+	 */
+	public static Locale getLocaleFor(@Nullable Brain b) {
+		if(b != null){
+			return locales.getLocale(b.getLocaleName());
+		} else {
+			return locales.getLocale("default");
+		}
 	}
 	
 	/**
