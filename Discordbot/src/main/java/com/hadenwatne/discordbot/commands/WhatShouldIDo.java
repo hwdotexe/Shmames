@@ -1,7 +1,7 @@
 package com.hadenwatne.discordbot.commands;
 
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Utils;
@@ -52,7 +52,7 @@ public class WhatShouldIDo implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 
 	}
 	

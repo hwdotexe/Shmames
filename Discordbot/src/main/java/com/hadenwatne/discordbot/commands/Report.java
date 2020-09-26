@@ -3,9 +3,8 @@ package com.hadenwatne.discordbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -16,7 +15,7 @@ import com.hadenwatne.discordbot.tasks.ReportCooldownTask;
 import javax.annotation.Nullable;
 
 public class Report implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -46,9 +45,9 @@ public class Report implements ICommand {
 				// Start a cooldown
 				new ReportCooldownTask(brain);
 
-				return locale.getMsg(Locales.FEEDBACK_SENT);
+				return lang.getMsg(Langs.FEEDBACK_SENT);
 			}else {
-				return locale.getMsg(Locales.FEEDBACK_COOLDOWN);
+				return lang.getMsg(Langs.FEEDBACK_COOLDOWN);
 			}
 		}else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -61,8 +60,8 @@ public class Report implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

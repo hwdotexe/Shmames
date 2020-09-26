@@ -1,9 +1,8 @@
 package com.hadenwatne.discordbot.commands;
 
 import com.hadenwatne.discordbot.Errors;
-import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Shmames;
@@ -12,7 +11,7 @@ import com.hadenwatne.discordbot.storage.Brain;
 import javax.annotation.Nullable;
 
 public class DropTrigger implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -32,7 +31,7 @@ public class DropTrigger implements ICommand {
 				if (brain.getTriggers().containsKey(args)) {
 					brain.getTriggers().remove(args);
 
-					return locale.getMsg(Locales.ITEM_REMOVED, new String[]{ args });
+					return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ args });
 				} else
 					return Errors.NOT_FOUND;
 			} else {
@@ -49,8 +48,8 @@ public class DropTrigger implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

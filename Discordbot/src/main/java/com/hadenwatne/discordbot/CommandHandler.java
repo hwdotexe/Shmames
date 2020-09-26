@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.commands.*;
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.tasks.TypingTask;
 
@@ -99,14 +99,14 @@ public class CommandHandler {
 						if(m.matches()){
 							String args = m.group(2) != null ? m.group(2).trim() : "";
 							Brain brain = null;
-							Locale locale = Shmames.getDefaultLocale();
+							Lang lang = Shmames.getDefaultLang();
 
 							if(message.isFromGuild()) {
 								brain = Shmames.getBrains().getBrain(message.getGuild().getId());
-								locale = Shmames.getLocaleFor(brain);
+								lang = Shmames.getLangFor(brain);
 							}
 
-							c.setRunContext(locale, brain);
+							c.setRunContext(lang, brain);
 
 							// Run the command async and send a message back when it finishes.
 							try {

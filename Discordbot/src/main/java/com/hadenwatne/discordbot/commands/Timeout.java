@@ -3,10 +3,9 @@ package com.hadenwatne.discordbot.commands;
 import java.util.List;
 
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Response;
@@ -50,7 +49,7 @@ public class Timeout implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
 	}
 	

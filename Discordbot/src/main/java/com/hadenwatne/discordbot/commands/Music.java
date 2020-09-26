@@ -1,8 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +34,7 @@ public class Music implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		// TODO this command can benefit from Brain injection, but needs to be cautious of methods that use the brains
 		// TODO of other servers.
 	}

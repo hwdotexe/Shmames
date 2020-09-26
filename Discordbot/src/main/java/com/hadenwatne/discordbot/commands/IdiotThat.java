@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -83,7 +83,7 @@ public class IdiotThat implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 
 	}
 	

@@ -1,17 +1,16 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
 
 public class ListTriggers implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -28,7 +27,7 @@ public class ListTriggers implements ICommand {
 	public String run(String args, User author, Message message) {
 		String list = Utils.GenerateList(brain.getTriggers(), -1);
 
-		return locale.getMsg(Locales.TRIGGER_LIST)+"\n"+list;
+		return lang.getMsg(Langs.TRIGGER_LIST)+"\n"+list;
 	}
 
 	@Override
@@ -37,8 +36,8 @@ public class ListTriggers implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

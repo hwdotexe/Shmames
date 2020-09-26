@@ -3,19 +3,18 @@ package com.hadenwatne.discordbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
 
 public class AddTrigger implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -44,7 +43,7 @@ public class AddTrigger implements ICommand {
 				if (TriggerType.byName(nttype) != null) {
 					brain.getTriggers().put(newtrigger, TriggerType.byName(nttype));
 
-					return locale.getMsg(Locales.ADD_TRIGGER_SUCCESS, new String[] { TriggerType.byName(nttype).toString(), newtrigger });
+					return lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[] { TriggerType.byName(nttype).toString(), newtrigger });
 				} else {
 					StringBuilder types = new StringBuilder();
 
@@ -55,7 +54,7 @@ public class AddTrigger implements ICommand {
 						types.append("`").append(t.name()).append("`");
 					}
 
-					return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
+					return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 				}
 			} else {
 				return Errors.ALREADY_EXISTS;
@@ -71,8 +70,8 @@ public class AddTrigger implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

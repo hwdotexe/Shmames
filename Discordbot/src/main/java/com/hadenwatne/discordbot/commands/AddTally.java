@@ -1,16 +1,15 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
 
 public class AddTally implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -31,7 +30,7 @@ public class AddTally implements ICommand {
 			brain.getTallies().put(args, 1);
 		}
 
-		return locale.getMsg(Locales.TALLY_CURRENT_VALUE, new String[] { args, brain.getTallies().get(args).toString() });
+		return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { args, brain.getTallies().get(args).toString() });
 	}
 
 	@Override
@@ -40,8 +39,8 @@ public class AddTally implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

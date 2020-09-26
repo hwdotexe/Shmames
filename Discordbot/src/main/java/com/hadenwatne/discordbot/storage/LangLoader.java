@@ -8,34 +8,34 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocaleLoader {
+public class LangLoader {
 	private Gson gson;
-	private List<Locale> locales;
+	private List<Lang> langs;
 
-	public LocaleLoader() {
+	public LangLoader() {
 		gson = new Gson();
-		locales = new ArrayList<Locale>();
+		langs = new ArrayList<Lang>();
 	}
 
-	public void loadLocales() {
-		File folder = new File("locales");
+	public void loadLangs() {
+		File folder = new File("langs");
 
 		createDirectory(folder);
 
 		// Always save default in case of new changes.
-		saveLocale(new Locale("default"));
+		saveLang(new Lang("default"));
 
-		// Discover locale files and add to system.
-		for(File l : discoverLocales(folder)) {
-			Locale locale = gson.fromJson(loadJSONFile(l), Locale.class);
+		// Discover lang files and add to system.
+		for(File l : discoverLangs(folder)) {
+			Lang lang = gson.fromJson(loadJSONFile(l), Lang.class);
 
-			locales.add(locale);
+			langs.add(lang);
 		}
 	}
 
-	public Locale getLocale(String name) {
-		for (Locale l : locales) {
-			if (l.getLocaleName().equalsIgnoreCase(name)) {
+	public Lang getLang(String name) {
+		for (Lang l : langs) {
+			if (l.getLangName().equalsIgnoreCase(name)) {
 				return l;
 			}
 		}
@@ -43,8 +43,8 @@ public class LocaleLoader {
 		return null;
 	}
 
-	public List<Locale> getAllLocales() {
-		return locales;
+	public List<Lang> getAllLangs() {
+		return langs;
 	}
 
 	private String loadJSONFile(File f) {
@@ -67,7 +67,7 @@ public class LocaleLoader {
 		return "";
 	}
 
-	private List<File> discoverLocales(File dir) {
+	private List<File> discoverLangs(File dir) {
 		File[] files = dir.listFiles();
 		List<File> locs = new ArrayList<File>();
 
@@ -82,11 +82,11 @@ public class LocaleLoader {
 		return locs;
 	}
 
-	private void saveLocale(Locale l) {
+	private void saveLang(Lang l) {
 		byte[] bytes = gson.toJson(l).getBytes();
 
 		try {
-			File lf = new File("locales/"+l.getLocaleName()+".json");
+			File lf = new File("langs/"+l.getLangName()+".json");
 			FileOutputStream os = new FileOutputStream(lf);
 
 			if(!lf.exists())

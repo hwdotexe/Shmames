@@ -3,8 +3,8 @@ package com.hadenwatne.discordbot.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -15,7 +15,7 @@ import com.hadenwatne.discordbot.storage.Response;
 import javax.annotation.Nullable;
 
 public class AddResponse implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -43,7 +43,7 @@ public class AddResponse implements ICommand {
 			if (TriggerType.byName(nrtype) != null) {
 				brain.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
 
-				return locale.getMsg(Locales.ITEM_ADDED);
+				return lang.getMsg(Langs.ITEM_ADDED);
 			} else {
 				StringBuilder types = new StringBuilder();
 
@@ -54,7 +54,7 @@ public class AddResponse implements ICommand {
 					types.append("`").append(t.name()).append("`");
 				}
 
-				return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
+				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -67,8 +67,8 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

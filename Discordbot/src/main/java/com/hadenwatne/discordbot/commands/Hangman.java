@@ -1,6 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -199,7 +199,7 @@ public class Hangman implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 
 	}
 	

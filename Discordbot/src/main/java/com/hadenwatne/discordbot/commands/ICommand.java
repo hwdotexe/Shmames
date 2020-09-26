@@ -1,7 +1,7 @@
 package com.hadenwatne.discordbot.commands;
 
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
@@ -38,7 +38,7 @@ public interface ICommand {
 	/**
 	 * Used to provide context data to the command.
 	 */
-	void setRunContext(Locale locale, @Nullable Brain brain);
+	void setRunContext(Lang lang, @Nullable Brain brain);
 	
 	/**
 	 * Sets whether this command must be run in a Guild.

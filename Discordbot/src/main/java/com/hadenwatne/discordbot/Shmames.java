@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public final class Shmames {
 	private static JDA jda;
 	private static BrainController brains;
-	private static LocaleLoader locales;
+	private static LangLoader langs;
 	private static String botName;
 	private static MusicManager musicManager;
 	
@@ -33,9 +33,9 @@ public final class Shmames {
 	public static void main(String[] args) {
 		// Initialize bot settings and utilities.
 		brains = new BrainController();
-		locales = new LocaleLoader();
+		langs = new LangLoader();
 
-		locales.loadLocales();
+		langs.loadLangs();
 		loadDefaultSettings();
 		Utils.Init();
 		brains.loadMotherBrain();
@@ -110,7 +110,7 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.ALLOW_POLLS, BotSettingType.ROLE, "everyone"));
 		defaults.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
 		defaults.add(new BotSetting(BotSettingName.MANAGE_MUSIC, BotSettingType.ROLE, "administrator"));
-		defaults.add(new BotSetting(BotSettingName.SERVER_LOCALE, BotSettingType.TEXT, "default"));
+		defaults.add(new BotSetting(BotSettingName.SERVER_LANG, BotSettingType.TEXT, "default"));
 	}
 	
 	/**
@@ -125,33 +125,33 @@ public final class Shmames {
 	 * Gets the Locale Loader for more localization options.
 	 * @return A LocaleLoader object.
 	 */
-	public static LocaleLoader getLocales() {
-		return locales;
+	public static LangLoader getLangs() {
+		return langs;
 	}
 
 	/**
 	 * Gets the default Locale file.
 	 * @return The default Locale.
 	 */
-	public static Locale getDefaultLocale() {
-		return locales.getLocale("default");
+	public static Lang getDefaultLang() {
+		return langs.getLang("default");
 	}
 
 	/**
 	 * Gets the Locale for a server.
 	 * @return The server's desired Locale, or default if none.
 	 */
-	public static Locale getLocaleFor(@Nullable Brain b) {
+	public static Lang getLangFor(@Nullable Brain b) {
 		if(b != null){
-			Locale l = locales.getLocale(b.getSettingFor(BotSettingName.SERVER_LOCALE).getValue());
+			Lang l = langs.getLang(b.getSettingFor(BotSettingName.SERVER_LANG).getValue());
 
 			if(l == null){
-				l = locales.getLocale("default");
+				l = langs.getLang("default");
 			}
 
 			return l;
 		} else {
-			return getDefaultLocale();
+			return getDefaultLang();
 		}
 	}
 	

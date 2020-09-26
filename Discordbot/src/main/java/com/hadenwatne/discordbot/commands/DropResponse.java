@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Response;
@@ -18,7 +16,7 @@ import com.hadenwatne.discordbot.storage.Response;
 import javax.annotation.Nullable;
 
 public class DropResponse implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private Brain brain;
 
 	@Override
@@ -50,7 +48,7 @@ public class DropResponse implements ICommand {
 					Response r = responses.get(rNum-1);
 					brain.removeTriggerResponse(r);
 
-					return locale.getMsg(Locales.BLAME, new String[]{ r.getResponse() });
+					return lang.getMsg(Langs.BLAME, new String[]{ r.getResponse() });
 				}else {
 					return Errors.NOT_FOUND;
 				}
@@ -64,7 +62,7 @@ public class DropResponse implements ICommand {
 					types.append("`").append(t.name()).append("`");
 				}
 
-				return locale.getMsg(Locales.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
+				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -77,8 +75,8 @@ public class DropResponse implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

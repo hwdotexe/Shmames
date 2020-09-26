@@ -1,10 +1,9 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
 
@@ -12,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class Blame implements ICommand {
 	private String[] answers;
-	private Locale locale;
+	private Lang lang;
 	private @Nullable Brain brain;
 	
 	public Blame() {
@@ -37,11 +36,11 @@ public class Blame implements ICommand {
 	public String run(String args, User author, Message message) {
 		if(brain != null) {
 			if(brain.getJinping()) {
-				return locale.getMsg(Locales.BLAME, new String[]{ "Jinping" });
+				return lang.getMsg(Langs.BLAME, new String[]{ "Jinping" });
 			}
 		}
 
-		return locale.getMsg(Locales.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
+		return lang.getMsg(Langs.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
 	}
 
 	@Override
@@ -50,8 +49,8 @@ public class Blame implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

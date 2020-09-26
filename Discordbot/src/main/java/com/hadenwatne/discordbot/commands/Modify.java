@@ -1,11 +1,10 @@
 package com.hadenwatne.discordbot.commands;
 
 import java.awt.Color;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -54,11 +53,11 @@ public class Modify implements ICommand {
 						}
 
 						// Ensure that this setting is only changed to an existing Locale.
-						if (settingName == BotSettingName.SERVER_LOCALE) {
+						if (settingName == BotSettingName.SERVER_LANG) {
 							boolean found = false;
 
-							for(Locale l : Shmames.getLocales().getAllLocales()) {
-								if(l.getLocaleName().equalsIgnoreCase(value)){
+							for(Lang l : Shmames.getLangs().getAllLangs()) {
+								if(l.getLangName().equalsIgnoreCase(value)){
 									found=true;
 									break;
 								}
@@ -163,7 +162,7 @@ public class Modify implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
 	}
 	

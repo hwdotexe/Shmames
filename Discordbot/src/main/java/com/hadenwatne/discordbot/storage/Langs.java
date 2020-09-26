@@ -1,6 +1,6 @@
 package com.hadenwatne.discordbot.storage;
 
-public enum Locales {
+public enum Langs {
     ADD_TRIGGER_SUCCESS,
     BLAME,
     CHOOSE,

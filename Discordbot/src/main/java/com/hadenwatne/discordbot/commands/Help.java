@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.hadenwatne.discordbot.CommandHandler;
 import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Locale;
-import com.hadenwatne.discordbot.storage.Locales;
+import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
@@ -20,7 +20,7 @@ import com.hadenwatne.discordbot.Utils;
 import javax.annotation.Nullable;
 
 public class Help implements ICommand {
-	private Locale locale;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -80,7 +80,7 @@ public class Help implements ICommand {
 			if(message.getChannelType() == ChannelType.TEXT){
 				author.openPrivateChannel().queue((c) -> c.sendMessage(eBuilder.build()).queue());
 
-				return locale.getMsg(Locales.SENT_PRIVATE_MESSAGE);
+				return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
 			}else{
 				message.getChannel().sendMessage(eBuilder.build()).queue();
 
@@ -97,8 +97,8 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Locale;
+import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,7 +18,7 @@ import com.hadenwatne.discordbot.storage.Family;
 import javax.annotation.Nullable;
 
 public class SimonSays implements ICommand {
-	private Locale locale;
+	private Lang lang;
 	private @Nullable Brain brain;
 
 	@Override
@@ -104,8 +104,8 @@ public class SimonSays implements ICommand {
 	}
 
 	@Override
-	public void setRunContext(Locale locale, @Nullable Brain brain) {
-		this.locale = locale;
+	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	
