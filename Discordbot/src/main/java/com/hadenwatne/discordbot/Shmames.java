@@ -7,7 +7,7 @@ import com.hadenwatne.discordbot.listeners.ChatListener;
 import com.hadenwatne.discordbot.listeners.FirstJoinListener;
 import com.hadenwatne.discordbot.listeners.ReactListener;
 import com.hadenwatne.discordbot.storage.*;
-import com.hadenwatne.discordbot.tasks.DailyTask;
+import com.hadenwatne.discordbot.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
 import net.dv8tion.jda.api.AccountType;
@@ -55,7 +55,7 @@ public final class Shmames {
 				brains.loadServerBrains();
 
 				// Set the bot's status.
-				new DailyTask();
+				new SaveDataTask();
 
 				// Set the bot name.
 				botName = getJDA().getSelfUser().getName();

@@ -51,11 +51,11 @@ public class Utils {
 	 * @return A random item from the Set.
 	 */
 	public static <T> T getRandomHashMap(Set<T> set) {
-	    int num = getRandom(set.size());
-	    for(T t: set)
-	    	if (--num < 0)
-	    		return t;
-	    throw new AssertionError();
+		int num = getRandom(set.size());
+		for (T t : set)
+			if (--num < 0)
+				return t;
+		throw new AssertionError();
 	}
 	
 	/**
@@ -64,13 +64,13 @@ public class Utils {
 	 */
 	public static String createID() {
 		final String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		String newID = "";
-		
-		for(int i=0; i<5; i++) {
-			newID += alpha.charAt(getRandom(alpha.length()));
+		StringBuilder newID = new StringBuilder();
+
+		for (int i = 0; i < 5; i++) {
+			newID.append(alpha.charAt(getRandom(alpha.length())));
 		}
-		
-		return newID;
+
+		return newID.toString();
 	}
 	
 	/**
@@ -81,8 +81,8 @@ public class Utils {
 	public static String getFriendlyDate(Calendar c) {
 		int hour = c.get(Calendar.HOUR);
 		int minute = c.get(Calendar.MINUTE);
-		
-		return (c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.DAY_OF_MONTH)+" at "+ (hour == 0 ? "12" : hour) +":"+(minute < 10 ? "0"+minute : minute)+(c.get(Calendar.AM_PM) == 1 ? "PM" : "AM");
+
+		return (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + " at " + (hour == 0 ? "12" : hour) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
 	}
 	
 	/**
@@ -104,42 +104,42 @@ public class Utils {
 		try {
 			URL url = new URL(fqurl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			
-			switch(v) {
-			case GET:
-				conn.setRequestMethod("GET");
-				
-				break;
-			case POST:
-				conn.setRequestMethod("POST");
-				
-				if(body != null) {
-			    	conn.setDoOutput(true);
-			    	conn.setRequestProperty("content-type", "application/json");
-			    	conn.getOutputStream().write(body.toString().getBytes());
-			    }
-				
-				break;
+
+			switch (v) {
+				case GET:
+					conn.setRequestMethod("GET");
+
+					break;
+				case POST:
+					conn.setRequestMethod("POST");
+
+					if (body != null) {
+						conn.setDoOutput(true);
+						conn.setRequestProperty("content-type", "application/json");
+						conn.getOutputStream().write(body.toString().getBytes());
+					}
+
+					break;
 			}
-			
+
 			// Retrieve data
-			if(conn.getResponseCode() == 200) {
+			if (conn.getResponseCode() == 200) {
 				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			    String line;
-			    String result = "";
-			    
-			    while ((line = rd.readLine()) != null) {
-			       result += line;
-			    }
-			    
-			    rd.close();
-			    conn.disconnect();
-			    
-			    return result;
+				String line;
+				StringBuilder result = new StringBuilder();
+
+				while ((line = rd.readLine()) != null) {
+					result.append(line);
+				}
+
+				rd.close();
+				conn.disconnect();
+
+				return result.toString();
 			} else {
 				return null;
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -152,31 +152,28 @@ public class Utils {
 	 * @return A sorted HashMap.
 	 */
 	public static LinkedHashMap<String, Integer> sortHashMap(HashMap<String, Integer> passedMap) {
-	    List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
-	    List<Integer> mapValues = new ArrayList<Integer>(passedMap.values());
-	    Collections.sort(mapValues);
-	    Collections.sort(mapKeys);
+		List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
+		List<Integer> mapValues = new ArrayList<Integer>(passedMap.values());
+		Collections.sort(mapValues);
+		Collections.sort(mapKeys);
 
-	    LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
 
-	    Iterator<Integer> valueIt = mapValues.iterator();
-	    while (valueIt.hasNext()) {
-	        int val = valueIt.next();
-	        Iterator<String> keyIt = mapKeys.iterator();
+		for (int val : mapValues) {
+			Iterator<String> keyIt = mapKeys.iterator();
 
-	        while (keyIt.hasNext()) {
-	            String key = keyIt.next();
-	            int comp1 = passedMap.get(key);
-	            int comp2 = val;
+			while (keyIt.hasNext()) {
+				String key = keyIt.next();
+				int comp1 = passedMap.get(key);
 
-	            if (comp1 == comp2) {
-	                keyIt.remove();
-	                sortedMap.put(key, val);
-	                break;
-	            }
-	        }
-	    }
-	    return sortedMap;
+				if (comp1 == val) {
+					keyIt.remove();
+					sortedMap.put(key, val);
+					break;
+				}
+			}
+		}
+		return sortedMap;
 	}
 	
 	/**
@@ -187,19 +184,18 @@ public class Utils {
 	public static String getWolfram(String search) {
 		try {
 			String searchFormatted = URLEncoder.encode(search, "UTF-8");
-			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid="+Shmames.getBrains().getMotherBrain().getWolframAPIKey()+"&i="+searchFormatted, null);
-			
-			if(result != null) {
+			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=" + Shmames.getBrains().getMotherBrain().getWolframAPIKey() + "&i=" + searchFormatted, null);
+
+			if (result != null) {
 				return result.trim();
 			} else {
 				return Errors.ITEMS_NOT_FOUND;
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return Errors.BOT_ERROR;
 		}
 	}
-	
-	@SuppressWarnings("unused")
+
 	/**
 	 * Makes a request to Tenor and returns a random result.
 	 * @param search The query to search for.
@@ -207,30 +203,30 @@ public class Utils {
 	 */
 	public static String getGIF(String search, String filter) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q="+search+"&key="+Shmames.getBrains().getMotherBrain().getTenorAPIKey()+"&contentfilter="+filter+"&limit=25", null);
-		
-		JSONObject json = new JSONObject(result);
-	    JSONArray jsonArray = json.getJSONArray("results");
-	    List<String> gifURLs = new ArrayList<String>();
-	    
-	    for(int i=0; i<jsonArray.length(); i++) {
-	    	gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
-	    }
-	    
-	    if(gifURLs.size() > 0) {
-	    	String url = gifURLs.get(r.nextInt(gifURLs.size()));
+		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q=" + search + "&key=" + Shmames.getBrains().getMotherBrain().getTenorAPIKey() + "&contentfilter=" + filter + "&limit=25", null);
 
-	    	System.out.println("[GIF Search: "+search+" @ "+filter+"]");
-	    	
-	    	return url;
-	    
-	    } else {
-	    	String[] keyword = new String[] {"lost", "crash", "404", "anime", "cat", "doggo", "explode", "dragon", "deal with it"};
-	    	String[] message = new String[] {"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is",
-	    			"I think you'd like this instead", "Nah, how 'bout", "I would prefer not to"};
-	    	
-	    	return message[r.nextInt(message.length)]+": "+getGIF(keyword[r.nextInt(keyword.length)], filter);
-	    }
+		JSONObject json = new JSONObject(result);
+		JSONArray jsonArray = json.getJSONArray("results");
+		List<String> gifURLs = new ArrayList<String>();
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
+		}
+
+		if (gifURLs.size() > 0) {
+			String url = gifURLs.get(r.nextInt(gifURLs.size()));
+
+			System.out.println("[GIF Search: " + search + " @ " + filter + "]");
+
+			return url;
+
+		} else {
+			String[] keyword = new String[]{"lost", "crash", "404", "anime", "cat", "doggo", "explode", "dragon", "deal with it"};
+			String[] message = new String[]{"Aw shoot, this is the best I can do", "All I found was this", "The bad news is I didn't find that. The good news is",
+					"I think you'd like this instead", "Nah, how 'bout", "I would prefer not to"};
+
+			return message[r.nextInt(message.length)] + ": " + getGIF(keyword[r.nextInt(keyword.length)], filter);
+		}
 	}
 	
 	/**
@@ -246,10 +242,10 @@ public class Utils {
 	 * @param b The Brain to tally the emote in.
 	 * @param id The Emote ID.
 	 */
-	public static void IncrementEmoteTally(Brain b, String id){
-		if(b.getEmoteStats().containsKey(id)) {
-			b.getEmoteStats().put(id, b.getEmoteStats().get(id)+1);
-		}else {
+	public static void IncrementEmoteTally(Brain b, String id) {
+		if (b.getEmoteStats().containsKey(id)) {
+			b.getEmoteStats().put(id, b.getEmoteStats().get(id) + 1);
+		} else {
 			b.getEmoteStats().put(id, 1);
 		}
 	}
@@ -261,18 +257,18 @@ public class Utils {
 	 * @param member The user to check.
 	 * @return A boolean representing whether the user complies.
 	 */
-	public static boolean CheckUserPermission(BotSetting setting, Member member){
-		if(setting.getType() == BotSettingType.ROLE) {
+	public static boolean CheckUserPermission(BotSetting setting, Member member) {
+		if (setting.getType() == BotSettingType.ROLE) {
 			String sv = setting.getValue();
 			Role r = !sv.equals("administrator") && !sv.equals("everyone") ? member.getGuild().getRolesByName(sv, true).get(0) : null;
 
-			if(Shmames.isDebug)
+			if (Shmames.isDebug)
 				return true;
 
-			if(sv.equals("everyone"))
+			if (sv.equals("everyone"))
 				return true;
 
-			if(sv.equals("administrator"))
+			if (sv.equals("administrator"))
 				return member.hasPermission(Permission.ADMINISTRATOR);
 
 			return member.getRoles().contains(r);
@@ -287,17 +283,17 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static String GenerateList(List<String> items, int perRow, boolean numbered){
+	public static String GenerateList(List<String> items, int perRow, boolean numbered) {
 		StringBuilder list = new StringBuilder();
 		Pattern emote = Pattern.compile("(<(:[a-z]+:)\\d+>)", Pattern.CASE_INSENSITIVE);
 
 		int inRow = 0;
-		for(String i : items){
-			if(list.length() > 0) {
+		for (String i : items) {
+			if (list.length() > 0) {
 				list.append(numbered ? "\n" : ", ");
 			}
 
-			if(!numbered && perRow > 0) {
+			if (!numbered && perRow > 0) {
 				inRow++;
 
 				if (inRow > perRow) {
@@ -306,14 +302,14 @@ public class Utils {
 				}
 			}
 
-			if(numbered) {
+			if (numbered) {
 				list.append("> ");
-				list.append(items.indexOf(i)+1);
+				list.append(items.indexOf(i) + 1);
 				list.append(": ");
 			}
 
 			Matcher eMatcher = emote.matcher(i);
-			while(eMatcher.find()){
+			while (eMatcher.find()) {
 				i = i.replaceFirst(eMatcher.group(1), eMatcher.group(2));
 			}
 
@@ -331,25 +327,25 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static <T> String GenerateList(HashMap<String, T> items, int perRow){
+	public static <T> String GenerateList(HashMap<String, T> items, int perRow) {
 		StringBuilder list = new StringBuilder();
 
 		int inRow = 0;
-		for(String i : items.keySet()){
-			if(perRow > 0) {
+		for (String i : items.keySet()) {
+			if (perRow > 0) {
 				inRow++;
 
 				if (inRow > perRow) {
 					list.append("\n> ");
 					inRow = 1;
-				}else{
-					if(list.length() > 0)
+				} else {
+					if (list.length() > 0)
 						list.append("  ");
 					else
 						list.append("> ");
 				}
-			}else{
-				if(list.length() > 0)
+			} else {
+				if (list.length() > 0)
 					list.append("  ");
 				else
 					list.append("> ");
@@ -376,23 +372,22 @@ public class Utils {
 		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
 		String[] result = new String[breaks];
 
-		if(s.length() > interval) {
+		if (s.length() > interval) {
 			int lastIndex = 0;
 			for (int i = 0; i < breaks; i++) {
+				String sub = s.length() >= lastIndex + interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
 
-				String sub = s.length()>= lastIndex+interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
-
-				if (sub.charAt(sub.length()-1) == ' ' || sub.length() < interval) {
+				if (sub.charAt(sub.length() - 1) == ' ' || sub.length() < interval) {
 					result[i] = sub;
 					lastIndex += interval;
 				} else {
 					int lastSpace = sub.lastIndexOf(" ");
 
 					result[i] = sub.substring(0, lastSpace);
-					lastIndex = s.indexOf(result[i])+result[i].length();
+					lastIndex = s.indexOf(result[i]) + result[i].length();
 				}
 			}
-		}else{
+		} else {
 			result[0] = s;
 		}
 

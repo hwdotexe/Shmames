@@ -13,12 +13,11 @@ import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
 /**
- * Runs this code at a daily interval. This is useful for routine tasks and
- * necessary cosmetic changes.
+ * Saves data objects to disk at a regular interval, and changes the bot's status for fun.
  */
-public class DailyTask extends TimerTask{
+public class SaveDataTask extends TimerTask{
 	
-	public DailyTask() {
+	public SaveDataTask() {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
 		
