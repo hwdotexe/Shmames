@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 
 public class Timer implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -71,10 +73,10 @@ public class Timer implements ICommand {
 				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), time, interval, rmsg);
 
 				brain.getTimers().add(t);
-				
-				return "Started a new :alarm_clock: for **" + time + "** " + (interval == 1 ? "Days" : interval == 2 ? "Hours" : interval == 3 ? "Minutes" : "Seconds");
-			}else {
-				return "Please include an actual amount of time!";
+
+				return lang.getMsg(Langs.TIMER_STARTED, new String[]{ "**" + time + "** " + (interval == 1 ? "Days" : interval == 2 ? "Hours" : interval == 3 ? "Minutes" : "Seconds") });
+			} else {
+				return Errors.INCOMPLETE;
 			}
 		}else {
 			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -89,6 +91,7 @@ public class Timer implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
+		this.lang = lang;
 	}
 	
 	@Override

@@ -192,10 +192,10 @@ public class Utils {
 			if(result != null) {
 				return result.trim();
 			} else {
-				return "I'm not too sure on that one!";
+				return Errors.ITEMS_NOT_FOUND;
 			}
 		}catch(Exception e) {
-			return "There may have been a tiny problem...";
+			return Errors.BOT_ERROR;
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class PollTask extends TimerTask{
 	    		votes.put(this.emojiToInt(r.getReactionEmote().getName()), r.getCount()-1);
 	    	}
 	    	
-			eBuilder.setAuthor("== POLL (results) ==");
+			eBuilder.setAuthor(p.getTitleResults());
 	        eBuilder.setColor(Color.GRAY);
 	        eBuilder.setTitle(p.getQuestion());
 	        eBuilder.setFooter("#" + m.getChannel().getName() + " - Expired "+Utils.getFriendlyDate(c), null);

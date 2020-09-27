@@ -4,21 +4,19 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.BotSetting;
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
 
 public class Modify implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -73,7 +71,7 @@ public class Modify implements ICommand {
 
 							eBuilder.setColor(Color.ORANGE);
 							flexValueType(eBuilder, setting, message.getGuild());
-							eBuilder.addField("Status", "Setting updated successfully!", false);
+							eBuilder.addField("Status", lang.getMsg(Langs.SETTING_UPDATED_SUCCESS), false);
 							message.getChannel().sendMessage(eBuilder.build()).queue();
 
 							return "";
@@ -99,7 +97,7 @@ public class Modify implements ICommand {
 				EmbedBuilder eBuilder = new EmbedBuilder();
 				
 		        eBuilder.setColor(Color.ORANGE);
-		        eBuilder.setTitle("Available settings:");
+		        eBuilder.setTitle(lang.getMsg(Langs.SETTING_LIST_TITLE));
 		        eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
 		        
 		        for(BotSetting v : brain.getSettings()) {
@@ -120,39 +118,39 @@ public class Modify implements ICommand {
 			case CHANNEL:
 				try {
 					TextChannel mc = g.getTextChannelById(v.getValue());
-					eBuilder.addField("**"+v.getName().toString()+"**" + "» :tv:", mc.getAsMention(), true);
+					eBuilder.addField("**"+v.getName().toString()+"**" + " » :tv:", mc.getAsMention(), true);
 				}catch (Exception e){
-					eBuilder.addField("**"+v.getName().toString()+"**" + "» :tv:", ":warning: INVALID", true);
+					eBuilder.addField("**"+v.getName().toString()+"**" + " » :tv:", ":warning: INVALID", true);
 				}
 
 				break;
 			case EMOTE:
 				try {
 					Emote em = g.getEmoteById(v.getValue());
-					eBuilder.addField("**"+v.getName().toString()+"**" + "» :muscle:", em.getAsMention(), true);
+					eBuilder.addField("**"+v.getName().toString()+"**" + " » :muscle:", em.getAsMention(), true);
 				}catch (Exception e){
-					eBuilder.addField("**"+v.getName().toString()+"**" + "» :muscle:", ":warning: INVALID", true);
+					eBuilder.addField("**"+v.getName().toString()+"**" + " » :muscle:", ":warning: INVALID", true);
 				}
 
 				break;
 			case NUMBER:
-				eBuilder.addField("**"+v.getName().toString()+"**" + "» :hash:", v.getValue(), true);
+				eBuilder.addField("**"+v.getName().toString()+"**" + " » :hash:", v.getValue(), true);
 
 				break;
 			case BOOLEAN:
-				eBuilder.addField("**"+v.getName().toString()+"**" + "» :level_slider:", v.getValue(), true);
+				eBuilder.addField("**"+v.getName().toString()+"**" + " » :level_slider:", v.getValue(), true);
 
 				break;
 			case ROLE:
-				eBuilder.addField("**"+v.getName().toString()+"**" + "» :tools:", v.getValue(), true);
+				eBuilder.addField("**"+v.getName().toString()+"**" + " » :tools:", v.getValue(), true);
 
 				break;
 			case TEXT:
-				eBuilder.addField("**"+v.getName().toString()+"**" + "» :capital_abcd:", v.getValue(), true);
+				eBuilder.addField("**"+v.getName().toString()+"**" + " » :capital_abcd:", v.getValue(), true);
 
 				break;
 			default:
-				eBuilder.addField("**"+v.getName().toString()+"**" + "» :gear:", v.getValue(), true);
+				eBuilder.addField("**"+v.getName().toString()+"**" + " » :gear:", v.getValue(), true);
 		}
 	}
 
@@ -164,6 +162,7 @@ public class Modify implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
+		this.lang = lang;
 	}
 	
 	@Override

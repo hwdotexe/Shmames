@@ -54,7 +54,7 @@ public class ListResponses implements ICommand {
 				String list = Utils.GenerateList(rsText, -1, true);
 
 				if(list.length() == 0)
-					sb.append("There aren't any responses saved for this trigger type.");
+					sb.append(Errors.ITEMS_NOT_FOUND);
 				else
 					sb.append(list);
 				

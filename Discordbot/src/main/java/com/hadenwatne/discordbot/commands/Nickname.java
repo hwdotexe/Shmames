@@ -1,15 +1,12 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.BotSetting;
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
 import java.util.regex.Matcher;
@@ -17,6 +14,7 @@ import java.util.regex.Pattern;
 
 public class Nickname implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -41,7 +39,7 @@ public class Nickname implements ICommand {
 				try {
 					bot.modifyNickname(args).queue();
 
-					return "Nickname changed!";
+					return lang.getMsg(Langs.GENERIC_SUCCESS);
 				}catch (Exception e){
 					return Errors.NO_PERMISSION_BOT;
 				}
@@ -61,6 +59,7 @@ public class Nickname implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
+		this.lang = lang;
 	}
 	
 	@Override

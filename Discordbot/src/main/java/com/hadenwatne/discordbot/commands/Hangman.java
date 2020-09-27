@@ -1,6 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -10,9 +10,6 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.HangmanDictionary;
-import com.hadenwatne.discordbot.storage.HangmanGame;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -23,6 +20,7 @@ import java.util.regex.Pattern;
 
 public class Hangman implements ICommand {
 	private List<HangmanDictionary> dictionaries;
+	private Lang lang;
 
 	public Hangman(){
 		dictionaries = new ArrayList<HangmanDictionary>();
@@ -124,7 +122,7 @@ public class Hangman implements ICommand {
 			}else if(m.group(1).equalsIgnoreCase("guess")){
 				if(m.group(5) != null) {
 					if (b.getHangmanGame() == null)
-						return "There isn't a Hangman game running! Try starting one.";
+						return Errors.HANGMAN_NOT_STARTED;
 
 					HangmanGame g = b.getHangmanGame();
 					String guess = m.group(5).toLowerCase().trim();
@@ -132,7 +130,7 @@ public class Hangman implements ICommand {
 					if(guess.length() == 1){
 						// Make sure they haven't already guessed this one.
 						if(g.getCorrectGuesses().contains(guess.charAt(0)) || g.getIncorrectGuesses().contains(guess.charAt(0))){
-							return "You've already guessed that letter!";
+							return Errors.HANGMAN_ALREADY_GUESSED;
 						}
 
 						// Ok now continue
@@ -200,7 +198,7 @@ public class Hangman implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override
@@ -211,10 +209,10 @@ public class Hangman implements ICommand {
 	private void sendEmbeddedMessage(TextChannel c, HangmanGame g){
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
-		eBuilder.setAuthor("Let's Play Hangman!");
+		eBuilder.setAuthor(lang.getMsg(Langs.HANGMAN_TITLE));
 		eBuilder.setTitle(g.getDictionary()+" » "+g.getHint());
 		eBuilder.setColor(Color.WHITE);
-		eBuilder.setFooter("Already guessed: "+g.getIncorrectGuesses());
+		eBuilder.setFooter(lang.getMsg(Langs.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
 
 		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
 		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));

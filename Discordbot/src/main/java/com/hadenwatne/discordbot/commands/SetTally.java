@@ -37,8 +37,8 @@ public class SetTally implements ICommand {
 			if (brain.getTallies().containsKey(tally)) {
 				if(count == 0) {
 					brain.getTallies().remove(tally);
-					
-					return "`" + tally + "` hast been removed, sire";
+
+					return lang.getMsg(Langs.TALLY_REMOVED, new String[] { tally });
 				}
 			}
 

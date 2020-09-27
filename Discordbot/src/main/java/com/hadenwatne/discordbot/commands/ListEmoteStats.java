@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
 
 public class ListEmoteStats implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -27,7 +29,7 @@ public class ListEmoteStats implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String statMsg = "**Thus sayeth the Shmames:**\n";
+		StringBuilder statMsg = new StringBuilder("**" + lang.getMsg(Langs.EMOTE_STATS_TITLE) + "**\n");
 		HashMap<String, Integer> emStats = new HashMap<String, Integer>(brain.getEmoteStats());
 		
 		// Add emotes without any uses
@@ -51,18 +53,21 @@ public class ListEmoteStats implements ICommand {
 					i++;
 					
 					if(i > 5) {
-						statMsg += "\n";
+						statMsg.append("\n");
 						i = 1;
 					}
 					
-					statMsg += emote.getAsMention() + ": " + emotes.get(em)+"  ";
+					statMsg.append(emote.getAsMention())
+							.append(": ")
+							.append(emotes.get(em))
+							.append("  ");
 				}
 			}
 		}else {
-			statMsg += "\nThere's nothing here!";
+			statMsg.append("\nThere's nothing here!");
 		}
 
-		return statMsg;
+		return statMsg.toString();
 	}
 
 	@Override
@@ -72,6 +77,7 @@ public class ListEmoteStats implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
+		this.lang = lang;
 		this.brain = brain;
 	}
 	

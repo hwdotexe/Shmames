@@ -22,14 +22,16 @@ public class Poll {
 	private Date expires;
 	private String messageID;
 	private String channelID;
+	private String titleResults;
 	private boolean isActive;
 	
-	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id) {
+	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id, String title, String titleResults) {
 		question=q;
 		options=o;
 		pollID = id;
 		messageID="";
 		channelID=ch.getId();
+		this.titleResults = titleResults;
 		isActive=true;
 		
 		Calendar c = Calendar.getInstance();
@@ -42,9 +44,6 @@ public class Poll {
     	case "h":
     		c.add(Calendar.HOUR, time);
     		break;
-    	case "m":
-    		c.add(Calendar.MINUTE, time);
-    		break;
     	case "s":
     		c.add(Calendar.SECOND, time);
     		break;
@@ -56,7 +55,7 @@ public class Poll {
     	
 		EmbedBuilder eBuilder = new EmbedBuilder();
 		
-		eBuilder.setAuthor("== POLL ==");
+		eBuilder.setAuthor(title);
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
         eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c)+" - #"+pollID, null);
@@ -122,6 +121,10 @@ public class Poll {
 	
 	public String getID() {
 		return pollID;
+	}
+
+	public String getTitleResults() {
+		return titleResults;
 	}
 	
 	private String intToEmoji(int i) {

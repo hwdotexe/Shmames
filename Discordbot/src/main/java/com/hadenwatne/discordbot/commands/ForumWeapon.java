@@ -5,20 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Family;
-import com.hadenwatne.discordbot.storage.ForumWeaponObj;
 
 import javax.annotation.Nullable;
 
 public class ForumWeapon implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "Engage the meme arsenal. Create shorthand names for your favorite GIFs, " +
@@ -46,7 +45,7 @@ public class ForumWeapon implements ICommand {
 						if (getFWCount(message.getGuild().getId()) < 100) {
 							if (optFWName != null) {
 								if (optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")) {
-									return "Sorry, you can't create a Forum Weapon with that name!";
+									return Errors.RESERVED_WORD;
 								}
 
 								if (findFW(optFWName, message.getGuild().getId()) == null) {
@@ -55,15 +54,18 @@ public class ForumWeapon implements ICommand {
 
 									Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().add(nfw);
 
-									return "Created new forum weapon: **" + optFWName + "**" + (existingUrl != null ? "\n> :warning: Found existing ForumWeapon with that link: **"+existingUrl.getItemName()+"**" : "");
+									return lang.getMsg(Langs.FORUM_WEAPON_CREATED, new String[]{ optFWName })
+											+ (existingUrl != null
+											? "\n> "+lang.getMsg(Langs.FORUM_WEAPON_DUPLICATE, new String[]{ existingUrl.getItemName() })
+											: "");
 								} else {
-									return "An item with that name already exists!";
+									return Errors.ALREADY_EXISTS;
 								}
 							} else {
 								return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
 							}
 						} else {
-							return "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more.";
+							return Errors.FORUM_WEAPON_MAXIMUM_REACHED;
 						}
 					}else{
 						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
@@ -76,9 +78,9 @@ public class ForumWeapon implements ICommand {
 							if(fwu.getServerID().equals(message.getGuild().getId())) {
 								fwu.setItemLink(optURL);
 
-								return "Updated item with the new link!";
+								return lang.getMsg(Langs.FORUM_WEAPON_UPDATED);
 							}else {
-								return "That item is owned by a different server!";
+								return Errors.FORUM_WEAPON_OWNED_OTHER;
 							}
 						} else {
 							return Errors.NOT_FOUND;
@@ -95,9 +97,9 @@ public class ForumWeapon implements ICommand {
 							if (fwr.getServerID().equals(message.getGuild().getId())) {
 								Shmames.getBrains().getBrain(message.getGuild().getId()).getForumWeapons().remove(fwr);
 
-								return "Weapon destroyed.";
+								return lang.getMsg(Langs.FORUM_WEAPON_DESTROYED);
 							} else {
-								return "That item is owned by a different server!";
+								return Errors.FORUM_WEAPON_OWNED_OTHER;
 							}
 						} else {
 							return Errors.NOT_FOUND;
@@ -175,12 +177,12 @@ public class ForumWeapon implements ICommand {
 								if(fwother == null) {
 									fwa.getAliases().add(optFWAlias);
 
-									return "Alias added!";
+									return lang.getMsg(Langs.FORUM_WEAPON_ADDED_ALIAS);
 								}else{
-									return "A weapon with that name already exists!";
+									return Errors.ALREADY_EXISTS;
 								}
 							}else{
-								return "That weapon already has that alias!";
+								return Errors.ALREADY_EXISTS;
 							}
 						}else{
 							return Errors.NOT_FOUND;
@@ -213,7 +215,7 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.Errors;
@@ -63,7 +64,7 @@ public class Startpoll implements ICommand {
 						// Do nothing; we don't have permission
 					}
 
-					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID()));
+					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID(), lang.getMsg(Langs.POLL_TITLE), lang.getMsg(Langs.POLL_TITLE_RESULTS)));
 				} else {
 					return Errors.INCORRECT_ITEM_COUNT;
 				}
