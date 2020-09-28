@@ -1,6 +1,8 @@
 package com.hadenwatne.discordbot.commands;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +52,7 @@ public class Modify implements ICommand {
 							}
 						}
 
-						// Ensure that this setting is only changed to an existing Locale.
+						// Ensure that this setting is only changed to an existing Lang.
 						if (settingName == BotSettingName.SERVER_LANG) {
 							boolean found = false;
 
@@ -86,6 +88,46 @@ public class Modify implements ICommand {
 						flexValueType(eBuilder, setting, message.getGuild());
 						eBuilder.addField("Description", settingName.getDescription(), false);
 						eBuilder.addField("Type", setting.getType().name(), false);
+
+						switch(settingName) {
+							case PIN_POLLS:
+							case MUTE_DEV_ANNOUNCES:
+								eBuilder.addField("Possible Values", "`true`, `false`", false);
+								break;
+							case PIN_CHANNEL:
+							case DEV_ANNOUNCE_CHANNEL:
+								eBuilder.addField("Possible Values", "Any text channel", false);
+								break;
+							case MANAGE_MUSIC:
+							case ALLOW_MODIFY:
+							case ALLOW_POLLS:
+							case ALLOW_NICKNAME:
+							case RESET_EMOTE_STATS:
+								eBuilder.addField("Possible Values", "Any role, `administrator`, `everyone`", false);
+								break;
+							case REMOVAL_EMOTE:
+							case APPROVAL_EMOTE:
+								eBuilder.addField("Possible Values", "Any server emoji", false);
+								break;
+							case REMOVAL_THRESHOLD:
+							case APPROVAL_THRESHOLD:
+								eBuilder.addField("Possible Values", "Any positive number", false);
+								break;
+							case SERVER_LANG:
+								StringBuilder sb = new StringBuilder();
+								List<String> langs = new ArrayList<>();
+
+								for(Lang l : Shmames.getLangs().getAllLangs()) {
+									langs.add(l.getLangName());
+								}
+
+								sb.append(Utils.GenerateList(langs, -1, false));
+
+								eBuilder.addField("Possible Values", sb.toString(), false);
+								break;
+							default:
+						}
+
 						message.getChannel().sendMessage(eBuilder.build()).queue();
 
 						return "";

@@ -14,7 +14,7 @@ public enum BotSettingName {
 	ALLOW_POLLS("Sets the role (other than Administrator) allowed to start and end Polls."),
 	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts."),
 	MANAGE_MUSIC("Sets the role (other than Administrator) allowed to play and manage music."),
-	SERVER_LANG("Sets which language Locale preset to use on this server.");
+	SERVER_LANG("Sets which Lang preset to use on this server.");
 
 	private String description;
 
