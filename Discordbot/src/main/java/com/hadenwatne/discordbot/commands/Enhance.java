@@ -4,13 +4,14 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
 
 public class Enhance implements ICommand {
 	private String[] answers;
+	private Lang lang;
 	
 	public Enhance() {
 		answers = new String[] {"Done - @PH is now solid gold.", "Done - @PH now smells nice.",
@@ -37,8 +38,8 @@ public class Enhance implements ICommand {
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			return answers[Utils.getRandom(answers.length)].replace("@PH", args);
-		
-		return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
+
+		return lang.wrongUsage(getUsage());
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class Enhance implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

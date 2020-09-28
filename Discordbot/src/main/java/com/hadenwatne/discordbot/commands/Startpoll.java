@@ -9,7 +9,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Poll;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
@@ -64,16 +64,15 @@ public class Startpoll implements ICommand {
 						// Do nothing; we don't have permission
 					}
 
-					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID(), lang.getMsg(Langs.POLL_TITLE), lang.getMsg(Langs.POLL_TITLE_RESULTS)));
+					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID(), lang));
 				} else {
-					return Errors.INCORRECT_ITEM_COUNT;
+					return lang.getError(Errors.INCORRECT_ITEM_COUNT, true);
 				}
 			} else {
-				// Regex fail
-				return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+				return lang.wrongUsage(getUsage());
 			}
 		}else{
-			return Errors.NO_PERMISSION_USER;
+			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 		
 		return "";

@@ -4,7 +4,7 @@ import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
@@ -41,13 +41,13 @@ public class Nickname implements ICommand {
 
 					return lang.getMsg(Langs.GENERIC_SUCCESS);
 				}catch (Exception e){
-					return Errors.NO_PERMISSION_BOT;
+					return lang.getError(Errors.NO_PERMISSION_BOT, true);
 				}
 			}
 
-			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+			return lang.getError(Errors.INCOMPLETE, true);
 		}else{
-			return Errors.NO_PERMISSION_USER;
+			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 	}
 

@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.discordbot.CommandHandler;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.commands.ICommand;
@@ -96,7 +96,7 @@ public class ReactListener extends ListenerAdapter {
 						}
 					}
 				} catch (Exception ex) {
-					m.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
+					m.getChannel().sendMessage(Shmames.getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
 				}
 			}
 		}

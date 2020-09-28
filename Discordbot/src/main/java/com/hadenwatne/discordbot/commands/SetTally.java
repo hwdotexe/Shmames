@@ -7,7 +7,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public class SetTally implements ICommand {
 
 			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { tally, Integer.toString(count) });
 		} else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 	}
 

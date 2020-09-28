@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
@@ -89,7 +89,7 @@ public class Hangman implements ICommand {
 					}
 
 					if(specified.size() == 0)
-						return Errors.NOT_FOUND;
+						return lang.getError(Errors.NOT_FOUND, true);
 
 					if(dictCmd.startsWith("!")){
 						List<HangmanDictionary> drawPool = new ArrayList<HangmanDictionary>(dictionaries);
@@ -101,7 +101,7 @@ public class Hangman implements ICommand {
 						}
 
 						if(drawPool.size() == 0)
-							return Errors.NOT_FOUND;
+							return lang.getError(Errors.NOT_FOUND, true);
 
 						hd = drawPool.get(Utils.getRandom(drawPool.size()));
 					}else{
@@ -122,7 +122,7 @@ public class Hangman implements ICommand {
 			}else if(m.group(1).equalsIgnoreCase("guess")){
 				if(m.group(5) != null) {
 					if (b.getHangmanGame() == null)
-						return Errors.HANGMAN_NOT_STARTED;
+						return lang.getError(Errors.HANGMAN_NOT_STARTED, true);
 
 					HangmanGame g = b.getHangmanGame();
 					String guess = m.group(5).toLowerCase().trim();
@@ -130,7 +130,7 @@ public class Hangman implements ICommand {
 					if(guess.length() == 1){
 						// Make sure they haven't already guessed this one.
 						if(g.getCorrectGuesses().contains(guess.charAt(0)) || g.getIncorrectGuesses().contains(guess.charAt(0))){
-							return Errors.HANGMAN_ALREADY_GUESSED;
+							return lang.getError(Errors.HANGMAN_ALREADY_GUESSED, true);
 						}
 
 						// Ok now continue
@@ -181,11 +181,11 @@ public class Hangman implements ICommand {
 						return "You lose! The word was \""+g.getWord()+"\"";
 					}
 				}else{
-					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+					return lang.wrongUsage(getUsage());
 				}
 			}
 		}else{
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 
 		return "";

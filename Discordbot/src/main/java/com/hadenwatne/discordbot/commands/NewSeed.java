@@ -4,12 +4,14 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
 
 public class NewSeed implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "";
@@ -30,7 +32,7 @@ public class NewSeed implements ICommand {
 				seed = Long.parseLong(args);
 				Utils.GetRandomObj().setSeed(seed);
 			}catch(Exception e) {
-				return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+				return lang.wrongUsage(getUsage());
 			}
 		}else {
 			Utils.GetRandomObj().setSeed(seed);
@@ -46,7 +48,7 @@ public class NewSeed implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

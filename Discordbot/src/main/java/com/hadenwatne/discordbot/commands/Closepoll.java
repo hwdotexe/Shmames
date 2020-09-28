@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Poll;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 
 public class Closepoll implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -51,14 +52,12 @@ public class Closepoll implements ICommand {
 					}
 				}
 
-				// Not found
-				return Errors.NOT_FOUND;
+				return lang.getError(Errors.NOT_FOUND, true);
 			} else {
-				// Regex fail
-				return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+				return lang.wrongUsage(getUsage());
 			}
 		}else{
-			return Errors.NO_PERMISSION_USER;
+			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 	}
 
@@ -70,6 +69,7 @@ public class Closepoll implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
+		this.lang = lang;
 	}
 	
 	@Override

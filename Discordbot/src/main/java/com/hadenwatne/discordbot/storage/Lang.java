@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 public class Lang {
     public HashMap<Langs, String> messages;
+    public HashMap<Errors, String> errors;
     public final String wildcard = "%WC%";
     public final String linebreak = "%BR%";
     private String langName;
@@ -13,6 +14,7 @@ public class Lang {
     public Lang(String name) {
         langName = name;
         messages = new HashMap<Langs, String>();
+        errors = new HashMap<Errors, String>();
 
         populateDefaultValues();
     }
@@ -43,6 +45,34 @@ public class Lang {
         return msg;
     }
 
+    public String getError(Errors key, boolean showError) {
+        String s = showError ? ("\n> `// " + key.toString() + "`") : "";
+
+        if (errors.containsKey(key)) {
+            return processBreaks(errors.get(key)) + s;
+        } else {
+            if (!langName.equalsIgnoreCase("default")) {
+                return Shmames.getDefaultLang().getError(key, showError) + s;
+            } else {
+                return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
+            }
+        }
+    }
+
+    public String getError(Errors key, boolean showError, String[] replacements) {
+        String msg = getError(key, showError);
+
+        for(String r : replacements) {
+            msg = msg.replaceFirst(wildcard, r);
+        }
+
+        return msg;
+    }
+
+    public String wrongUsage(String usage) {
+        return getError(Errors.WRONG_USAGE, true) + "\n> " + getMsg(Langs.COMMAND_USAGE, new String[]{usage});
+    }
+
     private String processBreaks(String msg) {
         msg = msg.replaceAll(linebreak, "\n");
 
@@ -50,11 +80,40 @@ public class Lang {
     }
 
     private void populateDefaultValues() {
-        // TODO Add another map for Errors, use Error name instead of hard-coding type.
+        errors.put(Errors.ALREADY_EXISTS,               "I think you've already done that!");
+        errors.put(Errors.BOT_ERROR,                    "I sense a plot to destroy me.");
+        errors.put(Errors.CANNOT_DELETE,                "Sorry, I can't let you delete that. It's very precious to me.");
+        errors.put(Errors.CHANNEL_NOT_FOUND,            "I can't find the correct channel for that.");
+        errors.put(Errors.COMMAND_NOT_FOUND,            "That command hasn't been invented yet!");
+        errors.put(Errors.FAMILY_ALREADY_EXISTS,        "You already own a family with that name! Please choose a different name.");
+        errors.put(Errors.FAMILY_ALREADY_JOINED,        "This server already belongs to that family!");
+        errors.put(Errors.FAMILY_INVALID_DETAIL,        "Invalid Family name or Join Code!");
+        errors.put(Errors.FAMILY_NOT_JOINED,            "That server has not joined that Family!");
+        errors.put(Errors.FAMILY_MEMBER_MAXIMUM_REACHED,"That family has reached the maximum number of servers!");
+        errors.put(Errors.FAMILY_MAXIMUM_REACHED,       "You can only join up to 3 families!");
+        errors.put(Errors.FAMILY_SERVER_LIST_EMPTY,     "This Family does not contain any servers.");
+        errors.put(Errors.FORUM_WEAPON_MAXIMUM_REACHED, "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more.");
+        errors.put(Errors.FORUM_WEAPON_OWNED_OTHER,     "That weapon is owned by a different server!");
+        errors.put(Errors.GUILD_REQUIRED,               "That command must be run on a server.");
+        errors.put(Errors.HANGMAN_ALREADY_GUESSED,      "You've already guessed that letter!");
+        errors.put(Errors.HANGMAN_NOT_STARTED,          "There isn't a Hangman game running! Try starting one.");
+        errors.put(Errors.HEY_THERE,                    "Hey there! Try using `"+wildcard+" help`!");
+        errors.put(Errors.INCOMPLETE,                   "I'm gonna need a few more details.");
+        errors.put(Errors.INCORRECT_ITEM_COUNT,         "You've supplied an incorrect number of thingz!");
+        errors.put(Errors.ITEMS_NOT_FOUND,              "There weren't any results.");
+        errors.put(Errors.NO_PERMISSION_BOT,            "I ran into some trouble with the law...");
+        errors.put(Errors.NO_PERMISSION_USER,           "I'm afraid I can't let you do that.");
+        errors.put(Errors.NOT_FOUND,                    "That thing you said... I'm not sure what it is.");
+        errors.put(Errors.RESERVED_WORD,                "Sorry, you can't use that totally awesome name!");
+        errors.put(Errors.SERVER_FAMILY_LIST_EMPTY,     "This server does not belong to a Family.");
+        errors.put(Errors.SETTING_NOT_FOUND,            "I couldn't find that setting.");
+        errors.put(Errors.TRACK_NOT_PLAYING,            "There isn't a track playing right now.");
+        errors.put(Errors.WRONG_USAGE,                  "I don't think that's how you do it.");
 
         messages.put(Langs.ADD_TRIGGER_SUCCESS,         "I will now send a `"+wildcard+"` response when I hear `"+wildcard+"`!");
         messages.put(Langs.BLAME,                       "I blame "+wildcard);
         messages.put(Langs.CHOOSE,                      "I choose: "+wildcard+"!");
+        messages.put(Langs.COMMAND_USAGE,               "Give this a try: `"+wildcard+"`");
         messages.put(Langs.EMOTE_STATS_TITLE,           "The Emoji Abacus doth say:");
         messages.put(Langs.FAMILY_CREATED,              "The Family was created! Now let's go add other servers!");
         messages.put(Langs.FAMILY_JOIN_CODE,            "**Join Code for " + wildcard + "**"+linebreak+"`" + wildcard + "`"+linebreak+"_Use this one-time code to join a server to the Family._");

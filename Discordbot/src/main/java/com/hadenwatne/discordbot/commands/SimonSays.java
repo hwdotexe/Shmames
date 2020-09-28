@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
@@ -94,7 +94,7 @@ public class SimonSays implements ICommand {
 			
 			return args;
 		}else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 	}
 

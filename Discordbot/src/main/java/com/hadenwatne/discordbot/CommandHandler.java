@@ -9,16 +9,21 @@ import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.commands.*;
 import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.tasks.TypingTask;
 
+import javax.annotation.Nullable;
+
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
 	private static List<ICommand> commands;
+	private Lang defLang;
 	
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
+		defLang = Shmames.getDefaultLang();
 		
 		commands.add(new AddResponse());
 		commands.add(new AddTally());
@@ -72,9 +77,9 @@ public class CommandHandler {
 	 * @param author The user who is running the command.
 	 * @param server The server the command is running on.
 	 */
-	public void PerformCommand(String cmd, Message message, User author, Guild server) {
+	public void PerformCommand(String cmd, Message message, User author, @Nullable Guild server) {
 		if(cmd.length() == 0) {
-			message.getChannel().sendMessage(Errors.HEY_THERE).queue();
+			message.getChannel().sendMessage(defLang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() })).queue();
 			return;
 		}
 		
@@ -113,17 +118,17 @@ public class CommandHandler {
 								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
 										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()))
 								.exceptionally(exception -> {
-									sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());
+									sendMessageToChannel(defLang.getError(Errors.BOT_ERROR, true), message.getChannel());
 									exception.printStackTrace();
 									return null;
 								});
 							}catch (Exception e){
 								e.printStackTrace();
-								sendMessageToChannel(Errors.BOT_ERROR, message.getChannel());
+								sendMessageToChannel(defLang.getError(Errors.BOT_ERROR, true), message.getChannel());
 							}
 						}
 					}else {
-						sendMessageToChannel(Errors.GUILD_REQUIRED, message.getChannel());
+						sendMessageToChannel(defLang.getError(Errors.GUILD_REQUIRED, true), message.getChannel());
 					}
 
 					return;
@@ -131,7 +136,7 @@ public class CommandHandler {
 			}
 		}
 
-		sendMessageToChannel(Errors.COMMAND_NOT_FOUND, message.getChannel());
+		sendMessageToChannel(defLang.getError(Errors.COMMAND_NOT_FOUND, true), message.getChannel());
 	}
 	
 	/**
@@ -151,7 +156,7 @@ public class CommandHandler {
 				}
 			}
 		} else {
-			new TypingTask(channel, Errors.COMMAND_NOT_FOUND);
+			new TypingTask(channel, defLang.getError(Errors.COMMAND_NOT_FOUND, true));
 		}
 	}
 

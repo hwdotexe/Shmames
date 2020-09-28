@@ -8,11 +8,13 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 
 import javax.annotation.Nullable;
 
 public class IdiotThat implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "Rewrite a previous message with poor grammar. Use `^` symbols to specify the " +
@@ -73,7 +75,7 @@ public class IdiotThat implements ICommand {
 			
 			return idiot;
 		}else {
-			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+			return lang.getError(Errors.INCOMPLETE, true);
 		}
 	}
 
@@ -84,7 +86,7 @@ public class IdiotThat implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

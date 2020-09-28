@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
 
@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 public class PinThat implements ICommand {
 	private Brain brain;
+	private Lang lang;
 
 	@Override
 	public String getDescription() {
@@ -68,16 +69,16 @@ public class PinThat implements ICommand {
 				}
 				
 				if(!channelFound)
-					return Errors.CHANNEL_NOT_FOUND;
+					return lang.getError(Errors.CHANNEL_NOT_FOUND, true);
 				
 				return "";
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				return Errors.NO_PERMISSION_BOT;
+				return lang.getError(Errors.NO_PERMISSION_BOT, true);
 			}
 		}
-		
-		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+
+		return lang.getError(Errors.INCOMPLETE, true);
 	}
 
 	@Override
@@ -88,6 +89,7 @@ public class PinThat implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.brain = brain;
+		this.lang = lang;
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
@@ -87,8 +87,8 @@ public class Help implements ICommand {
 				return "";
 			}
 		}
-		
-		return Errors.COMMAND_NOT_FOUND;
+
+		return lang.getError(Errors.COMMAND_NOT_FOUND, true);
 	}
 
 	@Override

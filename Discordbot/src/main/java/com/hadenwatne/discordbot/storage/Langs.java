@@ -4,6 +4,7 @@ public enum Langs {
     ADD_TRIGGER_SUCCESS,
     BLAME,
     CHOOSE,
+    COMMAND_USAGE,
     EMOTE_STATS_TITLE,
     FAMILY_CREATED,
     FAMILY_JOIN_CODE,

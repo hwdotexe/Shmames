@@ -8,7 +8,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
@@ -29,21 +29,21 @@ public class Choose implements ICommand {
 	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^(.{1,}) or (.{1,})$", Pattern.CASE_INSENSITIVE).matcher(args);
-		
-		if(m.find()) {
+
+		if (m.find()) {
 			int mutator = Utils.getRandom(50);
-			
-			if(mutator < 5) { // 10%
-				return lang.getMsg(Langs.CHOOSE, new String[] { "Neither" });
-			} else if(mutator < 10) { // 20%
-				return lang.getMsg(Langs.CHOOSE, new String[] { "Both" });
+
+			if (mutator < 5) { // 10%
+				return lang.getMsg(Langs.CHOOSE, new String[]{"Neither"});
+			} else if (mutator < 10) { // 20%
+				return lang.getMsg(Langs.CHOOSE, new String[]{"Both"});
 			} else {
 				String c = m.group(1 + Utils.getRandom(2));
 
-				return lang.getMsg(Langs.CHOOSE, new String[] { c });
+				return lang.getMsg(Langs.CHOOSE, new String[]{c});
 			}
-		}else {
-			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+		} else {
+			return lang.getError(Errors.INCOMPLETE, true);
 		}
 	}
 

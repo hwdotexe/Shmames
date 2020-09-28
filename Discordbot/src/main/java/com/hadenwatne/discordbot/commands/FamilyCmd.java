@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.Brain;
@@ -51,7 +51,7 @@ public class FamilyCmd implements ICommand {
 							for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
 								if (f.getFamilyOwner() == author.getIdLong()) {
 									if (f.getFamName().equals(name)) {
-										return Errors.FAMILY_ALREADY_EXISTS;
+										return lang.getError(Errors.FAMILY_ALREADY_EXISTS, true);
 									}
 								}
 							}
@@ -69,7 +69,7 @@ public class FamilyCmd implements ICommand {
 									"Please use only letters, numbers, and dashes in the name.";
 						}
 					}else{
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "add": // add famName|code
 					if (m.group(6) != null) {
@@ -83,7 +83,7 @@ public class FamilyCmd implements ICommand {
 
 									return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
 								} else {
-									return Errors.FAMILY_MEMBER_MAXIMUM_REACHED;
+									return lang.getError(Errors.FAMILY_MEMBER_MAXIMUM_REACHED, true);
 								}
 							}
 
@@ -109,7 +109,7 @@ public class FamilyCmd implements ICommand {
 							}
 						}
 
-						return Errors.FAMILY_INVALID_DETAIL;
+						return lang.getError(Errors.FAMILY_INVALID_DETAIL, true);
 					}else{
 						return "Use `add <family name>` to get a new Join Code.\n" +
 								"Use `add <join code>` to join a server to a Family.";
@@ -155,7 +155,7 @@ public class FamilyCmd implements ICommand {
 							}
 						}
 
-						return Errors.NOT_FOUND;
+						return lang.getError(Errors.NOT_FOUND, true);
 					}else{
 						if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
 							Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
@@ -190,7 +190,7 @@ public class FamilyCmd implements ICommand {
 
 							return sb.toString();
 						}else{
-							return Errors.NO_PERMISSION_USER;
+							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}
 				case "remove": // <family> [server]
@@ -223,12 +223,12 @@ public class FamilyCmd implements ICommand {
 
 										return lang.getMsg(Langs.FAMILY_REMOVED_SERVER, new String[]{ gName, f.getFamName() });
 									} else {
-										return Errors.FAMILY_NOT_JOINED;
+										return lang.getError(Errors.FAMILY_NOT_JOINED, true);
 									}
 								}
 							}
 
-							return Errors.NOT_FOUND;
+							return lang.getError(Errors.NOT_FOUND, true);
 						} else {
 							if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
 								for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
@@ -248,9 +248,9 @@ public class FamilyCmd implements ICommand {
 									}
 								}
 
-								return Errors.NOT_FOUND;
+								return lang.getError(Errors.NOT_FOUND, true);
 							}else{
-								return Errors.NO_PERMISSION_USER;
+								return lang.getError(Errors.NO_PERMISSION_USER, true);
 							}
 						}
 					}else{
@@ -259,11 +259,11 @@ public class FamilyCmd implements ICommand {
 								"_Find the server number using `family view <familyName>`_";
 					}
 				default:
-					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+					return lang.wrongUsage(getUsage());
 			}
 		}
 
-		return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+		return lang.wrongUsage(getUsage());
 	}
 
 	@Override

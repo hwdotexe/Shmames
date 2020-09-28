@@ -9,11 +9,13 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 
 import javax.annotation.Nullable;
 
 public class React implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "Reacts to the specified message with emoji that spell out your word. Works " +
@@ -60,12 +62,12 @@ public class React implements ICommand {
 				return "";
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				
-				return Errors.NO_PERMISSION_BOT;
+
+				return lang.getError(Errors.NO_PERMISSION_BOT, true);
 			}
 		}
 		
-		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+		return lang.getError(Errors.INCOMPLETE, true);
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class React implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

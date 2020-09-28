@@ -4,13 +4,14 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
 
 public class Thoughts implements ICommand {
 	private String[] answers;
+	private Lang lang;
 	
 	public Thoughts() {
 		answers = new String[] {"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", 
@@ -32,8 +33,8 @@ public class Thoughts implements ICommand {
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			return answers[Utils.getRandom(answers.length)];
-		
-		return Errors.formatUsage(Errors.WRONG_USAGE, this.getUsage());
+
+		return lang.wrongUsage(getUsage());
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class Thoughts implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

@@ -17,9 +17,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.BotSetting;
-import com.hadenwatne.discordbot.storage.BotSettingType;
-import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -182,6 +180,8 @@ public class Utils {
 	 * @return The API's response.
 	 */
 	public static String getWolfram(String search) {
+		Lang lang = Shmames.getDefaultLang();
+
 		try {
 			String searchFormatted = URLEncoder.encode(search, "UTF-8");
 			String result = sendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=" + Shmames.getBrains().getMotherBrain().getWolframAPIKey() + "&i=" + searchFormatted, null);
@@ -189,10 +189,10 @@ public class Utils {
 			if (result != null) {
 				return result.trim();
 			} else {
-				return Errors.ITEMS_NOT_FOUND;
+				return lang.getError(Errors.ITEMS_NOT_FOUND, true);
 			}
 		} catch (Exception e) {
-			return Errors.BOT_ERROR;
+			return lang.getError(Errors.BOT_ERROR, true);
 		}
 	}
 

@@ -6,8 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.*;
 import com.hadenwatne.discordbot.tasks.PollTask;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -22,16 +21,16 @@ public class Poll {
 	private Date expires;
 	private String messageID;
 	private String channelID;
-	private String titleResults;
+	private Lang lang;
 	private boolean isActive;
 	
-	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id, String title, String titleResults) {
+	public Poll(MessageChannel ch, String q, List<String> o, int time, String interval, String id, Lang lang) {
 		question=q;
 		options=o;
 		pollID = id;
 		messageID="";
 		channelID=ch.getId();
-		this.titleResults = titleResults;
+		this.lang = lang;
 		isActive=true;
 		
 		Calendar c = Calendar.getInstance();
@@ -55,7 +54,7 @@ public class Poll {
     	
 		EmbedBuilder eBuilder = new EmbedBuilder();
 		
-		eBuilder.setAuthor(title);
+		eBuilder.setAuthor(lang.getMsg(Langs.POLL_TITLE));
         eBuilder.setColor(Color.GREEN);
         eBuilder.setTitle(question);
         eBuilder.setFooter("#" + ch.getName() + " - Expires "+Utils.getFriendlyDate(c)+" - #"+pollID, null);
@@ -86,7 +85,7 @@ public class Poll {
 			try {
 				m.pin().queue();
 			}catch(Exception e) {
-				m.getChannel().sendMessage(Errors.NO_PERMISSION_BOT).queue();
+				m.getChannel().sendMessage(lang.getError(Errors.NO_PERMISSION_BOT, true)).queue();
 			}
 		}
 	}
@@ -124,7 +123,7 @@ public class Poll {
 	}
 
 	public String getTitleResults() {
-		return titleResults;
+		return lang.getMsg(Langs.POLL_TITLE_RESULTS);
 	}
 	
 	private String intToEmoji(int i) {

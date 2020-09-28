@@ -8,19 +8,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.*;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.discordbot.*;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Family;
-import com.hadenwatne.discordbot.storage.Response;
 
 public class ChatListener extends ListenerAdapter {
 	private CommandHandler cmd;
+	private Lang defLang;
 	
 	public ChatListener() {
 		cmd = new CommandHandler();
+		defLang = Shmames.getDefaultLang();
 	}
 	
 	@Override
@@ -56,7 +55,7 @@ public class ChatListener extends ListenerAdapter {
 								// Send to the command handler for further processing.
 								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							}else{
-								e.getTextChannel().sendMessage(Errors.HEY_THERE).queue();
+								e.getTextChannel().sendMessage(defLang.getError(Errors.HEY_THERE, false, new String[] { Shmames.getBotName() })).queue();
 							}
 
 							return;

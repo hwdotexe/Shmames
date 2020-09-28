@@ -4,7 +4,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 import com.hadenwatne.discordbot.storage.BotSettingName;
 import com.hadenwatne.discordbot.storage.Brain;
@@ -32,7 +32,7 @@ public class ResetEmoteStats implements ICommand {
 
 			return lang.getMsg(Langs.RESET_EMOTE_STATS);
 		}else{
-			return Errors.NO_PERMISSION_USER;
+			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 	}
 

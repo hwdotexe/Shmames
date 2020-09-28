@@ -10,12 +10,14 @@ import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
 
 public class CringeThat implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "Rewrite a previous message in a cringy way. Use `^` symbols to specify the " +
@@ -118,11 +120,12 @@ public class CringeThat implements ICommand {
 				return cringe;
 			}catch(Exception ex) {
 				ex.printStackTrace();
-				return Errors.NO_PERMISSION_BOT;
+
+				return lang.getError(Errors.NO_PERMISSION_BOT, true);
 			}
 		}
-		
-		return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+
+		return lang.getError(Errors.INCOMPLETE, true);
 	}
 	
 	// Returns the position of a word that is safe to interject text into
@@ -154,7 +157,7 @@ public class CringeThat implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

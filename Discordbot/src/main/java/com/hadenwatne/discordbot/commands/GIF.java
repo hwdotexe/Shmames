@@ -5,12 +5,14 @@ import com.hadenwatne.discordbot.storage.Lang;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Utils;
 
 import javax.annotation.Nullable;
 
 public class GIF implements ICommand {
+	private Lang lang;
+
 	@Override
 	public String getDescription() {
 		return "Send an awesome, randomly-selected GIF based on a search term.";
@@ -32,7 +34,7 @@ public class GIF implements ICommand {
 
 			return Utils.getGIF(args, "high");
 		} else {
-			return Errors.formatUsage(Errors.INCOMPLETE, getUsage());
+			return lang.getError(Errors.INCOMPLETE, true);
 		}
 	}
 
@@ -43,7 +45,7 @@ public class GIF implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
+		this.lang = lang;
 	}
 	
 	@Override

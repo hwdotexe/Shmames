@@ -9,7 +9,7 @@ import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
@@ -45,7 +45,7 @@ public class ForumWeapon implements ICommand {
 						if (getFWCount(message.getGuild().getId()) < 100) {
 							if (optFWName != null) {
 								if (optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")) {
-									return Errors.RESERVED_WORD;
+									return lang.getError(Errors.RESERVED_WORD, true);
 								}
 
 								if (findFW(optFWName, message.getGuild().getId()) == null) {
@@ -59,16 +59,16 @@ public class ForumWeapon implements ICommand {
 											? "\n> "+lang.getMsg(Langs.FORUM_WEAPON_DUPLICATE, new String[]{ existingUrl.getItemName() })
 											: "");
 								} else {
-									return Errors.ALREADY_EXISTS;
+									return lang.getError(Errors.ALREADY_EXISTS, true);
 								}
 							} else {
-								return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+								return lang.wrongUsage(getUsage());
 							}
 						} else {
-							return Errors.FORUM_WEAPON_MAXIMUM_REACHED;
+							return lang.getError(Errors.FORUM_WEAPON_MAXIMUM_REACHED, true);
 						}
 					}else{
-						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						return lang.wrongUsage(getUsage());
 					}
 				case "update":
 					if(optFWName != null && optURL != null) {
@@ -80,13 +80,13 @@ public class ForumWeapon implements ICommand {
 
 								return lang.getMsg(Langs.FORUM_WEAPON_UPDATED);
 							}else {
-								return Errors.FORUM_WEAPON_OWNED_OTHER;
+								return lang.getError(Errors.FORUM_WEAPON_OWNED_OTHER, true);
 							}
 						} else {
-							return Errors.NOT_FOUND;
+							return lang.getError(Errors.NOT_FOUND, true);
 						}
 					} else {
-						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						return lang.wrongUsage(getUsage());
 					}
 				case "destroy":
 				case "remove":
@@ -99,13 +99,13 @@ public class ForumWeapon implements ICommand {
 
 								return lang.getMsg(Langs.FORUM_WEAPON_DESTROYED);
 							} else {
-								return Errors.FORUM_WEAPON_OWNED_OTHER;
+								return lang.getError(Errors.FORUM_WEAPON_OWNED_OTHER, true);
 							}
 						} else {
-							return Errors.NOT_FOUND;
+							return lang.getError(Errors.NOT_FOUND, true);
 						}
 					} else {
-						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						return lang.wrongUsage(getUsage());
 					}
 				case "list":
 					Guild thisGl = message.getGuild();
@@ -164,7 +164,7 @@ public class ForumWeapon implements ICommand {
 
 						return sb.toString();
 					}else{
-						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						return lang.wrongUsage(getUsage());
 					}
 				case "alias":
 					if(optFWName != null && optFWAlias != null) {
@@ -179,16 +179,16 @@ public class ForumWeapon implements ICommand {
 
 									return lang.getMsg(Langs.FORUM_WEAPON_ADDED_ALIAS);
 								}else{
-									return Errors.ALREADY_EXISTS;
+									return lang.getError(Errors.ALREADY_EXISTS, true);
 								}
 							}else{
-								return Errors.ALREADY_EXISTS;
+								return lang.getError(Errors.ALREADY_EXISTS, true);
 							}
 						}else{
-							return Errors.NOT_FOUND;
+							return lang.getError(Errors.NOT_FOUND, true);
 						}
 					}else{
-						return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+						return lang.wrongUsage(getUsage());
 					}
 				default:
 					// Try to send the weapon
@@ -200,11 +200,11 @@ public class ForumWeapon implements ICommand {
 						return fws.getItemLink();
 					}else {
 						// Couldn't find one
-						return Errors.NOT_FOUND;
+						return lang.getError(Errors.NOT_FOUND, true);
 					}
 			}
 		}else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 	}
 

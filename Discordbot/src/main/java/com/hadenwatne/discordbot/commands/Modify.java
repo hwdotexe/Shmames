@@ -8,7 +8,7 @@ import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
 
@@ -46,7 +46,7 @@ public class Modify implements ICommand {
 						// Ensure that this setting is only changed by an Administrator.
 						if (settingName == BotSettingName.ALLOW_MODIFY) {
 							if (!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
-								return Errors.NO_PERMISSION_USER;
+								return lang.getError(Errors.NO_PERMISSION_USER, true);
 							}
 						}
 
@@ -62,7 +62,7 @@ public class Modify implements ICommand {
 							}
 
 							if(!found) {
-								return Errors.NOT_FOUND;
+								return lang.getError(Errors.NOT_FOUND, true);
 							}
 						}
 
@@ -77,7 +77,7 @@ public class Modify implements ICommand {
 							return "";
 						} else {
 							// Not successful
-							return Errors.formatUsage(Errors.WRONG_USAGE, "`modify " + setting.getName().toString() + " <" + setting.getType().toString() + ">`");
+							return lang.wrongUsage("`modify " + setting.getName().toString() + " <" + setting.getType().toString() + ">`");
 						}
 					}else{
 						EmbedBuilder eBuilder = new EmbedBuilder();
@@ -91,7 +91,7 @@ public class Modify implements ICommand {
 						return "";
 					}
 				}else {
-					return Errors.formatUsage(Errors.SETTING_NOT_FOUND, "`modify`");
+					return lang.getError(Errors.SETTING_NOT_FOUND, true);
 				}
 			} else {
 				EmbedBuilder eBuilder = new EmbedBuilder();
@@ -109,7 +109,7 @@ public class Modify implements ICommand {
 		        return "";
 			}
 		}else {
-			return Errors.NO_PERMISSION_USER;
+			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 	}
 

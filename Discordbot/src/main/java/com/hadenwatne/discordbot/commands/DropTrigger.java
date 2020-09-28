@@ -1,6 +1,6 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
@@ -33,12 +33,12 @@ public class DropTrigger implements ICommand {
 
 					return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ args });
 				} else
-					return Errors.NOT_FOUND;
+					return lang.getError(Errors.NOT_FOUND, true);
 			} else {
-				return Errors.CANNOT_DELETE;
+				return lang.getError(Errors.CANNOT_DELETE, true);
 			}
 		} else {
-			return Errors.INCOMPLETE;
+			return lang.getError(Errors.INCOMPLETE, true);
 		}
 	}
 

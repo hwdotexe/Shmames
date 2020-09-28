@@ -11,13 +11,16 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.GuildOcarina;
 import com.hadenwatne.discordbot.Shmames;
 
 import javax.annotation.Nullable;
 
 public class Music implements ICommand {
+	private Lang lang;
+	private Brain brain;
+
 	@Override
 	public String getDescription() {
 		return "Play music, create playlists, and chill out.";
@@ -37,6 +40,8 @@ public class Music implements ICommand {
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		// TODO this command can benefit from Brain injection, but needs to be cautious of methods that use the brains
 		// TODO of other servers.
+		this.lang = lang;
+		this.brain = brain;
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class Music implements ICommand {
 					if (canUse(b, message.getMember())) {
 						return cmdPlay(b, message.getMember(), message.getTextChannel(), ocarina, m.group(2));
 					} else {
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "pause":
 					ocarina.togglePause(true);
@@ -71,10 +76,10 @@ public class Music implements ICommand {
 						if (canUse(b, message.getMember())) {
 							ocarina.skip();
 						} else {
-							return Errors.NO_PERMISSION_USER;
+							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}else{
-						return Errors.TRACK_NOT_PLAYING;
+						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
 					}
 					break;
 				case "shuffle":
@@ -84,20 +89,20 @@ public class Music implements ICommand {
 
 							return "Shuffled the music queue!";
 						} else {
-							return Errors.NO_PERMISSION_USER;
+							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}else{
-						return Errors.TRACK_NOT_PLAYING;
+						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
 					}
 				case "stop":
 					if(ocarina.getNowPlaying() != null) {
 						if (canUse(b, message.getMember())) {
 							ocarina.stop();
 						} else {
-							return Errors.NO_PERMISSION_USER;
+							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}else{
-						return Errors.TRACK_NOT_PLAYING;
+						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
 					}
 					break;
 				case "loop":
@@ -105,7 +110,7 @@ public class Music implements ICommand {
 						boolean isLoop = ocarina.toggleLoop();
 						return "Music looping is now **" + (isLoop ? "ON" : "OFF") + "**";
 					}else{
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "np":
 				case "playing":
@@ -114,7 +119,7 @@ public class Music implements ICommand {
 					if(track != null){
 						showTrackData(track, message.getChannel(), ocarina);
 					}else{
-						return Errors.TRACK_NOT_PLAYING;
+						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
 					}
 
 					break;
@@ -123,23 +128,23 @@ public class Music implements ICommand {
 					if (canUse(b, message.getMember())) {
 						return cmdPlaylist(b, message.getChannel(), m.group(2));
 					}else{
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "q":
 				case "queue":
 					if (canUse(b, message.getMember())) {
 						return cmdQueue(b, message.getMember(), ocarina, message.getChannel(), m.group(2));
 					} else {
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "convert":
 					if (canUse(b, message.getMember())) {
 						return cmdConvert(b, message.getMember(), ocarina, m.group(2));
 					} else {
-						return Errors.NO_PERMISSION_USER;
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				default:
-					return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+					return lang.wrongUsage(getUsage());
 			}
 		}else{
 			sendMusicCmdHelp(message.getChannel());
@@ -256,7 +261,7 @@ public class Music implements ICommand {
 				return "Please enter a name for the new playlist.";
 			}
 		} else {
-			return Errors.TRACK_NOT_PLAYING;
+			return lang.getError(Errors.TRACK_NOT_PLAYING, true);
 		}
 	}
 
@@ -276,7 +281,7 @@ public class Music implements ICommand {
 						if (create.find()) {
 							return cmdPlaylistCreate(b, create.group(1), create.group(2), create.group(3));
 						} else {
-							return Errors.WRONG_USAGE;
+							return lang.getError(Errors.WRONG_USAGE, true);
 						}
 					case "a":
 					case "add":
@@ -285,7 +290,7 @@ public class Music implements ICommand {
 						if (add.find()) {
 							return cmdPlaylistAdd(b, add.group(1), add.group(2), add.group(3));
 						} else {
-							return Errors.WRONG_USAGE;
+							return lang.getError(Errors.WRONG_USAGE, true);
 						}
 					case "l":
 					case "list":
@@ -294,7 +299,7 @@ public class Music implements ICommand {
 						if (list.find()) {
 							return cmdPlaylistList(b, list.group(1), c, list.group(2));
 						} else {
-							return Errors.WRONG_USAGE;
+							return lang.getError(Errors.WRONG_USAGE, true);
 						}
 					case "r":
 					case "remove":
@@ -315,7 +320,7 @@ public class Music implements ICommand {
 								return "That playlist doesn't exist!";
 							}
 						} else {
-							return Errors.WRONG_USAGE;
+							return lang.getError(Errors.WRONG_USAGE, true);
 						}
 					case "d":
 					case "delete":
@@ -332,13 +337,13 @@ public class Music implements ICommand {
 								return "That playlist doesn't exist!";
 							}
 						} else {
-							return Errors.WRONG_USAGE;
+							return lang.getError(Errors.WRONG_USAGE, true);
 						}
 					default:
-						return Errors.COMMAND_NOT_FOUND;
+						return lang.getError(Errors.COMMAND_NOT_FOUND, true);
 				}
 			} else {
-				return Errors.WRONG_USAGE;
+				return lang.getError(Errors.WRONG_USAGE, true);
 			}
 		} else {
 			sendPlaylistCmdHelp(c);
@@ -375,7 +380,7 @@ public class Music implements ICommand {
 				return "Playlists currently support a max of 50 tracks!";
 			}
 		} else {
-			return Errors.NOT_FOUND;
+			return lang.getError(Errors.NOT_FOUND, true);
 		}
 	}
 
@@ -444,7 +449,7 @@ public class Music implements ICommand {
 
 					return "";
 				} else {
-					return Errors.NOT_FOUND;
+					return lang.getError(Errors.NOT_FOUND, true);
 				}
 			}
 		}

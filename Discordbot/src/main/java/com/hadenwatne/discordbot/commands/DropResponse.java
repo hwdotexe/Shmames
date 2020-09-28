@@ -8,7 +8,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.TriggerType;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Response;
@@ -48,9 +48,9 @@ public class DropResponse implements ICommand {
 					Response r = responses.get(rNum-1);
 					brain.removeTriggerResponse(r);
 
-					return lang.getMsg(Langs.BLAME, new String[]{ r.getResponse() });
+					return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() });
 				}else {
-					return Errors.NOT_FOUND;
+					return lang.getError(Errors.NOT_FOUND, true);
 				}
 			} else {
 				StringBuilder types = new StringBuilder();
@@ -65,7 +65,7 @@ public class DropResponse implements ICommand {
 				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 			}
 		} else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 	}
 

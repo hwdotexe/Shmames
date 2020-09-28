@@ -7,7 +7,7 @@ import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.discordbot.Errors;
+import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.tasks.JTimerTask;
@@ -76,10 +76,10 @@ public class Timer implements ICommand {
 
 				return lang.getMsg(Langs.TIMER_STARTED, new String[]{ "**" + time + "** " + (interval == 1 ? "Days" : interval == 2 ? "Hours" : interval == 3 ? "Minutes" : "Seconds") });
 			} else {
-				return Errors.INCOMPLETE;
+				return lang.getError(Errors.INCOMPLETE, true);
 			}
 		}else {
-			return Errors.formatUsage(Errors.WRONG_USAGE, getUsage());
+			return lang.wrongUsage(getUsage());
 		}
 	}
 
