@@ -54,7 +54,7 @@ public class ListResponses implements ICommand {
 				String list = Utils.GenerateList(rsText, -1, true);
 
 				if(list.length() == 0)
-					sb.append(Errors.ITEMS_NOT_FOUND);
+					sb.append(lang.getError(Errors.ITEMS_NOT_FOUND, true));
 				else
 					sb.append(list);
 				

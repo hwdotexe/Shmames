@@ -377,14 +377,27 @@ public class Utils {
 			for (int i = 0; i < breaks; i++) {
 				String sub = s.length() >= lastIndex + interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
 
-				if (sub.charAt(sub.length() - 1) == ' ' || sub.length() < interval) {
-					result[i] = sub;
-					lastIndex += interval;
-				} else {
-					int lastSpace = sub.lastIndexOf(" ");
+				// Experiment: Break on newline chars when possible.
+				if(sub.contains("\n")) {
+					if (sub.charAt(sub.length() - 1) == '\n' || sub.length() < interval) {
+						result[i] = sub;
+						lastIndex += interval;
+					} else {
+						int lastSpace = sub.lastIndexOf("\n");
 
-					result[i] = sub.substring(0, lastSpace);
-					lastIndex = s.indexOf(result[i]) + result[i].length();
+						result[i] = sub.substring(0, lastSpace);
+						lastIndex = s.indexOf(result[i]) + result[i].length();
+					}
+				} else {
+					if (sub.charAt(sub.length() - 1) == ' ' || sub.length() < interval) {
+						result[i] = sub;
+						lastIndex += interval;
+					} else {
+						int lastSpace = sub.lastIndexOf(" ");
+
+						result[i] = sub.substring(0, lastSpace);
+						lastIndex = s.indexOf(result[i]) + result[i].length();
+					}
 				}
 			}
 		} else {

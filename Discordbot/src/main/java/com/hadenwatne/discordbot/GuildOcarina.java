@@ -149,7 +149,8 @@ public class GuildOcarina extends AudioEventAdapter {
 				break;
 			case FINISHED:
 				if(isLoop) {
-					loadTrack(track.getInfo().uri, false);
+					player.startTrack(track.makeClone(), false);
+//					loadTrack(track.getInfo().uri, false);
 				} else {
 					if(queue.size() > 0){
 						this.skip();
@@ -167,6 +168,6 @@ public class GuildOcarina extends AudioEventAdapter {
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
 		// Audio track has been unable to provide us any audio, might want to just start a new track
-		System.out.println("Track stuck");
+		System.out.println("Track stuck: "+track.getInfo().title);
 	}
 }
