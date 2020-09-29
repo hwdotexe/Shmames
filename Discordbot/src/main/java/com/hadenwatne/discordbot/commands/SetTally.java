@@ -28,10 +28,10 @@ public class SetTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(.+) (\\d{1,3})$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^([\\w\\d\\s]+)\\s(\\d{1,3})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
-			String tally = m.group(1).replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+			String tally = m.group().trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
 			int count = Integer.parseInt(m.group(2));
 			
 			if (brain.getTallies().containsKey(tally)) {

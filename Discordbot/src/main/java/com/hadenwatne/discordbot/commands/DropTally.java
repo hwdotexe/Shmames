@@ -8,6 +8,8 @@ import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.storage.Brain;
 
 import javax.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DropTally implements ICommand {
 	private Lang lang;
@@ -25,20 +27,28 @@ public class DropTally implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if (brain.getTallies().containsKey(args)) {
-			int tallies = brain.getTallies().get(args);
+		Matcher m = Pattern.compile("^[\\w\\d\\s]+$", Pattern.CASE_INSENSITIVE).matcher(args);
 
-			if (tallies - 1 < 1) {
-				brain.getTallies().remove(args);
+		if(m.find()) {
+			String tally = m.group().trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
 
-				return lang.getMsg(Langs.TALLY_REMOVED, new String[] { args });
+			if (brain.getTallies().containsKey(tally)) {
+				int tallies = brain.getTallies().get(tally);
+
+				if (tallies - 1 < 1) {
+					brain.getTallies().remove(tally);
+
+					return lang.getMsg(Langs.TALLY_REMOVED, new String[] { tally });
+				} else {
+					brain.getTallies().put(tally, tallies - 1);
+
+					return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { tally, brain.getTallies().get(tally).toString() });
+				}
 			} else {
-				brain.getTallies().put(args, tallies - 1);
-
-				return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { args, brain.getTallies().get(args).toString() });
+				return lang.getError(Errors.NOT_FOUND, true);
 			}
-		} else {
-			return lang.getError(Errors.NOT_FOUND, true);
+		}else{
+			return lang.getError(Errors.WRONG_USAGE, true);
 		}
 	}
 
