@@ -38,8 +38,6 @@ public class Music implements ICommand {
 
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		// TODO this command can benefit from Brain injection, but needs to be cautious of methods that use the brains
-		// TODO of other servers.
 		this.lang = lang;
 		this.brain = brain;
 	}
@@ -61,7 +59,7 @@ public class Music implements ICommand {
 			switch(mainCmd) {
 				case "play":
 					if (canUse(b, message.getMember())) {
-						return cmdPlay(b, message.getMember(), message.getTextChannel(), ocarina, m.group(2));
+						return cmdPlay(message.getMember(), message.getTextChannel(), ocarina, m.group(2));
 					} else {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
@@ -79,7 +77,7 @@ public class Music implements ICommand {
 							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
+						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
 					}
 					break;
 				case "shuffle":
@@ -87,12 +85,12 @@ public class Music implements ICommand {
 						if (canUse(b, message.getMember())) {
 							ocarina.shuffleQueue();
 
-							return "Shuffled the music queue!";
+							return lang.getMsg(Langs.MUSIC_QUEUE_SHUFFLED);
 						} else {
 							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
 					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
+						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
 					}
 				case "stop":
 					if(ocarina.getNowPlaying() != null) {
@@ -108,7 +106,7 @@ public class Music implements ICommand {
 				case "loop":
 					if (canUse(b, message.getMember())) {
 						boolean isLoop = ocarina.toggleLoop();
-						return "Music looping is now **" + (isLoop ? "ON" : "OFF") + "**";
+						return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{ isLoop ? "ON" : "OFF" });
 					}else{
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
@@ -119,7 +117,7 @@ public class Music implements ICommand {
 					if(track != null){
 						showTrackData(track, message.getChannel(), ocarina);
 					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
+						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
 					}
 
 					break;
@@ -133,13 +131,13 @@ public class Music implements ICommand {
 				case "q":
 				case "queue":
 					if (canUse(b, message.getMember())) {
-						return cmdQueue(b, message.getMember(), ocarina, message.getChannel(), m.group(2));
+						return cmdQueue(ocarina, message.getChannel(), m.group(2));
 					} else {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "convert":
 					if (canUse(b, message.getMember())) {
-						return cmdConvert(b, message.getMember(), ocarina, m.group(2));
+						return cmdConvert(ocarina, m.group(2));
 					} else {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
@@ -155,7 +153,7 @@ public class Music implements ICommand {
 		return "";
 	}
 
-	private String cmdPlay(Brain b, Member m, TextChannel c, GuildOcarina ocarina, @Nullable String args) {
+	private String cmdPlay(Member m, TextChannel c, GuildOcarina ocarina, @Nullable String args) {
 		if (args != null) {
 			if (!ocarina.isInVoiceChannel()) {
 				if (m.getVoiceState() != null && m.getVoiceState().inVoiceChannel()) {
@@ -163,23 +161,23 @@ public class Music implements ICommand {
 
 					ocarina.connect(vchannel, c);
 				} else {
-					return "Please join a voice channel and run this command again.";
+					return lang.getError(Errors.MUSIC_NOT_IN_CHANNEL, false);
 				}
 			}
 
 			if (isUrl(args)) {
 				ocarina.loadTrack(args, false);
 
-				return "Playing!";
+				return lang.getMsg(Langs.MUSIC_PLAYING);
 			} else {
-				Playlist pl = findPlaylist(args, b);
+				Playlist pl = findPlaylistFamily(args, brain);
 
 				if(pl != null) {
 					ocarina.loadCustomPlaylist(pl.getTracks(), false);
 
-					return "Playing the `" + pl.getName() + "` playlist!";
+					return lang.getMsg(Langs.MUSIC_PLAYING_PLAYLIST, new String[]{ pl.getName() });
 				} else {
-					return "No playlists were found with that name.";
+					return lang.getError(Errors.ITEMS_NOT_FOUND, false);
 				}
 			}
 		} else {
@@ -188,35 +186,35 @@ public class Music implements ICommand {
 
 				return "";
 			} else {
-				return "Please enter a media URL or playlist name!";
+				return lang.getError(Errors.MUSIC_WRONG_INPUT, false);
 			}
 		}
 	}
 
-	private String cmdQueue(Brain b, Member m, GuildOcarina ocarina, MessageChannel c, @Nullable String args) {
+	private String cmdQueue(GuildOcarina ocarina, MessageChannel c, @Nullable String args) {
 		if (ocarina.isInVoiceChannel()) {
 			if (args != null) {
 				if (isUrl(args)) {
 					ocarina.loadTrack(args, true);
 
-					return "Added to queue!";
+					return lang.getMsg(Langs.MUSIC_ADDED_TO_QUEUE);
 				} else if (args.equalsIgnoreCase("clear")) {
 					ocarina.getQueue().clear();
 
-					return "Cleared the queue!";
+					return lang.getMsg(Langs.MUSIC_QUEUE_CLEARED);
 				} else if (isInt(args)) {
 					showQueue(ocarina.getQueue(), c, Integer.parseInt(args));
 
 					return "";
 				} else {
-					Playlist pl = findPlaylist(args, b);
+					Playlist pl = findPlaylistFamily(args, brain);
 
 					if(pl != null) {
 						ocarina.loadCustomPlaylist(pl.getTracks(), true);
 
-						return "Queued the `" + pl.getName() + "` playlist!";
+						return lang.getMsg(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{ pl.getName() });
 					} else {
-						return "No playlists were found with that name.";
+						return lang.getError(Errors.ITEMS_NOT_FOUND, false);
 					}
 				}
 			} else {
@@ -225,11 +223,11 @@ public class Music implements ICommand {
 				return "";
 			}
 		} else {
-			return "I have to be connected to a voice channel in order to do that!";
+			return lang.getError(Errors.MUSIC_NOT_IN_CHANNEL, false);
 		}
 	}
 
-	private String cmdConvert(Brain b, Member m, GuildOcarina ocarina, @Nullable String args) {
+	private String cmdConvert(GuildOcarina ocarina, @Nullable String args) {
 		if (ocarina.getNowPlaying() != null) {
 			if (args != null) {
 				Matcher conv = Pattern.compile("^([a-z0-9]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
@@ -237,7 +235,7 @@ public class Music implements ICommand {
 				if (conv.find()) {
 					String name = conv.group(1).toLowerCase();
 
-					if (getPlaylist(name, b) == null) {
+					if (findPlaylistServer(name, brain) == null) {
 						Playlist p = new Playlist(name);
 
 						p.addTrack(ocarina.getNowPlaying().getInfo().uri, ocarina.getNowPlaying().getInfo().title);
@@ -248,17 +246,17 @@ public class Music implements ICommand {
 							}
 						}
 
-						b.getPlaylists().add(p);
+						brain.getPlaylists().add(p);
 
-						return "Created a new playlist `" + name + "` with `" + p.getTracks().size() + "` tracks!";
+						return lang.getMsg(Langs.MUSIC_PLAYLIST_CONVERTED, new String[]{ name, Integer.toString(p.getTracks().size()) });
 					} else {
-						return "A playlist with that name already exists on this server!";
+						return lang.getError(Errors.MUSIC_PLAYLIST_ALREADY_EXISTS, false);
 					}
 				} else {
-					return "Playlist names must be alphanumeric!";
+					return lang.getError(Errors.MUSIC_PLAYLIST_NAME_INVALID, false);
 				}
 			} else {
-				return "Please enter a name for the new playlist.";
+				return lang.getError(Errors.MUSIC_PLAYLIST_NAME_MISSING, false);
 			}
 		} else {
 			return lang.getError(Errors.TRACK_NOT_PLAYING, true);
@@ -308,16 +306,16 @@ public class Music implements ICommand {
 						if (remove.find()) {
 							String listName = remove.group(1);
 							int position = Integer.parseInt(remove.group(2));
-							Playlist pRemove = getPlaylist(listName, b);
+							Playlist pRemove = findPlaylistServer(listName, b);
 
 							if (pRemove != null) {
 								if (pRemove.removeTrack(position - 1)) {
-									return "Track removed!";
+									return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_REMOVED);
 								} else {
-									return "That item doesn't exist!";
+									return lang.getError(Errors.NOT_FOUND, false);
 								}
 							} else {
-								return "That playlist doesn't exist!";
+								return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
 							}
 						} else {
 							return lang.getError(Errors.WRONG_USAGE, true);
@@ -328,13 +326,14 @@ public class Music implements ICommand {
 
 						if (delete.find()) {
 							String listName = delete.group(1);
-							Playlist pDelete = getPlaylist(listName, b);
+							Playlist pDelete = findPlaylistServer(listName, b);
 
 							if (pDelete != null) {
 								b.getPlaylists().remove(pDelete);
-								return "Playlist deleted!";
+
+								return lang.getMsg(Langs.MUSIC_PLAYLIST_DELETED);
 							} else {
-								return "That playlist doesn't exist!";
+								return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
 							}
 						} else {
 							return lang.getError(Errors.WRONG_USAGE, true);
@@ -353,7 +352,7 @@ public class Music implements ICommand {
 	}
 
 	private String cmdPlaylistCreate(Brain b, String listName, @Nullable String url, @Nullable String memo) {
-		if(getPlaylist(listName, b) == null) {
+		if(findPlaylistServer(listName, b) == null) {
 			Playlist newList = new Playlist(listName);
 
 			if(url != null) {
@@ -362,22 +361,22 @@ public class Music implements ICommand {
 
 			b.getPlaylists().add(newList);
 
-			return "Playlist `"+listName+"` created!";
+			return lang.getMsg(Langs.MUSIC_PLAYLIST_CREATED, new String[]{ listName });
 		} else {
-			return "A playlist with that name already exists on this server!";
+			return lang.getError(Errors.MUSIC_PLAYLIST_ALREADY_EXISTS, false);
 		}
 	}
 
 	private String cmdPlaylistAdd(Brain b, String listName, String url, @Nullable String memo) {
-		Playlist p = getPlaylist(listName, b);
+		Playlist p = findPlaylistServer(listName, b);
 
 		if (p != null) {
 			if(p.getTracks().size() < 50) {
 				p.addTrack(url, memo);
 
-				return "Added track to playlist!";
+				return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_ADDED);
 			}else{
-				return "Playlists currently support a max of 50 tracks!";
+				return lang.getError(Errors.MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED, true);
 			}
 		} else {
 			return lang.getError(Errors.NOT_FOUND, true);
@@ -402,7 +401,7 @@ public class Music implements ICommand {
 				}
 
 				if (sb.length() == 0) {
-					sb.append("There aren't any playlists yet.");
+					sb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
 				}
 
 				eBuilder.addField(Shmames.getJDA().getGuildById(b.getGuildID()).getName(), sb.toString(), false);
@@ -427,7 +426,7 @@ public class Music implements ICommand {
 								}
 
 								if (obsb.length() == 0) {
-									obsb.append("There aren't any playlists yet.");
+									obsb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
 								}
 
 								eBuilder.addField(Shmames.getJDA().getGuildById(ob.getGuildID()).getName(), obsb.toString(), false);
@@ -440,7 +439,7 @@ public class Music implements ICommand {
 
 				return "";
 			}else{
-				Playlist pList = getPlaylist(listName, b);
+				Playlist pList = findPlaylistServer(listName, b);
 
 				if (pList != null) {
 					int page = p != null ? Math.max(Integer.parseInt(p), 1) : 1;
@@ -468,25 +467,13 @@ public class Music implements ICommand {
 		}
 
 		if (sb.length() == 0) {
-			sb.append("There aren't any playlists yet.");
+			sb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
 		}
 
 		eBuilder.addField("Playlists", sb.toString(), false);
 		c.sendMessage(eBuilder.build()).queue();
 
 		return "";
-	}
-
-	private Playlist getPlaylist(String name, Brain b) {
-		if(name.length() > 0) {
-			for (Playlist p : b.getPlaylists()) {
-				if (p.getName().equalsIgnoreCase(name)) {
-					return p;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
@@ -528,9 +515,9 @@ public class Music implements ICommand {
 
 		if(sb.length() == 0) {
 			if(page == 0) {
-				sb.append("There are no tracks in the queue.");
+				sb.append(lang.getError(Errors.MUSIC_QUEUE_EMPTY, false));
 			} else {
-				sb.append("There are no tracks in the queue on this page.");
+				sb.append(lang.getError(Errors.MUSIC_QUEUE_PAGE_EMPTY, false));
 			}
 		}
 
@@ -579,9 +566,9 @@ public class Music implements ICommand {
 
 		if(sb.length() == 0) {
 			if(page == 0) {
-				sb.append("There are no tracks in that playlist.");
+				sb.append(lang.getError(Errors.MUSIC_PLAYLIST_EMPTY, false));
 			} else {
-				sb.append("There are no tracks in that playlist on this page.");
+				sb.append(lang.getError(Errors.MUSIC_PLAYLIST_PAGE_EMPTY, false));
 			}
 		}
 
@@ -677,12 +664,23 @@ public class Music implements ICommand {
 		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.RESET_EMOTE_STATS), m);
 	}
 
-	private Playlist findPlaylist(String name, Brain b) {
-		// Check local server.
-		for(Playlist pl : b.getPlaylists()) {
-			if(pl.getName().equalsIgnoreCase(name)) {
-				return pl;
+	private Playlist findPlaylistServer(String name, Brain b) {
+		if(name.length() > 0) {
+			for (Playlist p : b.getPlaylists()) {
+				if (p.getName().equalsIgnoreCase(name)) {
+					return p;
+				}
 			}
+		}
+
+		return null;
+	}
+
+	private Playlist findPlaylistFamily(String name, Brain b) {
+		Playlist server = findPlaylistServer(name, b);
+
+		if (server != null) {
+			return server;
 		}
 
 		// Check other Family servers.
@@ -693,11 +691,10 @@ public class Music implements ICommand {
 				for(long gid : f.getMemberGuilds()){
 					if(!Long.toString(gid).equals(b.getGuildID())){
 						Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
+						Playlist otherServer = findPlaylistServer(name, ob);
 
-						for(Playlist pl : ob.getPlaylists()) {
-							if(pl.getName().equalsIgnoreCase(name)) {
-								return pl;
-							}
+						if (otherServer != null) {
+							return otherServer;
 						}
 					}
 				}
