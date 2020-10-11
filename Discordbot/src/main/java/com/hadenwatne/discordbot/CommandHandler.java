@@ -154,7 +154,9 @@ public class CommandHandler {
 			if(r.length() > 0) {
 				for(String m : Utils.splitString(r, 2000)){
 //					new TypingTask(channel, m);
-					channel.sendMessage(m).queue();
+					if(m.length() > 0) {
+						channel.sendMessage(m).queue();
+					}
 				}
 			}
 		} else {
