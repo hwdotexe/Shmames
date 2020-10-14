@@ -31,14 +31,17 @@ public class AddTally implements ICommand {
 
 		if(m.find()) {
 			String tally = m.group().trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
+			int tallyNum = 0;
 
 			if (brain.getTallies().containsKey(tally)) {
-				brain.getTallies().put(tally, brain.getTallies().get(tally) + 1);
+				tallyNum = brain.getTallies().get(tally) + 1;
 			} else {
-				brain.getTallies().put(tally, 1);
+				tallyNum = 1;
 			}
 
-			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{ tally, brain.getTallies().get(tally).toString() });
+			brain.getTallies().put(tally, tallyNum);
+
+			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{ tally, Integer.toString(tallyNum) });
 		}else{
 			return lang.getError(Errors.WRONG_USAGE, true);
 		}

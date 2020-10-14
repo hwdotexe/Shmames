@@ -41,7 +41,7 @@ public class ReactListener extends ListenerAdapter {
 				String removalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
 
 				if (emo.getId().equals(removalEmote)) {
-					badTallyMessage(removalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
+					badTallyMessage(removalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete(), b);
 					return;
 				}
 
@@ -49,7 +49,7 @@ public class ReactListener extends ListenerAdapter {
 				String approvalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
 
 				if (emo.getId().equals(approvalEmote)) {
-					goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete());
+					goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete(), b);
 					return;
 				}
 			}
@@ -62,7 +62,7 @@ public class ReactListener extends ListenerAdapter {
 	 * @param removalEmote The name of the emote used to remove messages.
 	 * @param m The Message this reaction occurred on.
 	 */
-	private void badTallyMessage(String removalEmote, Message m) {
+	private void badTallyMessage(String removalEmote, Message m, Brain b) {
 		int threshold = Integer.parseInt(Shmames.getBrains().getBrain(m.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_THRESHOLD).getValue());
 		int votes = 0;
 
@@ -89,6 +89,7 @@ public class ReactListener extends ListenerAdapter {
 					for (ICommand c : CommandHandler.getLoadedCommands()) {
 						for (String a : c.getAliases()) {
 							if (a.equalsIgnoreCase("addtally")) {
+								c.setRunContext(Shmames.getLangFor(b), b);
 								String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
 								m.getChannel().sendMessage(response).queue();
 								return;
@@ -108,7 +109,7 @@ public class ReactListener extends ListenerAdapter {
 	 * @param approvalEmote The name of the emote used to remove messages.
 	 * @param m The Message this reaction occurred on.
 	 */
-	private void goodTallyMessage(String approvalEmote, Message m) {
+	private void goodTallyMessage(String approvalEmote, Message m ,Brain b) {
 		int threshold = Integer.parseInt(Shmames.getBrains().getBrain(m.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_THRESHOLD).getValue());
 		int votes = 0;
 
@@ -132,6 +133,7 @@ public class ReactListener extends ListenerAdapter {
 				for (ICommand c : CommandHandler.getLoadedCommands()) {
 					for (String a : c.getAliases()) {
 						if (a.equalsIgnoreCase("addtally")) {
+							c.setRunContext(Shmames.getLangFor(b), b);
 							String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
 							m.getChannel().sendMessage(response).queue();
 							return;
