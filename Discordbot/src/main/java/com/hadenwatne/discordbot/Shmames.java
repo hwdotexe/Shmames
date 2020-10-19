@@ -1,8 +1,10 @@
 package com.hadenwatne.discordbot;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hadenwatne.discordbot.http.ShmamesHTTPHandler;
 import com.hadenwatne.discordbot.listeners.ChatListener;
 import com.hadenwatne.discordbot.listeners.FirstJoinListener;
 import com.hadenwatne.discordbot.listeners.ReactListener;
@@ -10,6 +12,7 @@ import com.hadenwatne.discordbot.storage.*;
 import com.hadenwatne.discordbot.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
+import com.sun.net.httpserver.HttpServer;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -25,6 +28,8 @@ public final class Shmames {
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaults;
+
+	private static HttpServer httpServer;
 	
 	/**
 	 * The entry point for the bot.
@@ -49,6 +54,11 @@ public final class Shmames {
 					jda = new JDABuilder(AccountType.BOT).setToken(brains.getMotherBrain().getBotAPIKey()).build();
 					isDebug = false;
 				}
+
+				// Open HTTP server to take in API requests.
+				httpServer = HttpServer.create(new InetSocketAddress("localhost", 8337), 0);
+				httpServer.createContext("/shmames", new ShmamesHTTPHandler());
+				httpServer.start();
 
 				// Load server brains after the bot has initialized.
 				jda.awaitReady();
