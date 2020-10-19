@@ -45,6 +45,8 @@ public class Dev implements ICommand {
 							return addStatus(m.group(2)) ? "Status change successful!" : "Invalid syntax or bot error.";
 						case "getguilds":
 							return getGuilds();
+						case "createapikey":
+							return createAPIKey();
 						case "reload":
 							reload(m.group(2));
 							return "Finished reloading the brain!";
@@ -72,6 +74,7 @@ public class Dev implements ICommand {
 					return "**Developer Commands**\n"
 							+ "addStatus <type> <status>\n"
 							+ "getGuilds\n"
+							+ "createapikey\n"
 							+ "reload <guildID>\n"
 							+ "inviteme <guildID>\n"
 							+ "getCommandStats\n"
@@ -144,6 +147,20 @@ public class Dev implements ICommand {
 		sb.insert(0, "**Guilds the bot runs on**\n");
 
 		return sb.toString();
+	}
+
+	private String createAPIKey() {
+		StringBuilder key = new StringBuilder();
+
+		for(int i=0; i<3; i++){
+			key.append(Utils.createID());
+		}
+
+		String newKey = key.toString();
+
+		Shmames.getBrains().getMotherBrain().getShmamesAPIKeys().add(newKey);
+
+		return newKey;
 	}
 
 	private void reload(String g) {
