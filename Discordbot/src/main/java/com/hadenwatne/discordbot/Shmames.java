@@ -56,7 +56,7 @@ public final class Shmames {
 				}
 
 				// Open HTTP server to take in API requests.
-				httpServer = HttpServer.create(new InetSocketAddress("localhost", 8337), 0);
+				httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", 8337), 0);
 				httpServer.createContext("/shmames", new ShmamesHTTPHandler());
 				httpServer.start();
 
