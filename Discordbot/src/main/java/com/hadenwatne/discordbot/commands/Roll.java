@@ -28,15 +28,15 @@ public class Roll implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Pattern dicePattern = Pattern.compile("([+\\-*/])?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
-		Matcher cmdFormat = Pattern.compile("^([+\\-*/\\d ()d\\^tkhl]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
+		Matcher cmdFormat = Pattern.compile("^([+\\-*/\\d\\s()d\\^tkhl]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
 		Matcher dice = dicePattern.matcher(args);
 
 		if(cmdFormat.matches()){
 			List<String> diceOps = new ArrayList<String>();
 
 			while(dice.find()){
-				diceOps.add(dice.group());
+				diceOps.add(dice.group().replaceAll("\\s", ""));
 			}
 
 			try {
