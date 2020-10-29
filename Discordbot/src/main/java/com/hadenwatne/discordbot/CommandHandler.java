@@ -63,6 +63,7 @@ public class CommandHandler {
 		commands.add(new SimonSays());
 //		commands.add(new Source());
 		commands.add(new Startpoll());
+		commands.add(new Storytime());
 		commands.add(new Thoughts());
 //		commands.add(new Timeout());
 		commands.add(new Timer());

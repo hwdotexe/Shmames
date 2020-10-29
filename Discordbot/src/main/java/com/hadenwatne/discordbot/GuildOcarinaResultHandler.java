@@ -71,5 +71,9 @@ public class GuildOcarinaResultHandler implements AudioLoadResultHandler {
     public void loadFailed(FriendlyException throwable) {
         ocarina.sendMessageToChannel("Loading failed for a track.");
         throwable.printStackTrace();
+
+        if(ocarina.getNowPlaying() == null && ocarina.getQueue().size() == 0) {
+            ocarina.stop();
+        }
     }
 }

@@ -48,10 +48,10 @@ public final class Shmames {
 		try {
 			if(!brains.getMotherBrain().getBotAPIKey().equals("API_KEY_HERE")) {
 				if (args.length > 0 && args[0].toLowerCase().equals("-debug")) {
-					jda = new JDABuilder(AccountType.BOT).setToken(brains.getMotherBrain().getBotAPIKeySecondary()).build();
+					jda = JDABuilder.createDefault(brains.getMotherBrain().getBotAPIKeySecondary()).build();
 					isDebug = true;
 				} else {
-					jda = new JDABuilder(AccountType.BOT).setToken(brains.getMotherBrain().getBotAPIKey()).build();
+					jda = JDABuilder.createDefault(brains.getMotherBrain().getBotAPIKey()).build();
 					isDebug = false;
 				}
 

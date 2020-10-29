@@ -26,14 +26,14 @@ import org.json.JSONObject;
 
 public class Utils {
 	private static Random r;
-	
+
 	/**
 	 * Prepare variables for use.
 	 */
 	public static void Init() {
 		r = new Random();
 	}
-	
+
 	/**
 	 * Creates a random integer based on a possible maximum (exclusive).
 	 * @param bound The exclusive maximum value.
@@ -42,7 +42,7 @@ public class Utils {
 	public static int getRandom(int bound) {
 		return r.nextInt(bound);
 	}
-	
+
 	/**
 	 * Returns a random value from a Set input.
 	 * @param set The unordered list to use.
@@ -55,7 +55,7 @@ public class Utils {
 				return t;
 		throw new AssertionError();
 	}
-	
+
 	/**
 	 * Creates a random, 5-character ID.
 	 * @return A string ID.
@@ -70,7 +70,7 @@ public class Utils {
 
 		return newID.toString();
 	}
-	
+
 	/**
 	 * Creates a friendly time readout from a given Calendar object.
 	 * @param c The Calendar to use.
@@ -82,7 +82,7 @@ public class Utils {
 
 		return (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + " at " + (hour == 0 ? "12" : hour) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
 	}
-	
+
 	/**
 	 * A basic enumeration to control values passed into an HTTP request.
 	 */
@@ -90,7 +90,7 @@ public class Utils {
 		GET,
 		POST
 	}
-	
+
 	/**
 	 * Creates and performs a synchronous HTTP request, and provides the response.
 	 * @param v The HTTP Verb to use with this request.
@@ -142,7 +142,7 @@ public class Utils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Sorts a HashMap based on the Integer value of a String key.
 	 * From https://stackoverflow.com/questions/8119366/sorting-hashmap-by-values
@@ -173,7 +173,7 @@ public class Utils {
 		}
 		return sortedMap;
 	}
-	
+
 	/**
 	 * Makes a request to Wolfram Alpha and returns the response.
 	 * @param search The query to ask the API.
@@ -199,7 +199,7 @@ public class Utils {
 	/**
 	 * Makes a request to Tenor and returns a random result.
 	 * @param search The query to search for.
-	 * @return A random GIF URL from the results of the search. 
+	 * @return A random GIF URL from the results of the search.
 	 */
 	public static String getGIF(String search, String filter) {
 		search = search.trim().replaceAll(" ", "%20");
@@ -228,7 +228,7 @@ public class Utils {
 			return message[r.nextInt(message.length)] + ": " + getGIF(keyword[r.nextInt(keyword.length)], filter);
 		}
 	}
-	
+
 	/**
 	 * Retrieves the basic Random instance currently being used.
 	 * @return A Random object.
@@ -360,6 +360,26 @@ public class Utils {
 		}
 
 		return list.toString();
+	}
+
+	/**
+	 * Returns a random string from a Set of strings.
+	 * @param items The Set to use.
+	 * @return A random string.
+	 */
+	public static String getRandomStringFromSet(Set<String> items) {
+		int target = r.nextInt(items.size());
+		int i = 0;
+
+		for(String o : items) {
+			if(i == target) {
+				return o;
+			}
+
+			i++;
+		}
+
+		return "";
 	}
 
 	/**
