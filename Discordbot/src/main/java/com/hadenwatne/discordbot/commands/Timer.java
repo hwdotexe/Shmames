@@ -30,7 +30,7 @@ public class Timer implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^(\\d{1,3})([dhms]?)(.*?)$").matcher(args);
+		Matcher m = Pattern.compile("^(\\d{1,3})([dhms]?)(.*?)$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(m.find()) {
 			int time = Integer.parseInt(m.group(1));
@@ -39,7 +39,7 @@ public class Timer implements ICommand {
 			
 			if(time > 0) {
 				int interval = -1;
-				String i = m.group(2);
+				String i = m.group(2).toLowerCase();
 				
 				if(i == null || i.length() == 0)
 					i = "m";

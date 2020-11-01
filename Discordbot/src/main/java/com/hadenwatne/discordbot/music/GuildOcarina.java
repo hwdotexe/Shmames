@@ -1,12 +1,12 @@
-package com.hadenwatne.discordbot;
+package com.hadenwatne.discordbot.music;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.hadenwatne.discordbot.Shmames;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
@@ -27,7 +27,8 @@ public class GuildOcarina extends AudioEventAdapter {
 	private TextChannel msgChannel;
 	private GuildOcarinaResultHandler loader;
 	private boolean isLoop;
-	
+	private boolean isLoopQueue;
+
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
 		player = Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
@@ -36,7 +37,8 @@ public class GuildOcarina extends AudioEventAdapter {
 		queue = new ArrayList<AudioTrack>();
 		loader = new GuildOcarinaResultHandler(this);
 		isLoop = false;
-		
+		isLoopQueue = false;
+
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
 		} else {
@@ -77,8 +79,18 @@ public class GuildOcarina extends AudioEventAdapter {
 		return isLoop;
 	}
 
+	public boolean toggleLoopQueue() {
+		isLoopQueue = !isLoopQueue;
+
+		return isLoopQueue;
+	}
+
 	public boolean isLooping() {
 		return isLoop;
+	}
+
+	public boolean isLoopingQueue() {
+		return isLoopQueue;
 	}
 
 	public void shuffleQueue() {
@@ -148,6 +160,12 @@ public class GuildOcarina extends AudioEventAdapter {
 
 				break;
 			case FINISHED:
+				// Only append to queue if regular looping is off.
+				// Otherwise we'll be adding a lot of copies to the queue ._.
+				if(isLoopQueue && !isLoop) {
+					queue.add(track.makeClone());
+				}
+
 				if(isLoop) {
 					player.startTrack(track.makeClone(), false);
 //					loadTrack(track.getInfo().uri, false);

@@ -9,6 +9,7 @@ import java.util.Timer;
 
 import com.google.gson.Gson;
 
+import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.discordbot.Poll;
@@ -33,7 +34,7 @@ public class BrainController {
 	 * for each server attached to the bot.
 	 */
 	public BrainController() {
-		gson = new Gson();
+		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		brains = new ArrayList<Brain>();
 		mbFile = new File("brains/motherBrain.json");
 	}

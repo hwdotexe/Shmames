@@ -12,7 +12,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.storage.Errors;
-import com.hadenwatne.discordbot.GuildOcarina;
+import com.hadenwatne.discordbot.music.GuildOcarina;
 import com.hadenwatne.discordbot.Shmames;
 
 import javax.annotation.Nullable;
@@ -105,8 +105,19 @@ public class Music implements ICommand {
 					break;
 				case "loop":
 					if (canUse(b, message.getMember())) {
-						boolean isLoop = ocarina.toggleLoop();
-						return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{ isLoop ? "ON" : "OFF" });
+						String g2 = m.group(2);
+
+						if(g2 != null) {
+							if(g2.equalsIgnoreCase("queue")) {
+								boolean isLoopQueue = ocarina.toggleLoopQueue();
+								return lang.getMsg(Langs.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{ isLoopQueue ? "ON" : "OFF" });
+							}else{
+								return lang.getError(Errors.COMMAND_NOT_FOUND, false);
+							}
+						}else {
+							boolean isLoop = ocarina.toggleLoop();
+							return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"});
+						}
 					}else{
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}

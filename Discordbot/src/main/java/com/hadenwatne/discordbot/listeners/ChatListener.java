@@ -78,7 +78,7 @@ public class ChatListener extends ListenerAdapter {
 							if (message.toLowerCase().contains(trigger)) {
 								if (type != TriggerType.COMMAND) {
 									if (type != TriggerType.REACT) {
-										sendRandom(e.getTextChannel(), e.getGuild(), type, e.getAuthor());
+										sendRandom(e.getTextChannel(), e.getGuild(), type, e.getMember());
 									} else {
 										List<Emote> em = new ArrayList<Emote>(e.getGuild().getEmotes());
 
@@ -111,7 +111,7 @@ public class ChatListener extends ListenerAdapter {
 
 					// Bot gives its two cents.
 					if (Utils.getRandom(150) == 0) {
-						sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.RANDOM, e.getAuthor());
+						sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.RANDOM, e.getMember());
 					}
 				}
 			} else if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
@@ -132,11 +132,12 @@ public class ChatListener extends ListenerAdapter {
 	 * @param t The trigger type being called.
 	 * @param author The user who triggered this message.
 	 */
-	private void sendRandom(TextChannel c, Guild g, TriggerType t, User author) {
+	private void sendRandom(TextChannel c, Guild g, TriggerType t, Member author) {
 		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t);
+		String name = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 
 		if(r.size() > 0) {
-			String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", author.getName());
+			String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", name);
 
 			if (response.startsWith("[gif]"))
 				response = Utils.getGIF(response.split("\\[gif\\]", 2)[1], c.isNSFW() ? "low" : "high");

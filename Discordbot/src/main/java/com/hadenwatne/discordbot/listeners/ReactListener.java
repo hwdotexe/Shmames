@@ -74,7 +74,7 @@ public class ReactListener extends ListenerAdapter {
 			}
 		}
 
-		if(votes >= threshold){
+		if(votes == threshold){
 			if(!badTallyCache.contains(m.getId())) {
 				badTallyCache.add(m.getId());
 
@@ -121,7 +121,7 @@ public class ReactListener extends ListenerAdapter {
 			}
 		}
 
-		if(votes >= threshold){
+		if(votes == threshold){
 			if(!goodTallyCache.contains(m.getId())) {
 				goodTallyCache.add(m.getId());
 

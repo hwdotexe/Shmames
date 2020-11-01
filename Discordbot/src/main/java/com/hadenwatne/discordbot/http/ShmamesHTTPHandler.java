@@ -21,7 +21,7 @@ public class ShmamesHTTPHandler implements HttpHandler {
         String route = getRoute(URI);
         String result = null;
 
-        System.out.println("[HTTP/"+httpExchange.getRequestMethod()+"] to \""+httpExchange.getRequestURI().toString()+"\" from "+httpExchange.getRemoteAddress().getAddress().getHostAddress());
+        System.out.println("[HTTP/"+httpExchange.getRequestMethod()+"] to \""+route+"\" from "+httpExchange.getRemoteAddress().getAddress().getHostAddress());
 
         if(isAuthenticated(queryStrings)) {
             if ("POST".equals(httpExchange.getRequestMethod())) {

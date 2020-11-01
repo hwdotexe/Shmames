@@ -1,4 +1,4 @@
-package com.hadenwatne.discordbot;
+package com.hadenwatne.discordbot.music;
 
 import java.nio.ByteBuffer;
 

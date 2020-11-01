@@ -27,12 +27,7 @@ public class Playlist {
 
     public void addTrack(String url, String memo) {
         urls.add(url);
-
-        // TODO temporary check, remove soon.
-        if(memos == null) {
-            memos = new HashMap<Integer, String>();
-        }
-
+        
         if(memo != null) {
             memos.put(urls.indexOf(url), memo);
         }else{

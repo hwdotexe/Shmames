@@ -8,12 +8,12 @@ import com.hadenwatne.discordbot.http.ShmamesHTTPHandler;
 import com.hadenwatne.discordbot.listeners.ChatListener;
 import com.hadenwatne.discordbot.listeners.FirstJoinListener;
 import com.hadenwatne.discordbot.listeners.ReactListener;
+import com.hadenwatne.discordbot.music.MusicManager;
 import com.hadenwatne.discordbot.storage.*;
 import com.hadenwatne.discordbot.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
 import com.sun.net.httpserver.HttpServer;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 

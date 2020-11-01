@@ -1,5 +1,6 @@
-package com.hadenwatne.discordbot;
+package com.hadenwatne.discordbot.music;
 
+import com.hadenwatne.discordbot.music.GuildOcarina;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;

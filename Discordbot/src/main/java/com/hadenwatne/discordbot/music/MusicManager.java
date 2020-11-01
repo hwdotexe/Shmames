@@ -1,5 +1,7 @@
-package com.hadenwatne.discordbot;
+package com.hadenwatne.discordbot.music;
 
+import com.hadenwatne.discordbot.Shmames;
+import com.hadenwatne.discordbot.music.GuildOcarina;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import net.dv8tion.jda.api.entities.Guild;

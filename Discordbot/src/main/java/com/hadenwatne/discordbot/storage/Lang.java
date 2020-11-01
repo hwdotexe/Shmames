@@ -148,6 +148,7 @@ public class Lang {
         messages.put(Langs.ITEM_REMOVED,                        "I've removed \""+wildcard+"\"!");
         messages.put(Langs.MUSIC_ADDED_TO_QUEUE,                "Added to queue!");
         messages.put(Langs.MUSIC_LOOPING_TOGGLED,               "Music looping is now **"+wildcard+"**");
+        messages.put(Langs.MUSIC_LOOPING_QUEUE_TOGGLED,         "Music Queue looping is now **"+wildcard+"**");
         messages.put(Langs.MUSIC_PLAYING,                       "Playing!");
         messages.put(Langs.MUSIC_PLAYING_PLAYLIST,              "Playing the `"+wildcard+"` Playlist!");
         messages.put(Langs.MUSIC_PLAYLIST_CREATED,              "Created a new Playlist `"+wildcard+"`!");
