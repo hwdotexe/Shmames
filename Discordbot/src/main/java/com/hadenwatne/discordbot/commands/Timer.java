@@ -62,6 +62,10 @@ public class Timer implements ICommand {
 			}
 
 			if(seconds > 0) {
+				if(seconds > 7776000) {
+					return "Timers must be set for 90 days or sooner.";
+				}
+
 				Date date = new Date(seconds*1000);
 
 				// Days
@@ -73,23 +77,24 @@ public class Timer implements ICommand {
 				// Hours
 				DateFormat df_hour = new SimpleDateFormat("HH");
 				df_hour.setTimeZone(TimeZone.getTimeZone("UTC"));
-				String f_hour = df_hour.format(date);
+				int f_hour = Integer.parseInt(df_hour.format(date));
 
 				// Minutes
 				DateFormat df_min = new SimpleDateFormat("mm");
 				df_min.setTimeZone(TimeZone.getTimeZone("UTC"));
-				String f_min = df_min.format(date);
+				int f_min = Integer.parseInt(df_min.format(date));
 
 				// Seconds
 				DateFormat df_sec = new SimpleDateFormat("ss");
 				df_sec.setTimeZone(TimeZone.getTimeZone("UTC"));
-				String f_sec = df_sec.format(date);
+				int f_sec = Integer.parseInt(df_sec.format(date));
 
 				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), seconds, msg);
+				String timeMsg = (f_day>0?f_day+"d ":"") + (f_hour>0?f_hour+"h ":"") + (f_min>0?f_min+"m ":"") + (f_sec>0?f_sec+"s":"");
 
 				brain.getTimers().add(t);
 
-				return lang.getMsg(Langs.TIMER_STARTED, new String[]{"**" + f_day + "d " + f_hour + "h " + f_min + "m " + f_sec + "s" + "**"});
+				return lang.getMsg(Langs.TIMER_STARTED, new String[]{"**" + timeMsg + "**"});
 			}else{
 				return lang.wrongUsage(getUsage());
 			}
