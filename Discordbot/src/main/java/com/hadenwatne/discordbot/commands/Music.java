@@ -603,7 +603,7 @@ public class Music implements ICommand {
 		sb.append("`shuffle` - Shuffles tracks in the queue.\n");
 		sb.append("`skip` - Skip the current track.\n");
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
-		sb.append("`loop` - Toggle track looping.\n");
+		sb.append("`loop [queue]` - Toggle track or queue looping.\n");
 		sb.append("`playing|np` - See details about the current track.\n");
 		sb.append("`(q)ueue [url|playlist|clear|page]` - Show the queue, add items, or clear it.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");

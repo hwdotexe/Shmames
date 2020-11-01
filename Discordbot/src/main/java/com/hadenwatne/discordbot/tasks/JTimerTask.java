@@ -15,33 +15,17 @@ public class JTimerTask {
 	private String message;
 	private Date execTime;
 	
-	public JTimerTask(String mention, long ch, int time, int interval, String msg) {
+	public JTimerTask(String mention, long ch, int seconds, String msg) {
 		Calendar c = Calendar.getInstance();
-		message = msg;
+		Timer t = new Timer();
 
-    	c.setTime(new Date());
-    	
-    	switch(interval) {
-    	case 1:
-    		c.add(Calendar.HOUR, 24*time);
-    		break;
-    	case 2:
-    		c.add(Calendar.HOUR, time);
-    		break;
-    	case 3:
-    		c.add(Calendar.MINUTE, time);
-    		break;
-    	case 4:
-    		c.add(Calendar.SECOND, time);
-    		break;
-    	default:
-    		c.add(Calendar.SECOND, 5);
-    	}
-    	
+		c.setTime(new Date());
+		c.add(Calendar.SECOND, seconds);
+
+		message = msg;
     	userMention = mention;
     	channelID = ch;
     	execTime = c.getTime();
-		Timer t = new Timer();
 
 		t.schedule(new TimerTask() {
 			@Override
