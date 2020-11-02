@@ -16,10 +16,9 @@ public class ShmamesHTTPHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String URI = httpExchange.getRequestURI().toString();
-        Utils.HTTPVerb v = null;
+        Utils.HTTPVerb v;
         HashMap<String, String> queryStrings = getQueryStrings(URI);
         String route = getRoute(URI);
-        String result = null;
 
         System.out.println("[HTTP/"+httpExchange.getRequestMethod()+"] to \""+route+"\" from "+httpExchange.getRemoteAddress().getAddress().getHostAddress());
 
@@ -30,45 +29,59 @@ public class ShmamesHTTPHandler implements HttpHandler {
                 v = Utils.HTTPVerb.GET;
             }
 
-            result = processRequest(route, queryStrings);
-        }
+            ShmamesHTTPResponse result = processRequest(route, v, queryStrings);
 
-        sendResponse(httpExchange, result);
+            sendResponse(httpExchange, result);
+        } else {
+            ShmamesHTTPResponse notAuth = new ShmamesHTTPResponse(401, "Not authorized.");
+
+            sendResponse( httpExchange, notAuth);
+        }
     }
 
-    private String processRequest(String route, HashMap<String, String> queryStrings)  {
-        try {
-            switch (route) {
-                case "":
-                    return "Pong!";
-                case "setstatus":
-                    if (queryStrings.size() > 0) {
-                        if (queryStrings.get("text") != null) {
-                            ShmamesActions.SetTempStatus(Activity.ActivityType.DEFAULT, queryStrings.get("text"));
-                            return "Success";
-                        }
+    private ShmamesHTTPResponse processRequest(String route, Utils.HTTPVerb verb, HashMap<String, String> queryStrings)  {
+        ShmamesHTTPResponse response = new ShmamesHTTPResponse();
+
+        switch (route.toLowerCase()) {
+            case "":
+                response.setResponseCode(200);
+                response.setResponseData("Pong!");
+
+                break;
+            case "status":
+                if(verb == Utils.HTTPVerb.POST) {
+                    if (queryStrings.containsKey("text")) {
+                        ShmamesActions.SetTempStatus(Activity.ActivityType.DEFAULT, queryStrings.get("text"));
+
+                        response.setResponseCode(200);
+                        response.setResponseData("Status changed successfully.");
                     }
-                default:
-                    return null;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
+                } else if(verb == Utils.HTTPVerb.GET) {
+                    response.setResponseCode(200);
+                    response.setResponseData(ShmamesActions.GetStatus());
+                } else {
+                    response.setResponseCode(405);
+                    response.setResponseData("Method not allowed.");
+                }
+
+                break;
+            default:
+                response.setResponseCode(404);
+                response.setResponseData("The requested route could not be found.");
+                break;
         }
+
+        response.ready();
+
+        return response;
     }
 
-    // TODO this should be adapted to send accurate HTTP codes (401, 404, 50x, etc.)
-    private void sendResponse(HttpExchange httpExchange, String result) throws IOException {
+    private void sendResponse(HttpExchange httpExchange, ShmamesHTTPResponse result) throws IOException {
         OutputStream outputStream = httpExchange.getResponseBody();
-        int responseCode = 200;
+        String data = result.getResponseData();
 
-        if(result == null) {
-            responseCode = 400;
-            result = "Bad request / Not successful";
-        }
-
-        httpExchange.sendResponseHeaders(responseCode, result.length());
-        outputStream.write(result.getBytes());
+        httpExchange.sendResponseHeaders(result.getResponseCode(), data.length());
+        outputStream.write(data.getBytes());
         outputStream.flush();
         outputStream.close();
     }
