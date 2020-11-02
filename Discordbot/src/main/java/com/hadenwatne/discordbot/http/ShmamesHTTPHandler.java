@@ -5,6 +5,7 @@ import com.hadenwatne.discordbot.Utils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import net.dv8tion.jda.api.entities.Activity;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,15 +51,32 @@ public class ShmamesHTTPHandler implements HttpHandler {
                 break;
             case "status":
                 if(verb == Utils.HTTPVerb.POST) {
+                    String type = "DEFAULT";
+
+                    if (queryStrings.containsKey("type")) {
+                        type = queryStrings.get("type").toUpperCase();
+
+                        if(!type.equalsIgnoreCase("Listening") && !type.equalsIgnoreCase("Watching") && !type.equalsIgnoreCase("Default")) {
+                            type = "DEFAULT";
+                        }
+                    }
+
                     if (queryStrings.containsKey("text")) {
-                        ShmamesActions.SetTempStatus(Activity.ActivityType.DEFAULT, queryStrings.get("text"));
+                        ShmamesActions.SetTempStatus(Activity.ActivityType.valueOf(type), queryStrings.get("text"));
 
                         response.setResponseCode(200);
                         response.setResponseData("Status changed successfully.");
                     }
                 } else if(verb == Utils.HTTPVerb.GET) {
+                    JSONObject status = new JSONObject();
+                    JSONObject data = new JSONObject();
+
+                    data.put("type", ShmamesActions.GetStatus().getType().toString());
+                    data.put("text", ShmamesActions.GetStatus().getName());
+                    status.put("status", data);
+
                     response.setResponseCode(200);
-                    response.setResponseData(ShmamesActions.GetStatus());
+                    response.setResponseData(status);
                 } else {
                     response.setResponseCode(405);
                     response.setResponseData("Method not allowed.");
@@ -78,7 +96,7 @@ public class ShmamesHTTPHandler implements HttpHandler {
 
     private void sendResponse(HttpExchange httpExchange, ShmamesHTTPResponse result) throws IOException {
         OutputStream outputStream = httpExchange.getResponseBody();
-        String data = result.getResponseData();
+        String data = result.getResponseData().toString();
 
         httpExchange.sendResponseHeaders(result.getResponseCode(), data.length());
         outputStream.write(data.getBytes());

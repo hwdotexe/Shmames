@@ -11,8 +11,13 @@ An example API request would look like this:
 The above call would generate a response like this:  
 ```
 {
-  "code":200,
-  "response":"Netflix"
+  "code": 200,
+  "response": {
+    "status": {
+      "text": "Bagpipes",
+      "type": "DEFAULT"
+      }
+   }
 }
 ```
 
@@ -23,5 +28,11 @@ Ping the API and receive a basic response back.
 #### GET - /shmames/status
 Gets the current status of the bot on Discord.
 
-#### POST - /shmames/status?text=NEW_STATUS_HERE
-Sets the bot's status temporarily, using the default "Playing" status type.
+#### POST - /shmames/status?text=NEW_STATUS_HERE&type=default
+Sets the bot's status temporarily. Adjust the `text` and `type` parameters to craft the new status.
+
+Type | Discord
+--- | ---
+default | "Playing"
+watching | "Watching"
+listening | "Listening to"
