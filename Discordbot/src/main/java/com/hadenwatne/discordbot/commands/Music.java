@@ -672,7 +672,7 @@ public class Music implements ICommand {
 	}
 
 	private boolean canUse(Brain b, Member m) {
-		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.RESET_EMOTE_STATS), m);
+		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.MANAGE_MUSIC), m);
 	}
 
 	private Playlist findPlaylistServer(String name, Brain b) {

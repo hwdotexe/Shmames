@@ -66,6 +66,9 @@ public class ShmamesHTTPHandler implements HttpHandler {
 
                         response.setResponseCode(200);
                         response.setResponseData("Status changed successfully.");
+                    }else {
+                        response.setResponseCode(400);
+                        response.setResponseData("Bad request.");
                     }
                 } else if(verb == Utils.HTTPVerb.GET) {
                     JSONObject status = new JSONObject();

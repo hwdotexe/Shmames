@@ -1,4 +1,5 @@
 # ShmamesAPI Reference
+v1.0 - 11/2/2020
 
 ### API Keys
 All API endpoints require the user call them with an API key. With Shmames, this key is added to your request URL as a
@@ -6,7 +7,7 @@ query string: `api_key=YOUR_KEY_HERE`. Keys must be created manually by the deve
 
 ##### Example
 An example API request would look like this:  
-`GET http://shmamesapi/shmames/status?api_key=ABCDEF12345`
+`GET http://shmamesapi.whyamialoser.com:8337/shmames/status?api_key=ABCDEF12345`
 
 The above call would generate a response like this:  
 ```
