@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,28 +67,22 @@ public class Timer implements ICommand {
 					return "Timers must be set for 90 days or sooner.";
 				}
 
-				Date date = new Date(seconds*1000);
+				long sLong = (long)seconds;
 
 				// Days
-				DateFormat df_day = new SimpleDateFormat("dd");
-				df_day.setTimeZone(TimeZone.getTimeZone("UTC"));
-				int f_day = Integer.parseInt(df_day.format(date));
-				f_day -= 1;
+				long f_day = TimeUnit.SECONDS.toDays(sLong);
+				sLong -= TimeUnit.DAYS.toSeconds(f_day);
 
 				// Hours
-				DateFormat df_hour = new SimpleDateFormat("HH");
-				df_hour.setTimeZone(TimeZone.getTimeZone("UTC"));
-				int f_hour = Integer.parseInt(df_hour.format(date));
+				long f_hour = TimeUnit.SECONDS.toHours(sLong);
+				sLong -= TimeUnit.HOURS.toSeconds(f_hour);
 
 				// Minutes
-				DateFormat df_min = new SimpleDateFormat("mm");
-				df_min.setTimeZone(TimeZone.getTimeZone("UTC"));
-				int f_min = Integer.parseInt(df_min.format(date));
+				long f_min = TimeUnit.SECONDS.toMinutes(sLong);
+				sLong -= TimeUnit.MINUTES.toSeconds(f_min);
 
 				// Seconds
-				DateFormat df_sec = new SimpleDateFormat("ss");
-				df_sec.setTimeZone(TimeZone.getTimeZone("UTC"));
-				int f_sec = Integer.parseInt(df_sec.format(date));
+				long f_sec = sLong;
 
 				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), seconds, msg);
 				String timeMsg = (f_day>0?f_day+"d ":"") + (f_hour>0?f_hour+"h ":"") + (f_min>0?f_min+"m ":"") + (f_sec>0?f_sec+"s":"");
