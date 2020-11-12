@@ -10,15 +10,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.MotherBrain;
 
 import javax.annotation.Nullable;
 
@@ -326,5 +323,7 @@ public class Dev implements ICommand {
 		}
 
 		Shmames.getBrains().saveMotherBrain();
+
+		ShmamesLogger.write();
 	}
 }

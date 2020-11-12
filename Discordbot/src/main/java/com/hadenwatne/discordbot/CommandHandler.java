@@ -8,9 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.commands.*;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Errors;
-import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.tasks.TypingTask;
 
@@ -61,7 +59,6 @@ public class CommandHandler {
 		commands.add(new Roll());
 		commands.add(new SetTally());
 		commands.add(new SimonSays());
-//		commands.add(new Source());
 		commands.add(new Startpoll());
 		commands.add(new Storytime());
 		commands.add(new Thoughts());
@@ -83,6 +80,8 @@ public class CommandHandler {
 			message.getChannel().sendMessage(lang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() })).queue();
 			return;
 		}
+
+		ShmamesLogger.log(LogType.COMMAND, "["+ (server != null ? server.getId() : "Private Message") + "/" + author.getName() +"] "+ cmd);
 
 		Brain brain = null;
 

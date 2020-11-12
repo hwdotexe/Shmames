@@ -216,7 +216,7 @@ public class Utils {
 		if (gifURLs.size() > 0) {
 			String url = gifURLs.get(r.nextInt(gifURLs.size()));
 
-			System.out.println("[GIF Search: " + search + " @ " + filter + "]");
+			ShmamesLogger.log(LogType.NETWORK, "[GIF Search: " + search + " @ " + filter + "]");
 
 			return url;
 

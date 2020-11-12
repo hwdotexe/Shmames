@@ -2,6 +2,8 @@ package com.hadenwatne.discordbot.http;
 
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
+import com.hadenwatne.discordbot.storage.LogType;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import net.dv8tion.jda.api.entities.Activity;
@@ -21,7 +23,7 @@ public class ShmamesHTTPHandler implements HttpHandler {
         HashMap<String, String> queryStrings = getQueryStrings(URI);
         String route = getRoute(URI);
 
-        System.out.println("[HTTP/"+httpExchange.getRequestMethod()+"] to \""+route+"\" from "+httpExchange.getRemoteAddress().getAddress().getHostAddress());
+        ShmamesLogger.log(LogType.NETWORK, "[HTTP/"+httpExchange.getRequestMethod()+"]["+httpExchange.getRemoteAddress().getAddress().getHostAddress()+"] to \""+route+"\"");
 
         if(isAuthenticated(queryStrings)) {
             if ("POST".equals(httpExchange.getRequestMethod())) {

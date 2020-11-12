@@ -44,14 +44,6 @@ public class ChatListener extends ListenerAdapter {
 							if(m.group(2) != null){
 								String command = m.group(2).trim();
 
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(new Date());
-
-								int minute = cal.get(Calendar.MINUTE);
-								String timestamp = "["+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DAY_OF_MONTH)+" "+cal.get(Calendar.HOUR)+":"+(minute < 10 ? "0"+minute : minute)+"]";
-
-								System.out.println(timestamp+"[COMMAND/" + e.getGuild().getId() + "/" + e.getAuthor().getName() + "]: " + command);
-
 								// Send to the command handler for further processing.
 								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							}else{
@@ -118,7 +110,6 @@ public class ChatListener extends ListenerAdapter {
 				if (message.toLowerCase().startsWith(Shmames.getBotName().toLowerCase())) {
 					String command = message.substring(Shmames.getBotName().length()).trim();
 
-					System.out.println("[COMMAND/" + e.getAuthor().getName() + "]: " + command);
 					cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);
 				}
 			}

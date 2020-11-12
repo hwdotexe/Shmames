@@ -6,7 +6,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.LogType;
 import com.hadenwatne.discordbot.storage.MotherBrain;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.discordbot.Shmames;
@@ -40,6 +42,7 @@ public class SaveDataTask extends TimerTask{
 
 		Shmames.getBrains().saveMotherBrain();
 
-		System.out.println("[ AUTOSAVE TASK RAN ]");
+		ShmamesLogger.log(LogType.SYSTEM, "Autosave Task Ran");
+		ShmamesLogger.write();
 	}
 }

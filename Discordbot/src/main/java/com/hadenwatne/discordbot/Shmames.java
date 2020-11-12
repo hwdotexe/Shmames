@@ -43,6 +43,7 @@ public final class Shmames {
 		langs.loadLangs();
 		loadDefaultSettings();
 		Utils.Init();
+		ShmamesLogger.init();
 		brains.loadMotherBrain();
 		
 		try {
@@ -86,7 +87,7 @@ public final class Shmames {
 				brains.getMotherBrain().getWolframAPIKey();
 				brains.saveMotherBrain();
 
-				System.out.println("Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
+				ShmamesLogger.log(LogType.ERROR, "Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

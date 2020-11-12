@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hadenwatne.discordbot.Shmames;
+import com.hadenwatne.discordbot.storage.LogType;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -186,6 +188,6 @@ public class GuildOcarina extends AudioEventAdapter {
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
 		// Audio track has been unable to provide us any audio, might want to just start a new track
-		System.out.println("Track stuck: "+track.getInfo().title);
+		ShmamesLogger.log(LogType.ERROR, "A music track is stuck: "+track.getInfo().title);
 	}
 }

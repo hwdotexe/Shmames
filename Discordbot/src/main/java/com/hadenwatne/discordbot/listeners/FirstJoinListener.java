@@ -1,13 +1,11 @@
 package com.hadenwatne.discordbot.listeners;
 
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.discordbot.Shmames;
-import com.hadenwatne.discordbot.storage.BotSetting;
-import com.hadenwatne.discordbot.storage.BotSettingName;
-import com.hadenwatne.discordbot.storage.Brain;
 
 import java.util.List;
 
@@ -45,7 +43,7 @@ public class FirstJoinListener extends ListenerAdapter {
 						app.setValue(em.get(1).getName(), b);
 				}
 			}catch (Exception ex){
-				System.out.println("Shmames could not set default bot settings.");
+				ShmamesLogger.log(LogType.ERROR, "Shmames could not set default bot settings.");
 			}
 
 			// Try to send a welcome message.
@@ -53,7 +51,7 @@ public class FirstJoinListener extends ListenerAdapter {
 				sendMessage(e.getGuild().getDefaultChannel());
 				b.setSentWelcome();
 			}catch (Exception ex){
-				System.out.println("Shmames could not send a welcome message.");
+				ShmamesLogger.log(LogType.ERROR, "Shmames could not send a welcome message.");
 			}
 		}
 	}
