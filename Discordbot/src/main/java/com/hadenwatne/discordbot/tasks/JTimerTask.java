@@ -1,11 +1,10 @@
 package com.hadenwatne.discordbot.tasks;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import com.hadenwatne.discordbot.storage.Brain;
+import com.hadenwatne.discordbot.storage.LogType;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.discordbot.Shmames;
 
@@ -74,7 +73,7 @@ public class JTimerTask {
 				b.getTimers().remove(this);
 			}
 		}catch (Exception e){
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 	}
 }

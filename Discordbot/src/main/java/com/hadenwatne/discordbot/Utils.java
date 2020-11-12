@@ -5,15 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,7 +130,7 @@ public class Utils {
 				return null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 			return null;
 		}
 	}

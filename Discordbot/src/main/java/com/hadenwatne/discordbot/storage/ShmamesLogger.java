@@ -1,9 +1,6 @@
 package com.hadenwatne.discordbot.storage;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +25,30 @@ public class ShmamesLogger {
         log = "["+getDateTime()+"]["+type.name()+"] "+log;
 
         System.out.println(log);
+        tempLog.add(log);
+    }
 
+    public static void logException(Throwable e) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[");
+        sb.append(getDateTime());
+        sb.append("]");
+        sb.append("[");
+        sb.append(LogType.ERROR.name());
+        sb.append("] ");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        e.printStackTrace(pw);
+        sb.append(sw.toString());
+
+        pw.close();
+
+        String log = sb.toString();
+
+        System.out.println(log);
         tempLog.add(log);
     }
 

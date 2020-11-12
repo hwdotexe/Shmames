@@ -3,10 +3,7 @@ package com.hadenwatne.discordbot.commands;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -300,7 +297,7 @@ public class Dev implements ICommand {
 			fo.flush();
 			fo.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 
 		// Send to me.

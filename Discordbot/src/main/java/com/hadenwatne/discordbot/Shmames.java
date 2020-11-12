@@ -2,6 +2,7 @@ package com.hadenwatne.discordbot;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.hadenwatne.discordbot.http.ShmamesHTTPHandler;
@@ -90,7 +91,7 @@ public final class Shmames {
 				ShmamesLogger.log(LogType.ERROR, "Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 	}
 	

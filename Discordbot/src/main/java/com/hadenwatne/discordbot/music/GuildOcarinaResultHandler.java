@@ -1,10 +1,14 @@
 package com.hadenwatne.discordbot.music;
 
 import com.hadenwatne.discordbot.music.GuildOcarina;
+import com.hadenwatne.discordbot.storage.LogType;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import java.util.Arrays;
 
 public class GuildOcarinaResultHandler implements AudioLoadResultHandler {
     private GuildOcarina ocarina;
@@ -71,7 +75,7 @@ public class GuildOcarinaResultHandler implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException throwable) {
         ocarina.sendMessageToChannel("Loading failed for a track.");
-        throwable.printStackTrace();
+        ShmamesLogger.logException(throwable);
 
         if(ocarina.getNowPlaying() == null && ocarina.getQueue().size() == 0) {
             ocarina.stop();

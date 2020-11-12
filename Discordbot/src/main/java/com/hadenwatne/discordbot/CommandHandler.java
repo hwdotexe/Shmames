@@ -1,6 +1,7 @@
 package com.hadenwatne.discordbot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -121,11 +122,11 @@ public class CommandHandler {
 										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()))
 								.exceptionally(exception -> {
 									sendMessageToChannel(lang.getError(Errors.BOT_ERROR, true), message.getChannel());
-									exception.printStackTrace();
+									ShmamesLogger.logException(exception);
 									return null;
 								});
 							}catch (Exception e){
-								e.printStackTrace();
+								ShmamesLogger.logException(e);
 								sendMessageToChannel(lang.getError(Errors.BOT_ERROR, true), message.getChannel());
 							}
 						}

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LangLoader {
@@ -61,7 +62,7 @@ public class LangLoader {
 
 			return jsonData.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 
 		return "";
@@ -96,7 +97,7 @@ public class LangLoader {
 			os.flush();
 			os.close();
 		}catch(Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 	}
 

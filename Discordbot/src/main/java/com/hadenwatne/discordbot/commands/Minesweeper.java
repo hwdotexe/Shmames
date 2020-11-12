@@ -2,11 +2,14 @@ package com.hadenwatne.discordbot.commands;
 
 import com.hadenwatne.discordbot.storage.Brain;
 import com.hadenwatne.discordbot.storage.Lang;
+import com.hadenwatne.discordbot.storage.LogType;
+import com.hadenwatne.discordbot.storage.ShmamesLogger;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.MinesweepGame;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class Minesweeper implements ICommand {
 	@Override
@@ -31,7 +34,7 @@ public class Minesweeper implements ICommand {
 					return "Valid range is 6-11.";
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				ShmamesLogger.logException(e);
 			}
 		
 		return "Try `minesweep 6`!";

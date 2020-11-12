@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 
@@ -195,7 +196,7 @@ public class BrainController {
 			os.flush();
 			os.close();
 		}catch(Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 	}
 	
@@ -215,7 +216,7 @@ public class BrainController {
 			os.flush();
 			os.close();
 		}catch(Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 	}
 	
@@ -238,7 +239,7 @@ public class BrainController {
 
 			return jsonData.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ShmamesLogger.logException(e);
 		}
 
 		return "";
