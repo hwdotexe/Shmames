@@ -67,7 +67,9 @@ public class ChatListener extends ListenerAdapter {
 					// Process other triggers.
 					for (TriggerType type : TriggerType.values()) {
 						for (String trigger : brain.getTriggers(type)) {
-							if (message.toLowerCase().contains(trigger)) {
+							Matcher m = Pattern.compile("\\b"+trigger+"\\b", Pattern.CASE_INSENSITIVE).matcher(message);
+
+							if (m.find()) {
 								if (type != TriggerType.COMMAND) {
 									if (type != TriggerType.REACT) {
 										sendRandom(e.getTextChannel(), e.getGuild(), type, e.getMember());

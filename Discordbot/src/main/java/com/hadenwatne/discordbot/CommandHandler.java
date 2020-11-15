@@ -65,6 +65,7 @@ public class CommandHandler {
 		commands.add(new Thoughts());
 //		commands.add(new Timeout());
 		commands.add(new Timer());
+		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
 		commands.add(new Wiki());
 	}

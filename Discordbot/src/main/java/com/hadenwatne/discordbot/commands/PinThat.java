@@ -49,7 +49,7 @@ public class PinThat implements ICommand {
 						channelFound = true;
 						
 						EmbedBuilder eBuilder = new EmbedBuilder();
-						
+
 						eBuilder.setAuthor(toPin.getAuthor().getName(), null, toPin.getAuthor().getEffectiveAvatarUrl());
 				        eBuilder.setColor(Color.CYAN);
 				        

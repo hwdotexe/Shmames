@@ -39,8 +39,11 @@ public class Lang {
         String msg = getMsg(key);
 
         for(String r : replacements) {
-            msg = msg.replaceFirst(wildcard, r);
+            // $ characters need to be dynamically escaped, otherwise Java will think it's an improper regex anchor.
+            msg = msg.replaceFirst(wildcard, r.replaceAll("\\$", "__DOLLARSIGN__"));
         }
+
+        msg = msg.replaceAll("__DOLLARSIGN__", "\\$");
 
         return msg;
     }
