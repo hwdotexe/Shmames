@@ -29,45 +29,52 @@ public class React implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("(^\\w{2,16}) ([\\^]{1,15})$").matcher(args);
-		
-		if(m.find()) {
-			try {
-				int messages = m.group(2).length();
-				String word = m.group(1);
-				
-				List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
-				Message toPin = msgs.get(msgs.size()-1);
-				List<Character> chars = new ArrayList<Character>();
-				
-				for(char letter : word.toCharArray()) {
-					if(chars.contains(letter)) {
-						String l = dupLetterEmoji(letter);
-						
-						if(l != null)
-							toPin.addReaction(l).queue();
-						
-						continue;
-					}
-					
-					toPin.addReaction(letterToEmoji(letter)).queue();
-					chars.add(letter);
-				}
-				
-				// Remove the querying message
-				try {
-					message.delete().queue();
-				}catch(Exception e) {}
-				
-				return "";
-			}catch(Exception ex) {
-				ex.printStackTrace();
+		Matcher m1 = Pattern.compile("^(\\w{2,16})\\s([\\^]{1,15})$").matcher(args);
+		Matcher m2 = Pattern.compile("^([\\^]{1,15})\\s(\\w{2,16})$").matcher(args);
 
-				return lang.getError(Errors.NO_PERMISSION_BOT, true);
-			}
+		int messages = 0;
+		String word = "";
+
+		if(m1.find()) {
+			messages = m1.group(2).length();
+			word = m1.group(1);
+		} else if(m2.find()) {
+			messages = m2.group(1).length();
+			word = m2.group(2);
+		} else {
+			return lang.wrongUsage(getUsage());
 		}
-		
-		return lang.getError(Errors.INCOMPLETE, true);
+
+		try {
+			List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
+			Message toPin = msgs.get(msgs.size()-1);
+			List<Character> chars = new ArrayList<Character>();
+
+			for(char letter : word.toCharArray()) {
+				if(chars.contains(letter)) {
+					String l = dupLetterEmoji(letter);
+
+					if(l != null)
+						toPin.addReaction(l).queue();
+
+					continue;
+				}
+
+				toPin.addReaction(letterToEmoji(letter)).queue();
+				chars.add(letter);
+			}
+
+			// Remove the querying message
+			try {
+				message.delete().queue();
+			}catch(Exception e) {}
+
+			return "";
+		}catch(Exception ex) {
+			ex.printStackTrace();
+
+			return lang.getError(Errors.NO_PERMISSION_BOT, true);
+		}
 	}
 
 	@Override
