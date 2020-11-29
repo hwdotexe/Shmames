@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 public class ForumWeapon implements ICommand {
 	private Lang lang;
+	private Brain brain;
 
 	@Override
 	public String getDescription() {
@@ -26,18 +27,18 @@ public class ForumWeapon implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "fw [create|update|remove|list|search|alias] [weapon name] [weapon alias] [weapon link]";
+		return "fw [create|update|remove|list|search|alias|prune] [weapon name] [weapon alias] [weapon link]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(destroy)|(list)|(search)|(alias)|(\\w{3,})) ?(\\w{3,})? ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher m = Pattern.compile("^((create)|(update)|(remove)|(destroy)|(list)|(search)|(alias)|(prune)|(\\w{3,})) ?(\\w{3,})? ?(\\w{3,})? ?(https?:\\/\\/.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()) {
 			String nameOrOp = m.group(1).toLowerCase();
-			String optFWName = m.group(10) != null ?  m.group(10).toLowerCase() : null;
-			String optFWAlias = m.group(11) != null ?  m.group(11).toLowerCase() : null;
-			String optURL = m.group(12);
+			String optFWName = m.group(11) != null ?  m.group(11).toLowerCase() : null;
+			String optFWAlias = m.group(12) != null ?  m.group(12).toLowerCase() : null;
+			String optURL = m.group(13);
 
 			switch(nameOrOp) {
 				case "create":
@@ -190,6 +191,12 @@ public class ForumWeapon implements ICommand {
 					}else{
 						return lang.wrongUsage(getUsage());
 					}
+				case "prune":
+					// TODO
+					List<ForumWeaponObj> unused = getServerUnusedFWs();
+
+					// Prune these out and create a file that contains all the removed FWs.
+					return "Command is under construction";
 				default:
 					// Try to send the weapon
 					ForumWeaponObj fws = findFW(nameOrOp, message.getGuild().getId());
@@ -216,13 +223,26 @@ public class ForumWeapon implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.lang = lang;
+		this.brain = brain;
 	}
 	
 	@Override
 	public boolean requiresGuild() {
 		return true;
 	}
-	
+
+	private List<ForumWeaponObj> getServerUnusedFWs() {
+		List<ForumWeaponObj> unused = new ArrayList<>();
+
+		for(ForumWeaponObj obj : this.brain.getForumWeapons()) {
+			if(obj.getUses() == 0) {
+				unused.add(obj);
+			}
+		}
+
+		return unused;
+	}
+
 	private ForumWeaponObj findFW(String name, String guildID) {
 		// Check local server.
 		for(ForumWeaponObj fw : Shmames.getBrains().getBrain(guildID).getForumWeapons()) {
