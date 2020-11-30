@@ -143,6 +143,7 @@ public class Lang {
         messages.put(Langs.FORUM_WEAPON_DESTROYED,              "Weapon destroyed.");
         messages.put(Langs.FORUM_WEAPON_DUPLICATE,              ":warning: Found an existing Forum Weapon with that link: **"+wildcard+"**");
         messages.put(Langs.FORUM_WEAPON_UPDATED,                "The weapon was updated with a new link!");
+        messages.put(Langs.FORUM_WEAPONS_PRUNED,                "Pruned **"+wildcard+"** unused Forum Weapons!");
         messages.put(Langs.GENERIC_SUCCESS,                     "Success!");
         messages.put(Langs.HANGMAN_FOOTER_GUESSED,              "Already guessed:");
         messages.put(Langs.HANGMAN_TITLE,                       "Let's play Hangman!");

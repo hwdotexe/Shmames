@@ -1,13 +1,18 @@
 package com.hadenwatne.discordbot.commands;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
@@ -21,8 +26,7 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Engage the meme arsenal. Create shorthand names for your favorite GIFs, " +
-				"videos, links, and more. Then, use them in chat whenever you need!";
+		return "Create shorthand names for your favorite links, and share them in a snap.\n`create <name> <link>` - create a new weapon\n`update <name> <new link>` - change a weapon's link\n`remove <name>` - delete a weapon\n`list [all]` - list available weapons\n`search <name>` - find a weapon\n`alias <name> <alias>` - create a weapon alias\n`prune` - clear all unused weapons and put them in a file";
 	}
 	
 	@Override
@@ -192,11 +196,15 @@ public class ForumWeapon implements ICommand {
 						return lang.wrongUsage(getUsage());
 					}
 				case "prune":
-					// TODO
 					List<ForumWeaponObj> unused = getServerUnusedFWs();
 
-					// Prune these out and create a file that contains all the removed FWs.
-					return "Command is under construction";
+					sendPrunedFWs(message.getGuild().getName(), message.getTextChannel(), unused);
+
+					for(ForumWeaponObj fw : unused) {
+						this.brain.getForumWeapons().remove(fw);
+					}
+
+					return lang.getMsg(Langs.FORUM_WEAPONS_PRUNED, new String[]{ Integer.toString(unused.size()) });
 				default:
 					// Try to send the weapon
 					ForumWeaponObj fws = findFW(nameOrOp, message.getGuild().getId());
@@ -334,5 +342,48 @@ public class ForumWeapon implements ICommand {
 		String list = Utils.GenerateList(fwSorted, -1);
 
 		return "**"+g.getName()+"**\n" + (list.length()>2 ? list.substring(2) : "> No Results");
+	}
+
+	private void sendPrunedFWs(String guildName, MessageChannel c, List<ForumWeaponObj> fws) {
+		StringBuilder pruned = new StringBuilder("Pruned ForumWeapons\n");
+
+		pruned.append("===================\n");
+		pruned.append("= Name:\t\tURL   =\n");
+		pruned.append("===================\n");
+
+		// Build list.
+		for(ForumWeaponObj fw : fws) {
+			pruned.append("\n");
+			pruned.append(fw.getItemName());
+			pruned.append(":\t\t");
+			pruned.append(fw.getItemLink());
+		}
+
+		// Save to file.
+		File dir = new File("reports");
+		File f = new File("reports/"+guildName+".txt");
+		dir.mkdirs();
+
+		try {
+			f.createNewFile();
+
+			FileOutputStream fo = new FileOutputStream(f);
+			fo.write(pruned.toString().getBytes());
+			fo.flush();
+			fo.close();
+		} catch (Exception e) {
+			ShmamesLogger.logException(e);
+		}
+
+		try {
+			c.sendFile(f).complete();
+
+			// Delete on disk.
+			f.delete();
+		} catch(Exception e) {
+			ShmamesLogger.logException(e);
+
+			c.sendMessage(lang.getError(Errors.NO_PERMISSION_BOT, true)).queue();
+		}
 	}
 }
