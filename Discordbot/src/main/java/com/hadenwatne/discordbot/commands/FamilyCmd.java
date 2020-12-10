@@ -144,7 +144,8 @@ public class FamilyCmd implements ICommand {
 							return "";
 						}else{
 							for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
-								if ((f.getFamilyOwner() == author.getIdLong() || message.getMember().hasPermission(Permission.ADMINISTRATOR)) && f.getFamName().equalsIgnoreCase(name)) {
+								// View the family if the user is the family owner, or if they are an Admin and this server is a member
+								if ((f.getFamilyOwner() == author.getIdLong() || (brain.getFamilies().contains(f.getFamID()) && message.getMember().hasPermission(Permission.ADMINISTRATOR))) && f.getFamName().equalsIgnoreCase(name)) {
 									StringBuilder sb = new StringBuilder();
 
 									sb.append("**");
