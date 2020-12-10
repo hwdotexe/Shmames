@@ -2,10 +2,9 @@ package com.hadenwatne.discordbot.commands;
 
 import com.hadenwatne.discordbot.storage.Lang;
 import com.hadenwatne.discordbot.storage.Langs;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
@@ -21,32 +20,32 @@ import java.util.regex.Pattern;
 
 public class FamilyCmd implements ICommand {
 	private Lang lang;
+	private Brain brain;
 
 	@Override
 	public String getDescription() {
-		return "Manage your "+ Shmames.getBotName() + " Family! Families share Shmames " +
-				"Forum Weapons, and can even use each others' server emotes in `simonSays` commands!";
+		return "Manage your server family membership.\n`family create [name]` - Create a new server family\n`family add [name|code]` - Create a join code, or redeem a code to join a family\n`family view [name|emotes]` - View information about the family or list family emotes";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "family <create|add|view|remove> [family|code] [server]";
+		return "family <create|add|view|remove> [family|code|emotes] [server]";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^((create)|(add)|(view)|(remove))( [a-z0-9\\-]+)?( \\d+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
-		//g1 - command
-		//g6 - args
-		//g7 - args2
-
 		if(m.find()){
-			switch(m.group(1).toLowerCase()){
+			String cmd = m.group(1);
+			String arg1 = m.group(6);
+			String arg2 = m.group(7);
+
+			switch(cmd.toLowerCase()){
 				case "create": // create famName
 					if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-						if (m.group(6) != null) {
-							String name = m.group(6).trim().toLowerCase();
+						if (arg1 != null) {
+							String name = arg1.trim().toLowerCase();
 
 							for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
 								if (f.getFamilyOwner() == author.getIdLong()) {
@@ -61,7 +60,7 @@ public class FamilyCmd implements ICommand {
 
 							// Add the Family to the system
 							Shmames.getBrains().getMotherBrain().getServerFamilies().add(newFam);
-							Shmames.getBrains().getBrain(message.getGuild().getId()).getFamilies().add(newFam.getFamID());
+							brain.getFamilies().add(newFam.getFamID());
 
 							return lang.getMsg(Langs.FAMILY_CREATED);
 						} else {
@@ -72,9 +71,8 @@ public class FamilyCmd implements ICommand {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				case "add": // add famName|code
-					if (m.group(6) != null) {
-						String arg = m.group(6).trim().toLowerCase();
-						Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+					if (arg1 != null) {
+						String arg = arg1.trim().toLowerCase();
 
 						for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
 							if(f.getFamilyOwner()==author.getIdLong() && f.getFamName().equalsIgnoreCase(arg)){
@@ -91,10 +89,10 @@ public class FamilyCmd implements ICommand {
 								f.clearCode();
 
 								if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-									if(b.getFamilies().size() < 3) {
-										if (!b.getFamilies().contains(f.getFamID())) {
+									if(brain.getFamilies().size() < 3) {
+										if (!brain.getFamilies().contains(f.getFamID())) {
 											f.addToFamily(message.getGuild());
-											b.getFamilies().add(f.getFamID());
+											brain.getFamilies().add(f.getFamID());
 
 											return lang.getMsg(Langs.FAMILY_JOINED, new String[]{ message.getGuild().getName(), f.getFamName() });
 										} else {
@@ -114,52 +112,82 @@ public class FamilyCmd implements ICommand {
 						return "Use `add <family name>` to get a new Join Code.\n" +
 								"Use `add <join code>` to join a server to a Family.";
 					}
-				case "view": // [famName]
-					if (m.group(6) != null) {
-						String name = m.group(6).trim().toLowerCase();
+				case "view": // [famName|emotes]
+					if (arg1 != null) {
+						String name = arg1.trim().toLowerCase();
 
-						for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
-							if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
-								StringBuilder sb = new StringBuilder();
+						if(name.equalsIgnoreCase("emotes")){
+							// Get all the emotes from all the servers in all the families
+							EmbedBuilder embed = new EmbedBuilder();
 
-								sb.append("**");
-								sb.append(lang.getMsg(Langs.FAMILY_SERVER_LIST, new String[]{ f.getFamName() }));
-								sb.append("**");
-								sb.append("\n");
+							// This server first.
+							addEmoteListField(embed, message.getGuild());
 
-								boolean contains = false;
-								List<String> memberGuilds = new ArrayList<String>();
+							for(String id : brain.getFamilies()){
+								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
+									if(f.getFamID().equals(id)) {
+										for (long guildID : f.getMemberGuilds()) {
+											if (message.getGuild().getIdLong() != guildID) { // Don't include this server
+												Guild otherGuild = Shmames.getJDA().getGuildById(guildID);
 
-								for(long g : new ArrayList<Long>(f.getMemberGuilds())){
-									Guild guild = Shmames.getJDA().getGuildById(g);
+												if(otherGuild != null) {
+													addEmoteListField(embed, otherGuild);
+												}else{
+													f.getMemberGuilds().remove(guildID);
+												}
+											}
+										}
 
-									// Quick null check!
-									if(guild == null){
-										f.getMemberGuilds().remove(g);
-										continue;
+										break;
+									}
+								}
+							}
+
+							message.getChannel().sendMessage(embed.build()).queue();
+
+							return "";
+						}else{
+							for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+								if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
+									StringBuilder sb = new StringBuilder();
+
+									sb.append("**");
+									sb.append(lang.getMsg(Langs.FAMILY_SERVER_LIST, new String[]{ f.getFamName() }));
+									sb.append("**");
+									sb.append("\n");
+
+									boolean contains = false;
+									List<String> memberGuilds = new ArrayList<String>();
+
+									for(long g : new ArrayList<Long>(f.getMemberGuilds())){
+										Guild guild = Shmames.getJDA().getGuildById(g);
+
+										// Quick null check!
+										if(guild == null){
+											f.getMemberGuilds().remove(g);
+											continue;
+										}
+
+										memberGuilds.add(guild.getName());
+										contains = true;
 									}
 
-									memberGuilds.add(guild.getName());
-									contains = true;
-								}
+									if(contains) {
+										sb.append(Utils.GenerateList(memberGuilds, -1, true));
+									}else{
+										sb.append("_");
+										sb.append(Errors.FAMILY_SERVER_LIST_EMPTY);
+										sb.append("_");
+									}
 
-								if(contains) {
-									sb.append(Utils.GenerateList(memberGuilds, -1, true));
-								}else{
-									sb.append("_");
-									sb.append(Errors.FAMILY_SERVER_LIST_EMPTY);
-									sb.append("_");
+									return sb.toString();
 								}
-
-								return sb.toString();
 							}
-						}
 
-						return lang.getError(Errors.NOT_FOUND, true);
+							return lang.getError(Errors.NOT_FOUND, true);
+						}
 					}else{
 						if(message.getMember().hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-							Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
 							StringBuilder sb = new StringBuilder();
 							sb.append("**");
 							sb.append(lang.getMsg(Langs.SERVER_FAMILY_LIST));
@@ -169,7 +197,7 @@ public class FamilyCmd implements ICommand {
 							boolean contains = false;
 							List<String> families = new ArrayList<String>();
 
-							for(String id : b.getFamilies()){
+							for(String id : brain.getFamilies()){
 								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
 									if(f.getFamID().equals(id)){
 										families.add(f.getFamName());
@@ -194,11 +222,11 @@ public class FamilyCmd implements ICommand {
 						}
 					}
 				case "remove": // <family> [server]
-					if(m.group(6) != null) {
-						String name = m.group(6).trim().toLowerCase();
+					if(arg1 != null) {
+						String name = arg1.trim().toLowerCase();
 
-						if (m.group(7) != null) {
-							int server = Integer.parseInt(m.group(7).trim())-1;
+						if (arg2 != null) {
+							int server = Integer.parseInt(arg2.trim())-1;
 
 							for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
 								if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
@@ -210,8 +238,7 @@ public class FamilyCmd implements ICommand {
 											f.getMemberGuilds().remove(f.getMemberGuilds().get(server));
 											gName = "that server";
 										}else{
-											Brain b = Shmames.getBrains().getBrain(g.getId());
-											b.getFamilies().remove(f.getFamID());
+											brain.getFamilies().remove(f.getFamID());
 											f.getMemberGuilds().remove(g.getIdLong());
 											gName = g.getName();
 										}
@@ -234,9 +261,8 @@ public class FamilyCmd implements ICommand {
 								for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
 									if(f.getFamName().equalsIgnoreCase(name)){
 										Guild g = message.getGuild();
-										Brain b = Shmames.getBrains().getBrain(g.getId());
 
-										b.getFamilies().remove(f.getFamID());
+										brain.getFamilies().remove(f.getFamID());
 										f.getMemberGuilds().remove(g.getIdLong());
 
 										// Remove the family if empty
@@ -274,10 +300,40 @@ public class FamilyCmd implements ICommand {
 	@Override
 	public void setRunContext(Lang lang, @Nullable Brain brain) {
 		this.lang = lang;
+		this.brain = brain;
 	}
 	
 	@Override
 	public boolean requiresGuild() {
 		return true;
+	}
+
+	private void addEmoteListField(EmbedBuilder embed, Guild g) {
+		StringBuilder guildEmotes = new StringBuilder();
+		int tempCounter = 0;
+
+		for(Emote e : g.getEmotes()) {
+			if(guildEmotes.length() > 0)
+				guildEmotes.append(" ");
+
+			guildEmotes.append(e.getAsMention());
+
+			tempCounter++;
+
+			if(tempCounter == 10) {
+				guildEmotes.append("\n");
+				tempCounter = 0;
+			}
+		}
+
+		String[] emoteLists = Utils.splitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+
+		embed.addField(g.getName(), emoteLists[0], false);
+
+		if(emoteLists.length > 1) {
+			for(int i=1; i<emoteLists.length; i++) {
+				embed.addField("", emoteLists[i], false);
+			}
+		}
 	}
 }
