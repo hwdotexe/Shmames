@@ -1,15 +1,11 @@
 package com.hadenwatne.discordbot.commands;
 
-import com.hadenwatne.discordbot.storage.Lang;
-import com.hadenwatne.discordbot.storage.Langs;
+import com.hadenwatne.discordbot.storage.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.discordbot.storage.Errors;
 import com.hadenwatne.discordbot.Shmames;
 import com.hadenwatne.discordbot.Utils;
-import com.hadenwatne.discordbot.storage.Brain;
-import com.hadenwatne.discordbot.storage.Family;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -121,7 +117,7 @@ public class FamilyCmd implements ICommand {
 							EmbedBuilder embed = new EmbedBuilder();
 
 							// This server first.
-							addEmoteListField(embed, message.getGuild());
+							addEmoteListField(embed, message.getGuild(), message.getTextChannel());
 
 							for(String id : brain.getFamilies()){
 								for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
@@ -131,7 +127,7 @@ public class FamilyCmd implements ICommand {
 												Guild otherGuild = Shmames.getJDA().getGuildById(guildID);
 
 												if(otherGuild != null) {
-													addEmoteListField(embed, otherGuild);
+													addEmoteListField(embed, otherGuild, message.getTextChannel());
 												}else{
 													f.getMemberGuilds().remove(guildID);
 												}
@@ -148,7 +144,7 @@ public class FamilyCmd implements ICommand {
 							return "";
 						}else{
 							for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
-								if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(name)) {
+								if ((f.getFamilyOwner() == author.getIdLong() || message.getMember().hasPermission(Permission.ADMINISTRATOR)) && f.getFamName().equalsIgnoreCase(name)) {
 									StringBuilder sb = new StringBuilder();
 
 									sb.append("**");
@@ -308,7 +304,7 @@ public class FamilyCmd implements ICommand {
 		return true;
 	}
 
-	private void addEmoteListField(EmbedBuilder embed, Guild g) {
+	private void addEmoteListField(EmbedBuilder embed, Guild g, TextChannel channel) {
 		StringBuilder guildEmotes = new StringBuilder();
 		int tempCounter = 0;
 
@@ -328,10 +324,22 @@ public class FamilyCmd implements ICommand {
 
 		String[] emoteLists = Utils.splitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
 
+		if((embed.length() + emoteLists[0].length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
+			channel.sendMessage(embed.build()).complete();
+
+			embed.clearFields();
+		}
+
 		embed.addField(g.getName(), emoteLists[0], false);
 
 		if(emoteLists.length > 1) {
 			for(int i=1; i<emoteLists.length; i++) {
+				if((embed.length() + emoteLists[i].length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
+					channel.sendMessage(embed.build()).complete();
+
+					embed.clearFields();
+				}
+
 				embed.addField("", emoteLists[i], false);
 			}
 		}
