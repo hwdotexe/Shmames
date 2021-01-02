@@ -1,5 +1,6 @@
 package com.hadenwatne.discordbot.listeners;
 
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
@@ -67,10 +68,12 @@ public class ReactListener extends ListenerAdapter {
 		int votes = 0;
 
 		for(MessageReaction r : m.getReactions()) {
-			if(r.getReactionEmote().getId().equalsIgnoreCase(removalEmote)){
-				votes = r.getCount();
+			if(r.getReactionEmote().isEmote()) {
+				if (r.getReactionEmote().getId().equalsIgnoreCase(removalEmote)) {
+					votes = r.getCount();
 
-				break;
+					break;
+				}
 			}
 		}
 
@@ -114,10 +117,12 @@ public class ReactListener extends ListenerAdapter {
 		int votes = 0;
 
 		for(MessageReaction r : m.getReactions()) {
-			if(r.getReactionEmote().getId().equalsIgnoreCase(approvalEmote)){
-				votes = r.getCount();
+			if(r.getReactionEmote().isEmote()) {
+				if (r.getReactionEmote().getId().equalsIgnoreCase(approvalEmote)) {
+					votes = r.getCount();
 
-				break;
+					break;
+				}
 			}
 		}
 
