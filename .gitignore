@@ -1,7 +1,5 @@
-*.prefs
 bin
 Discordbot/brains
 Discordbot/.idea/libraries
 Discordbot/.DS_Store
 .DS_Store
-Discordbot/.idea
