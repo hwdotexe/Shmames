@@ -121,7 +121,7 @@ public class ForumWeapon implements ICommand {
 
 						sb.append(buildServerFWList(thisGl));
 
-						for (String fID : Shmames.getBrains().getBrain(message.getGuild().getId()).getFamilies()) {
+						for (String fID : brain.getFamilies()) {
 							Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fID);
 
 							if (f != null) {
@@ -130,7 +130,8 @@ public class ForumWeapon implements ICommand {
 										Guild g = Shmames.getJDA().getGuildById(gid);
 
 										if (g != null) {
-											sb.append("\n\n");
+											sb.append(System.lineSeparator());
+											sb.append(System.lineSeparator());
 											sb.append(buildServerFWList(g));
 										}
 									}
@@ -326,7 +327,7 @@ public class ForumWeapon implements ICommand {
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
 		String list = Utils.GenerateList(fwSorted, -1);
 
-		return "**"+g.getName()+"**\n" + (list.length()>2 ? list.substring(2) : "> None Found");
+		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> None Found");
 	}
 
 	private String searchServerFWList(Guild g, String q) {
@@ -341,7 +342,7 @@ public class ForumWeapon implements ICommand {
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
 		String list = Utils.GenerateList(fwSorted, -1);
 
-		return "**"+g.getName()+"**\n" + (list.length()>2 ? list.substring(2) : "> No Results");
+		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> No Results");
 	}
 
 	private void sendPrunedFWs(String guildName, MessageChannel c, List<ForumWeaponObj> fws) {

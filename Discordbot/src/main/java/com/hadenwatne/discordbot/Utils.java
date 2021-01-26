@@ -389,13 +389,18 @@ public class Utils {
 			for (int i = 0; i < breaks; i++) {
 				String sub = s.length() >= lastIndex + interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
 
+				// Remove any breaks at the beginning
+				if(sub.startsWith(System.lineSeparator())){
+					sub = sub.substring(System.lineSeparator().length());
+				}
+
 				// Experiment: Break on newline chars when possible.
-				if(sub.contains("\n")) {
-					if (sub.charAt(sub.length() - 1) == '\n' || sub.length() < interval) {
+				if(sub.contains(System.lineSeparator())) {
+					if (sub.endsWith(System.lineSeparator())|| sub.length() < interval) {
 						result[i] = sub;
 						lastIndex += interval;
 					} else {
-						int lastSpace = sub.lastIndexOf("\n");
+						int lastSpace = sub.lastIndexOf(System.lineSeparator());
 
 						result[i] = sub.substring(0, lastSpace);
 						lastIndex = s.indexOf(result[i]) + result[i].length();
