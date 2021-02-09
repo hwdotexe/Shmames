@@ -36,7 +36,7 @@ public class Playlist {
     }
 
     public boolean removeTrack(int position) {
-        if(urls.size() > position) {
+        if(position >= 0 && urls.size() > position) {
             urls.remove(position);
             memos.remove(position);
 

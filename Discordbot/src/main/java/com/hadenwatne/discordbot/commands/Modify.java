@@ -34,7 +34,7 @@ public class Modify implements ICommand {
 	public String run(String args, User author, Message message) {
 		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);
 
-		if(Utils.CheckUserPermission(canModify, message.getGuild().getMember(author))) {
+		if(Utils.CheckUserPermission(canModify, message.getMember())) {
 			Matcher m = Pattern.compile("^([\\w]+)( [\\w\\-]+)?$").matcher(args);
 			
 			if(m.find()) {
@@ -47,7 +47,7 @@ public class Modify implements ICommand {
 
 						// Ensure that this setting is only changed by an Administrator.
 						if (settingName == BotSettingName.ALLOW_MODIFY) {
-							if (!message.getGuild().getMember(author).hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
+							if (!message.getMember().hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
 								return lang.getError(Errors.NO_PERMISSION_USER, true);
 							}
 						}
@@ -64,7 +64,15 @@ public class Modify implements ICommand {
 							}
 
 							if(!found) {
-								return lang.getError(Errors.NOT_FOUND, true);
+								List<String> langNames = new ArrayList<>();
+
+								for(Lang l : Shmames.getLangs().getAllLangs()){
+									langNames.add(l.getLangName());
+								}
+
+								String langList = Utils.GenerateList(langNames, 0, false);
+
+								return lang.getError(Errors.NOT_FOUND, true) + System.lineSeparator() + "Options: " + langList;
 							}
 						}
 

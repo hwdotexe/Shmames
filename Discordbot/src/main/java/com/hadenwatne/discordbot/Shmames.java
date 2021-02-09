@@ -123,6 +123,7 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
 		defaults.add(new BotSetting(BotSettingName.MANAGE_MUSIC, BotSettingType.ROLE, "administrator"));
 		defaults.add(new BotSetting(BotSettingName.SERVER_LANG, BotSettingType.TEXT, "default"));
+		defaults.add(new BotSetting(BotSettingName.PRUNE_FW, BotSettingType.ROLE, "administrator"));
 	}
 	
 	/**

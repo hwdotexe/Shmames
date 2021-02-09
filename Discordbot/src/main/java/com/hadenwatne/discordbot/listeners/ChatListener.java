@@ -72,7 +72,7 @@ public class ChatListener extends ListenerAdapter {
 							if (m.find()) {
 								if (type != TriggerType.COMMAND) {
 									if (type != TriggerType.REACT) {
-										sendRandom(e.getTextChannel(), e.getGuild(), type, e.getMember());
+										sendRandom(e.getTextChannel(), type, e.getMessage());
 									} else {
 										List<Emote> em = new ArrayList<Emote>(e.getGuild().getEmotes());
 
@@ -105,7 +105,7 @@ public class ChatListener extends ListenerAdapter {
 
 					// Bot gives its two cents.
 					if (Utils.getRandom(150) == 0) {
-						sendRandom(e.getTextChannel(), e.getGuild(), TriggerType.RANDOM, e.getMember());
+						sendRandom(e.getTextChannel(), TriggerType.RANDOM, e.getMessage());
 					}
 				}
 			} else if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
@@ -121,11 +121,12 @@ public class ChatListener extends ListenerAdapter {
 	/**
 	 * Chooses a random response from the server's list for a given response trigger.
 	 * @param c The channel to reply to.
-	 * @param g The server to reply in.
 	 * @param t The trigger type being called.
-	 * @param author The user who triggered this message.
+	 * @param message The message that triggered this event.
 	 */
-	private void sendRandom(TextChannel c, Guild g, TriggerType t, Member author) {
+	private void sendRandom(TextChannel c, TriggerType t, Message message) {
+		Guild g = message.getGuild();
+		Member author = message.getMember();
 		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t);
 		String name = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 
@@ -135,7 +136,11 @@ public class ChatListener extends ListenerAdapter {
 			if (response.startsWith("[gif]"))
 				response = Utils.getGIF(response.split("\\[gif\\]", 2)[1], c.isNSFW() ? "low" : "high");
 
-			c.sendMessage(response).queue();
+			if(t == TriggerType.LOVE || t == TriggerType.HATE) {
+				message.reply(response).queue();
+			} else {
+				c.sendMessage(response).queue();
+			}
 		}else{
 			if(t != TriggerType.RANDOM)
 				c.sendMessage("There are no responses saved for the "+t.name()+" type!").queue();

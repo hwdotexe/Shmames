@@ -49,7 +49,7 @@ public class ForumWeapon implements ICommand {
 					if(optURL != null) {
 						if (getFWCount(message.getGuild().getId()) < 100) {
 							if (optFWName != null) {
-								if (optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search")) {
+								if (optFWName.equals("create") || optFWName.equals("update") || optFWName.equals("remove") || optFWName.equals("list") || optFWName.equals("search") || optFWName.equals("prune")) {
 									return lang.getError(Errors.RESERVED_WORD, true);
 								}
 
@@ -197,15 +197,19 @@ public class ForumWeapon implements ICommand {
 						return lang.wrongUsage(getUsage());
 					}
 				case "prune":
-					List<ForumWeaponObj> unused = getServerUnusedFWs();
+					if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.PRUNE_FW), message.getMember())) {
+						List<ForumWeaponObj> unused = getServerUnusedFWs();
 
-					sendPrunedFWs(message.getGuild().getName(), message.getTextChannel(), unused);
+						sendPrunedFWs(message.getGuild().getName(), message.getTextChannel(), unused);
 
-					for(ForumWeaponObj fw : unused) {
-						this.brain.getForumWeapons().remove(fw);
+						for (ForumWeaponObj fw : unused) {
+							this.brain.getForumWeapons().remove(fw);
+						}
+
+						return lang.getMsg(Langs.FORUM_WEAPONS_PRUNED, new String[]{Integer.toString(unused.size())});
+					}else{
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
-
-					return lang.getMsg(Langs.FORUM_WEAPONS_PRUNED, new String[]{ Integer.toString(unused.size()) });
 				default:
 					// Try to send the weapon
 					ForumWeaponObj fws = findFW(nameOrOp, message.getGuild().getId());

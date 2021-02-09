@@ -120,19 +120,19 @@ public class CommandHandler {
 							// Run the command async and send a message back when it finishes.
 							try {
 								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-										.thenAccept(r -> sendMessageToChannel(r, message.getChannel()))
+										.thenAccept(r -> sendMessageResponse(r, message))
 								.exceptionally(exception -> {
-									sendMessageToChannel(lang.getError(Errors.BOT_ERROR, true), message.getChannel());
+									sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
 									ShmamesLogger.logException(exception);
 									return null;
 								});
 							}catch (Exception e){
 								ShmamesLogger.logException(e);
-								sendMessageToChannel(lang.getError(Errors.BOT_ERROR, true), message.getChannel());
+								sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
 							}
 						}
 					}else {
-						sendMessageToChannel(lang.getError(Errors.GUILD_REQUIRED, true), message.getChannel());
+						sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
 					}
 
 					return;
@@ -140,7 +140,7 @@ public class CommandHandler {
 			}
 		}
 
-		sendMessageToChannel(lang.getError(Errors.COMMAND_NOT_FOUND, true), message.getChannel());
+		sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), message);
 	}
 	
 	/**
@@ -151,18 +151,18 @@ public class CommandHandler {
 		return commands;
 	}
 
-	private void sendMessageToChannel(String r, MessageChannel channel){
+	private void sendMessageResponse(String r, Message msg){
 		if(r != null) {
 			if(r.length() > 0) {
 				for(String m : Utils.splitString(r, 2000)){
 //					new TypingTask(channel, m);
 					if(m.length() > 0) {
-						channel.sendMessage(m).queue();
+						msg.reply(m).queue(success -> {}, error -> msg.getChannel().sendMessage(m).queue());
 					}
 				}
 			}
 		} else {
-			new TypingTask(channel, lang.getError(Errors.COMMAND_NOT_FOUND, true));
+			new TypingTask(msg.getChannel(), lang.getError(Errors.COMMAND_NOT_FOUND, true));
 		}
 	}
 
