@@ -1,5 +1,5 @@
 bin
-Discordbot/brains
-Discordbot/.idea/libraries
-Discordbot/.DS_Store
+brains
+.idea/libraries
 .DS_Store
+target
