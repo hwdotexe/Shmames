@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.shmames.Shmames;
 
-public class JTimerTask extends TimerTask {
+public class JTimerTask {
 	private final String userMention;
 	private final long channelID;
 	private final long messageID;
@@ -28,7 +28,12 @@ public class JTimerTask extends TimerTask {
     	this.messageID = messageID;
 		this.execTime = c.getTime();
 
-		t.schedule(this, execTime);
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				runTimer();
+			}
+		}, execTime);
 	}
 
 	public void rescheduleTimer(){
@@ -44,11 +49,15 @@ public class JTimerTask extends TimerTask {
 			execTime = c.getTime();
 		}
 
-		t.schedule(this, execTime);
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				runTimer();
+			}
+		}, execTime);
 	}
 
-	@Override
-	public void run() {
+	public void runTimer() {
 		try {
 			String m = ":alarm_clock: (" + userMention + "): The timer you set is finished!";
 
@@ -58,7 +67,13 @@ public class JTimerTask extends TimerTask {
 			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
 
 			if (tc != null) {
-				Message originMessage = tc.retrieveMessageById(this.messageID).complete();
+				Message originMessage;
+
+				try {
+					originMessage = tc.retrieveMessageById(this.messageID).complete();
+				} catch (Exception e) {
+					originMessage = null;
+				}
 
 				if(originMessage != null) {
 					final String mFinal = m;
