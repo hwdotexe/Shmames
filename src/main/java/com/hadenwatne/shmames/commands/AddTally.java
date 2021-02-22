@@ -1,11 +1,11 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.Errors;
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 import java.util.regex.Matcher;

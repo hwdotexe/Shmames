@@ -6,12 +6,12 @@ import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.shmames.CommandHandler;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commands.ICommand;
-import com.hadenwatne.shmames.storage.BotSettingName;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.Brain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ReactListener extends ListenerAdapter {
 			// Tally up the emote.
 			if(emo.isEmote()) {
 				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
-					Utils.IncrementEmoteTally(b, emo.getId());
+					Utils.incrementEmoteTally(b, emo.getId());
 				}
 
 				// Removal emote.

@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.enums;
 
 public enum Langs {
     ADD_TRIGGER_SUCCESS,

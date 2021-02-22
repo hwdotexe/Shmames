@@ -7,7 +7,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.MotherBrain;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
@@ -56,8 +60,6 @@ public class Dev implements ICommand {
 						case "clearcommandstats":
 							clearCommandStats();
 							return "Command statistics cleared!";
-						case "announce":
-							return announce(m.group(2), message.getAuthor());
 						case "leave":
 							return leave(m.group(2)) ? "Successfully left the server!" : "Could not leave that server.";
 						case "getreports":
@@ -80,7 +82,6 @@ public class Dev implements ICommand {
 							+ "inviteme <guildID>\n"
 							+ "getCommandStats\n"
 							+ "clearCommandStats\n"
-							+ "announce <message>\n"
 							+ "leave <guildID>\n"
 							+ "getReports\n"
 							+ "saveBrains\n";
@@ -171,7 +172,7 @@ public class Dev implements ICommand {
 	}
 
 	private String listAPIKeys() {
-		return Utils.GenerateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false);
+		return Utils.generateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false);
 	}
 
 	private void reload(String g) {
@@ -214,44 +215,6 @@ public class Dev implements ICommand {
 
 	private void clearCommandStats() {
 		Shmames.getBrains().getMotherBrain().getCommandStats().clear();
-	}
-
-	private String announce(String msg, User a) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date());
-
-		eBuilder.setAuthor(a.getName(), null, a.getEffectiveAvatarUrl());
-		eBuilder.setColor(Color.RED);
-		eBuilder.setTitle("\u2699 Developer Note");
-		eBuilder.appendDescription(msg);
-		eBuilder.setFooter("Developer Note - sent on "+Utils.getFriendlyDate(c), null);
-
-		MessageEmbed embed = eBuilder.build();
-		int success = 0;
-		int fail = 0;
-		int muted = 0;
-
-		// Send to one channel for all guilds
-		for(Guild g : Shmames.getJDA().getGuilds()) {
-			Brain b = Shmames.getBrains().getBrain(g.getId());
-
-			if(b.getSettingFor(BotSettingName.MUTE_DEV_ANNOUNCES).getValue().equalsIgnoreCase("false")) {
-				String channel = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL).getValue();
-
-				try {
-					g.getTextChannelById(channel).sendMessage(embed).complete();
-					success++;
-				}catch(Exception e) {
-					// Was not able to send to this channel - add to failures.
-					fail++;
-				}
-			}else {
-				muted++;
-			}
-		}
-
-		return ":white_check_mark: Sent the message to "+success+" guilds!\n:no_entry: Failed for "+fail+" guilds.\n:hear_no_evil: "+muted+" guilds muted.";
 	}
 
 	private boolean leave(String gid) {

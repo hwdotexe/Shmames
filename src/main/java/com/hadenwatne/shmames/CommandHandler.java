@@ -8,7 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.commands.*;
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
 
@@ -62,7 +65,6 @@ public class CommandHandler {
 		commands.add(new Startpoll());
 		commands.add(new Storytime());
 		commands.add(new Thoughts());
-//		commands.add(new Timeout());
 		commands.add(new Timer());
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
@@ -151,19 +153,6 @@ public class CommandHandler {
 	}
 
 	private void sendMessageResponse(String r, Message msg){
-		if(r != null) {
-			if(r.length() > 0) {
-				for(String m : Utils.splitString(r, 2000)){
-//					new TypingTask(channel, m);
-					if(m.length() > 0) {
-						msg.reply(m).queue(success -> {}, error -> msg.getChannel().sendMessage(m).queue());
-					}
-				}
-			}
-		} else {
-			new TypingTask(msg.getChannel(), lang.getError(Errors.COMMAND_NOT_FOUND, true));
-		}
+		new TypingTask(r, msg);
 	}
-
-
 }

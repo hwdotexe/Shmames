@@ -4,12 +4,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 
 import javax.annotation.Nullable;
@@ -33,29 +34,8 @@ public class Timer implements ICommand {
 		Matcher cmd = Pattern.compile("^([\\ddhms]+)(\\s.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(cmd.find()) {
-			Matcher time = Pattern.compile("(\\d{1,3})([dhms])", Pattern.CASE_INSENSITIVE).matcher(cmd.group(1));
+			int seconds = Utils.convertTimeStringToSeconds(cmd.group(1));
 			String msg = cmd.group(2) != null ? cmd.group(2).trim() : "";
-			int seconds = 0;
-
-			while(time.find()) {
-				int multiplier = 1;
-
-				switch(time.group(2).toLowerCase()) {
-					case "d":
-						multiplier = 86400;
-						break;
-					case "h":
-						multiplier = 3600;
-						break;
-					case "m":
-						multiplier = 60;
-						break;
-					default:
-						break;
-				}
-
-				seconds += Integer.parseInt(time.group(1)) * multiplier;
-			}
 
 			if(seconds > 0) {
 				if(seconds > 7776000) {
@@ -79,7 +59,7 @@ public class Timer implements ICommand {
 				// Seconds
 				long f_sec = sLong;
 
-				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), seconds, msg);
+				JTimerTask t = new JTimerTask(author.getAsMention(), message.getChannel().getIdLong(), message.getIdLong(), seconds, msg);
 				String timeMsg = (f_day>0?f_day+"d ":"") + (f_hour>0?f_hour+"h ":"") + (f_min>0?f_min+"m ":"") + (f_sec>0?f_sec+"s":"");
 
 				brain.getTimers().add(t);

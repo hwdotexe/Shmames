@@ -1,4 +1,6 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames;
+
+import com.hadenwatne.shmames.enums.LogType;
 
 import java.io.*;
 import java.util.ArrayList;

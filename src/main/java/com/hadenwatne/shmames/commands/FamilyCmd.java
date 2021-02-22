@@ -1,6 +1,10 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -170,7 +174,7 @@ public class FamilyCmd implements ICommand {
 									}
 
 									if(contains) {
-										sb.append(Utils.GenerateList(memberGuilds, -1, true));
+										sb.append(Utils.generateList(memberGuilds, -1, true));
 									}else{
 										sb.append("_");
 										sb.append(Errors.FAMILY_SERVER_LIST_EMPTY);
@@ -206,7 +210,7 @@ public class FamilyCmd implements ICommand {
 							}
 
 							if(contains) {
-								sb.append(Utils.GenerateList(families, 3, false));
+								sb.append(Utils.generateList(families, 3, false));
 							}else{
 								sb.append("_");
 								sb.append(Errors.SERVER_FAMILY_LIST_EMPTY);

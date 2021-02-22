@@ -1,17 +1,24 @@
 package com.hadenwatne.shmames.commands;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.Playlist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.music.GuildOcarina;
 import com.hadenwatne.shmames.Shmames;
 
@@ -364,15 +371,19 @@ public class Music implements ICommand {
 
 	private String cmdPlaylistCreate(Brain b, String listName, @Nullable String url, @Nullable String memo) {
 		if(findPlaylistServer(listName, b) == null) {
-			Playlist newList = new Playlist(listName);
+			if(!listName.equalsIgnoreCase("all")) {
+				Playlist newList = new Playlist(listName);
 
-			if(url != null) {
-				newList.addTrack(url, memo);
+				if (url != null) {
+					newList.addTrack(url, memo);
+				}
+
+				b.getPlaylists().add(newList);
+
+				return lang.getMsg(Langs.MUSIC_PLAYLIST_CREATED, new String[]{listName});
+			}else{
+				return lang.getError(Errors.RESERVED_WORD, false);
 			}
-
-			b.getPlaylists().add(newList);
-
-			return lang.getMsg(Langs.MUSIC_PLAYLIST_CREATED, new String[]{ listName });
 		} else {
 			return lang.getError(Errors.MUSIC_PLAYLIST_ALREADY_EXISTS, false);
 		}
@@ -398,24 +409,10 @@ public class Music implements ICommand {
 		if(listName != null) {
 			if(listName.equalsIgnoreCase("all")) {
 				// List families' playlists
-				StringBuilder sb = new StringBuilder();
 				EmbedBuilder eBuilder = buildBasicEmbed();
+				String playlistNames = createPlaylistNameList(b.getPlaylists());
 
-				// Add this server's to the embed
-				for (Playlist pl : b.getPlaylists()) {
-					if (sb.length() > 0)
-						sb.append(", ");
-
-					sb.append("`");
-					sb.append(pl.getName());
-					sb.append("`");
-				}
-
-				if (sb.length() == 0) {
-					sb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
-				}
-
-				eBuilder.addField(Shmames.getJDA().getGuildById(b.getGuildID()).getName(), sb.toString(), false);
+				eBuilder.addField(Shmames.getJDA().getGuildById(b.getGuildID()).getName(), playlistNames, false);
 
 				// Then add each server in our family's playlists
 				for(String fid : b.getFamilies()) {
@@ -425,22 +422,9 @@ public class Music implements ICommand {
 						for(long gid : f.getMemberGuilds()){
 							if(!Long.toString(gid).equals(b.getGuildID())){
 								Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
-								StringBuilder obsb = new StringBuilder();
+								String playlistNamesOther = createPlaylistNameList(ob.getPlaylists());
 
-								for (Playlist pl : ob.getPlaylists()) {
-									if (obsb.length() > 0)
-										obsb.append(", ");
-
-									obsb.append("`");
-									obsb.append(pl.getName());
-									obsb.append("`");
-								}
-
-								if (obsb.length() == 0) {
-									obsb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
-								}
-
-								eBuilder.addField(Shmames.getJDA().getGuildById(ob.getGuildID()).getName(), obsb.toString(), false);
+								eBuilder.addField(Shmames.getJDA().getGuildById(ob.getGuildID()).getName(), playlistNamesOther, false);
 							}
 						}
 					}
@@ -465,23 +449,10 @@ public class Music implements ICommand {
 		}
 
 		// Just list out this server's playlists
-		StringBuilder sb = new StringBuilder();
 		EmbedBuilder eBuilder = buildBasicEmbed();
+		String playlistNames = createPlaylistNameList(b.getPlaylists());
 
-		for (Playlist pl : b.getPlaylists()) {
-			if (sb.length() > 0)
-				sb.append(", ");
-
-			sb.append("`");
-			sb.append(pl.getName());
-			sb.append("`");
-		}
-
-		if (sb.length() == 0) {
-			sb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
-		}
-
-		eBuilder.addField("Playlists", sb.toString(), false);
+		eBuilder.addField("Playlists", playlistNames, false);
 		c.sendMessage(eBuilder.build()).queue();
 
 		return "";
@@ -634,7 +605,7 @@ public class Music implements ICommand {
 
 		eBuilder.setColor(new Color(43, 164, 188));
 		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
-		eBuilder.setFooter("Music is in Beta. Some features may not work as intended.");
+//		eBuilder.setFooter("Music is in Beta. Some features may not work as intended.");
 
 		return eBuilder;
 	}
@@ -672,7 +643,7 @@ public class Music implements ICommand {
 	}
 
 	private boolean canUse(Brain b, Member m) {
-		return Utils.CheckUserPermission(b.getSettingFor(BotSettingName.MANAGE_MUSIC), m);
+		return Utils.checkUserPermission(b.getSettingFor(BotSettingName.MANAGE_MUSIC), m);
 	}
 
 	private Playlist findPlaylistServer(String name, Brain b) {
@@ -713,5 +684,31 @@ public class Music implements ICommand {
 		}
 
 		return null;
+	}
+
+	private String createPlaylistNameList(List<Playlist> playlist) {
+		List<String> playlistNames = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+
+		for (Playlist pl : playlist) {
+			playlistNames.add(pl.getName());
+		}
+
+		Collections.sort(playlistNames);
+
+		for (String playlistName : playlistNames) {
+			if (sb.length() > 0)
+				sb.append(", ");
+
+			sb.append("`");
+			sb.append(playlistName);
+			sb.append("`");
+		}
+
+		if (sb.length() == 0) {
+			sb.append(lang.getError(Errors.MUSIC_PLAYLIST_LIST_EMPTY, false));
+		}
+
+		return sb.toString();
 	}
 }

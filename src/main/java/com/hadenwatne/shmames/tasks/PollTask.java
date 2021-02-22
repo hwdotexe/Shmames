@@ -6,13 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimerTask;
 
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import com.hadenwatne.shmames.Poll;
+import com.hadenwatne.shmames.models.Poll;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 

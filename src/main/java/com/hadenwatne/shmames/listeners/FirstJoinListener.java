@@ -1,6 +1,10 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.BotSetting;
+import com.hadenwatne.shmames.models.Brain;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -10,11 +14,6 @@ import com.hadenwatne.shmames.Shmames;
 import java.util.List;
 
 public class FirstJoinListener extends ListenerAdapter {
-
-	public FirstJoinListener(){
-
-	}
-
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
 		Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());

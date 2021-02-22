@@ -1,13 +1,17 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.HangmanDictionary;
+import com.hadenwatne.shmames.models.HangmanGame;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 

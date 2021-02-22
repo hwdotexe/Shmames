@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 
 public class JinpingTask extends TimerTask{
 	private Brain b;
@@ -13,6 +13,7 @@ public class JinpingTask extends TimerTask{
 	public JinpingTask(Brain brain) {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
+
     	c.setTime(new Date());
     	c.add(Calendar.MINUTE, 1);
 		t.schedule(this, c.getTime());

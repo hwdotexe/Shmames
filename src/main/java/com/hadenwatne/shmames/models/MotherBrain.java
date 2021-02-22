@@ -1,9 +1,10 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.hadenwatne.shmames.models.Family;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 
 public class MotherBrain {

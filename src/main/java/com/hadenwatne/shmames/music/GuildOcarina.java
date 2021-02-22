@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.storage.LogType;
-import com.hadenwatne.shmames.storage.ShmamesLogger;
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.ShmamesLogger;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;

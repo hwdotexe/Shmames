@@ -9,12 +9,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
+import com.hadenwatne.shmames.models.ForumWeaponObj;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 
@@ -197,7 +203,7 @@ public class ForumWeapon implements ICommand {
 						return lang.wrongUsage(getUsage());
 					}
 				case "prune":
-					if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.PRUNE_FW), message.getMember())) {
+					if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.PRUNE_FW), message.getMember())) {
 						List<ForumWeaponObj> unused = getServerUnusedFWs();
 
 						sendPrunedFWs(message.getGuild().getName(), message.getTextChannel(), unused);
@@ -329,7 +335,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.GenerateList(fwSorted, -1);
+		String list = Utils.generateList(fwSorted, -1);
 
 		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> None Found");
 	}
@@ -344,7 +350,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.GenerateList(fwSorted, -1);
+		String list = Utils.generateList(fwSorted, -1);
 
 		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> No Results");
 	}

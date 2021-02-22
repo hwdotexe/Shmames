@@ -1,12 +1,13 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.hadenwatne.shmames.Poll;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.TriggerType;
+import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 
 public class Brain {

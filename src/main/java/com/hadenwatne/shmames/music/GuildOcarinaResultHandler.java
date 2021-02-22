@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.music;
 
-import com.hadenwatne.shmames.storage.ShmamesLogger;
+import com.hadenwatne.shmames.ShmamesLogger;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;

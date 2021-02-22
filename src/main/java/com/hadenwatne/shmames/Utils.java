@@ -9,7 +9,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.BotSettingType;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.HTTPVerb;
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.BotSetting;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -73,14 +79,6 @@ public class Utils {
 		int minute = c.get(Calendar.MINUTE);
 
 		return (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + " at " + (hour == 0 ? "12" : hour) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
-	}
-
-	/**
-	 * A basic enumeration to control values passed into an HTTP request.
-	 */
-	public enum HTTPVerb {
-		GET,
-		POST
 	}
 
 	/**
@@ -225,7 +223,7 @@ public class Utils {
 	 * Retrieves the basic Random instance currently being used.
 	 * @return A Random object.
 	 */
-	public static Random GetRandomObj() {
+	public static Random getRandomObj() {
 		return r;
 	}
 
@@ -234,7 +232,7 @@ public class Utils {
 	 * @param b The Brain to tally the emote in.
 	 * @param id The Emote ID.
 	 */
-	public static void IncrementEmoteTally(Brain b, String id) {
+	public static void incrementEmoteTally(Brain b, String id) {
 		if (b.getEmoteStats().containsKey(id)) {
 			b.getEmoteStats().put(id, b.getEmoteStats().get(id) + 1);
 		} else {
@@ -249,10 +247,9 @@ public class Utils {
 	 * @param member The user to check.
 	 * @return A boolean representing whether the user complies.
 	 */
-	public static boolean CheckUserPermission(BotSetting setting, Member member) {
+	public static boolean checkUserPermission(BotSetting setting, Member member) {
 		if (setting.getType() == BotSettingType.ROLE) {
 			String sv = setting.getValue();
-			Role r = !sv.equals("administrator") && !sv.equals("everyone") ? member.getGuild().getRolesByName(sv, true).get(0) : null;
 
 			if (Shmames.isDebug)
 				return true;
@@ -262,6 +259,8 @@ public class Utils {
 
 			if (sv.equals("administrator"))
 				return member.hasPermission(Permission.ADMINISTRATOR);
+
+			Role r = member.getGuild().getRolesByName(sv, true).get(0);
 
 			return member.getRoles().contains(r);
 		}
@@ -275,7 +274,7 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static String GenerateList(List<String> items, int perRow, boolean numbered) {
+	public static String generateList(List<String> items, int perRow, boolean numbered) {
 		StringBuilder list = new StringBuilder();
 		Pattern emote = Pattern.compile("(<(:[a-z]+:)\\d+>)", Pattern.CASE_INSENSITIVE);
 
@@ -319,7 +318,7 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static <T> String GenerateList(HashMap<String, T> items, int perRow) {
+	public static <T> String generateList(HashMap<String, T> items, int perRow) {
 		StringBuilder list = new StringBuilder();
 
 		int inRow = 0;
@@ -422,5 +421,68 @@ public class Utils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Converts a String representation of an amount of time into seconds.
+	 * Example: 1d -> 86400; 1d24h -> 172800
+	 * @param timeString The time String to convert. Example: 1d24h30m15s
+	 * @return An integer equal to the time String in Seconds.
+	 */
+	public static int convertTimeStringToSeconds(String timeString) {
+		Matcher timeMatcher = Pattern.compile("(\\d{1,3})([dhms])", Pattern.CASE_INSENSITIVE).matcher(timeString);
+		int seconds = 0;
+
+		while(timeMatcher.find()) {
+			int multiplier = 1;
+
+			switch(timeMatcher.group(2).toLowerCase()) {
+				case "d":
+					multiplier = 86400;
+					break;
+				case "h":
+					multiplier = 3600;
+					break;
+				case "m":
+					multiplier = 60;
+					break;
+				default:
+					break;
+			}
+
+			seconds += Integer.parseInt(timeMatcher.group(1)) * multiplier;
+		}
+
+		return seconds;
+	}
+
+	/**
+	 * Converts an integer to a Unicode emoji of the same number.
+	 * @param i The number to convert.
+	 * @return A Unicode string representing the emoji character.
+	 */
+	public static String intToEmoji(int i) {
+		switch(i) {
+			case 1:
+				return "\u0031\u20E3";
+			case 2:
+				return "\u0032\u20E3";
+			case 3:
+				return "\u0033\u20E3";
+			case 4:
+				return "\u0034\u20E3";
+			case 5:
+				return "\u0035\u20E3";
+			case 6:
+				return "\u0036\u20E3";
+			case 7:
+				return "\u0037\u20E3";
+			case 8:
+				return "\u0038\u20E3";
+			case 9:
+				return "\u0039\u20E3";
+			default:
+				return "\u0030\u20E3";
+		}
 	}
 }

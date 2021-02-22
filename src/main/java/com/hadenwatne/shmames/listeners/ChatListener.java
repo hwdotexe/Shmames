@@ -6,7 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.*;
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.Response;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -58,7 +63,7 @@ public class ChatListener extends ListenerAdapter {
 							String id = Long.toString(emo.getIdLong());
 							Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 
-							Utils.IncrementEmoteTally(b, id);
+							Utils.incrementEmoteTally(b, id);
 						}
 					}
 

@@ -2,12 +2,12 @@ package com.hadenwatne.shmames.commands;
 
 import java.util.LinkedHashMap;
 
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +29,7 @@ public class ListTallies implements ICommand {
 	public String run(String args, User author, Message message) {
 		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(brain.getTallies());
 		
-		String tallies = Utils.GenerateList(tSorted, -1);
+		String tallies = Utils.generateList(tSorted, -1);
 
 		return lang.getMsg(Langs.TALLY_LIST)+"\n"+tallies;
 	}

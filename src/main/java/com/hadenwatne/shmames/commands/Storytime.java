@@ -1,8 +1,8 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.Lang;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;

@@ -1,6 +1,6 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
-import com.hadenwatne.shmames.TriggerType;
+import com.hadenwatne.shmames.enums.TriggerType;
 
 public class Response {
 	private TriggerType type;

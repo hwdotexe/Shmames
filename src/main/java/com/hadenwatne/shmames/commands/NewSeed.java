@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.Lang;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Utils;
@@ -29,12 +29,12 @@ public class NewSeed implements ICommand {
 		if(args.length()>0) {
 			try {
 				seed = Long.parseLong(args);
-				Utils.GetRandomObj().setSeed(seed);
+				Utils.getRandomObj().setSeed(seed);
 			}catch(Exception e) {
 				return lang.wrongUsage(getUsage());
 			}
 		}else {
-			Utils.GetRandomObj().setSeed(seed);
+			Utils.getRandomObj().setSeed(seed);
 		}
 		
 		return ":game_die: New seed: "+seed;

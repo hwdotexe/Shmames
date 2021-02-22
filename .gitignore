@@ -3,3 +3,4 @@ brains
 .idea/libraries
 .DS_Store
 target
+logs

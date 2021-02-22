@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.LogType;
-import com.hadenwatne.shmames.storage.MotherBrain;
-import com.hadenwatne.shmames.storage.ShmamesLogger;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.MotherBrain;
+import com.hadenwatne.shmames.ShmamesLogger;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.shmames.Shmames;

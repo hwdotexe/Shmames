@@ -1,5 +1,7 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.BotSettingType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;

@@ -1,13 +1,13 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.BotSettingName;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 
@@ -27,7 +27,7 @@ public class ResetEmoteStats implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
+		if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
 			brain.getEmoteStats().clear();
 
 			return lang.getMsg(Langs.RESET_EMOTE_STATS);

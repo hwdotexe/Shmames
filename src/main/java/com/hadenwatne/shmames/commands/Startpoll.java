@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.Lang;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
-import com.hadenwatne.shmames.Poll;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.models.Poll;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.BotSettingName;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 
@@ -22,25 +22,24 @@ public class Startpoll implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Starts a new poll in the current channel, and pins it if configured. Example: " +
-				"`startpoll 3h What is your favorite color? Red; Blue; Green`";
+		return "Starts a new poll in the current channel, and pins it if configured.\n" +
+				"Example: `startpoll 1d12h Which color looks best? Red; Blue; Green;`";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "startpoll <time>[d/h/m/s] <question>? <option>; <option>;...";
+		return "startpoll <time> <question>? <option>; <option>;...";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		if(Utils.CheckUserPermission(brain.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
-			Matcher m = Pattern.compile("^(\\d{1,3})([dhms])? (.+\\?) ((.+); (.+))$").matcher(args);
+		if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
+			Matcher m = Pattern.compile("^(\\d{1,3}[dhms])+ (.+\\?) ((.+); (.+))$").matcher(args);
 
 			if (m.find()) {
-				int time = Integer.parseInt(m.group(1));
-				String interval = m.group(2); // Could be empty!
-				String question = m.group(3);
-				String opt = m.group(4);
+				int seconds = Utils.convertTimeStringToSeconds(m.group(1));
+				String question = m.group(2);
+				String opt = m.group(3);
 
 				// Bugfix: replace channel names within the question.
 				Matcher bf = Pattern.compile("<#(\\d{5,})>").matcher(question);
@@ -63,7 +62,7 @@ public class Startpoll implements ICommand {
 						// Do nothing; we don't have permission
 					}
 
-					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, time, interval, Utils.createID(), lang));
+					brain.getActivePolls().add(new Poll(message.getChannel(), question, options, seconds, Utils.createID(), lang));
 				} else {
 					return lang.getError(Errors.INCORRECT_ITEM_COUNT, true);
 				}

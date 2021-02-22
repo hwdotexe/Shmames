@@ -6,14 +6,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hadenwatne.shmames.CommandHandler;
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 
@@ -41,7 +41,7 @@ public class Help implements ICommand {
 				for(String a : c.getAliases()) {
 					if(a.equalsIgnoreCase(args)) {
 						// Create list of aliases
-						String list = Utils.GenerateList(Arrays.asList(c.getAliases()), -1, false);
+						String list = Utils.generateList(Arrays.asList(c.getAliases()), -1, false);
 						 
 						EmbedBuilder eBuilder = new EmbedBuilder();
 						
@@ -68,7 +68,7 @@ public class Help implements ICommand {
 				}
 			}
 
-			String list = Utils.GenerateList(cmds, -1, false);
+			String list = Utils.generateList(cmds, -1, false);
 
 			EmbedBuilder eBuilder = new EmbedBuilder();
 

@@ -1,19 +1,21 @@
 package com.hadenwatne.shmames;
 
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hadenwatne.shmames.http.ShmamesHTTPHandler;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.BotSettingType;
+import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
+import com.hadenwatne.shmames.models.BotSetting;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.music.MusicManager;
-import com.hadenwatne.shmames.storage.*;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
-import com.sun.net.httpserver.HttpServer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
@@ -28,8 +30,6 @@ public final class Shmames {
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaults;
-
-	private static HttpServer httpServer;
 	
 	/**
 	 * The entry point for the bot.
@@ -55,11 +55,6 @@ public final class Shmames {
 					jda = JDABuilder.createDefault(brains.getMotherBrain().getBotAPIKey()).build();
 					isDebug = false;
 				}
-
-				// Open HTTP server to take in API requests.
-				httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", 8337), 0);
-				httpServer.createContext("/shmames", new ShmamesHTTPHandler());
-				httpServer.start();
 
 				// Load server brains after the bot has initialized.
 				jda.awaitReady();
@@ -111,7 +106,6 @@ public final class Shmames {
 		defaults.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
 		defaults.add(new BotSetting(BotSettingName.PIN_POLLS, BotSettingType.BOOLEAN, "false"));
 		defaults.add(new BotSetting(BotSettingName.DEV_ANNOUNCE_CHANNEL, BotSettingType.CHANNEL, "general"));
-		defaults.add(new BotSetting(BotSettingName.MUTE_DEV_ANNOUNCES, BotSettingType.BOOLEAN, "false"));
 		defaults.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "notset"));
 		defaults.add(new BotSetting(BotSettingName.APPROVAL_EMOTE, BotSettingType.EMOTE, "notset"));
 		defaults.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));

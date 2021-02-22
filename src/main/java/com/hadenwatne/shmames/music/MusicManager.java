@@ -7,9 +7,6 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.HashMap;
 
-/**
- *
- */
 public class MusicManager {
     private HashMap<String, GuildOcarina> ocarinas;
     private AudioPlayerManager audioPlayerManager;

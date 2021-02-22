@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,18 +10,20 @@ import java.util.Timer;
 import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
+import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.BotSetting;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.MotherBrain;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import com.hadenwatne.shmames.Poll;
+import com.hadenwatne.shmames.models.Poll;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 
 /**
- * Loads the global brain, then loads brains retroactively from the brain
- * directory. Provides an access point to retrieve a Guild's brain based on the
- * Guild ID. Provides a save method for an individual Guild brain. To save all
- * of them, just call this method for each.
+ * Responsible for serialization of server-specific data files ("brains").
  */
 public class BrainController {
 	private MotherBrain mb;
@@ -29,10 +31,6 @@ public class BrainController {
 	private Gson gson;
 	private List<Brain> brains;
 
-	/**
-	 * Performs on-restart loading operations and prepares settings files
-	 * for each server attached to the bot.
-	 */
 	public BrainController() {
 		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		brains = new ArrayList<Brain>();
@@ -59,7 +57,7 @@ public class BrainController {
 		for(File b : discoverBrains()) {
 			Brain brain = gson.fromJson(loadJSONFile(b), Brain.class);
 
-			//If this brain belongs to a deleted server, remove it and continue
+			//If this brain belongs to a deleted server, remove it and continue.
 			if(Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
 				brains.add(brain);
 			} else {
@@ -68,7 +66,6 @@ public class BrainController {
 			}
 
 			// Activate any threads that this brain may have had.
-			// TODO this will change when we create a state.
 			if(brain.getActivePolls().size() > 0) {
 				for(Poll p : brain.getActivePolls()) {
 					// Create new task

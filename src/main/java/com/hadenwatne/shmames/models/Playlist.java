@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

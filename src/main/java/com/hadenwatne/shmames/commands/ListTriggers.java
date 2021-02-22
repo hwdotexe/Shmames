@@ -1,11 +1,11 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,7 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String list = Utils.GenerateList(brain.getTriggers(), -1);
+		String list = Utils.generateList(brain.getTriggers(), -1);
 
 		return lang.getMsg(Langs.TRIGGER_LIST)+"\n"+list;
 	}

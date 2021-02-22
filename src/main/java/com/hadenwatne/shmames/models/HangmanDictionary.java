@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
 import com.hadenwatne.shmames.Utils;
 

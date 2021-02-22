@@ -1,6 +1,8 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames;
 
 import com.google.gson.Gson;
+import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.models.Lang;
 
 import java.io.File;
 import java.io.FileInputStream;

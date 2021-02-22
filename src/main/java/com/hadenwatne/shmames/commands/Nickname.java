@@ -1,10 +1,14 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.*;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.BotSetting;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 
@@ -30,7 +34,7 @@ public class Nickname implements ICommand {
 	public String run(String args, User author, Message message) {
 		BotSetting canChangeNickname = brain.getSettingFor(BotSettingName.ALLOW_NICKNAME);
 
-		if(Utils.CheckUserPermission(canChangeNickname, message.getGuild().getMember(author))) {
+		if(Utils.checkUserPermission(canChangeNickname, message.getGuild().getMember(author))) {
 			Matcher m = Pattern.compile("^[\\w\\s]{3,}$").matcher(args);
 
 			if(m.find()){

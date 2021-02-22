@@ -1,20 +1,23 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.models;
 
 import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.Langs;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Lang {
-    public HashMap<Langs, String> messages;
-    public HashMap<Errors, String> errors;
+    public LinkedHashMap<Langs, String> messages;
+    public LinkedHashMap<Errors, String> errors;
     public final String wildcard = "%WC%";
     public final String linebreak = "%BR%";
     private String langName;
 
     public Lang(String name) {
         langName = name;
-        messages = new HashMap<Langs, String>();
-        errors = new HashMap<Errors, String>();
+        messages = new LinkedHashMap<Langs, String>();
+        errors = new LinkedHashMap<Errors, String>();
 
         populateDefaultValues();
     }

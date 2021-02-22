@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames;
+package com.hadenwatne.shmames.enums;
 
 public enum TriggerType {
 	LOVE,

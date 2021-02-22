@@ -1,10 +1,10 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.storage.Lang;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.storage.Brain;
+import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.tasks.JinpingTask;
 
 import javax.annotation.Nullable;

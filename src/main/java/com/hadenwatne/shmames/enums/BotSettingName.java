@@ -1,9 +1,8 @@
-package com.hadenwatne.shmames.storage;
+package com.hadenwatne.shmames.enums;
 
 public enum BotSettingName {
 	PIN_CHANNEL("The channel to send custom pins to."),
 	DEV_ANNOUNCE_CHANNEL("The channel to receive important developer announcements."),
-	MUTE_DEV_ANNOUNCES("Whether to mute developer announcements."),
 	PIN_POLLS("Whether to pin Polls to the current channel."),
 	REMOVAL_EMOTE("The Emote to use as a \"Dislike\" button."),
 	REMOVAL_THRESHOLD("The number of Dislikes a post must get to be removed and increase the user's bad tally."),

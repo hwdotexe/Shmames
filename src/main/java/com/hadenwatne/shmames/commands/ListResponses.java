@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.Lang;
-import com.hadenwatne.shmames.storage.Langs;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.storage.Errors;
-import com.hadenwatne.shmames.TriggerType;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.Response;
+import com.hadenwatne.shmames.models.Response;
 
 import javax.annotation.Nullable;
 
@@ -51,7 +51,7 @@ public class ListResponses implements ICommand {
 					rsText.add(r.getResponse());
 				}
 
-				String list = Utils.GenerateList(rsText, -1, true);
+				String list = Utils.generateList(rsText, -1, true);
 
 				if(list.length() == 0)
 					sb.append(lang.getError(Errors.ITEMS_NOT_FOUND, true));

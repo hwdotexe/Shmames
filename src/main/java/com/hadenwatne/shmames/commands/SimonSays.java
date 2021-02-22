@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.storage.Lang;
+import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.Family;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
 
 import javax.annotation.Nullable;
 
@@ -86,7 +86,7 @@ public class SimonSays implements ICommand {
 						Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
 						String eID = Long.toString(e.getIdLong());
 
-						Utils.IncrementEmoteTally(b, eID);
+						Utils.incrementEmoteTally(b, eID);
 					}
 				}
 			}

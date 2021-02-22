@@ -2,35 +2,33 @@ package com.hadenwatne.shmames.tasks;
 
 import java.util.*;
 
-import com.hadenwatne.shmames.storage.Brain;
-import com.hadenwatne.shmames.storage.ShmamesLogger;
+import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.ShmamesLogger;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.shmames.Shmames;
 
-public class JTimerTask {
-	private String userMention;
-	private long channelID;
-	private String message;
+public class JTimerTask extends TimerTask {
+	private final String userMention;
+	private final long channelID;
+	private final long messageID;
+	private final String message;
 	private Date execTime;
 	
-	public JTimerTask(String mention, long ch, int seconds, String msg) {
+	public JTimerTask(String mention, long channelID, long messageID, int seconds, String msg) {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
 
 		c.setTime(new Date());
 		c.add(Calendar.SECOND, seconds);
 
-		message = msg;
-    	userMention = mention;
-    	channelID = ch;
-    	execTime = c.getTime();
+		this.message = msg;
+		this.userMention = mention;
+    	this.channelID = channelID;
+    	this.messageID = messageID;
+		this.execTime = c.getTime();
 
-		t.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				runTimer();
-			}
-		}, execTime);
+		t.schedule(this, execTime);
 	}
 
 	public void rescheduleTimer(){
@@ -46,15 +44,11 @@ public class JTimerTask {
 			execTime = c.getTime();
 		}
 
-		t.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				runTimer();
-			}
-		}, execTime);
+		t.schedule(this, execTime);
 	}
 
-	private void runTimer() {
+	@Override
+	public void run() {
 		try {
 			String m = ":alarm_clock: (" + userMention + "): The timer you set is finished!";
 
@@ -64,7 +58,15 @@ public class JTimerTask {
 			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
 
 			if (tc != null) {
-				tc.sendMessage(m).queue();
+				Message originMessage = tc.retrieveMessageById(this.messageID).complete();
+
+				if(originMessage != null) {
+					final String mFinal = m;
+
+					originMessage.reply(mFinal).queue(success -> {}, error -> tc.sendMessage(mFinal).queue());
+				} else {
+					tc.sendMessage(m).queue();
+				}
 
 				String id = tc.getGuild().getId();
 				Brain b = Shmames.getBrains().getBrain(id);

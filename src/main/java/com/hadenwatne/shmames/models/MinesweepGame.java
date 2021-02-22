@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames;
+package com.hadenwatne.shmames.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class MinesweepGame {
 		
 		for(int[] row : rows) {
 			for(int c : row) {
-				ms.append("||"+numberToEmoji(c)+"||");
+				ms.append("||"+ mapNumberToMinesweeperEmoji(c)+"||");
 			}
 			
 			ms.append("\n");
@@ -81,8 +81,15 @@ public class MinesweepGame {
 		
 		return ms.toString();
 	}
-	
-	private static String numberToEmoji(int i) {
+
+	/**
+	 * Maps an integer to an emoji representation for the game Minesweeper.
+	 * This is a custom implementation of the similar function from Utils.class;
+	 * Needed due to differing emoji sent during the mapping process.
+	 * @param i The number to map.
+	 * @return A Discord emoji String name.
+	 */
+	private static String mapNumberToMinesweeperEmoji(int i) {
 		switch(i){
 		case -1:
 			return ":bomb:";
