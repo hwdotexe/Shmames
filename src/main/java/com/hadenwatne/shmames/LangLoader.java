@@ -1,6 +1,7 @@
 package com.hadenwatne.shmames;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.ShmamesLogger;
 import com.hadenwatne.shmames.models.Lang;
 
@@ -14,22 +15,25 @@ public class LangLoader {
 	private Gson gson;
 	private List<Lang> langs;
 
+	private final String LANG_DIRECTORY = "langs";
+
 	public LangLoader() {
-		gson = new Gson();
+		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		langs = new ArrayList<Lang>();
+
+		// Always save a new copy of the default language file.
+		Lang def = new Lang("default");
+		Utils.saveBytesToFile(LANG_DIRECTORY, def.getLangName() + ".json", gson.toJson(def).getBytes());
+
+		// Load language files.
+		loadLangs();
 	}
 
-	public void loadLangs() {
-		File folder = new File("langs");
+	private void loadLangs() {
+		File[] langFiles = Utils.listFilesInDirectory(LANG_DIRECTORY, new JSONFileFilter());
 
-		createDirectory(folder);
-
-		// Always save default in case of new changes.
-		saveLang(new Lang("default"));
-
-		// Discover lang files and add to system.
-		for(File l : discoverLangs(folder)) {
-			Lang lang = gson.fromJson(loadJSONFile(l), Lang.class);
+		for(File l : langFiles) {
+			Lang lang = gson.fromJson(Utils.loadFileAsString(l), Lang.class);
 
 			langs.add(lang);
 		}
@@ -47,64 +51,5 @@ public class LangLoader {
 
 	public List<Lang> getAllLangs() {
 		return langs;
-	}
-
-	private String loadJSONFile(File f) {
-		try {
-			int data;
-			FileInputStream is = new FileInputStream(f);
-			StringBuilder jsonData = new StringBuilder();
-
-			while ((data = is.read()) != -1) {
-				jsonData.append((char) data);
-			}
-
-			is.close();
-
-			return jsonData.toString();
-		} catch (Exception e) {
-			ShmamesLogger.logException(e);
-		}
-
-		return "";
-	}
-
-	private List<File> discoverLangs(File dir) {
-		File[] files = dir.listFiles();
-		List<File> locs = new ArrayList<File>();
-
-		for (File f : files) {
-			if (f.isFile()) {
-				if (f.getName().endsWith(".json")) {
-					locs.add(f);
-				}
-			}
-		}
-
-		return locs;
-	}
-
-	private void saveLang(Lang l) {
-		byte[] bytes = gson.toJson(l).getBytes();
-
-		try {
-			File lf = new File("langs/"+l.getLangName()+".json");
-			FileOutputStream os = new FileOutputStream(lf);
-
-			if(!lf.exists())
-				lf.createNewFile();
-
-			os.write(bytes);
-			os.flush();
-			os.close();
-		}catch(Exception e) {
-			ShmamesLogger.logException(e);
-		}
-	}
-
-	private void createDirectory(File dir) {
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
 	}
 }

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.tasks.JTimerTask;
@@ -193,6 +192,6 @@ public class Brain {
 	 */
 	public void loadFirstRunDefaults() {
 		triggers.put(Shmames.getBotName(), TriggerType.COMMAND);
-		settings.addAll(Shmames.defaults);
+		settings.addAll(Shmames.defaultBotSettings);
 	}
 }

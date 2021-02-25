@@ -50,9 +50,6 @@ public class Dev implements ICommand {
 							return "Key deleted!";
 						case "listapikeys":
 							return listAPIKeys();
-						case "reload":
-							reload(m.group(2));
-							return "Finished reloading the brain!";
 						case "inviteme":
 							return inviteMe(m.group(2));
 						case "getcommandstats":
@@ -78,7 +75,6 @@ public class Dev implements ICommand {
 							+ "createapikey\n"
 							+ "deleteapikey\n"
 							+ "listapikeys\n"
-							+ "reload <guildID>\n"
 							+ "inviteme <guildID>\n"
 							+ "getCommandStats\n"
 							+ "clearCommandStats\n"
@@ -173,10 +169,6 @@ public class Dev implements ICommand {
 
 	private String listAPIKeys() {
 		return Utils.generateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false);
-	}
-
-	private void reload(String g) {
-		Shmames.getBrains().reloadBrain(g);
 	}
 
 	private String inviteMe(String g) {

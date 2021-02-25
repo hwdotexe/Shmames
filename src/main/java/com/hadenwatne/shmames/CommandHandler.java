@@ -80,60 +80,48 @@ public class CommandHandler {
 	 */
 	public void PerformCommand(String cmd, Message message, User author, @Nullable Guild server) {
 		if(cmd.length() == 0) {
-			message.getChannel().sendMessage(lang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() })).queue();
+			sendMessageResponse(lang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() }), message);
 			return;
 		}
 
 		ShmamesLogger.log(LogType.COMMAND, "["+ (server != null ? server.getId() : "Private Message") + "/" + author.getName() +"] "+ cmd);
 
+		lang = Shmames.getLangFor(server);
 		Brain brain = null;
 
-		if(message.isFromGuild() && server != null) {
+		if(message.isFromGuild()) {
 			brain = Shmames.getBrains().getBrain(server.getId());
-			lang = Shmames.getLangFor(brain);
-		} else {
-			lang = Shmames.getDefaultLang();
 		}
 		
 		for(ICommand c : commands) {
-			for(String a : c.getAliases()) {
-				if(cmd.toLowerCase().startsWith(a.toLowerCase())) {
-					// Record command use statistic.
-					String alias = c.getAliases()[0].toLowerCase();
-					HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
+			for(String alias : c.getAliases()) {
+				Matcher m = Pattern.compile("^("+alias+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
-					if(stats.containsKey(alias)) {
-						int s = stats.get(alias);
-						stats.put(alias, s+1);
-					}else {
-						stats.put(alias, 1);
+				if(m.matches()){
+					logCountCommandUsage(c);
+
+					if(server == null && c.requiresGuild()) {
+						sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
+
+						return;
 					}
 
-					// Execute command.
-					if(!(server==null && c.requiresGuild())) {
-						Matcher m = Pattern.compile("^("+a+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+					String commandArguments = m.group(2) != null ? m.group(2).trim() : "";
 
-						if(m.matches()){
-							String args = m.group(2) != null ? m.group(2).trim() : "";
+					c.setRunContext(lang, brain);
 
-							c.setRunContext(lang, brain);
-
-							// Run the command async and send a message back when it finishes.
-							try {
-								CompletableFuture.supplyAsync(() -> c.run(args, author, message))
-										.thenAccept(r -> sendMessageResponse(r, message))
+					// Run the command async and send a message back when it finishes.
+					try {
+						CompletableFuture.supplyAsync(() -> c.run(commandArguments, author, message))
+								.thenAccept(r -> sendMessageResponse(r, message))
 								.exceptionally(exception -> {
 									sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
 									ShmamesLogger.logException(exception);
 									return null;
 								});
-							}catch (Exception e){
-								ShmamesLogger.logException(e);
-								sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
-							}
-						}
-					}else {
-						sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
+					}catch (Exception e){
+						ShmamesLogger.logException(e);
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
 					}
 
 					return;
@@ -154,5 +142,13 @@ public class CommandHandler {
 
 	private void sendMessageResponse(String r, Message msg){
 		new TypingTask(r, msg);
+	}
+
+	private void logCountCommandUsage(ICommand command) {
+		String primaryCommandName = command.getAliases()[0].toLowerCase();
+		HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
+		int count = stats.getOrDefault(primaryCommandName, 1) + 1;
+
+		stats.put(primaryCommandName, count);
 	}
 }

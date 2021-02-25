@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -193,7 +192,7 @@ public class Utils {
 	 */
 	public static String getGIF(String search, String filter) {
 		search = search.trim().replaceAll(" ", "%20");
-		String result = sendHTTPReq(HTTPVerb.GET, "https://api.tenor.com/v1/search?q=" + search + "&key=" + Shmames.getBrains().getMotherBrain().getTenorAPIKey() + "&contentfilter=" + filter + "&limit=25", null);
+		String result = sendHTTPReq(HTTPVerb.GET, "https://g.tenor.com/v1/search?q=" + search + "&key=" + Shmames.getBrains().getMotherBrain().getTenorAPIKey() + "&contentfilter=" + filter + "&limit=25", null);
 
 		JSONObject json = new JSONObject(result);
 		JSONArray jsonArray = json.getJSONArray("results");
@@ -483,6 +482,76 @@ public class Utils {
 				return "\u0039\u20E3";
 			default:
 				return "\u0030\u20E3";
+		}
+	}
+
+	/**
+	 * Uses a filter to build a list of files in a given directory path. Creates the directory if it does not exist.
+	 * @param directoryPath The path to list child files.
+	 * @param filter A filter to use in the search.
+	 * @return A File array of files that matched the filter within the directory.
+	 */
+	public static File[] listFilesInDirectory(String directoryPath, FileFilter filter) {
+		File directory = new File(directoryPath);
+
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		return directory.listFiles(filter);
+	}
+
+	/**
+	 * Attempts to load a given File as a String, and returns the result.
+	 * @param f The File to load.
+	 * @return The File's content as a String, or "" by default.
+	 */
+	public static String loadFileAsString(File f) {
+		try {
+			int data;
+			FileInputStream is = new FileInputStream(f);
+			StringBuilder jsonData = new StringBuilder();
+
+			while ((data = is.read()) != -1) {
+				jsonData.append((char) data);
+			}
+
+			is.close();
+
+			return jsonData.toString();
+		} catch (Exception e) {
+			ShmamesLogger.logException(e);
+		}
+
+		return "";
+	}
+
+	/**
+	 * Writes a byte array to a file specified. Overwrites existing file contents.
+	 * @param directory The parent directory to contain the file.
+	 * @param fileName The name of the file to write, including extension.
+	 * @param bytesToWrite The byte array to write to file.
+	 */
+	public static void saveBytesToFile(String directory, String fileName, byte[] bytesToWrite) {
+		try {
+			File file = new File(directory + File.separator + fileName);
+			File parentDirectory = new File(directory);
+
+			if(!parentDirectory.exists()) {
+				parentDirectory.mkdirs();
+			}
+
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileOutputStream os = new FileOutputStream(file);
+
+			os.write(bytesToWrite);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			ShmamesLogger.logException(e);
 		}
 	}
 }
