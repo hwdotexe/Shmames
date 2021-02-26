@@ -26,20 +26,23 @@ public class Timer implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "timer <time><d/h/m/s> [description]";
+		return "timer <time> [description]\n\n" +
+				"Example: `timer 24h Pizza Time`\n" +
+				"Example: `timer 15m30s Downvote Horny Bard`\n" +
+				"`<time>` can be 1-3 digits plus one of: <y/d/h/m/s> ";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		Matcher cmd = Pattern.compile("^([\\ddhms]+)(\\s.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		Matcher cmd = Pattern.compile("^([\\dydhms]+)(\\s.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 		
 		if(cmd.find()) {
 			int seconds = Utils.convertTimeStringToSeconds(cmd.group(1));
 			String msg = cmd.group(2) != null ? cmd.group(2).trim() : "";
 
 			if(seconds > 0) {
-				if(seconds > 7776000) {
-					return "Timers must be set for 90 days or sooner.";
+				if(seconds > 31536000) {
+					return "Timers must be set for 365 days or sooner.";
 				}
 
 				long sLong = (long)seconds;

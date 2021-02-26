@@ -429,13 +429,16 @@ public class Utils {
 	 * @return An integer equal to the time String in Seconds.
 	 */
 	public static int convertTimeStringToSeconds(String timeString) {
-		Matcher timeMatcher = Pattern.compile("(\\d{1,3})([dhms])", Pattern.CASE_INSENSITIVE).matcher(timeString);
+		Matcher timeMatcher = Pattern.compile("(\\d{1,3})([ydhms])", Pattern.CASE_INSENSITIVE).matcher(timeString);
 		int seconds = 0;
 
 		while(timeMatcher.find()) {
 			int multiplier = 1;
 
 			switch(timeMatcher.group(2).toLowerCase()) {
+				case "y":
+					multiplier = 31536000;
+					break;
 				case "d":
 					multiplier = 86400;
 					break;
