@@ -489,6 +489,37 @@ public class Utils {
 	}
 
 	/**
+	 * Converts a Unicode emoji string into an Integer, if the
+	 * emoji represents a number.
+	 * @param i The String to convert.
+	 * @return An Integer from the emoji.
+	 */
+	public static int emojiToInt(String i) {
+		switch(i) {
+			case "\u0031\u20E3":
+				return 1;
+			case "\u0032\u20E3":
+				return 2;
+			case "\u0033\u20E3":
+				return 3;
+			case "\u0034\u20E3":
+				return 4;
+			case "\u0035\u20E3":
+				return 5;
+			case "\u0036\u20E3":
+				return 6;
+			case "\u0037\u20E3":
+				return 7;
+			case "\u0038\u20E3":
+				return 8;
+			case "\u0039\u20E3":
+				return 9;
+			default:
+				return 0;
+		}
+	}
+
+	/**
 	 * Uses a filter to build a list of files in a given directory path. Creates the directory if it does not exist.
 	 * @param directoryPath The path to list child files.
 	 * @param filter A filter to use in the search.

@@ -1,8 +1,6 @@
 package com.hadenwatne.shmames;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -16,7 +14,7 @@ import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.MotherBrain;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import com.hadenwatne.shmames.models.Poll;
+import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 
@@ -71,15 +69,10 @@ public class BrainController {
 
 			// Activate any threads that this brain may have had.
 			if(brain.getActivePolls().size() > 0) {
-				for(Poll p : brain.getActivePolls()) {
+				for(PollModel p : brain.getActivePolls()) {
 					// Create new task
 					Timer t = new Timer();
-					TextChannel ch = Shmames.getJDA().getGuildById(brain.getGuildID()).getTextChannelById(p.getChannelID());
-					Message m = ch.retrieveMessageById(p.getMessageID()).complete();
-
-					if(m != null) {
-						t.schedule(new PollTask(p, m), p.getExpiration());
-					}
+					t.schedule(new PollTask(p), p.getExpiration());
 				}
 			}
 

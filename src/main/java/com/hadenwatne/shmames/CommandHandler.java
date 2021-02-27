@@ -31,7 +31,6 @@ public class CommandHandler {
 		commands.add(new AddTrigger());
 		commands.add(new Blame());
 		commands.add(new Choose());
-		commands.add(new Closepoll());
 		commands.add(new CringeThat());
 		commands.add(new Dev());
 		commands.add(new DropResponse());
@@ -56,13 +55,13 @@ public class CommandHandler {
 		commands.add(new NewSeed());
 		commands.add(new Nickname());
 		commands.add(new PinThat());
+		commands.add(new Poll());
 		commands.add(new React());
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
 		commands.add(new SetTally());
 		commands.add(new SimonSays());
-		commands.add(new Startpoll());
 		commands.add(new Storytime());
 		commands.add(new Thoughts());
 		commands.add(new Timer());

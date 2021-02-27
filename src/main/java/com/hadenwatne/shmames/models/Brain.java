@@ -17,7 +17,7 @@ public class Brain {
 	private List<Response> triggerResponses;
 	private List<BotSetting> settings;
 	private List<String> feedback;
-	private List<Poll> activePolls;
+	private List<PollModel> activePolls;
 	private List<String> families;
 	private List<ForumWeaponObj> forumWeapons;
 	private List<JTimerTask> timers;
@@ -36,7 +36,7 @@ public class Brain {
 		triggerResponses = new ArrayList<Response>();
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
-		activePolls = new ArrayList<Poll>();
+		activePolls = new ArrayList<PollModel>();
 		families = new ArrayList<String>();
 		forumWeapons = new ArrayList<ForumWeaponObj>();
 		timers = new ArrayList<JTimerTask>();
@@ -78,7 +78,7 @@ public class Brain {
 		isReportCooldown = cd;
 	}
 	
-	public List<Poll> getActivePolls(){
+	public List<PollModel> getActivePolls(){
 		return activePolls;
 	}
 
