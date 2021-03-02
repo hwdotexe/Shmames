@@ -106,7 +106,6 @@ public class Modify implements ICommand {
 								eBuilder.addField("Possible Values", "`true`, `false`", false);
 								break;
 							case PIN_CHANNEL:
-							case DEV_ANNOUNCE_CHANNEL:
 								eBuilder.addField("Possible Values", "Any text channel", false);
 								break;
 							case MANAGE_MUSIC:
@@ -166,45 +165,41 @@ public class Modify implements ICommand {
 		}
 	}
 
-	private void flexValueType(EmbedBuilder eBuilder, BotSetting v, Guild g){
-		switch(v.getType()){
+	private void flexValueType(EmbedBuilder eBuilder, BotSetting setting, Guild g){
+		String mention = "";
+
+		switch(setting.getType()){
 			case CHANNEL:
 				try {
-					TextChannel mc = g.getTextChannelById(v.getValue());
-					eBuilder.addField("**"+v.getName().toString()+"**" + " » :tv:", mc.getAsMention(), true);
-				}catch (Exception e){
-					eBuilder.addField("**"+v.getName().toString()+"**" + " » :tv:", ":warning: INVALID", true);
+					TextChannel mc = g.getTextChannelById(setting.getValue());
+
+					if (mc != null) {
+						mention = mc.getAsMention();
+					}
+				} catch (NumberFormatException e) {
+					mention = ":warning: INVALID";
 				}
 
 				break;
 			case EMOTE:
 				try {
-					Emote em = g.getEmoteById(v.getValue());
-					eBuilder.addField("**"+v.getName().toString()+"**" + " » :muscle:", em.getAsMention(), true);
-				}catch (Exception e){
-					eBuilder.addField("**"+v.getName().toString()+"**" + " » :muscle:", ":warning: INVALID", true);
+					Emote em = g.getEmoteById(setting.getValue());
+
+					if(em != null) {
+						mention = em.getAsMention();
+					}
+				} catch (NumberFormatException e) {
+					mention = ":warning: INVALID";
 				}
 
 				break;
-			case NUMBER:
-				eBuilder.addField("**"+v.getName().toString()+"**" + " » :hash:", v.getValue(), true);
-
-				break;
-			case BOOLEAN:
-				eBuilder.addField("**"+v.getName().toString()+"**" + " » :level_slider:", v.getValue(), true);
-
-				break;
-			case ROLE:
-				eBuilder.addField("**"+v.getName().toString()+"**" + " » :tools:", v.getValue(), true);
-
-				break;
-			case TEXT:
-				eBuilder.addField("**"+v.getName().toString()+"**" + " » :capital_abcd:", v.getValue(), true);
-
-				break;
 			default:
-				eBuilder.addField("**"+v.getName().toString()+"**" + " » :gear:", v.getValue(), true);
+				mention = setting.getValue();
 		}
+
+		String value = "**Type:** " + setting.getType() + "\n**Value:** " + mention;
+
+		eBuilder.addField("**__"+setting.getName()+"__**", value, true);
 	}
 
 	@Override

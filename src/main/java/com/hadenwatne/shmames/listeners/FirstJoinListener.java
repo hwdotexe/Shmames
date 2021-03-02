@@ -26,12 +26,10 @@ public class FirstJoinListener extends ListenerAdapter {
 
 				if(general.size() > 0){
 					BotSetting pin = b.getSettingFor(BotSettingName.PIN_CHANNEL);
-					BotSetting dev = b.getSettingFor(BotSettingName.DEV_ANNOUNCE_CHANNEL);
 					BotSetting rem = b.getSettingFor(BotSettingName.REMOVAL_EMOTE);
 					BotSetting app = b.getSettingFor(BotSettingName.APPROVAL_EMOTE);
 
 					pin.setValue(general.get(0).getName(), b);
-					dev.setValue(general.get(0).getName(), b);
 
 					List<Emote> em = e.getGuild().getEmotes();
 
