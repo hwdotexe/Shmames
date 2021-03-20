@@ -160,12 +160,12 @@ public final class Shmames {
 	}
 
 	/**
-	 * Gets the Locale for a server.
-	 * @return The server's desired Locale, or default if none.
+	 * Gets the Lang for a server.
+	 * @return The server's desired Lang, or default if none.
 	 */
 	public static Lang getLangFor(Guild guild) {
 		if(guild != null){
-			getLangFor(brains.getBrain(guild.getId()));
+			return getLangFor(brains.getBrain(guild.getId()));
 		}
 
 		return getDefaultLang();
