@@ -32,18 +32,16 @@ public class SetTally implements ICommand {
 		if(m.find()) {
 			String tally = m.group(1).trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
 			int count = Integer.parseInt(m.group(2));
-			
-			if (brain.getTallies().containsKey(tally)) {
-				if(count == 0) {
-					brain.getTallies().remove(tally);
 
-					return lang.getMsg(Langs.TALLY_REMOVED, new String[] { tally });
-				}
+			if(count > 0) {
+				brain.getTallies().put(tally, count);
+
+				return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { tally, Integer.toString(count) });
+			} else {
+				brain.getTallies().remove(tally);
+
+				return lang.getMsg(Langs.TALLY_REMOVED, new String[] { tally });
 			}
-
-			brain.getTallies().put(tally, count);
-
-			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { tally, Integer.toString(count) });
 		} else {
 			return lang.wrongUsage(getUsage());
 		}
