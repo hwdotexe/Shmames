@@ -52,7 +52,6 @@ public class CommandHandler {
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
 		commands.add(new Music());
-		commands.add(new NewSeed());
 		commands.add(new Nickname());
 		commands.add(new PinThat());
 		commands.add(new Poll());
@@ -67,6 +66,7 @@ public class CommandHandler {
 		commands.add(new Timer());
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
+		commands.add(new When());
 		commands.add(new Wiki());
 	}
 	

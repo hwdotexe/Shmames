@@ -18,22 +18,28 @@ public class WhatAreTheOdds implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "whataretheodds [query]";
+		return "whataretheodds <query>";
 	}
 
 	@Override
 	public String run(String args, User author, Message message) {
-		for (ICommand c : CommandHandler.getLoadedCommands()) {
-			for (String a : c.getAliases()) {
-				if (a.equalsIgnoreCase("roll")) {
-					c.setRunContext(lang, null);
+		if(args.length() > 0) {
+			for (ICommand c : CommandHandler.getLoadedCommands()) {
+				for (String a : c.getAliases()) {
+					if (a.equalsIgnoreCase("roll")) {
+						c.setRunContext(lang, null);
 
-					return c.run("1d100", author, message);
+						String prefix = "\"What are the odds " + args + "\"\n";
+
+						return prefix + c.run("1d100", author, message);
+					}
 				}
 			}
-		}
 
-		return null;
+			return null;
+		}else{
+			return lang.wrongUsage(getUsage());
+		}
 	}
 
 	@Override

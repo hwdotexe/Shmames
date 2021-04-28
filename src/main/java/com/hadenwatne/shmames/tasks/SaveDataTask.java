@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.MotherBrain;
@@ -33,6 +34,8 @@ public class SaveDataTask extends TimerTask{
 		MotherBrain mb = Shmames.getBrains().getMotherBrain();
 		String action = Utils.getRandomHashMap(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
+
+		updateRandomSeed();
 		Shmames.getJDA().getPresence().setActivity(Activity.of(t, action));
 		
 		// Save all brains
@@ -44,5 +47,24 @@ public class SaveDataTask extends TimerTask{
 
 		ShmamesLogger.log(LogType.SYSTEM, "Autosave Task Ran");
 		ShmamesLogger.write();
+	}
+
+	private void updateRandomSeed() {
+		String resp = Utils.sendHTTPReq(HTTPVerb.GET, "https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new", null);
+
+		if(resp != null) {
+			resp = resp.trim();
+			resp = resp.replaceAll("\n", "");
+			long seed;
+
+			try {
+				seed = Long.parseLong(resp);
+			} catch (Exception e) {
+				seed = System.currentTimeMillis();
+				ShmamesLogger.logException(e);
+			}
+
+			Utils.getRandomObj().setSeed(seed);
+		}
 	}
 }
