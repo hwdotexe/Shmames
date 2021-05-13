@@ -37,6 +37,7 @@
     "MUSIC_PLAYLIST_TRACK_REMOVED": "Track removed!",
     "MUSIC_QUEUE_CLEARED": "Cleared the music queue!",
     "MUSIC_QUEUE_SHUFFLED": "Shuffled the music queue!",
+    "MUSIC_QUEUE_REVERSED": "Reversed the music queue!",
     "MUSIC_QUEUED_PLAYLIST": "Queued the `%WC%` Playlist!",
     "POLL_TITLE": "== POLL ==",
     "POLL_TITLE_RESULTS": "== POLL (Results) ==",

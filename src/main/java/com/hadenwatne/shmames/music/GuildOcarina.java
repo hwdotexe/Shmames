@@ -2,7 +2,10 @@ package com.hadenwatne.shmames.music;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.LogType;
@@ -30,6 +33,10 @@ public class GuildOcarina extends AudioEventAdapter {
 	private GuildOcarinaResultHandler loader;
 	private boolean isLoop;
 	private boolean isLoopQueue;
+	private HashMap<String, Integer> timecodes;
+
+	private final Pattern youtubeTimecode = Pattern.compile("\\?t=(\\d+)$", Pattern.CASE_INSENSITIVE);
+	private final Pattern youtubeIdentifier = Pattern.compile("((((.be)|(.com))\\/)|(v=))([a-z0-9_\\-]+)", Pattern.CASE_INSENSITIVE);
 
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
@@ -40,6 +47,7 @@ public class GuildOcarina extends AudioEventAdapter {
 		loader = new GuildOcarinaResultHandler(this);
 		isLoop = false;
 		isLoopQueue = false;
+		timecodes = new HashMap<>();
 
 		if(manager.getSendingHandler() != null) {
 			((JDAAudioSendHandler) manager.getSendingHandler()).setAudioPlayer(player);
@@ -99,9 +107,14 @@ public class GuildOcarina extends AudioEventAdapter {
 		Collections.shuffle(queue);
 	}
 
+	public void reverseQueue() {
+		Collections.reverse(queue);
+	}
+
 	public void loadTrack(String url, boolean addToQueue) {
 		loader.prepareLoadingTrack(addToQueue);
 		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, loader);
+		checkAddYouTubeTimecode(url);
 	}
 
 	public void loadCustomPlaylist(List<String> urls, boolean addToQueue) {
@@ -111,6 +124,7 @@ public class GuildOcarina extends AudioEventAdapter {
 
 		for(String url : urls) {
 			Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, loader);
+			checkAddYouTubeTimecode(url);
 		}
 	}
 	
@@ -131,9 +145,30 @@ public class GuildOcarina extends AudioEventAdapter {
 		}
 	}
 
+	public void skipMany(int count){
+		if(queue.size() >= count) {
+			player.playTrack(queue.get(count-1));
+
+			for(int i=0; i<count; i++) {
+				queue.remove(0);
+			}
+		} else {
+			stop();
+		}
+	}
+
 	public void sendMessageToChannel(String msg) {
 		if(msg != null && msg.length() > 0) {
 			msgChannel.sendMessage(msg).queue();
+		}
+	}
+
+	private void checkAddYouTubeTimecode(String url) {
+		Matcher timecodeMatch = youtubeTimecode.matcher(url);
+		Matcher identifierMatch = youtubeIdentifier.matcher(url);
+
+		if(timecodeMatch.find() && identifierMatch.find()){
+			timecodes.put(identifierMatch.group(7), Integer.parseInt(timecodeMatch.group(1)));
 		}
 	}
 	
@@ -143,7 +178,13 @@ public class GuildOcarina extends AudioEventAdapter {
 	
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
+		if(timecodes.containsKey(track.getInfo().identifier)){
+			int seconds = timecodes.get(track.getInfo().identifier);
 
+			track.setPosition(seconds*1000);
+
+			timecodes.remove(track.getInfo().identifier);
+		}
 	}
 
 	@Override

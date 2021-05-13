@@ -165,6 +165,7 @@ public class Lang {
         messages.put(Langs.MUSIC_PLAYLIST_TRACK_REMOVED,        "Track removed!");
         messages.put(Langs.MUSIC_QUEUE_CLEARED,                 "Cleared the music queue!");
         messages.put(Langs.MUSIC_QUEUE_SHUFFLED,                "Shuffled the music queue!");
+        messages.put(Langs.MUSIC_QUEUE_REVERSED,                "Reversed the music queue!");
         messages.put(Langs.MUSIC_QUEUED_PLAYLIST,               "Queued the `"+wildcard+"` Playlist!");
         messages.put(Langs.POLL_TITLE,                          "== POLL ==");
         messages.put(Langs.POLL_TITLE_RESULTS,                  "== POLL (Results) ==");

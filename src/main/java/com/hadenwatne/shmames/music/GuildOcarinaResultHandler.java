@@ -6,6 +6,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
+import java.util.HashMap;
+
 public class GuildOcarinaResultHandler implements AudioLoadResultHandler {
     private GuildOcarina ocarina;
     private boolean addToQueue;

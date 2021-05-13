@@ -38,7 +38,7 @@ public class Thoughts implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"thoughts", "what do you think about"};
+		return new String[] {"thoughts", "what do you think about", "what do you think of"};
 	}
 
 	@Override

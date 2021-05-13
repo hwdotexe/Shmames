@@ -64,6 +64,7 @@ public class Music implements ICommand {
 			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 
 			switch(mainCmd) {
+				case "p":
 				case "play":
 					if (canUse(b, message.getMember())) {
 						return cmdPlay(message.getMember(), message.getTextChannel(), ocarina, m.group(2));
@@ -73,13 +74,18 @@ public class Music implements ICommand {
 				case "pause":
 					ocarina.togglePause(true);
 					break;
+				case "r":
 				case "resume":
 					ocarina.togglePause(false);
 					break;
 				case "skip":
 					if(ocarina.getNowPlaying() != null) {
 						if (canUse(b, message.getMember())) {
-							ocarina.skip();
+							if(m.group(2) != null && isInt(m.group(2))){
+								ocarina.skipMany((Integer.parseInt( m.group(2))));
+							}else{
+								ocarina.skip();
+							}
 						} else {
 							return lang.getError(Errors.NO_PERMISSION_USER, true);
 						}
@@ -87,18 +93,6 @@ public class Music implements ICommand {
 						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
 					}
 					break;
-				case "shuffle":
-					if(ocarina.getNowPlaying() != null) {
-						if (canUse(b, message.getMember())) {
-							ocarina.shuffleQueue();
-
-							return lang.getMsg(Langs.MUSIC_QUEUE_SHUFFLED);
-						} else {
-							return lang.getError(Errors.NO_PERMISSION_USER, true);
-						}
-					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
-					}
 				case "stop":
 					if(ocarina.getNowPlaying() != null) {
 						if (canUse(b, message.getMember())) {
@@ -220,7 +214,18 @@ public class Music implements ICommand {
 					ocarina.getQueue().clear();
 
 					return lang.getMsg(Langs.MUSIC_QUEUE_CLEARED);
-				} else if (isInt(args)) {
+				}
+				else if (args.equalsIgnoreCase("reverse")) {
+					ocarina.reverseQueue();
+
+					return lang.getMsg(Langs.MUSIC_QUEUE_REVERSED);
+				}
+				else if (args.equalsIgnoreCase("shuffle")) {
+					ocarina.shuffleQueue();
+
+					return lang.getMsg(Langs.MUSIC_QUEUE_SHUFFLED);
+				}
+				else if (isInt(args)) {
 					showQueue(ocarina.getQueue(), c, Integer.parseInt(args));
 
 					return "";
@@ -569,14 +574,13 @@ public class Music implements ICommand {
 		StringBuilder sb = new StringBuilder();
 		EmbedBuilder eBuilder = buildBasicEmbed();
 
-		sb.append("`play <url|playlist>` - Begin playing a track or playlist.\n");
+		sb.append("`(p)lay <url|playlist>` - Begin playing a track or playlist.\n");
 		sb.append("`pause` - Toggle pause.\n");
-		sb.append("`shuffle` - Shuffles tracks in the queue.\n");
-		sb.append("`skip` - Skip the current track.\n");
+		sb.append("`skip [count]` - Skip tracks.\n");
 		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
 		sb.append("`loop [queue]` - Toggle track or queue looping.\n");
 		sb.append("`playing|np` - See details about the current track.\n");
-		sb.append("`(q)ueue [url|playlist|clear|page]` - Show the queue, add items, or clear it.\n");
+		sb.append("`(q)ueue [url|playlist|clear|page|reverse|shuffle]` - Manage the music queue.\n");
 		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
 		sb.append("`(pl)aylist` - Manage a playlist.");
 
