@@ -14,6 +14,7 @@ public class Brain {
 	private HashMap<String, Integer> tallies;
 	private HashMap<String, Integer> emoteStats;
 	private HashMap<String, TriggerType> triggers;
+	private HashMap<String, List<UserCustomList>> userLists;
 	private List<Response> triggerResponses;
 	private List<BotSetting> settings;
 	private List<String> feedback;
@@ -33,6 +34,7 @@ public class Brain {
 		tallies = new HashMap<String, Integer>();
 		emoteStats = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
+		userLists = new HashMap<String, List<UserCustomList>>();
 		triggerResponses = new ArrayList<Response>();
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
@@ -99,9 +101,6 @@ public class Brain {
 	 */
 
 	public List<Playlist> getPlaylists() {
-		if(playlists == null)
-			playlists = new ArrayList<Playlist>();
-
 		return playlists;
 	}
 
@@ -160,6 +159,19 @@ public class Brain {
 	
 	public HashMap<String, TriggerType> getTriggers(){
 		return triggers;
+	}
+
+	// TODO remove the null check after update
+	public List<UserCustomList> getUserLists(String userID) {
+		if(userLists == null) {
+			userLists = new HashMap<String, List<UserCustomList>>();
+		}
+
+		if(!userLists.containsKey(userID)){
+			userLists.put(userID, new ArrayList<UserCustomList>());
+		}
+
+		return userLists.get(userID);
 	}
 	
 	public List<String> getFeedback(){

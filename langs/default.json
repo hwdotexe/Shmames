@@ -25,6 +25,8 @@
     "INVALID_TRIGGER_TYPE": ":scream: Invalid trigger type! Your options are: %WC%",
     "ITEM_ADDED": "Added the things :+1:",
     "ITEM_REMOVED": "I've removed \"%WC%\"!",
+    "LIST_CREATED": "The List was created!",
+    "LIST_DELETED": "Deleted the `%WC%` List!",
     "MUSIC_ADDED_TO_QUEUE": "Added to queue!",
     "MUSIC_LOOPING_TOGGLED": "Music looping is now **%WC%**",
     "MUSIC_LOOPING_QUEUE_TOGGLED": "Music Queue looping is now **%WC%**",

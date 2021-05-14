@@ -373,6 +373,17 @@ public class Utils {
 	}
 
 	/**
+	 * Returns a random string from a List of strings.
+	 * @param items The List to use.
+	 * @return A random string.
+	 */
+	public static String getRandomStringFromList(List<String> items) {
+		int target = r.nextInt(items.size());
+
+		return items.get(target);
+	}
+
+	/**
 	 * Splits a string into multiple strings on the given length, taking care to split on whitespaces.
 	 * @param s The string to split.
 	 * @param interval The number of characters to split on.
@@ -587,5 +598,19 @@ public class Utils {
 		} catch (Exception e) {
 			ShmamesLogger.logException(e);
 		}
+	}
+
+	/**
+	 * Figures if the String input is an Integer.
+	 * @param test The String to test.
+	 * @return True if and only if the String is an Integer.
+	 */
+	public static boolean isInt(String test) {
+		try {
+			Integer.parseInt(test);
+			return true;
+		} catch (Exception ignored) {}
+
+		return false;
 	}
 }

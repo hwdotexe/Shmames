@@ -45,6 +45,7 @@ public class CommandHandler {
 		commands.add(new Help());
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());
+		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTallies());

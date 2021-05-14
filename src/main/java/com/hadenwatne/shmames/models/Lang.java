@@ -153,6 +153,8 @@ public class Lang {
         messages.put(Langs.INVALID_TRIGGER_TYPE,                ":scream: Invalid trigger type! Your options are: "+wildcard);
         messages.put(Langs.ITEM_ADDED,                          "Added the things :+1:");
         messages.put(Langs.ITEM_REMOVED,                        "I've removed \""+wildcard+"\"!");
+        messages.put(Langs.LIST_CREATED,                        "The List was created!");
+        messages.put(Langs.LIST_DELETED,                        "Deleted the `"+wildcard+"` List!");
         messages.put(Langs.MUSIC_ADDED_TO_QUEUE,                "Added to queue!");
         messages.put(Langs.MUSIC_LOOPING_TOGGLED,               "Music looping is now **"+wildcard+"**");
         messages.put(Langs.MUSIC_LOOPING_QUEUE_TOGGLED,         "Music Queue looping is now **"+wildcard+"**");

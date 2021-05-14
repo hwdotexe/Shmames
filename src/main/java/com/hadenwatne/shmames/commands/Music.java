@@ -81,7 +81,7 @@ public class Music implements ICommand {
 				case "skip":
 					if(ocarina.getNowPlaying() != null) {
 						if (canUse(b, message.getMember())) {
-							if(m.group(2) != null && isInt(m.group(2))){
+							if(m.group(2) != null && Utils.isInt(m.group(2))){
 								ocarina.skipMany((Integer.parseInt( m.group(2))));
 							}else{
 								ocarina.skip();
@@ -225,7 +225,7 @@ public class Music implements ICommand {
 
 					return lang.getMsg(Langs.MUSIC_QUEUE_SHUFFLED);
 				}
-				else if (isInt(args)) {
+				else if (Utils.isInt(args)) {
 					showQueue(ocarina.getQueue(), c, Integer.parseInt(args));
 
 					return "";
@@ -635,15 +635,6 @@ public class Music implements ICommand {
 		Matcher m = Pattern.compile("^https?://.+$", Pattern.CASE_INSENSITIVE).matcher(test);
 
 		return m.find();
-	}
-
-	private boolean isInt(String test) {
-		try {
-			Integer.parseInt(test);
-			return true;
-		} catch (Exception ignored) {}
-
-		return false;
 	}
 
 	private boolean canUse(Brain b, Member m) {
