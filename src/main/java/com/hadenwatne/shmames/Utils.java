@@ -273,12 +273,14 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static String generateList(List<String> items, int perRow, boolean numbered) {
+	public static String generateList(List<String> items, int perRow, boolean numbered, boolean indented) {
 		StringBuilder list = new StringBuilder();
 		Pattern emote = Pattern.compile("(<(:[a-z]+:)\\d+>)", Pattern.CASE_INSENSITIVE);
 
 		int inRow = 0;
-		for (String i : items) {
+		for (int i=0; i<items.size(); i++) {
+			String item = items.get(i);
+
 			if (list.length() > 0) {
 				list.append(numbered ? "\n" : ", ");
 			}
@@ -293,18 +295,20 @@ public class Utils {
 			}
 
 			if (numbered) {
-				list.append("> ");
-				list.append(items.indexOf(i) + 1);
+				if (indented)
+					list.append("> ");
+
+				list.append(i + 1);
 				list.append(": ");
 			}
 
-			Matcher eMatcher = emote.matcher(i);
+			Matcher eMatcher = emote.matcher(item);
 			while (eMatcher.find()) {
-				i = i.replaceFirst(eMatcher.group(1), eMatcher.group(2));
+				item = item.replaceFirst(eMatcher.group(1), eMatcher.group(2));
 			}
 
 			list.append("`");
-			list.append(i);
+			list.append(item);
 			list.append("`");
 		}
 

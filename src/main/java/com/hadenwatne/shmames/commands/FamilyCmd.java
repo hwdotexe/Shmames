@@ -174,7 +174,7 @@ public class FamilyCmd implements ICommand {
 									}
 
 									if(contains) {
-										sb.append(Utils.generateList(memberGuilds, -1, true));
+										sb.append(Utils.generateList(memberGuilds, -1, true, true));
 									}else{
 										sb.append("_");
 										sb.append(Errors.FAMILY_SERVER_LIST_EMPTY);
@@ -210,7 +210,7 @@ public class FamilyCmd implements ICommand {
 							}
 
 							if(contains) {
-								sb.append(Utils.generateList(families, 3, false));
+								sb.append(Utils.generateList(families, 3, false, false));
 							}else{
 								sb.append("_");
 								sb.append(Errors.SERVER_FAMILY_LIST_EMPTY);

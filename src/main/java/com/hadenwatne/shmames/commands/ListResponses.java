@@ -51,7 +51,7 @@ public class ListResponses implements ICommand {
 					rsText.add(r.getResponse());
 				}
 
-				String list = Utils.generateList(rsText, -1, true);
+				String list = Utils.generateList(rsText, -1, true, true);
 
 				if(list.length() == 0)
 					sb.append(lang.getError(Errors.ITEMS_NOT_FOUND, true));

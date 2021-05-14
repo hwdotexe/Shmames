@@ -22,7 +22,8 @@ public class ListCmd implements ICommand {
 	private Lang lang;
 	private Brain brain;
 
-	private final Pattern basePattern = Pattern.compile("^((create)|(add)|(remove)|(delete)|(random)|(list))(\\s([a-z_\\-0-9]+)(\\s(.+))?)?$", Pattern.CASE_INSENSITIVE);
+	private final Pattern basePattern = Pattern.compile("^((create)|(add)|(remove)|(delete)|(random)|(list)|([a-z_\\-0-9]+))(\\s(.+))?$", Pattern.CASE_INSENSITIVE);
+	private final Pattern argsPattern = Pattern.compile("^([a-z_\\-0-9]+)(\\s(.+))?$", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String getDescription() {
@@ -31,7 +32,7 @@ public class ListCmd implements ICommand {
 
 	@Override
 	public String getUsage() {
-		return "list <create|add|remove|delete|random|list> [name] [item]";
+		return "list <create|add|remove|delete|random|list|[name]> [name] [item]";
 	}
 
 	@Override
@@ -40,111 +41,147 @@ public class ListCmd implements ICommand {
 
 		if(m.find()) {
 			String cmd = m.group(1).toLowerCase();
-			String listName = m.group(9);
-			String item = m.group(11);
+			String cmdArgs = m.group(10);
 			String userID = author.getId();
 
 			switch(cmd){
 				case "create":
-					if(listName != null) {
-						if(getList(userID, listName) == null) {
-							UserCustomList newList = new UserCustomList(listName);
-							brain.getUserLists(userID).add((newList));
+					if(cmdArgs != null) {
+						Matcher a = argsPattern.matcher(cmdArgs);
 
-							return lang.getMsg(Langs.LIST_CREATED);
-						}else{
-							return lang.getError(Errors.ALREADY_EXISTS, true);
+						if(a.find()){
+							String listName = a.group(1).toLowerCase();
+
+							if(getList(userID, listName) == null) {
+								UserCustomList newList = new UserCustomList(listName);
+								brain.getUserLists(userID).add((newList));
+
+								return lang.getMsg(Langs.LIST_CREATED);
+							}else{
+								return lang.getError(Errors.ALREADY_EXISTS, true);
+							}
 						}
-					}else{
-						return lang.wrongUsage(getUsage());
 					}
+
+					return lang.wrongUsage(getUsage());
 				case "add":
-					if(listName != null && item != null) {
-						UserCustomList existingList = getList(userID, listName);
+					if(cmdArgs != null) {
+						Matcher a = argsPattern.matcher(cmdArgs);
 
-						if(existingList != null) {
-							existingList.getValues().add(item);
+						if(a.find()){
+							String listName = a.group(1).toLowerCase();
+							String item = a.group(3);
 
-							return lang.getMsg(Langs.ITEM_ADDED);
-						}else{
-							return lang.getError(Errors.NOT_FOUND, true);
+							if(item != null) {
+								UserCustomList existingList = getList(userID, listName);
+
+								if(existingList != null) {
+									existingList.getValues().add(item);
+
+									return lang.getMsg(Langs.ITEM_ADDED);
+								}else{
+									return lang.getError(Errors.NOT_FOUND, true);
+								}
+							}
 						}
-					}else{
-						return lang.wrongUsage(getUsage());
 					}
+
+					return lang.wrongUsage(getUsage());
 				case "remove":
-					if(listName != null && item != null && Utils.isInt(item)) {
-						UserCustomList existingList = getList(userID, listName);
-						int index = Integer.parseInt(item) - 1;
+					if(cmdArgs != null) {
+						Matcher a = argsPattern.matcher(cmdArgs);
 
-						if(existingList != null) {
-							if(existingList.getValues().size() >= index) {
-								existingList.getValues().remove(index);
+						if(a.find()){
+							String listName = a.group(1).toLowerCase();
+							String item = a.group(3);
 
-								return lang.getMsg(Langs.ITEM_REMOVED);
+							if(item != null && Utils.isInt(item)) {
+								UserCustomList existingList = getList(userID, listName);
+								int index = Integer.parseInt(item) - 1;
+
+								if(existingList != null && index >= 0) {
+									if(existingList.getValues().size() > index) {
+										String removed = existingList.getValues().get(index);
+										existingList.getValues().remove(index);
+
+										return lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed});
+									}else{
+										return lang.getError(Errors.NOT_FOUND, true);
+									}
+								}else{
+									return lang.getError(Errors.NOT_FOUND, true);
+								}
+							}
+						}
+					}
+
+					return lang.wrongUsage(getUsage());
+				case "delete":
+					if(cmdArgs != null) {
+						Matcher a = argsPattern.matcher(cmdArgs);
+
+						if(a.find()){
+							String listName = a.group(1).toLowerCase();
+							UserCustomList existingList = getList(userID, listName);
+
+							if(existingList != null) {
+								brain.getUserLists(userID).remove((existingList));
+
+								return lang.getMsg(Langs.LIST_DELETED, new String[] { existingList.getName() });
 							}else{
 								return lang.getError(Errors.NOT_FOUND, true);
 							}
-						}else{
-							return lang.getError(Errors.NOT_FOUND, true);
 						}
-					}else{
-						return lang.wrongUsage(getUsage());
 					}
-				case "delete":
-					if(listName != null) {
-						UserCustomList existingList = getList(userID, listName);
 
-						if(existingList != null) {
-							brain.getUserLists(userID).remove((existingList));
-
-							return lang.getMsg(Langs.LIST_DELETED, new String[] { existingList.getName() });
-						}else{
-							return lang.getError(Errors.NOT_FOUND, true);
-						}
-					}else{
-						return lang.wrongUsage(getUsage());
-					}
+					return lang.wrongUsage(getUsage());
 				case "random":
-					if(listName != null) {
-						UserCustomList existingList = getList(userID, listName);
+					if(cmdArgs != null) {
+						Matcher a = argsPattern.matcher(cmdArgs);
 
-						if(existingList != null) {
-							return Utils.getRandomStringFromList(existingList.getValues());
-						}else{
-							return lang.getError(Errors.NOT_FOUND, true);
+						if(a.find()){
+							String listName = a.group(1).toLowerCase();
+							UserCustomList existingList = getList(userID, listName);
+
+							if(existingList != null) {
+								return Utils.getRandomStringFromList(existingList.getValues());
+							}else{
+								return lang.getError(Errors.NOT_FOUND, true);
+							}
 						}
-					}else{
-						return lang.wrongUsage(getUsage());
 					}
+
+					return lang.wrongUsage(getUsage());
 				case "list":
-					if(listName != null) {
-						// List elements in the list
-						UserCustomList existingList = getList(userID, listName);
+					// List lists
+					List<String> listNames = new ArrayList<>();
 
-						if(existingList != null) {
-							String lists = Utils.generateList(existingList.getValues(), 1, true);
-
-							message.getChannel().sendMessage(buildListEmbed(existingList.getName(), lists).build()).queue();
-							return "";
-						}else{
-							return lang.getError(Errors.NOT_FOUND, true);
-						}
-					}else{
-						// List lists
-						List<String> listNames = new ArrayList<>();
-
-						for(UserCustomList l : brain.getUserLists(userID)) {
-							listNames.add(l.getName());
-						}
-
-						String lists = Utils.generateList(listNames, 1, false);
-
-						message.getChannel().sendMessage(buildListEmbed("Your Lists", lists).build()).queue();
-						return "";
+					for(UserCustomList l : brain.getUserLists(userID)) {
+						listNames.add(l.getName());
 					}
+
+					String userLists = listNames.size() > 0
+							? Utils.generateList(listNames, 1, false, false)
+							: "No lists found";
+
+					message.getChannel().sendMessage(buildListEmbed("Your Lists", userLists).build()).queue();
+
+					return "";
 				default:
-					return lang.getError(Errors.COMMAND_NOT_FOUND, true);
+					// List elements in the list
+					UserCustomList existingList = getList(userID, cmd.toLowerCase());
+
+					if(existingList != null) {
+						String listValues = existingList.getValues().size() > 0
+								? Utils.generateList(existingList.getValues(), 1, true, false)
+								: "No items found";
+
+						message.getChannel().sendMessage(buildListEmbed(existingList.getName(), listValues).build()).queue();
+
+						return "";
+					}else{
+						return lang.getError(Errors.NOT_FOUND, true);
+					}
 			}
 		}else{
 			return lang.wrongUsage(getUsage());

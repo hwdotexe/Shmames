@@ -168,7 +168,7 @@ public class Dev implements ICommand {
 	}
 
 	private String listAPIKeys() {
-		return Utils.generateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false);
+		return Utils.generateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false, false);
 	}
 
 	private String inviteMe(String g) {

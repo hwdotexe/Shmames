@@ -74,7 +74,7 @@ public class Modify implements ICommand {
 									langNames.add(l.getLangName());
 								}
 
-								String langList = Utils.generateList(langNames, 0, false);
+								String langList = Utils.generateList(langNames, 0, false, false);
 
 								return lang.getError(Errors.NOT_FOUND, true) + System.lineSeparator() + "Options: " + langList;
 							}
@@ -131,7 +131,7 @@ public class Modify implements ICommand {
 									langs.add(l.getLangName());
 								}
 
-								sb.append(Utils.generateList(langs, -1, false));
+								sb.append(Utils.generateList(langs, -1, false, false));
 
 								eBuilder.addField("Possible Values", sb.toString(), false);
 								break;
