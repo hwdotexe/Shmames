@@ -24,6 +24,11 @@ public class GIF implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`gif bill nye`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			if(message.getChannelType() == ChannelType.TEXT){

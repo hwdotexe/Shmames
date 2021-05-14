@@ -27,14 +27,18 @@ public class Poll implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Create and manage server polls.\n\n" +
-				"Example: `poll start 12h30m Pizza or Burgers? Pizza; Burgers;`\n" +
-				"Example: `poll close #12345`";
+		return "Create and manage server polls.";
 	}
 	
 	@Override
 	public String getUsage() {
 		return "poll <start|close> [<time> <question> <options>|<pollID>]";
+	}
+
+	@Override
+	public String getExamples() {
+		return "`poll start 12h30m Pizza or Burgers? Pizza; Burgers;`\n" +
+				"`poll close #12345`";
 	}
 
 	@Override

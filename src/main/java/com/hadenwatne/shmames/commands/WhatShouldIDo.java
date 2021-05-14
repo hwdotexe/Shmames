@@ -42,6 +42,11 @@ public class WhatShouldIDo implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`what should i do`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		return intros[Utils.getRandom(intros.length)]+" "+answers[Utils.getRandom(answers.length)]+"!";
 	}

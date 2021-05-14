@@ -29,6 +29,11 @@ public class AddTrigger implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`addtrigger RANDOM explosion`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([a-zA-Z]{3,7}) ([\\w \\-]{3,})$").matcher(args);
 		

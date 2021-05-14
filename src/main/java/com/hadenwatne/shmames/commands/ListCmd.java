@@ -36,6 +36,17 @@ public class ListCmd implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`list create myList`\n" +
+				"`list add myList Eggs`\n" +
+				"`list remove myList 1`\n" +
+				"`list delete myList`\n" +
+				"`list random myList`\n" +
+				"`list list`\n" +
+				"`list myList`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = basePattern.matcher(args);
 

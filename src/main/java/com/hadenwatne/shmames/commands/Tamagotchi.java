@@ -21,6 +21,11 @@ public class Tamagotchi implements ICommand {
     }
 
     @Override
+    public String getExamples() {
+        return "`tamagotchi`";
+    }
+
+    @Override
     public String run(String args, User author, Message message) {
         /*
         Server Pet inspired by Tamagotchi

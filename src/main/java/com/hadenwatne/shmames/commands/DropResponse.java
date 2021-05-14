@@ -31,6 +31,11 @@ public class DropResponse implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`dropresponse RANDOM 2`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) (\\d{1,3})$").matcher(args);
 		

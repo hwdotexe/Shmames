@@ -26,10 +26,14 @@ public class Timer implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "timer <time> [description]\n\n" +
-				"Example: `timer 24h Pizza Time`\n" +
-				"Example: `timer 15m30s Downvote Horny Bard`\n" +
-				"`<time>` can be 1-3 digits plus one of: <y/d/h/m/s> ";
+		return "timer <time> [description]\n" +
+				"`<time>` can be 1-3 digits plus one of: <y/d/h/m/s>";
+	}
+
+	@Override
+	public String getExamples() {
+		return "`timer 24h Pizza Time`\n" +
+				"`timer 15m30s Downvote Horny Bard`";
 	}
 
 	@Override

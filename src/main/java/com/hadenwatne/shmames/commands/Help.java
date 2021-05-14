@@ -33,6 +33,12 @@ public class Help implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`help`\n" +
+				"`help gif`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			// Wants help on specific command.
@@ -51,6 +57,7 @@ public class Help implements ICommand {
 						eBuilder.addField("Aliases", list, true);
 						eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
 						eBuilder.addField("Usage", c.getUsage(), false);
+						eBuilder.addField("Examples", c.getExamples(), false);
 						
 				        message.getChannel().sendMessage(eBuilder.build()).queue();
 				        

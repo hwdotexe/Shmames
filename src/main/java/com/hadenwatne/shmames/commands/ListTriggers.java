@@ -24,6 +24,11 @@ public class ListTriggers implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`listtriggers`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		String list = Utils.generateList(brain.getTriggers(), -1);
 

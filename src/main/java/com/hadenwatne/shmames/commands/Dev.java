@@ -32,6 +32,11 @@ public class Dev implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(message.getChannel() instanceof PrivateChannel) {
 			if(author.getId().equals("294671756155682828")) { // My Discord account

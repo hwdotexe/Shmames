@@ -27,6 +27,11 @@ public class Storytime implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`storytime`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		String key = Utils.getRandomStringFromSet(stories.keySet());
 		String[] story = Utils.splitString(stories.get(key), MessageEmbed.VALUE_MAX_LENGTH);

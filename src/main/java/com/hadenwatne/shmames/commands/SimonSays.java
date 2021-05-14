@@ -31,6 +31,12 @@ public class SimonSays implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`simonsays Hey look at me, I'm a talkin' Shmames!`\n" +
+				"`simonsays :emoteFromAnotherServer:`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			try {

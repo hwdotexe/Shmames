@@ -32,12 +32,25 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Create shorthand names for your favorite links, and share them in a snap.\n`create <name> <link>` - create a new weapon\n`update <name> <new link>` - change a weapon's link\n`remove <name>` - delete a weapon\n`list [all]` - list available weapons\n`search <name>` - find a weapon\n`alias <name> <alias>` - create a weapon alias\n`prune` - clear all unused weapons and put them in a file";
+		return "Create shorthand names for your favorite links, and share them in a snap.";
 	}
 	
 	@Override
 	public String getUsage() {
 		return "fw [create|update|remove|list|search|alias|prune] [weapon name] [weapon alias] [weapon link]";
+	}
+
+	@Override
+	public String getExamples() {
+		return "`fw dekuheadbang`\n" +
+				"`fw create dekuheadbang http://link.to.meme`\n" +
+				"`fw update dekuheadbang http://new.link.to.meme`\n" +
+				"`fw remove dekuheadbang`\n" +
+				"`fw list`\n" +
+				"`fw list all`\n" +
+				"`fw search deku`\n" +
+				"`fw alias dekuheadbang dekunod`\n" +
+				"`fw prune`";
 	}
 
 	@Override

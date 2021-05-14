@@ -34,6 +34,11 @@ public class When implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`when will I get fired?`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		String msg = answers[Utils.getRandom(answers.length)];
 		Matcher m = Pattern.compile("%T").matcher(msg);

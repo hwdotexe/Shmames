@@ -21,6 +21,11 @@ public class Minesweeper implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`minesweep 10`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			try {

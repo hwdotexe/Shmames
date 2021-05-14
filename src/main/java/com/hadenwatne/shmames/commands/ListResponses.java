@@ -32,6 +32,11 @@ public class ListResponses implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`listresponses RANDOM`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7})$").matcher(args);
 		

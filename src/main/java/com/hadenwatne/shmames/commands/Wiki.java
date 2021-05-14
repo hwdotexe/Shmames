@@ -23,6 +23,11 @@ public class Wiki implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`wiki distance between Earth and Jupiter`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			return Utils.getWolfram(args);

@@ -28,6 +28,11 @@ public class ListEmoteStats implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`listemotestats`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		StringBuilder statMsg = new StringBuilder("**" + lang.getMsg(Langs.EMOTE_STATS_TITLE) + "**\n");
 		HashMap<String, Integer> emStats = new HashMap<String, Integer>(brain.getEmoteStats());

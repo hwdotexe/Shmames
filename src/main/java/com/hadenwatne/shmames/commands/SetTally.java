@@ -26,6 +26,11 @@ public class SetTally implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`settally professor_trips_on_hdmi_cord 17`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([\\w\\d\\s]+)\\s(\\d{1,3})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		

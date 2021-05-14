@@ -27,6 +27,11 @@ public class Choose implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`choose Go outside or One more level`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^(.{1,}) or (.{1,})$", Pattern.CASE_INSENSITIVE).matcher(args);
 

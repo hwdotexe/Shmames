@@ -26,6 +26,11 @@ public class ResetEmoteStats implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`resetemotestats`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
 			brain.getEmoteStats().clear();

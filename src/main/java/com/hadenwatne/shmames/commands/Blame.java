@@ -33,6 +33,11 @@ public class Blame implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`blame cropcircles`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(brain != null) {
 			if(brain.getJinping()) {

@@ -26,6 +26,11 @@ public class AddTally implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`addtally professor_trips_on_hdmi_cord`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^[\\w\\d\\s]+$", Pattern.CASE_INSENSITIVE).matcher(args);
 

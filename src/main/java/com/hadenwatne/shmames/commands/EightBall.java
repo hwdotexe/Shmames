@@ -30,6 +30,11 @@ public class EightBall implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`8ball Am I a pretty girl?`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		return replies[Utils.getRandom(replies.length)];
 	}

@@ -25,6 +25,11 @@ public class DropTrigger implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`droptrigger explosion`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			if (!args.equalsIgnoreCase(Shmames.getBotName())) {

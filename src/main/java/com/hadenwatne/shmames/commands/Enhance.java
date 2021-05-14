@@ -34,6 +34,11 @@ public class Enhance implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`enhance Polka music`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			return answers[Utils.getRandom(answers.length)].replace("@PH", args);

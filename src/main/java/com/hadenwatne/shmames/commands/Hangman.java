@@ -43,6 +43,16 @@ public class Hangman implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`hangman start`\n" +
+				"`hangman start media,anime`\n" +
+				"`hangman start !dnd`\n" +
+				"`hangman guess A`\n" +
+				"`hangman guess The Answer`" +
+				"`hangman list`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^((start)|(guess)|(list))( !?([a-z\\s],?)+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 

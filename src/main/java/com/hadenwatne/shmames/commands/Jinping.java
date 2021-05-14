@@ -21,6 +21,11 @@ public class Jinping implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`jinping`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
 		

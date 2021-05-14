@@ -22,6 +22,11 @@ public class WhatAreTheOdds implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`whataretheodds I pass my practical exam`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0) {
 			for (ICommand c : CommandHandler.getLoadedCommands()) {

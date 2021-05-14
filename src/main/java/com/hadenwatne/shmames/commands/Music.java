@@ -39,6 +39,14 @@ public class Music implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`music play http://link.to.a.good.song`\n" +
+				"`music pause`\n" +
+				"`music queue myDopePlaylist`\n" +
+				"`music playlist list`";
+	}
+
+	@Override
 	public String[] getAliases() {
 		return new String[] {"music", "bops"};
 	}

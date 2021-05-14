@@ -15,10 +15,16 @@ public interface ICommand {
 	String getDescription();
 	
 	/**
-	 * Returns some help text for how to use this command.
+	 * Returns the basic command structure string.
 	 * @return Usage information.
 	 */
 	String getUsage();
+
+	/**
+	 * Returns command examples.
+	 * @return Command examples.
+	 */
+	String getExamples();
 	
 	/**
 	 * Runs the command code.

@@ -28,6 +28,11 @@ public class React implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`react dope ^^^`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m1 = Pattern.compile("^(\\w{2,16})\\s([\\^]{1,15})$").matcher(args);
 		Matcher m2 = Pattern.compile("^([\\^]{1,15})\\s(\\w{2,16})$").matcher(args);

@@ -29,6 +29,11 @@ public class Thoughts implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`thoughts The State of Ohio`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		if(args.length() > 0)
 			return answers[Utils.getRandom(answers.length)];

@@ -29,6 +29,11 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`addresponse RANDOM Your mother was a hamster!`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) ([\\w\\W]{3,})$").matcher(args);
 		

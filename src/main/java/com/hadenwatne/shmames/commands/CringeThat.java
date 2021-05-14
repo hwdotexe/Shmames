@@ -30,6 +30,12 @@ public class CringeThat implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`cringethat ^^^`\n" +
+				"`cringethat ^ 5`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^([\\^]{1,15})( \\d{1,2})?$").matcher(args);
 		

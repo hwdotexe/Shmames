@@ -28,6 +28,12 @@ public class Report implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`report bug Shmames isn't funny`\n" +
+				"`report feature Shmames rolls some dice`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		Matcher m = Pattern.compile("^((bug)|(feature))?\\s?(.{10,})$", Pattern.CASE_INSENSITIVE).matcher(args);
 		

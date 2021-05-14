@@ -33,7 +33,14 @@ public class Modify implements ICommand {
 	public String getUsage() {
 		return "modify [<setting> [new value]]";
 	}
-	
+
+	@Override
+	public String getExamples() {
+		return "`modify`\n" +
+				"`modify ALLOW_MODIFY ServerPolice`\n" +
+				"`modify SERVER_LANG`";
+	}
+
 	@Override
 	public String run(String args, User author, Message message) {
 		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);

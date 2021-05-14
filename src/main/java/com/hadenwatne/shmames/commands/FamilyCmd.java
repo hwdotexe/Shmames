@@ -24,12 +24,25 @@ public class FamilyCmd implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Manage your server family membership.\n`family create [name]` - Create a new server family\n`family add [name|code]` - Create a join code, or redeem a code to join a family\n`family view [name|emotes]` - View information about the family or list family emotes";
+		return "Manage your server family membership.";
 	}
 	
 	@Override
 	public String getUsage() {
 		return "family <create|add|view|remove> [family|code|emotes] [server]";
+	}
+
+	@Override
+	public String getExamples() {
+		return "`family create myAwesomeFamily`\n" +
+				"`family add myAwesomeFamily`\n" +
+				"`family add s3rv3rj0inc0d3`\n" +
+				"`family view`\n" +
+				"`family view myAwesomeFamily`\n" +
+				"`family view myServer`\n" +
+				"`family view emotes`\n" +
+				"`family remove myAwesomeFamily`\n" +
+				"`family remove myAwesomeFamily myServer`";
 	}
 
 	@Override

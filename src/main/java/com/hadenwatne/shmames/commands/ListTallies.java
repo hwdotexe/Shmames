@@ -26,6 +26,11 @@ public class ListTallies implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`listtallies`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(brain.getTallies());
 		

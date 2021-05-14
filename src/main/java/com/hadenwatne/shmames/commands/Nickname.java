@@ -31,6 +31,11 @@ public class Nickname implements ICommand {
 	}
 
 	@Override
+	public String getExamples() {
+		return "`nickname Stupid Bot`";
+	}
+
+	@Override
 	public String run(String args, User author, Message message) {
 		BotSetting canChangeNickname = brain.getSettingFor(BotSettingName.ALLOW_NICKNAME);
 
