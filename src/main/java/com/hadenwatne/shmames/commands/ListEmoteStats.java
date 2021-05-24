@@ -77,7 +77,7 @@ public class ListEmoteStats implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"listemotestats", "list emote stats"};
+		return new String[] {"listemotestats", "list emote stats", "show emote stats", "showemotestats"};
 	}
 
 	@Override
