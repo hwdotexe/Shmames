@@ -20,6 +20,11 @@ import com.hadenwatne.shmames.Utils;
 
 import javax.annotation.Nullable;
 
+/**
+ * This command is not exposed to users by default, and is here only for the benefit of the bot developer.
+ * The goal is to provide easy-access commands in the event of bot maintenance, or to gauge which bot features
+ * are used most.
+ */
 public class Dev implements ICommand {
 	@Override
 	public String getDescription() {
@@ -48,15 +53,6 @@ public class Dev implements ICommand {
 							return addStatus(m.group(2)) ? "Status change successful!" : "Invalid syntax or bot error.";
 						case "getguilds":
 							return getGuilds();
-						case "createapikey":
-							return createAPIKey();
-						case "deleteapikey":
-							deleteAPIKey(m.group(2));
-							return "Key deleted!";
-						case "listapikeys":
-							return listAPIKeys();
-						case "inviteme":
-							return inviteMe(m.group(2));
 						case "getcommandstats":
 							return getCommandStats();
 						case "clearcommandstats":
@@ -77,10 +73,6 @@ public class Dev implements ICommand {
 					return "**Developer Commands**\n"
 							+ "addStatus <type> <status>\n"
 							+ "getGuilds\n"
-							+ "createapikey\n"
-							+ "deleteapikey\n"
-							+ "listapikeys\n"
-							+ "inviteme <guildID>\n"
 							+ "getCommandStats\n"
 							+ "clearCommandStats\n"
 							+ "leave <guildID>\n"
@@ -150,50 +142,6 @@ public class Dev implements ICommand {
 		sb.insert(0, "**Guilds the bot runs on**\n");
 
 		return sb.toString();
-	}
-
-	private String createAPIKey() {
-		StringBuilder key = new StringBuilder();
-
-		for(int i=0; i<3; i++){
-			key.append(Utils.createID());
-		}
-
-		String newKey = key.toString();
-
-		Shmames.getBrains().getMotherBrain().getShmamesAPIKeys().add(newKey);
-
-		return newKey;
-	}
-
-	private void deleteAPIKey(String key) {
-		if(key != null) {
-			Shmames.getBrains().getMotherBrain().getShmamesAPIKeys().remove(key);
-		}
-	}
-
-	private String listAPIKeys() {
-		return Utils.generateList(Shmames.getBrains().getMotherBrain().getShmamesAPIKeys(), 1, false, false);
-	}
-
-	private String inviteMe(String g) {
-		Guild guild = Shmames.getJDA().getGuildById(g);
-
-		if(guild != null) {
-			List<TextChannel> tc = guild.getTextChannels();
-
-			for (TextChannel c : tc) {
-				try {
-					String code = c.createInvite().complete().getCode();
-
-					return "Here you go! " + code;
-				} catch (Exception ignored) {}
-			}
-
-			return "Guess I'm not allowed to do that...";
-		}else{
-			return "Guild not found!";
-		}
 	}
 
 	private String getCommandStats() {

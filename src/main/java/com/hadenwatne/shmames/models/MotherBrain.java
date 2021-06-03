@@ -11,7 +11,6 @@ public class MotherBrain {
 	private HashMap<String, ActivityType> statuses;
 	private HashMap<String, Integer> commandStats;
 	private List<Family> serverFamilies;
-	private List<String> shmamesAPIKeys;
 	private String botAPIKey;
 	private String botAPIKeySecondary;
 	private String tenorAPIKey;
@@ -21,7 +20,6 @@ public class MotherBrain {
 		statuses = new HashMap<String, ActivityType>();
 		commandStats = new HashMap<String, Integer>();
 		serverFamilies = new ArrayList<Family>();
-		shmamesAPIKeys = new ArrayList<>();
 		botAPIKey = "API_KEY_HERE";
 		botAPIKeySecondary = "API_KEY_HERE";
 		tenorAPIKey = "API_KEY_HERE";
@@ -54,14 +52,6 @@ public class MotherBrain {
 		}
 
 		return null;
-	}
-
-	public List<String> getShmamesAPIKeys() {
-		if(shmamesAPIKeys == null) {
-			shmamesAPIKeys = new ArrayList<>();
-		}
-
-		return shmamesAPIKeys;
 	}
 
 	public String getBotAPIKey(){
