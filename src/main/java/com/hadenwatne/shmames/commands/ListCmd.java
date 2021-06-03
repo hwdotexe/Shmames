@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,7 +138,7 @@ public class ListCmd implements ICommand {
 
 							if(existingList != null) {
 								if(existingList.getOwnerID().equals(userID)) {
-									brain.getUserLists(userID).remove((existingList));
+									brain.getUserLists().remove((existingList));
 
 									return lang.getMsg(Langs.LIST_DELETED, new String[]{existingList.getName()});
 								}else{
@@ -173,8 +172,10 @@ public class ListCmd implements ICommand {
 					// List lists
 					HashMap<String, String> listNames = new HashMap<>();
 
-					for(UserCustomList l : brain.getUserLists(userID)) {
-						listNames.put(l.getName(), l.getType().name());
+					for(UserCustomList l : brain.getUserLists()) {
+						if(l.getOwnerID().equals(userID)) {
+							listNames.put(l.getName(), l.getType().name());
+						}
 					}
 
 					String userLists = listNames.size() > 0

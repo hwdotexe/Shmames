@@ -161,20 +161,6 @@ public class Brain {
 		return triggers;
 	}
 
-	// TODO we can iterate straight from the field
-	public List<UserCustomList> getUserLists(String userID) {
-		List<UserCustomList> lists = new ArrayList<>();
-
-		for(UserCustomList l : getUserLists()){
-			if(l.getOwnerID().equals(userID)){
-				lists.add(l);
-			}
-		}
-
-		return lists;
-	}
-
-	// TODO clean this up after update
 	public List<UserCustomList> getUserLists() {
 		if(userListsv2 == null) {
 			userListsv2 = new ArrayList<>();
