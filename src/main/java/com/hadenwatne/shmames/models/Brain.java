@@ -14,7 +14,7 @@ public class Brain {
 	private HashMap<String, Integer> tallies;
 	private HashMap<String, Integer> emoteStats;
 	private HashMap<String, TriggerType> triggers;
-	private HashMap<String, List<UserCustomList>> userLists;
+	private List<UserCustomList> userListsv2;
 	private List<Response> triggerResponses;
 	private List<BotSetting> settings;
 	private List<String> feedback;
@@ -34,7 +34,7 @@ public class Brain {
 		tallies = new HashMap<String, Integer>();
 		emoteStats = new HashMap<String, Integer>();
 		triggers = new HashMap<String, TriggerType>();
-		userLists = new HashMap<String, List<UserCustomList>>();
+		userListsv2 = new ArrayList<>();
 		triggerResponses = new ArrayList<Response>();
 		settings = new ArrayList<BotSetting>();
 		feedback = new ArrayList<String>();
@@ -161,17 +161,26 @@ public class Brain {
 		return triggers;
 	}
 
-	// TODO remove the null check after update
+	// TODO we can iterate straight from the field
 	public List<UserCustomList> getUserLists(String userID) {
-		if(userLists == null) {
-			userLists = new HashMap<String, List<UserCustomList>>();
+		List<UserCustomList> lists = new ArrayList<>();
+
+		for(UserCustomList l : getUserLists()){
+			if(l.getOwnerID().equals(userID)){
+				lists.add(l);
+			}
 		}
 
-		if(!userLists.containsKey(userID)){
-			userLists.put(userID, new ArrayList<UserCustomList>());
+		return lists;
+	}
+
+	// TODO clean this up after update
+	public List<UserCustomList> getUserLists() {
+		if(userListsv2 == null) {
+			userListsv2 = new ArrayList<>();
 		}
 
-		return userLists.get(userID);
+		return userListsv2;
 	}
 	
 	public List<String> getFeedback(){

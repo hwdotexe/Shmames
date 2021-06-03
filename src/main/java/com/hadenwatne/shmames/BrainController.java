@@ -9,12 +9,10 @@ import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.BotSetting;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.MotherBrain;
+import com.hadenwatne.shmames.enums.UserListType;
+import com.hadenwatne.shmames.models.*;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 

@@ -4,6 +4,7 @@ import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.UserListType;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.UserCustomList;
@@ -13,7 +14,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,17 +28,17 @@ public class ListCmd implements ICommand {
 
 	@Override
 	public String getDescription() {
-		return "Create and manage custom lists for all your things.";
+		return "Create and manage custom lists for all your things. Other server members can add to public lists, or you can keep it private for just yourself.";
 	}
 
 	@Override
 	public String getUsage() {
-		return "list <create|add|remove|delete|random|list|[name]> [name] [item]";
+		return "list <create|add|remove|delete|random|list|[name]> [name] [public|private] [item]";
 	}
 
 	@Override
 	public String getExamples() {
-		return "`list create myList`\n" +
+		return "`list create myList public`\n" +
 				"`list add myList Eggs`\n" +
 				"`list remove myList 1`\n" +
 				"`list delete myList`\n" +
@@ -60,12 +61,13 @@ public class ListCmd implements ICommand {
 					if(cmdArgs != null) {
 						Matcher a = argsPattern.matcher(cmdArgs);
 
-						if(a.find()){
+						if(a.find() && a.group(3) != null){
 							String listName = a.group(1).toLowerCase();
+							UserListType listType = UserListType.parseOrPrivate(a.group(3));
 
 							if(getList(userID, listName) == null) {
-								UserCustomList newList = new UserCustomList(listName);
-								brain.getUserLists(userID).add((newList));
+								UserCustomList newList = new UserCustomList(userID, listType, listName);
+								brain.getUserLists().add((newList));
 
 								return lang.getMsg(Langs.LIST_CREATED);
 							}else{
@@ -111,14 +113,14 @@ public class ListCmd implements ICommand {
 								int index = Integer.parseInt(item) - 1;
 
 								if(existingList != null && index >= 0) {
-									if(existingList.getValues().size() > index) {
-										String removed = existingList.getValues().get(index);
-										existingList.getValues().remove(index);
+										if (existingList.getValues().size() > index) {
+											String removed = existingList.getValues().get(index);
+											existingList.getValues().remove(index);
 
-										return lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed});
-									}else{
-										return lang.getError(Errors.NOT_FOUND, true);
-									}
+											return lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed});
+										} else {
+											return lang.getError(Errors.NOT_FOUND, true);
+										}
 								}else{
 									return lang.getError(Errors.NOT_FOUND, true);
 								}
@@ -136,9 +138,13 @@ public class ListCmd implements ICommand {
 							UserCustomList existingList = getList(userID, listName);
 
 							if(existingList != null) {
-								brain.getUserLists(userID).remove((existingList));
+								if(existingList.getOwnerID().equals(userID)) {
+									brain.getUserLists(userID).remove((existingList));
 
-								return lang.getMsg(Langs.LIST_DELETED, new String[] { existingList.getName() });
+									return lang.getMsg(Langs.LIST_DELETED, new String[]{existingList.getName()});
+								}else{
+									return lang.getError(Errors.NO_PERMISSION_USER, true);
+								}
 							}else{
 								return lang.getError(Errors.NOT_FOUND, true);
 							}
@@ -165,14 +171,14 @@ public class ListCmd implements ICommand {
 					return lang.wrongUsage(getUsage());
 				case "list":
 					// List lists
-					List<String> listNames = new ArrayList<>();
+					HashMap<String, String> listNames = new HashMap<>();
 
 					for(UserCustomList l : brain.getUserLists(userID)) {
-						listNames.add(l.getName());
+						listNames.put(l.getName(), l.getType().name());
 					}
 
 					String userLists = listNames.size() > 0
-							? Utils.generateList(listNames, 1, false, false)
+							?  Utils.generateList(listNames, 1, false) //Utils.generateList(listNames, 1, false, false)
 							: "No lists found";
 
 					message.getChannel().sendMessage(buildListEmbed("Your Lists", userLists).build()).queue();
@@ -180,14 +186,14 @@ public class ListCmd implements ICommand {
 					return "";
 				default:
 					// List elements in the list
-					UserCustomList existingList = getList(userID, cmd.toLowerCase());
+					UserCustomList list = getList(userID, cmd.toLowerCase());
 
-					if(existingList != null) {
-						String listValues = existingList.getValues().size() > 0
-								? Utils.generateList(existingList.getValues(), 1, true, false)
+					if(list != null) {
+						String listValues = list.getValues().size() > 0
+								? Utils.generateList(list.getValues(), 1, true, false)
 								: "No items found";
 
-						message.getChannel().sendMessage(buildListEmbed(existingList.getName(), listValues).build()).queue();
+						message.getChannel().sendMessage(buildListEmbed(list.getName(), listValues).build()).queue();
 
 						return "";
 					}else{
@@ -226,14 +232,21 @@ public class ListCmd implements ICommand {
 	}
 
 	private UserCustomList getList(String userID, String name) {
-		List<UserCustomList> userLists = brain.getUserLists(userID);
+		UserCustomList list = null;
 
-		if(userLists != null) {
-			for (UserCustomList list : userLists) {
-				if(list.getName().equals(name)) {
-					return list;
-				}
+		for (UserCustomList l : brain.getUserLists()) {
+			if(l.getName().equalsIgnoreCase(name)) {
+				list = l;
+				break;
 			}
+		}
+
+		if(list == null) {
+			return null;
+		}
+
+		if(list.getType() == UserListType.PUBLIC || list.getOwnerID().equals(userID)) {
+			return list;
 		}
 
 		return null;

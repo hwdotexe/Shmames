@@ -30,7 +30,7 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run(String args, User author, Message message) {
-		String list = Utils.generateList(brain.getTriggers(), -1);
+		String list = Utils.generateList(brain.getTriggers(), -1, true);
 
 		return lang.getMsg(Langs.TRIGGER_LIST)+"\n"+list;
 	}

@@ -348,7 +348,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.generateList(fwSorted, -1);
+		String list = Utils.generateList(fwSorted, -1, true);
 
 		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> None Found");
 	}
@@ -363,7 +363,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.generateList(fwSorted, -1);
+		String list = Utils.generateList(fwSorted, -1, true);
 
 		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> No Results");
 	}

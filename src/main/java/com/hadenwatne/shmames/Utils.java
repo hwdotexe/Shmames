@@ -321,7 +321,7 @@ public class Utils {
 	 * @param perRow The number of items to have per row.
 	 * @return The generated list.
 	 */
-	public static <T> String generateList(HashMap<String, T> items, int perRow) {
+	public static <T> String generateList(HashMap<String, T> items, int perRow, boolean indented) {
 		StringBuilder list = new StringBuilder();
 
 		int inRow = 0;
@@ -330,19 +330,25 @@ public class Utils {
 				inRow++;
 
 				if (inRow > perRow) {
-					list.append("\n> ");
+					list.append("\n");
+
+					if(indented)
+						list.append("> ");
+
 					inRow = 1;
 				} else {
 					if (list.length() > 0)
 						list.append("  ");
 					else
-						list.append("> ");
+						if(indented)
+							list.append("> ");
 				}
 			} else {
 				if (list.length() > 0)
 					list.append("  ");
 				else
-					list.append("> ");
+					if(indented)
+						list.append("> ");
 			}
 
 			list.append("`");

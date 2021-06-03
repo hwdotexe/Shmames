@@ -34,7 +34,7 @@ public class ListTallies implements ICommand {
 	public String run(String args, User author, Message message) {
 		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(brain.getTallies());
 		
-		String tallies = Utils.generateList(tSorted, -1);
+		String tallies = Utils.generateList(tSorted, -1, true);
 
 		return lang.getMsg(Langs.TALLY_LIST)+"\n"+tallies;
 	}
