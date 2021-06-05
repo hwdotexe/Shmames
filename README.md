@@ -1,4 +1,4 @@
-[![Build](https://github.com/hwdotexe/Shmames/actions/workflows/maven.yml/badge.svg)](https://github.com/hwdotexe/Shmames/actions/workflows/maven.yml)
+[![Build](https://github.com/hwdotexe/Shmames/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/hwdotexe/Shmames/actions/workflows/maven.yml)
 
 # Welcome to Shmames
 The Discord bot that's changing the world.
