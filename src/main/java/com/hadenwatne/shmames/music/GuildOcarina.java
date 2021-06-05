@@ -228,7 +228,7 @@ public class GuildOcarina extends AudioEventAdapter {
 	
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-		// Audio track has been unable to provide us any audio, might want to just start a new track
 		ShmamesLogger.log(LogType.ERROR, "A music track is stuck: "+track.getInfo().title);
+		this.skip();
 	}
 }

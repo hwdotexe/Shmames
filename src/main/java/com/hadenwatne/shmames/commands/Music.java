@@ -305,7 +305,7 @@ public class Music implements ICommand {
 				switch (subCmd) {
 					case "c":
 					case "create":
-						Matcher create = Pattern.compile("^([a-z0-9_]+)\\s?(https?://[./\\w\\d-_&?=*%]+)?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+						Matcher create = Pattern.compile("^([a-z0-9_]+)\\s?(https?://[./\\w\\d-_&?=*%:]+)?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
 
 						if (create.find()) {
 							return cmdPlaylistCreate(b, create.group(1), create.group(2), create.group(3));
@@ -314,7 +314,7 @@ public class Music implements ICommand {
 						}
 					case "a":
 					case "add":
-						Matcher add = Pattern.compile("^([a-z0-9_]+)\\s(https?://[./\\w\\d-_&?=*%]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+						Matcher add = Pattern.compile("^([a-z0-9_]+)\\s(https?://[./\\w\\d-_&?=*%:]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
 
 						if (add.find()) {
 							return cmdPlaylistAdd(b, add.group(1), add.group(2), add.group(3));
@@ -473,15 +473,22 @@ public class Music implements ICommand {
 
 	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
 		EmbedBuilder eBuilder = buildBasicEmbed();
-		String videoID = extractVideoID(t.getInfo().uri);
 
-		if(videoID != null) {
-			eBuilder.setThumbnail("http://img.youtube.com/vi/"+videoID+"/1.jpg");
+		if (!t.getInfo().isStream) {
+			String videoID = extractVideoID(t.getInfo().uri);
+
+			if (videoID != null) {
+				eBuilder.setThumbnail("http://img.youtube.com/vi/" + videoID + "/1.jpg");
+			}
+
+			eBuilder.setTitle(t.getInfo().title, t.getInfo().uri);
+			eBuilder.addField("Looping", o.isLooping() ? "Yes" : "No", true);
+			eBuilder.addField("Position", getHumanTimeCode(t.getPosition()) + " / " + getHumanTimeCode(t.getDuration()), true);
+		}else{
+			eBuilder.setThumbnail("https://www.screensaversplanet.com/img/screenshots/screensavers/large/the-matrix-1.png");
+			eBuilder.setTitle("Livestream");
+			eBuilder.addField("Info", Shmames.getBotName()+" is currently playing from an audio livestream.", false);
 		}
-
-		eBuilder.setTitle(t.getInfo().title, t.getInfo().uri);
-		eBuilder.addField("Looping", o.isLooping() ? "Yes" : "No", true);
-		eBuilder.addField("Position", getHumanTimeCode(t.getPosition()) + " / " + getHumanTimeCode(t.getDuration()), true);
 
 		c.sendMessage(eBuilder.build()).queue();
 	}
