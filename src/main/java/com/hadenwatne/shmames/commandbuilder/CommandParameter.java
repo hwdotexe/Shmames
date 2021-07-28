@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandParameter {
-    private String name;
-    private String description;
-    private Boolean isRequired;
-    private ParameterType type;
+    private final String name;
+    private final String description;
+    private final Boolean isRequired;
+    private final ParameterType type;
     private Pattern matchPattern;
     private List<String> selectionOptions;
 
@@ -31,24 +31,6 @@ public class CommandParameter {
         this.selectionOptions = new ArrayList<>();
 
         setInitialMatchPattern();
-    }
-
-    public CommandParameter(String name, String description, ParameterType type, Boolean isRequired, Pattern pattern) {
-        this.name = name;
-        this.description = description;
-        this.isRequired = isRequired;
-        this.type = type;
-        this.selectionOptions = new ArrayList<>();
-        this.matchPattern = pattern;
-    }
-
-    public CommandParameter(String name, String description, ParameterType type, Boolean isRequired, Pattern pattern, List<String> selectionOptions) {
-        this.name = name;
-        this.description = description;
-        this.isRequired = isRequired;
-        this.type = type;
-        this.selectionOptions = selectionOptions;
-        this.matchPattern = pattern;
     }
 
     public String getName() {
@@ -84,11 +66,34 @@ public class CommandParameter {
     public CommandParameter addSelectionOptions(String... options) {
         this.selectionOptions.addAll(Arrays.asList(options));
 
+        setInitialMatchPattern();
+
         return this;
     }
 
     private void setInitialMatchPattern() {
         switch(this.type) {
+            case SELECTION:
+                StringBuilder sb = new StringBuilder();
+                StringBuilder psb = new StringBuilder();
+
+                sb.append("(");
+
+                for(String o : this.selectionOptions) {
+                    if(psb.length() > 0) {
+                        psb.append("|");
+                    }
+
+                    psb.append("(");
+                    psb.append(o);
+                    psb.append(")");
+                }
+
+                sb.append(psb);
+                sb.append(")");
+
+                this.matchPattern = Pattern.compile("(?<"+this.name+">"+sb+")");
+                break;
             case INTEGER:
                 this.matchPattern = Pattern.compile("(?<"+this.name+">\\d+)");
                 break;

@@ -17,13 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ChatListener extends ListenerAdapter {
-	private CommandHandler cmd;
-	private Lang defLang;
-	
-	public ChatListener() {
-		cmd = new CommandHandler();
-		defLang = Shmames.getDefaultLang();
-	}
+	private final Lang defaultLang = Shmames.getDefaultLang();
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
@@ -48,9 +42,9 @@ public class ChatListener extends ListenerAdapter {
 								String command = m.group(2).trim();
 
 								// Send to the command handler for further processing.
-								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
+								Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
 							}else{
-								e.getTextChannel().sendMessage(defLang.getError(Errors.HEY_THERE, false, new String[] { Shmames.getBotName() })).queue();
+								e.getTextChannel().sendMessage(defaultLang.getError(Errors.HEY_THERE, false, new String[] { Shmames.getBotName() })).queue();
 							}
 
 							return;
@@ -115,7 +109,7 @@ public class ChatListener extends ListenerAdapter {
 				if (message.toLowerCase().startsWith(Shmames.getBotName().toLowerCase())) {
 					String command = message.substring(Shmames.getBotName().length()).trim();
 
-					cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);
+					Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), e.getAuthor(), null);
 				}
 			}
 		}

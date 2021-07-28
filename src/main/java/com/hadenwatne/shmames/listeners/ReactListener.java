@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.Brain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ReactListener extends ListenerAdapter {
@@ -50,7 +51,6 @@ public class ReactListener extends ListenerAdapter {
 
 				if (emo.getId().equals(approvalEmote)) {
 					goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete(), b);
-					return;
 				}
 			}
 		}
@@ -89,13 +89,14 @@ public class ReactListener extends ListenerAdapter {
 					m.getChannel().deleteMessageById(m.getIdLong()).queue();
 
 					for (ICommand c : CommandHandler.getLoadedCommands()) {
-						for (String a : c.getAliases()) {
-							if (a.equalsIgnoreCase("addtally")) {
-								c.setRunContext(Shmames.getLangFor(b), b);
-								String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-								m.getChannel().sendMessage(response).queue();
-								return;
-							}
+						if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
+							HashMap<String, String> tallyArgs = new HashMap<>();
+
+							tallyArgs.put("toTally", toTally);
+
+							String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), m.getChannel());
+							m.getChannel().sendMessage(response).queue();
+							return;
 						}
 					}
 				} catch (Exception ex) {
@@ -135,13 +136,14 @@ public class ReactListener extends ListenerAdapter {
 
 				// Process.
 				for (ICommand c : CommandHandler.getLoadedCommands()) {
-					for (String a : c.getAliases()) {
-						if (a.equalsIgnoreCase("addtally")) {
-							c.setRunContext(Shmames.getLangFor(b), b);
-							String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-							m.getChannel().sendMessage(response).queue();
-							return;
-						}
+					if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
+						HashMap<String, String> tallyArgs = new HashMap<>();
+
+						tallyArgs.put("toTally", toTally);
+
+						String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), m.getChannel());
+						m.getChannel().sendMessage(response).queue();
+						return;
 					}
 				}
 			}

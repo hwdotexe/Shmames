@@ -29,6 +29,7 @@ public final class Shmames {
 	private static LangLoader langs;
 	private static String botName;
 	private static MusicManager musicManager;
+	private static CommandHandler commandHandler;
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaultBotSettings;
@@ -66,6 +67,9 @@ public final class Shmames {
 				// Set the bot name.
 				botName = getJDA().getSelfUser().getName();
 
+				// Load commands.
+				commandHandler = new CommandHandler();
+
 				// Begin listening for events.
 				jda.addEventListener(new ChatListener());
 				jda.addEventListener(new SlashCommandListener());
@@ -96,6 +100,10 @@ public final class Shmames {
 
 	public static MusicManager getMusicManager() {
 		return musicManager;
+	}
+
+	public static CommandHandler getCommandHandler() {
+		return commandHandler;
 	}
 	
 	/**

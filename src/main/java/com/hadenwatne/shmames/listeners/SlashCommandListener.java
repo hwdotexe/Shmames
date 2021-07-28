@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.Shmames;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -9,6 +10,6 @@ public class SlashCommandListener extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event)
     {
-        event.reply("Slash Commands are coming soon™").queue();
+        Shmames.getCommandHandler().PerformCommand(event, event.getChannel(), event.getUser(), event.getGuild());
     }
 }

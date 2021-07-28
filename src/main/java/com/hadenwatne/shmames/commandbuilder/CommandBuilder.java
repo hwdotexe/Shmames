@@ -42,28 +42,7 @@ public class CommandBuilder {
                 sb.append("^");
             }
 
-            switch(p.getType()) {
-                case SELECTION:
-                    StringBuilder psb = new StringBuilder();
-
-                    sb.append("(");
-
-                    for(String o : p.getSelectionOptions()) {
-                        if(psb.length() > 0) {
-                            psb.append("|");
-                        }
-
-                        psb.append("(");
-                        psb.append(o);
-                        psb.append(")");
-                    }
-
-                    sb.append(psb);
-                    sb.append(")");
-                    break;
-                default:
-                    sb.append(p.getPattern().pattern());
-            }
+            sb.append(p.getPattern().pattern());
 
             if(!p.isRequired()) {
                 sb.append("?");

@@ -154,6 +154,10 @@ public class CommandHandler {
 			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), message);
 		}
 	}
+
+	public void PerformCommand(SlashCommandEvent event, MessageChannel channel, User author, @Nullable Guild server) {
+		event.reply("Slash commands are under development!").queue();
+	}
 	
 	/**
 	 * Gets a list of commands actively loaded.
@@ -189,7 +193,7 @@ public class CommandHandler {
 					Matcher aliasMatcher = Pattern.compile("^(" + a + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
 					if(aliasMatcher.matches()) {
-						return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
+						return new ParsedCommandResult(c, aliasMatcher.group(2) != null ? aliasMatcher.group(2).trim() : "");
 					}
 				}
 			}
@@ -212,5 +216,34 @@ public class CommandHandler {
 		int count = stats.getOrDefault(primaryCommandName, 1) + 1;
 
 		stats.put(primaryCommandName, count);
+	}
+
+	private void updateSlashCommands(List<ICommand> commands) {
+		// Update command syntax on individual test servers.
+		if(Shmames.isDebug) {
+			for(Guild g : Shmames.getJDA().getGuilds()) {
+				CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById(g.getId()).updateCommands();
+
+				for(ICommand command : commands) {
+					cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+				}
+
+				cUpdate.queue();
+			}
+
+			return;
+		}
+
+		// Update command syntax if configured to do so.
+		if(Shmames.getBrains().getMotherBrain().doUpdateDiscordSlashCommands()) {
+			CommandListUpdateAction cUpdate = Shmames.getJDA().updateCommands();
+
+			for(ICommand command : commands) {
+				cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+			}
+
+			cUpdate.queue();
+			Shmames.getBrains().getMotherBrain().setUpdateDiscordSlashCommands(false);
+		}
 	}
 }
