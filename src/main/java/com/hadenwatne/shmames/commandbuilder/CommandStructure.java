@@ -9,11 +9,21 @@ public class CommandStructure {
     private String name;
     private List<String> aliases;
     private List<CommandParameter> parameters;
+    private Pattern pattern;
+    private String usage;
 
     public CommandStructure(String name) {
         this.name = name;
         this.aliases = new ArrayList<>();
         this.parameters = new ArrayList<>();
+    }
+
+    public Pattern getPattern() {
+        return this.pattern;
+    }
+
+    public String getUsage() {
+        return this.usage;
     }
 
     public String getName() {
@@ -42,6 +52,13 @@ public class CommandStructure {
 
     public CommandStructure addParameters(CommandParameter... parameters) {
         Collections.addAll(this.parameters, parameters);
+
+        return this;
+    }
+
+    public CommandStructure build() {
+        this.pattern = CommandBuilder.BuildPattern(this);
+        this.usage = CommandBuilder.BuildUsage(this);
 
         return this;
     }

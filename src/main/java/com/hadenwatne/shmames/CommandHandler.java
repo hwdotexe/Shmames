@@ -130,10 +130,8 @@ public class CommandHandler {
 				return;
 			}
 
-			// TODO around here, we should perform a validation check on the command, and pass through the correct
-			// TODO parameters for ICommand
 			// Validate the command usage.
-			Matcher usageMatcher = CommandBuilder.BuildPattern(c.getCommandStructure()).matcher(args);
+			Matcher usageMatcher = c.getCommandStructure().getPattern().matcher(args);
 
 			if(usageMatcher.matches()) {
 				// Build map of arguments

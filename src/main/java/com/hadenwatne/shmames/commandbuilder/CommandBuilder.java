@@ -75,6 +75,53 @@ public class CommandBuilder {
         return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
     }
 
+    public static String BuildUsage(CommandStructure command) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(command.getName());
+
+        for(CommandParameter p : command.getParameters()) {
+            sb.append(" ");
+
+            if(p.isRequired()) {
+                sb.append("<");
+                sb.append(buildUsageLabel(p));
+                sb.append(">");
+            }else{
+                sb.append("[");
+                sb.append(buildUsageLabel(p));
+                sb.append("]");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private static String buildUsageLabel(CommandParameter p) {
+        StringBuilder sb = new StringBuilder();
+
+        if(p.getType() == ParameterType.SELECTION) {
+            sb.append("[");
+
+            StringBuilder ssb = new StringBuilder();
+
+            for(String s : p.getSelectionOptions()) {
+                if(ssb.length() > 0) {
+                    ssb.append("|");
+                }
+
+                ssb.append(s);
+            }
+
+            sb.append(ssb);
+            sb.append("]");
+        } else {
+            sb.append(p.getName());
+        }
+
+        return sb.toString();
+    }
+
     private static OptionType MapParameterType(ParameterType type) {
         switch(type) {
             case INTEGER:

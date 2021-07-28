@@ -41,7 +41,8 @@ public class AddResponse implements ICommand {
 				.addParameters(
 						triggerType,
 						new CommandParameter("responseText", "The actual text of this response", ParameterType.ANY)
-				);
+				)
+				.build();
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class AddResponse implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "addresponse <triggerType> <responseText>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
