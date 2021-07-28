@@ -11,10 +11,13 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 public class TypingTask extends TimerTask{
 	private String response;
 	private Message trigger;
+	private MessageChannel channel;
+	private boolean doReply;
 	
-	public TypingTask(String response, Message trigger) {
+	public TypingTask(String response, Message trigger, boolean doReply) {
 		this.response = response;
 		this.trigger = trigger;
+		this.doReply = doReply;
 
 		if(response != null && response.length() > 0) {
 			trigger.getChannel().sendTyping().queue();
@@ -23,7 +26,20 @@ public class TypingTask extends TimerTask{
 			t.schedule(this, 500);
 		}
 	}
-	
+
+	public TypingTask(String response, MessageChannel channel, boolean doReply) {
+		this.response = response;
+		this.channel = channel;
+		this.doReply = doReply;
+
+		if(response != null && response.length() > 0) {
+			channel.sendTyping().queue();
+
+			Timer t = new Timer();
+			t.schedule(this, 500);
+		}
+	}
+
 	public void run() {
 		for(String m : Utils.splitString(response, 2000)){
 			if(m.length() > 0) {
@@ -35,6 +51,10 @@ public class TypingTask extends TimerTask{
 	}
 
 	private void dispatchMessage(String message) {
-		trigger.reply(message).queue(success -> {}, error -> trigger.getChannel().sendMessage(message).queue());
+		if(doReply) {
+			trigger.reply(message).queue(success -> {}, error -> trigger.getChannel().sendMessage(message).queue());
+		} else {
+			channel.sendMessage(message).queue();
+		}
 	}
 }

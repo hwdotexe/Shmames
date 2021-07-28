@@ -7,27 +7,26 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.ParsedCommandResult;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
 	private static List<ICommand> commands;
-	private Lang lang;
+	private final Lang defaultLang = Shmames.getDefaultLang();
 
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
-		lang = Shmames.getDefaultLang();
 
 //		// TODO reset all commands
 //		List<Command> cmds = Shmames.getJDA().retrieveCommands().complete();
@@ -48,6 +47,7 @@ public class CommandHandler {
 //		cUpdate.queue();
 //		// TODO End
 
+		commands.add(new AddResponse());
 		commands.add(new AddTally());
 		commands.add(new AddTrigger());
 		commands.add(new Blame());
@@ -101,56 +101,60 @@ public class CommandHandler {
 	 */
 	public void PerformCommand(String cmd, Message message, User author, @Nullable Guild server) {
 		if(cmd.length() == 0) {
-			sendMessageResponse(lang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() }), message);
+			sendMessageResponse(defaultLang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() }), message);
 			return;
 		}
 
-		ShmamesLogger.log(LogType.COMMAND, "["+ (server != null ? server.getId() : "Private Message") + "/" + author.getName() +"] "+ cmd);
-
-		lang = Shmames.getLangFor(server);
 		Brain brain = null;
+		Lang lang = Shmames.getDefaultLang();
 
-		if(message.isFromGuild()) {
+		if(server != null) {
+			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ cmd);
+			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
+		} else {
+			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ cmd);
 		}
-		
-		for(ICommand c : commands) {
-			for(String alias : c.getAliases()) {
-				Matcher m = Pattern.compile("^("+alias+")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
-				if(m.matches()){
-					logCountCommandUsage(c);
+		ParsedCommandResult parsedCommand = getMatchedCommand(cmd);
 
-					if(server == null && c.requiresGuild()) {
-						sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
+		if(parsedCommand != null) {
+			ICommand c = parsedCommand.getCommand();
+			String args = parsedCommand.getArguments();
 
-						return;
-					}
+			logCountCommandUsage(c);
 
-					String commandArguments = m.group(2) != null ? m.group(2).trim() : "";
+			if(server == null && c.requiresGuild()) {
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
 
-					c.setRunContext(lang, brain);
-
-					// Run the command async and send a message back when it finishes.
-					try {
-						CompletableFuture.supplyAsync(() -> c.run(commandArguments, author, message))
-								.thenAccept(r -> sendMessageResponse(r, message))
-								.exceptionally(exception -> {
-									sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
-									ShmamesLogger.logException(exception);
-									return null;
-								});
-					}catch (Exception e){
-						ShmamesLogger.logException(e);
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), message);
-					}
-
-					return;
-				}
+				return;
 			}
-		}
 
-		sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), message);
+			// TODO around here, we should perform a validation check on the command, and pass through the correct
+			// TODO parameters for ICommand
+			// Validate the command usage.
+			Matcher usageMatcher = CommandBuilder.BuildPattern(c.getCommandStructure()).matcher(args);
+
+			if(usageMatcher.matches()) {
+				// Build map of arguments
+				HashMap<String, String> namedArguments = new HashMap<>();
+
+				for(CommandParameter cp : c.getCommandStructure().getParameters()) {
+					String group = usageMatcher.group(cp.getName());
+
+					if(group != null) {
+						namedArguments.put(cp.getName(), group);
+					}
+				}
+
+				// Execute the command
+				executeCommand(lang, brain, c, namedArguments, author, message.getChannel());
+			}else{
+				sendMessageResponse(lang.wrongUsage(c.getUsage()), message);
+			}
+		} else {
+			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), message);
+		}
 	}
 	
 	/**
@@ -161,12 +165,51 @@ public class CommandHandler {
 		return commands;
 	}
 
+	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, String> arguments, User author, MessageChannel channel) {
+		try {
+			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, channel))
+					.thenAccept(r -> sendMessageResponse(r, channel))
+					.exceptionally(exception -> {
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), channel);
+						ShmamesLogger.logException(exception);
+						return null;
+					});
+		}catch (Exception e){
+			ShmamesLogger.logException(e);
+			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), channel);
+		}
+	}
+
+	private ParsedCommandResult getMatchedCommand(String cmd) {
+		for(ICommand c : commands) {
+			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+
+			if (nameMatcher.matches()) {
+				return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
+			} else {
+				for(String a : c.getCommandStructure().getAliases()) {
+					Matcher aliasMatcher = Pattern.compile("^(" + a + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+
+					if(aliasMatcher.matches()) {
+						return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private void sendMessageResponse(String r, Message msg){
-		new TypingTask(r, msg);
+		new TypingTask(r, msg, true);
+	}
+
+	private void sendMessageResponse(String r, MessageChannel chn){
+		new TypingTask(r, chn, false);
 	}
 
 	private void logCountCommandUsage(ICommand command) {
-		String primaryCommandName = command.getAliases()[0].toLowerCase();
+		String primaryCommandName = command.getCommandStructure().getName().toLowerCase();
 		HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
 		int count = stats.getOrDefault(primaryCommandName, 1) + 1;
 

@@ -1,8 +1,15 @@
 package com.hadenwatne.shmames.commands;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
@@ -20,40 +27,36 @@ import javax.annotation.Nullable;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 public class AddResponse implements ICommand {
-	private Lang lang;
-	private Brain brain;
-	private CommandData commandData;
-	private final String[] aliases = new String[] {"addresponse", "add response"};
-	private final String description = "Adds a new response to the list for the chosen response type. These are chosen at random.";
+	private final CommandStructure commandStructure;
 
 	public AddResponse() {
-		this.commandData = new CommandData(getAliases()[0], getDescription());
-
-		OptionData triggerType = new OptionData(STRING, "triggertype", "The trigger type to provoke this response.", true);
+		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger to provoke this response", ParameterType.SELECTION);
 
 		for(TriggerType type : TriggerType.values()) {
-			triggerType.addChoice(type.name(), type.name());
+			triggerType.addSelectionOptions(type.name());
 		}
 
-		this.commandData.addOptions(
-				triggerType,
-				new OptionData(STRING, "responsetext", "The actual response text.", true)
-		);
+		this.commandStructure = CommandBuilder.Create("addresponse")
+				.addAlias("add response")
+				.addParameters(
+						triggerType,
+						new CommandParameter("responseText", "The actual text of this response", ParameterType.ANY)
+				);
 	}
 
 	@Override
-	public CommandData getCommandData() {
-		return this.commandData;
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
 	public String getDescription() {
-		return this.description;
+		return "Adds a new random response for the chosen trigger type.";
 	}
 	
 	@Override
 	public String getUsage() {
-		return "addresponse <responseType> <responseText>";
+		return "addresponse <triggerType> <responseText>";
 	}
 
 	@Override
@@ -62,46 +65,27 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public String run (User author, MessageChannel channel) {
-		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) ([\\w\\W]{3,})$").matcher(args);
-		
-		if(m.find()) {
-			String newresp = m.group(2);
-			String nrtype = m.group(1);
+	public String run (Lang lang, Brain brain, HashMap<String, String> args, User author, MessageChannel channel) {
+		String nrtype = args.get("triggerType");
+		String newresp = args.get("responseText");
 
-			// Easter egg: "ronald" -> "hate"
-			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
-	
-			if (TriggerType.byName(nrtype) != null) {
-				brain.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
+		// Safety check
+		if (TriggerType.byName(nrtype) != null) {
+			brain.getTriggerResponses().add(new Response(TriggerType.byName(nrtype), newresp));
 
-				return lang.getMsg(Langs.ITEM_ADDED);
-			} else {
-				StringBuilder types = new StringBuilder();
-
-				for (TriggerType t : TriggerType.values()) {
-					if(types.length() > 0)
-						types.append(", ");
-					
-					types.append("`").append(t.name()).append("`");
-				}
-
-				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
-			}
+			return lang.getMsg(Langs.ITEM_ADDED);
 		} else {
-			return lang.wrongUsage(getUsage());
+			StringBuilder types = new StringBuilder();
+
+			for (TriggerType t : TriggerType.values()) {
+				if(types.length() > 0)
+					types.append(", ");
+
+				types.append("`").append(t.name()).append("`");
+			}
+
+			return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 		}
-	}
-
-	@Override
-	public String[] getAliases() {
-		return this.aliases;
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
 	}
 	
 	@Override
