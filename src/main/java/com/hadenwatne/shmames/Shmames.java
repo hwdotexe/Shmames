@@ -9,6 +9,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
+import com.hadenwatne.shmames.listeners.SlashCommandListener;
 import com.hadenwatne.shmames.models.BotSetting;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
@@ -67,6 +68,7 @@ public final class Shmames {
 
 				// Begin listening for events.
 				jda.addEventListener(new ChatListener());
+				jda.addEventListener(new SlashCommandListener());
 				jda.addEventListener(new ReactListener());
 				jda.addEventListener(new FirstJoinListener());
 

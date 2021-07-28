@@ -14,6 +14,9 @@ import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
 
@@ -25,8 +28,26 @@ public class CommandHandler {
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
 		lang = Shmames.getDefaultLang();
-		
-		commands.add(new AddResponse());
+
+//		// TODO reset all commands
+//		List<Command> cmds = Shmames.getJDA().retrieveCommands().complete();
+//
+//		for(Command c : cmds) {
+//			Shmames.getJDA().deleteCommandById(c.getId()).queue();
+//		}
+
+//		// TODO temporary patch - Guild ID 344604589976453144
+//		CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById("344604589976453144").updateCommands();
+//
+//		AddResponse cmd = new AddResponse();
+//
+//		cUpdate.addCommands(cmd.getCommandData());
+//
+//		commands.add(cmd);
+//
+//		cUpdate.queue();
+//		// TODO End
+
 		commands.add(new AddTally());
 		commands.add(new AddTrigger());
 		commands.add(new Blame());

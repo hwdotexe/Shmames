@@ -3,11 +3,22 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public interface ICommand {
+	/**
+	 * Returns the CommandData object used in slash
+	 * commands and to standardize parameters.
+	 * @return CommandData
+	 */
+	CommandData getCommandData();
+
 	/**
 	 * Returns a description of the command.
 	 * @return About information.
@@ -33,7 +44,7 @@ public interface ICommand {
 	 * @param message The message that triggered this command.
 	 * @return A string response, if applicable.
 	 */
-	String run(String args, User author, Message message);
+	String run(List<OptionMapping> args, User author, MessageChannel channel);
 	
 	/**
 	 * Returns a list of command aliases for this item.

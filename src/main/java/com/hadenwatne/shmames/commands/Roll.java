@@ -62,7 +62,7 @@ public class Roll implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"roll a", "roll"};
+		return new String[] {"roll"};
 	}
 
 	@Override

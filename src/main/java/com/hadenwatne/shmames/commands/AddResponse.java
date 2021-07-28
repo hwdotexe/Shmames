@@ -6,21 +6,49 @@ import java.util.regex.Pattern;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Response;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import javax.annotation.Nullable;
+
+import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 public class AddResponse implements ICommand {
 	private Lang lang;
 	private Brain brain;
+	private CommandData commandData;
+	private final String[] aliases = new String[] {"addresponse", "add response"};
+	private final String description = "Adds a new response to the list for the chosen response type. These are chosen at random.";
+
+	public AddResponse() {
+		this.commandData = new CommandData(getAliases()[0], getDescription());
+
+		OptionData triggerType = new OptionData(STRING, "triggertype", "The trigger type to provoke this response.", true);
+
+		for(TriggerType type : TriggerType.values()) {
+			triggerType.addChoice(type.name(), type.name());
+		}
+
+		this.commandData.addOptions(
+				triggerType,
+				new OptionData(STRING, "responsetext", "The actual response text.", true)
+		);
+	}
+
+	@Override
+	public CommandData getCommandData() {
+		return this.commandData;
+	}
 
 	@Override
 	public String getDescription() {
-		return "Adds a new response to the list for the chosen response type. These are " +
-				"chosen at random.";
+		return this.description;
 	}
 	
 	@Override
@@ -34,7 +62,7 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
+	public String run (User author, MessageChannel channel) {
 		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) ([\\w\\W]{3,})$").matcher(args);
 		
 		if(m.find()) {
@@ -67,7 +95,7 @@ public class AddResponse implements ICommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"addresponse", "add response"};
+		return this.aliases;
 	}
 
 	@Override
