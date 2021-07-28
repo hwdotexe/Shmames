@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 import com.hadenwatne.shmames.models.Brain;
 
-public class JinpingTask extends TimerTask{
+public class JinpingTask extends TimerTask {
 	private Brain b;
 	
 	public JinpingTask(Brain brain) {

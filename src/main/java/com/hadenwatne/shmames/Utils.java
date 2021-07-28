@@ -14,8 +14,10 @@ import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.BotSetting;
 import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.json.JSONArray;
@@ -622,5 +624,34 @@ public class Utils {
 		} catch (Exception ignored) {}
 
 		return false;
+	}
+
+	/**
+	 * Returns a list of other Guilds that the provided Guild is connected to via
+	 * Shmames Family, excluding the Guild that was passed in.
+	 * @param g The Guild to search with.
+	 * @return A list of connected Guilds, exclusively.
+	 */
+	public static List<Guild> GetConnectedFamilyGuilds(Guild g) {
+		List<Guild> guilds = new ArrayList<>();
+
+		for(String fid : Shmames.getBrains().getBrain(g.getId()).getFamilies()){
+			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+
+			for(long mg : f.getMemberGuilds()) {
+				if(mg != g.getIdLong()) {
+					Guild familyGuild = Shmames.getJDA().getGuildById(mg);
+
+					if(familyGuild != null) {
+						guilds.add(familyGuild);
+					} else {
+						// The guild came back null, so remove it from the Family.
+						f.getMemberGuilds().remove(mg);
+					}
+				}
+			}
+		}
+
+		return guilds;
 	}
 }
