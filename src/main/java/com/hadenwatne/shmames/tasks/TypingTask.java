@@ -7,6 +7,7 @@ import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class TypingTask extends TimerTask{
 	private String response;

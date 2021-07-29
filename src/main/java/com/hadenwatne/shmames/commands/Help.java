@@ -2,29 +2,23 @@ package com.hadenwatne.shmames.commands;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.hadenwatne.shmames.CommandHandler;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
-
-import javax.annotation.Nullable;
 
 public class Help implements ICommand {
 	private final CommandStructure commandStructure;
@@ -34,7 +28,7 @@ public class Help implements ICommand {
 				.addAlias("how do i use")
 				.addAlias("how do you use")
 				.addParameters(
-						new CommandParameter("command", "The command you need help with", ParameterType.ANY, false)
+						new CommandParameter("command", "The command you need help with", ParameterType.STRING, false)
 				)
 				.build();
 	}
@@ -61,12 +55,12 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, HashMap<String, String> args, User author, MessageChannel channel) {
+	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, MessageChannel channel) {
 		if(args.size() > 0) {
-			String commandHelp = args.get("command");
+			String commandHelp = (String) args.get("command");
 
 			// Wants help on specific command.
-			for(ICommand c : CommandHandler.getLoadedCommands()) {
+			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getCommandStructure().getName().equalsIgnoreCase(commandHelp)) {
 					// Create list of aliases
 					String list = Utils.generateList(c.getCommandStructure().getAliases(), -1, false, false);
@@ -90,7 +84,7 @@ public class Help implements ICommand {
 			// Wants a list of all commands.
 			List<String> cmds = new ArrayList<String>();
 
-			for(ICommand c : CommandHandler.getLoadedCommands()) {
+			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getDescription().length() > 0) {
 					cmds.add(c.getCommandStructure().getName());
 				}

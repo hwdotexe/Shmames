@@ -18,7 +18,9 @@ import com.hadenwatne.shmames.models.ParsedCommandResult;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
@@ -31,8 +33,8 @@ public class CommandHandler {
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
 
-		/*
 		commands.add(new AddResponse());
+		/*
 		commands.add(new AddTally());
 		commands.add(new AddTrigger());
 		commands.add(new Blame());
@@ -48,7 +50,9 @@ public class CommandHandler {
 		commands.add(new ForumWeapon());
 		commands.add(new GIF());
 		commands.add(new Hangman());
+		*/
 		commands.add(new Help());
+		/*
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());
 		commands.add(new ListCmd());
@@ -124,13 +128,13 @@ public class CommandHandler {
 
 			if(usageMatcher.matches()) {
 				// Build map of arguments
-				HashMap<String, String> namedArguments = new HashMap<>();
+				HashMap<String, Object> namedArguments = new HashMap<>();
 
 				for(CommandParameter cp : c.getCommandStructure().getParameters()) {
 					String group = usageMatcher.group(cp.getName());
 
 					if(group != null) {
-						namedArguments.put(cp.getName(), group);
+						insertArgumentWithType(namedArguments, group, cp, server);
 					}
 				}
 
@@ -144,8 +148,27 @@ public class CommandHandler {
 		}
 	}
 
-	public void PerformCommand(SlashCommandEvent event, MessageChannel channel, User author, @Nullable Guild server) {
-		event.reply("Slash commands are under development!").queue();
+	public void PerformCommand(ICommand command, HashMap<String, Object> arguments, SlashCommandEvent event, @Nullable Guild server) {
+		event.deferReply().queue();
+
+		Brain brain = null;
+		Lang lang = Shmames.getDefaultLang();
+		User author = event.getUser();
+
+		if(server != null) {
+			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
+			lang = Shmames.getLangFor(server);
+			brain = Shmames.getBrains().getBrain(server.getId());
+		} else {
+			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
+		}
+
+		InteractionHook hook = event.getHook();
+
+
+		// Run command
+		// Execute the command
+		executeCommand(lang, brain, command, arguments, author, event.getChannel(), hook);
 
 		/*
 		Idea:
@@ -158,11 +181,11 @@ public class CommandHandler {
 	 * Gets a list of commands actively loaded.
 	 * @return A list of commands.
 	 */
-	public static List<ICommand> getLoadedCommands(){
+	public List<ICommand> getLoadedCommands(){
 		return commands;
 	}
 
-	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, String> arguments, User author, MessageChannel channel) {
+	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, MessageChannel channel) {
 		try {
 			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, channel))
 					.thenAccept(r -> sendMessageResponse(r, channel))
@@ -174,6 +197,23 @@ public class CommandHandler {
 		}catch (Exception e){
 			ShmamesLogger.logException(e);
 			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), channel);
+		}
+	}
+
+	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, MessageChannel channel, InteractionHook hook) {
+		try {
+			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, channel))
+					.thenAccept(r -> sendMessageResponse(r, hook))
+					.exceptionally(exception -> {
+						hook.setEphemeral(true);
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), hook);
+						ShmamesLogger.logException(exception);
+						return null;
+					});
+		}catch (Exception e){
+			hook.setEphemeral(true);
+			ShmamesLogger.logException(e);
+			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), hook);
 		}
 	}
 
@@ -203,6 +243,15 @@ public class CommandHandler {
 
 	private void sendMessageResponse(String r, MessageChannel chn){
 		new TypingTask(r, chn, false);
+	}
+
+	private void sendMessageResponse(String r, InteractionHook hook){
+		for(String m : Utils.splitString(r, 2000)){
+			// TODO it thinks forever if the length is 0, i.e. an embed. Can we pass in a hook elsewhere?
+			if(m.length() > 0) {
+				hook.sendMessage(r).queue();
+			}
+		}
 	}
 
 	private void logCountCommandUsage(ICommand command) {
@@ -239,6 +288,59 @@ public class CommandHandler {
 
 			cUpdate.queue();
 			Shmames.getBrains().getMotherBrain().setUpdateDiscordSlashCommands(false);
+		}
+	}
+
+	private void insertArgumentWithType(HashMap<String, Object> map, String value, CommandParameter parameter, @Nullable Guild guild) {
+		switch(parameter.getType()) {
+			case BOOLEAN:
+				map.put(parameter.getName(), Boolean.valueOf(value));
+				break;
+			case INTEGER:
+				map.put(parameter.getName(), Integer.parseInt(value));
+				break;
+			case DISCORD_ROLE:
+				if(guild != null) {
+					Matcher m = parameter.getPattern().matcher(value);
+
+					if(m.find()){
+						Role role = guild.getRoleById(m.group(2));
+						map.put(parameter.getName(), role);
+						break;
+					}
+				}
+			case DISCORD_USER:
+				if(guild != null) {
+					Matcher m = parameter.getPattern().matcher(value);
+
+					if(m.find()){
+						User user  = guild.getMemberById(m.group(2)).getUser();
+						map.put(parameter.getName(), user);
+						break;
+					}
+				}
+			case DISCORD_EMOTE:
+				if(guild != null) {
+					Matcher m = parameter.getPattern().matcher(value);
+
+					if(m.find()){
+						Emote emote = guild.getEmoteById(m.group(2));
+						map.put(parameter.getName(), emote);
+						break;
+					}
+				}
+			case DISCORD_CHANNEL:
+				if(guild != null) {
+					Matcher m = parameter.getPattern().matcher(value);
+
+					if(m.find()){
+						MessageChannel channel = guild.getTextChannelById(m.group(2));
+						map.put(parameter.getName(), channel);
+						break;
+					}
+				}
+			default:
+				map.put(parameter.getName(), value);
 		}
 	}
 }

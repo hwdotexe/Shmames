@@ -88,9 +88,9 @@ public class ReactListener extends ListenerAdapter {
 				try {
 					m.getChannel().deleteMessageById(m.getIdLong()).queue();
 
-					for (ICommand c : CommandHandler.getLoadedCommands()) {
+					for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 						if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
-							HashMap<String, String> tallyArgs = new HashMap<>();
+							HashMap<String, Object> tallyArgs = new HashMap<>();
 
 							tallyArgs.put("toTally", toTally);
 
@@ -135,9 +135,9 @@ public class ReactListener extends ListenerAdapter {
 				String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "good" + name;
 
 				// Process.
-				for (ICommand c : CommandHandler.getLoadedCommands()) {
+				for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 					if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
-						HashMap<String, String> tallyArgs = new HashMap<>();
+						HashMap<String, Object> tallyArgs = new HashMap<>();
 
 						tallyArgs.put("toTally", toTally);
 

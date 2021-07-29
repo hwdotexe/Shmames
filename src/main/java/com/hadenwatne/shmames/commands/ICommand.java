@@ -49,7 +49,7 @@ public interface ICommand {
 	 * @param channel The channel this command is being run in.
 	 * @return A string response, if applicable.
 	 */
-	String run(Lang lang, @Nullable Brain brain, HashMap<String, String> args, User author, MessageChannel channel);
+	String run(Lang lang, @Nullable Brain brain, HashMap<String, Object> args, User author, MessageChannel channel);
 
 	/**
 	 * Sets whether this command must be run in a Guild.

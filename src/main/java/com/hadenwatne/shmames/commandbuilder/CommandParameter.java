@@ -94,20 +94,23 @@ public class CommandParameter {
 
                 this.matchPattern = Pattern.compile("(?<"+this.name+">"+sb+")");
                 break;
+            case BOOLEAN:
+                this.matchPattern = Pattern.compile("(?<"+this.name+">((true)|(false)))");
+                break;
             case INTEGER:
                 this.matchPattern = Pattern.compile("(?<"+this.name+">\\d+)");
                 break;
             case DISCORD_ROLE:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><@&\\d+>)");
+                this.matchPattern = Pattern.compile("(?<"+this.name+"><@&(\\d+)>)");
                 break;
             case DISCORD_CHANNEL:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><#\\d+>)");
+                this.matchPattern = Pattern.compile("(?<"+this.name+"><#(\\d+)>)");
                 break;
             case DISCORD_USER:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><@!\\d+>)");
+                this.matchPattern = Pattern.compile("(?<"+this.name+"><@!(\\d+)>)");
                 break;
             case DISCORD_EMOTE:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><:[a-zA-Z0-9_]:\\d+>)");
+                this.matchPattern = Pattern.compile("(?<"+this.name+"><:[a-zA-Z0-9_]:(\\d+)>)");
                 break;
             default:
                 this.matchPattern = Pattern.compile("(?<"+this.name+">.+)");
