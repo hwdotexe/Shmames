@@ -10,6 +10,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -55,7 +56,7 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, MessageChannel channel) {
+	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel) {
 		if(args.size() > 0) {
 			String commandHelp = (String) args.get("command");
 
@@ -75,12 +76,18 @@ public class Help implements ICommand {
 					eBuilder.addField("Usage", c.getUsage(), false);
 					eBuilder.addField("Examples", c.getExamples(), false);
 
-					channel.sendMessageEmbeds(eBuilder.build()).queue();
+					if(messagingChannel.hasChannel()) {
+						messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
+					} else if(messagingChannel.hasHook()) {
+						messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
+					}
 
 					return "";
 				}
 			}
-		}else {
+
+			return lang.getError(Errors.COMMAND_NOT_FOUND, true);
+		} else {
 			// Wants a list of all commands.
 			List<String> cmds = new ArrayList<String>();
 
@@ -99,18 +106,20 @@ public class Help implements ICommand {
 			eBuilder.addField("All Commands", list, false);
 			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
 
-			if(channel.getType() == ChannelType.TEXT){
-				author.openPrivateChannel().queue((c) -> c.sendMessage(eBuilder.build()).queue());
+			if(messagingChannel.hasChannel()) {
+				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
+					author.openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
 
-				return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
-			}else{
-				channel.sendMessageEmbeds(eBuilder.build()).queue();
-
-				return "";
+					return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
+				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {
+					messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
+				}
+			} else if(messagingChannel.hasHook()) {
+				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
 			}
-		}
 
-		return lang.getError(Errors.COMMAND_NOT_FOUND, true);
+			return "";
+		}
 	}
 
 	@Override

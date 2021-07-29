@@ -6,6 +6,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -54,7 +55,7 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, MessageChannel channel) {
+	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel) {
 		String nrtype = (String) args.get("triggerType");
 		String newresp = (String) args.get("responseText");
 

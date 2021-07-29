@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.models.CommandMessagingChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
@@ -94,7 +95,7 @@ public class ReactListener extends ListenerAdapter {
 
 							tallyArgs.put("toTally", toTally);
 
-							String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), m.getChannel());
+							String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
 							m.getChannel().sendMessage(response).queue();
 							return;
 						}
@@ -141,7 +142,7 @@ public class ReactListener extends ListenerAdapter {
 
 						tallyArgs.put("toTally", toTally);
 
-						String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), m.getChannel());
+						String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
 						m.getChannel().sendMessage(response).queue();
 						return;
 					}

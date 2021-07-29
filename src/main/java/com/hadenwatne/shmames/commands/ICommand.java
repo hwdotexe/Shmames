@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -49,7 +50,7 @@ public interface ICommand {
 	 * @param channel The channel this command is being run in.
 	 * @return A string response, if applicable.
 	 */
-	String run(Lang lang, @Nullable Brain brain, HashMap<String, Object> args, User author, MessageChannel channel);
+	String run(Lang lang, @Nullable Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel);
 
 	/**
 	 * Sets whether this command must be run in a Guild.

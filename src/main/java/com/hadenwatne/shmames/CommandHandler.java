@@ -13,6 +13,7 @@ import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.ParsedCommandResult;
 import net.dv8tion.jda.api.entities.*;
@@ -139,7 +140,7 @@ public class CommandHandler {
 				}
 
 				// Execute the command
-				executeCommand(lang, brain, c, namedArguments, author, message.getChannel());
+				executeCommand(lang, brain, c, namedArguments, author, new CommandMessagingChannel(message.getChannel()));
 			}else{
 				sendMessageResponse(lang.wrongUsage(c.getUsage()), message);
 			}
@@ -165,16 +166,8 @@ public class CommandHandler {
 
 		InteractionHook hook = event.getHook();
 
-
 		// Run command
-		// Execute the command
-		executeCommand(lang, brain, command, arguments, author, event.getChannel(), hook);
-
-		/*
-		Idea:
-		- Get ICommand first, and use that CommandStructure to map to the Options in the Event
-		- Use deferReply to avoid problemz (thus needing to pass in the event)
-		 */
+		executeCommand(lang, brain, command, arguments, author, new CommandMessagingChannel(hook));
 	}
 	
 	/**
@@ -185,35 +178,26 @@ public class CommandHandler {
 		return commands;
 	}
 
-	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, MessageChannel channel) {
+	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, CommandMessagingChannel msg) {
 		try {
-			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, channel))
-					.thenAccept(r -> sendMessageResponse(r, channel))
+			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, msg))
+					.thenAccept(r -> sendMessageResponse(r, msg))
 					.exceptionally(exception -> {
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), channel);
-						ShmamesLogger.logException(exception);
-						return null;
-					});
-		}catch (Exception e){
-			ShmamesLogger.logException(e);
-			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), channel);
-		}
-	}
+						if(msg.hasHook()) {
+							msg.getHook().setEphemeral(true);
+						}
 
-	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, MessageChannel channel, InteractionHook hook) {
-		try {
-			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, channel))
-					.thenAccept(r -> sendMessageResponse(r, hook))
-					.exceptionally(exception -> {
-						hook.setEphemeral(true);
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), hook);
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), msg);
 						ShmamesLogger.logException(exception);
 						return null;
 					});
 		}catch (Exception e){
-			hook.setEphemeral(true);
+			if(msg.hasHook()) {
+				msg.getHook().setEphemeral(true);
+			}
+
 			ShmamesLogger.logException(e);
-			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), hook);
+			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), msg);
 		}
 	}
 
@@ -241,19 +225,17 @@ public class CommandHandler {
 		new TypingTask(r, msg, true);
 	}
 
-	private void sendMessageResponse(String r, MessageChannel chn){
-		new TypingTask(r, chn, false);
-	}
-
-	private void sendMessageResponse(String r, InteractionHook hook){
-		for(String m : Utils.splitString(r, 2000)){
-			// TODO it thinks forever if the length is 0, i.e. an embed. Can we pass in a hook elsewhere?
-			if(m.length() > 0) {
-				hook.sendMessage(r).queue();
+	private void sendMessageResponse(String r, CommandMessagingChannel msg){
+		if(msg.hasChannel()) {
+			new TypingTask(r, msg.getChannel(), false);
+		} else if(msg.hasHook()) {
+			if(r.length() > 0) {
+				for (String m : Utils.splitString(r, 2000)) {
+					msg.getHook().sendMessage(m).queue();
+				}
 			}
 		}
 	}
-
 	private void logCountCommandUsage(ICommand command) {
 		String primaryCommandName = command.getCommandStructure().getName().toLowerCase();
 		HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
