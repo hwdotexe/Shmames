@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.data.Brain;
 
 public class ReportCooldownTask extends TimerTask{
 	private Brain b;

@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import java.util.List;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 
 public class Brain {
@@ -24,7 +25,6 @@ public class Brain {
 	private List<JTimerTask> timers;
 	private List<Playlist> playlists;
 	private boolean isReportCooldown;
-	private boolean isTimeout;
 	private boolean isJinping;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -44,7 +44,6 @@ public class Brain {
 		timers = new ArrayList<JTimerTask>();
 		playlists = new ArrayList<Playlist>();
 		isReportCooldown = false;
-		isTimeout = false;
 		isJinping = false;
 		sentWelcome = false;
 		hangmanGame = null;
@@ -62,14 +61,6 @@ public class Brain {
 	
 	public void setJinping(boolean j) {
 		isJinping = j;
-	}
-	
-	public boolean getTimeout() {
-		return isTimeout;
-	}
-	
-	public void setTimeout(boolean t) {
-		isTimeout=t;
 	}
 	
 	public boolean getReportCooldown() {

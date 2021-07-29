@@ -2,20 +2,19 @@ package com.hadenwatne.shmames.commands;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.CommandMessagingChannel;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
@@ -56,9 +55,9 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel) {
-		if(args.size() > 0) {
-			String commandHelp = (String) args.get("command");
+	public String run (Lang lang, Brain brain, ShmamesCommandArguments args, User author, CommandMessagingChannel messagingChannel) {
+		if(args.count() > 0) {
+			String commandHelp = args.getAsString("command");
 
 			// Wants help on specific command.
 			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {

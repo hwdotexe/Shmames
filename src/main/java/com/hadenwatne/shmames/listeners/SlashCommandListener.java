@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.ICommand;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -17,17 +18,19 @@ public class SlashCommandListener extends ListenerAdapter {
         ICommand command = getCommandFromName(event.getName());
 
         if(command != null) {
-            HashMap<String, Object> arguments = new HashMap<>();
+            HashMap<String, Object> namedArguments = new HashMap<>();
 
             for(CommandParameter cp : command.getCommandStructure().getParameters()) {
                 OptionMapping option = event.getOption(cp.getName().toLowerCase());
 
                 if(option != null) {
-                    insertArgumentWithType(arguments, option, cp);
+                    insertArgumentWithType(namedArguments, option, cp);
                 }
             }
 
-            Shmames.getCommandHandler().PerformCommand(command, arguments, event, event.getGuild());
+            ShmamesCommandArguments sca = new ShmamesCommandArguments(namedArguments);
+
+            Shmames.getCommandHandler().PerformCommand(command, sca, event, event.getGuild());
         }
     }
 

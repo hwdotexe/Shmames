@@ -1,18 +1,18 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.shmames.models.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.shmames.CommandHandler;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.data.Brain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +95,9 @@ public class ReactListener extends ListenerAdapter {
 
 							tallyArgs.put("toTally", toTally);
 
-							String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
+							ShmamesCommandArguments sca = new ShmamesCommandArguments(tallyArgs);
+
+							String response = c.run(Shmames.getLangFor(b), b, sca, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
 							m.getChannel().sendMessage(response).queue();
 							return;
 						}
@@ -142,7 +144,9 @@ public class ReactListener extends ListenerAdapter {
 
 						tallyArgs.put("toTally", toTally);
 
-						String response = c.run(Shmames.getLangFor(b), b, tallyArgs, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
+						ShmamesCommandArguments sca = new ShmamesCommandArguments(tallyArgs);
+
+						String response = c.run(Shmames.getLangFor(b), b, sca, Shmames.getJDA().getSelfUser(), new CommandMessagingChannel(m.getChannel()));
 						m.getChannel().sendMessage(response).queue();
 						return;
 					}

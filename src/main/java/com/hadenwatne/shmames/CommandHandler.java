@@ -12,16 +12,16 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.CommandMessagingChannel;
-import com.hadenwatne.shmames.models.Lang;
-import com.hadenwatne.shmames.models.ParsedCommandResult;
+import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ParsedCommandResult;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
@@ -85,6 +85,14 @@ public class CommandHandler {
 		// Send Discord the syntax we plan to use for slash commands.
 		updateSlashCommands(commands);
 	}
+
+	/**
+	 * Gets a list of commands actively loaded.
+	 * @return A list of commands.
+	 */
+	public List<ICommand> getLoadedCommands(){
+		return commands;
+	}
 	
 	/**
 	 * Parses the command provided, and performs an action based on the command determined.
@@ -139,8 +147,10 @@ public class CommandHandler {
 					}
 				}
 
+				ShmamesCommandArguments sca = new ShmamesCommandArguments(namedArguments);
+
 				// Execute the command
-				executeCommand(lang, brain, c, namedArguments, author, new CommandMessagingChannel(message.getChannel()));
+				executeCommand(lang, brain, c, sca, author, new CommandMessagingChannel(message.getChannel()));
 			}else{
 				sendMessageResponse(lang.wrongUsage(c.getUsage()), message);
 			}
@@ -149,7 +159,7 @@ public class CommandHandler {
 		}
 	}
 
-	public void PerformCommand(ICommand command, HashMap<String, Object> arguments, SlashCommandEvent event, @Nullable Guild server) {
+	public void PerformCommand(ICommand command, ShmamesCommandArguments arguments, SlashCommandEvent event, @Nullable Guild server) {
 		event.deferReply().queue();
 
 		Brain brain = null;
@@ -165,39 +175,32 @@ public class CommandHandler {
 		}
 
 		InteractionHook hook = event.getHook();
+		ShmamesCommandData data = new ShmamesCommandData(command, arguments, new CommandMessagingChannel(hook), author);
 
 		// Run command
-		executeCommand(lang, brain, command, arguments, author, new CommandMessagingChannel(hook));
-	}
-	
-	/**
-	 * Gets a list of commands actively loaded.
-	 * @return A list of commands.
-	 */
-	public List<ICommand> getLoadedCommands(){
-		return commands;
+		executeCommand(lang, brain, data);
 	}
 
-	private void executeCommand(Lang lang, Brain brain, ICommand c, HashMap<String, Object> arguments, User author, CommandMessagingChannel msg) {
+	private void executeCommand(Lang lang, Brain brain, ShmamesCommandData data) {
 		try {
-			CompletableFuture.supplyAsync(() -> c.run(lang, brain, arguments, author, msg))
-					.thenAccept(r -> sendMessageResponse(r, msg))
+			CompletableFuture.supplyAsync(() -> data.getCommand().run(lang, brain, data))
+					.thenAccept(r -> sendMessageResponse(r, data.getMessagingChannel()))
 					.exceptionally(exception -> {
-						if(msg.hasHook()) {
-							msg.getHook().setEphemeral(true);
+						if(data.getMessagingChannel().hasHook()) {
+							data.getMessagingChannel().getHook().setEphemeral(true);
 						}
 
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), msg);
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel());
 						ShmamesLogger.logException(exception);
 						return null;
 					});
 		}catch (Exception e){
-			if(msg.hasHook()) {
-				msg.getHook().setEphemeral(true);
+			if(data.getMessagingChannel().hasHook()) {
+				data.getMessagingChannel().getHook().setEphemeral(true);
 			}
 
 			ShmamesLogger.logException(e);
-			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), msg);
+			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel());
 		}
 	}
 
@@ -260,7 +263,7 @@ public class CommandHandler {
 			return;
 		}
 
-		// Update command syntax if configured to do so.
+		// Update command syntax on Discord if configured to do so.
 		if(Shmames.getBrains().getMotherBrain().doUpdateDiscordSlashCommands()) {
 			CommandListUpdateAction cUpdate = Shmames.getJDA().updateCommands();
 

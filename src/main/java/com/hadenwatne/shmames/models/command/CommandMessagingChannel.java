@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.command;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;

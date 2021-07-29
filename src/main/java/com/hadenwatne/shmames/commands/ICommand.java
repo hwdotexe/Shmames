@@ -1,19 +1,14 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.CommandMessagingChannel;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
 
 public interface ICommand {
 	/**
@@ -45,12 +40,10 @@ public interface ICommand {
 	 * Runs the command code.
 	 * @param lang The language file to use.
 	 * @param brain The brain of the server this command is calling from, if available.
-	 * @param args Command arguments map in the format <parameterName, parameterValue>
-	 * @param author The user trying to run the command.
-	 * @param channel The channel this command is being run in.
+	 * @param data Data about the command call and how to return the result.
 	 * @return A string response, if applicable.
 	 */
-	String run(Lang lang, @Nullable Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel);
+	String run(Lang lang, @Nullable Brain brain, ShmamesCommandData data);
 
 	/**
 	 * Sets whether this command must be run in a Guild.

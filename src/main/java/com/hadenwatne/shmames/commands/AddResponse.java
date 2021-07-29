@@ -1,19 +1,17 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.HashMap;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.CommandMessagingChannel;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Response;
 
 public class AddResponse implements ICommand {
 	private final CommandStructure commandStructure;
@@ -55,9 +53,9 @@ public class AddResponse implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, HashMap<String, Object> args, User author, CommandMessagingChannel messagingChannel) {
-		String nrtype = (String) args.get("triggerType");
-		String newresp = (String) args.get("responseText");
+	public String run (Lang lang, Brain brain, ShmamesCommandArguments args, User author, CommandMessagingChannel messagingChannel) {
+		String nrtype = args.getAsString("triggerType");
+		String newresp = args.getAsString("responseText");
 
 		// Safety check
 		if (TriggerType.byName(nrtype) != null) {

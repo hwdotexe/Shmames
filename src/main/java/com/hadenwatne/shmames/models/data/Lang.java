@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;

@@ -6,9 +6,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.hadenwatne.shmames.enums.HTTPVerb;
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.MotherBrain;
+import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.ShmamesLogger;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;

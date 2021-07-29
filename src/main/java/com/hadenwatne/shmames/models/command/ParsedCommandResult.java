@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.command;
 
 import com.hadenwatne.shmames.commands.ICommand;
 
