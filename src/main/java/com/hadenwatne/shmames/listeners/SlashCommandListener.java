@@ -22,6 +22,9 @@ public class SlashCommandListener extends ListenerAdapter {
 
             HashMap<String, Object> namedArguments = new HashMap<>();
 
+            // TODO if the user does not TAB to name the parameter, it does not get sent with a name (with optional param)
+            // TODO Default to the first optional parameter if this is the case?
+            // TODO This might be a Library limitation
             for (CommandParameter cp : command.getCommandStructure().getParameters()) {
                 OptionMapping option = event.getOption(cp.getName().toLowerCase());
 

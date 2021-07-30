@@ -97,6 +97,9 @@ public class CommandParameter {
             case BOOLEAN:
                 this.matchPattern = Pattern.compile("(?<"+this.name+">((true)|(false)))");
                 break;
+            case TIMECODE:
+                this.matchPattern = Pattern.compile("(?<"+this.name+">[\\dydhms]+)");
+                break;
             case INTEGER:
                 this.matchPattern = Pattern.compile("(?<"+this.name+">\\d+)");
                 break;

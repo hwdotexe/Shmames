@@ -10,7 +10,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
@@ -57,7 +57,7 @@ public class Help implements ICommand {
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		ShmamesCommandArguments args = data.getArguments();
-		CommandMessagingChannel messagingChannel = data.getMessagingChannel();
+		ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
 
 		if(args.count() > 0) {
 			String commandHelp = args.getAsString("command");
@@ -78,10 +78,10 @@ public class Help implements ICommand {
 					eBuilder.addField("Usage", c.getUsage(), false);
 					eBuilder.addField("Examples", c.getExamples(), false);
 
-					if(messagingChannel.hasChannel()) {
-						messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
-					} else if(messagingChannel.hasHook()) {
+					if(messagingChannel.hasHook()) {
 						messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
+					} else {
+						messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
 					}
 
 					return "";
@@ -108,7 +108,9 @@ public class Help implements ICommand {
 			eBuilder.addField("All Commands", list, false);
 			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
 
-			if(messagingChannel.hasChannel()) {
+			if(messagingChannel.hasHook()) {
+				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
+			} else {
 				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
 					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
 
@@ -116,8 +118,6 @@ public class Help implements ICommand {
 				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {
 					messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
 				}
-			} else if(messagingChannel.hasHook()) {
-				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
 			}
 
 			return "";

@@ -37,18 +37,20 @@ public class CommandBuilder {
 
         for(CommandParameter p : command.getParameters()) {
             if(sb.length() > 0) {
-                sb.append("\\s");
-            } else {
-                sb.append("^");
+                if(!p.isRequired()) {
+                    sb.append("(\\s");
+                    sb.append(p.getPattern().pattern());
+                    sb.append(")?");
+                    continue;
+                }else{
+                    sb.append("\\s");
+                }
             }
 
             sb.append(p.getPattern().pattern());
-
-            if(!p.isRequired()) {
-                sb.append("?");
-            }
         }
 
+        sb.insert(0, "^");
         sb.append("$");
 
         return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
@@ -94,6 +96,8 @@ public class CommandBuilder {
 
             sb.append(ssb);
             sb.append("]");
+        } else if(p.getType() == ParameterType.TIMECODE) {
+            sb.append("#[y|d|h|m|s]");
         } else {
             sb.append(p.getName());
         }

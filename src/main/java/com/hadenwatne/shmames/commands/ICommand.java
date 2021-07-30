@@ -3,10 +3,7 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
-import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
 

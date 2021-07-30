@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import net.dv8tion.jda.api.entities.*;
@@ -89,7 +89,7 @@ public class ReactListener extends ListenerAdapter {
 					toTally = tallyPrefix+authorName;
 				}
 
-				runAddTallyCommand(toTally, brain, channel);
+				runAddTallyCommand(toTally, brain, message);
 
 				// Try to delete the message if this was a "bad" tally.
 				if(setting == BotSettingName.REMOVAL_THRESHOLD) {
@@ -103,7 +103,9 @@ public class ReactListener extends ListenerAdapter {
 		}
 	}
 
-	private void runAddTallyCommand(String tallyValue, Brain brain, MessageChannel channel) {
+	private void runAddTallyCommand(String tallyValue, Brain brain, Message message) {
+		MessageChannel channel = message.getTextChannel();
+
 		for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
 				HashMap<String, Object> tallyArgs = new HashMap<>();
@@ -113,7 +115,7 @@ public class ReactListener extends ListenerAdapter {
 				ShmamesCommandData data = new ShmamesCommandData(
 						c,
 						new ShmamesCommandArguments(tallyArgs),
-						new CommandMessagingChannel(channel),
+						new ShmamesCommandMessagingChannel(message, channel),
 						Shmames.getJDA().getSelfUser()
 				);
 

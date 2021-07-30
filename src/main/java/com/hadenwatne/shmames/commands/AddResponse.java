@@ -6,12 +6,9 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.TriggerType;
 
 public class AddResponse implements ICommand {

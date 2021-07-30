@@ -1,9 +1,10 @@
 package com.hadenwatne.shmames.commandbuilder;
 
 public enum ParameterType {
-    STRING, // String
-    INTEGER, // Numbers only
-    SELECTION, // Value must be selected from a list
+    STRING,
+    INTEGER,
+    SELECTION,
+    TIMECODE,
     BOOLEAN,
     DISCORD_ROLE,
     DISCORD_CHANNEL,

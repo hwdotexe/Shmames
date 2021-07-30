@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.entities.User;
 public class ShmamesCommandData {
     private ICommand command;
     private ShmamesCommandArguments arguments;
-    private CommandMessagingChannel messagingChannel;
+    private ShmamesCommandMessagingChannel messagingChannel;
     private User author;
 
-    public ShmamesCommandData(ICommand command, ShmamesCommandArguments arguments, CommandMessagingChannel messagingChannel, User author) {
+    public ShmamesCommandData(ICommand command, ShmamesCommandArguments arguments, ShmamesCommandMessagingChannel messagingChannel, User author) {
         this.command = command;
         this.arguments = arguments;
         this.messagingChannel = messagingChannel;
@@ -24,7 +24,7 @@ public class ShmamesCommandData {
         return this.arguments;
     }
 
-    public CommandMessagingChannel getMessagingChannel() {
+    public ShmamesCommandMessagingChannel getMessagingChannel() {
         return this.messagingChannel;
     }
 

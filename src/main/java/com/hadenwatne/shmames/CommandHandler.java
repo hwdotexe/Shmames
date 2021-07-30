@@ -12,7 +12,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ParsedCommandResult;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
@@ -75,7 +75,9 @@ public class CommandHandler {
 		commands.add(new SimonSays());
 		commands.add(new Storytime());
 		commands.add(new Thoughts());
+		*/
 		commands.add(new Timer());
+		/*
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
 		commands.add(new When());
@@ -104,6 +106,7 @@ public class CommandHandler {
 	public void PerformCommand(String commandText, Message message, @Nullable Guild server, @Nullable Brain brain) {
 		Lang lang = Shmames.getDefaultLang();
 		User author = message.getAuthor();
+		MessageChannel channel = message.getTextChannel();
 
 		// Log the command.
 		if(server != null) {
@@ -123,7 +126,7 @@ public class CommandHandler {
 			logCountCommandUsage(c);
 
 			if(server == null && c.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), message);
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(message, channel));
 
 				return;
 			}
@@ -147,17 +150,17 @@ public class CommandHandler {
 				ShmamesCommandData data = new ShmamesCommandData(
 						c,
 						new ShmamesCommandArguments(namedArguments),
-						new CommandMessagingChannel(message.getChannel()),
+						new ShmamesCommandMessagingChannel(message, channel),
 						author
 				);
 
 				// Execute the command
 				executeCommand(lang, brain, data);
 			}else{
-				sendMessageResponse(lang.wrongUsage(c.getUsage()), message);
+				sendMessageResponse(lang.wrongUsage(c.getUsage()), new ShmamesCommandMessagingChannel(message, channel));
 			}
 		} else {
-			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), message);
+			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel));
 		}
 	}
 
@@ -184,7 +187,7 @@ public class CommandHandler {
 			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
 
 			if(command.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new CommandMessagingChannel(hook));
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()));
 
 				return;
 			}
@@ -194,7 +197,7 @@ public class CommandHandler {
 		ShmamesCommandData data = new ShmamesCommandData(
 				command,
 				arguments,
-				new CommandMessagingChannel(hook),
+				new ShmamesCommandMessagingChannel(hook, event.getChannel()),
 				author
 		);
 
@@ -245,19 +248,15 @@ public class CommandHandler {
 		}
 	}
 
-	private void sendMessageResponse(String r, Message msg){
-		new TypingTask(r, msg, true);
-	}
-
-	private void sendMessageResponse(String r, CommandMessagingChannel msg){
-		if(msg.hasChannel()) {
-			new TypingTask(r, msg.getChannel(), false);
-		} else if(msg.hasHook()) {
+	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg){
+		if(msg.hasHook()) {
 			if(r.length() > 0) {
 				for (String m : Utils.splitString(r, 2000)) {
 					msg.getHook().sendMessage(m).queue();
 				}
 			}
+		} else {
+			new TypingTask(r, msg.getChannel(), false);
 		}
 	}
 	private void logCountCommandUsage(ICommand command) {
