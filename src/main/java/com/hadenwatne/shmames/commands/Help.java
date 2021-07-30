@@ -8,6 +8,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.command.CommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Lang;
@@ -15,7 +16,6 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
@@ -55,7 +55,10 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandArguments args, User author, CommandMessagingChannel messagingChannel) {
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		ShmamesCommandArguments args = data.getArguments();
+		CommandMessagingChannel messagingChannel = data.getMessagingChannel();
+
 		if(args.count() > 0) {
 			String commandHelp = args.getAsString("command");
 
@@ -88,7 +91,7 @@ public class Help implements ICommand {
 			return lang.getError(Errors.COMMAND_NOT_FOUND, true);
 		} else {
 			// Wants a list of all commands.
-			List<String> cmds = new ArrayList<String>();
+			List<String> cmds = new ArrayList<>();
 
 			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getDescription().length() > 0) {
@@ -107,7 +110,7 @@ public class Help implements ICommand {
 
 			if(messagingChannel.hasChannel()) {
 				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
-					author.openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
+					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
 
 					return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
 				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {

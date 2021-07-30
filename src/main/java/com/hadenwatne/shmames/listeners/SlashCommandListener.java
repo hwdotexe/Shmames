@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.ICommand;
+import com.hadenwatne.shmames.models.command.ParsedCommandResult;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,17 +14,18 @@ import java.util.HashMap;
 public class SlashCommandListener extends ListenerAdapter {
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event)
-    {
-        ICommand command = getCommandFromName(event.getName());
+    public void onSlashCommand(SlashCommandEvent event) {
+        ParsedCommandResult parsedCommand = Shmames.getCommandHandler().parseCommandString(event.getName());
 
-        if(command != null) {
+        if (parsedCommand != null) {
+            ICommand command = parsedCommand.getCommand();
+
             HashMap<String, Object> namedArguments = new HashMap<>();
 
-            for(CommandParameter cp : command.getCommandStructure().getParameters()) {
+            for (CommandParameter cp : command.getCommandStructure().getParameters()) {
                 OptionMapping option = event.getOption(cp.getName().toLowerCase());
 
-                if(option != null) {
+                if (option != null) {
                     insertArgumentWithType(namedArguments, option, cp);
                 }
             }
@@ -32,16 +34,6 @@ public class SlashCommandListener extends ListenerAdapter {
 
             Shmames.getCommandHandler().PerformCommand(command, sca, event, event.getGuild());
         }
-    }
-
-    private ICommand getCommandFromName(String name) {
-        for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
-            if(c.getCommandStructure().getName().equalsIgnoreCase(name)) {
-                return c;
-            }
-        }
-
-        return null;
     }
 
     private void insertArgumentWithType(HashMap<String, Object> map, OptionMapping option, CommandParameter parameter) {

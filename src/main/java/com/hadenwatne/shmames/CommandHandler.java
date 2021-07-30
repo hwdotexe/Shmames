@@ -96,29 +96,25 @@ public class CommandHandler {
 	
 	/**
 	 * Parses the command provided, and performs an action based on the command determined.
-	 * @param cmd The raw String calling the command.
+	 * @param commandText The raw String calling the command.
 	 * @param message The message.
-	 * @param author The user who is running the command.
-	 * @param server The server the command is running on.
+	 * @param server The server the command is running on, if applicable.
+	 * @param brain The brain of the server, if applicable.
 	 */
-	public void PerformCommand(String cmd, Message message, User author, @Nullable Guild server) {
-		if(cmd.length() == 0) {
-			sendMessageResponse(defaultLang.getError(Errors.HEY_THERE,false, new String[] { Shmames.getBotName() }), message);
-			return;
-		}
-
-		Brain brain = null;
+	public void PerformCommand(String commandText, Message message, @Nullable Guild server, @Nullable Brain brain) {
 		Lang lang = Shmames.getDefaultLang();
+		User author = message.getAuthor();
 
+		// Log the command.
 		if(server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ cmd);
+			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ commandText);
 			lang = Shmames.getLangFor(server);
-			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ cmd);
+			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ commandText);
 		}
 
-		ParsedCommandResult parsedCommand = getMatchedCommand(cmd);
+		// Parse the command.
+		ParsedCommandResult parsedCommand = parseCommandString(commandText);
 
 		if(parsedCommand != null) {
 			ICommand c = parsedCommand.getCommand();
@@ -147,10 +143,16 @@ public class CommandHandler {
 					}
 				}
 
-				ShmamesCommandArguments sca = new ShmamesCommandArguments(namedArguments);
+				// Build command data.
+				ShmamesCommandData data = new ShmamesCommandData(
+						c,
+						new ShmamesCommandArguments(namedArguments),
+						new CommandMessagingChannel(message.getChannel()),
+						author
+				);
 
 				// Execute the command
-				executeCommand(lang, brain, c, sca, author, new CommandMessagingChannel(message.getChannel()));
+				executeCommand(lang, brain, data);
 			}else{
 				sendMessageResponse(lang.wrongUsage(c.getUsage()), message);
 			}
@@ -159,12 +161,20 @@ public class CommandHandler {
 		}
 	}
 
+	/**
+	 * Performs additional validation on the command provided, and runs it if valid.
+	 * @param command The command to run.
+	 * @param arguments Arguments to pass into the command.
+	 * @param event The event that summoned this method.
+	 * @param server The server this command is running on, if applicable.
+	 */
 	public void PerformCommand(ICommand command, ShmamesCommandArguments arguments, SlashCommandEvent event, @Nullable Guild server) {
 		event.deferReply().queue();
 
 		Brain brain = null;
 		Lang lang = Shmames.getDefaultLang();
 		User author = event.getUser();
+		InteractionHook hook = event.getHook();
 
 		if(server != null) {
 			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
@@ -172,13 +182,44 @@ public class CommandHandler {
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
 			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
+
+			if(command.requiresGuild()) {
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new CommandMessagingChannel(hook));
+
+				return;
+			}
 		}
 
-		InteractionHook hook = event.getHook();
-		ShmamesCommandData data = new ShmamesCommandData(command, arguments, new CommandMessagingChannel(hook), author);
+		// Build command data.
+		ShmamesCommandData data = new ShmamesCommandData(
+				command,
+				arguments,
+				new CommandMessagingChannel(hook),
+				author
+		);
 
-		// Run command
+		// Execute the command.
 		executeCommand(lang, brain, data);
+	}
+
+	public @Nullable ParsedCommandResult parseCommandString(String cmd) {
+		for(ICommand c : commands) {
+			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+
+			if (nameMatcher.matches()) {
+				return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
+			} else {
+				for(String a : c.getCommandStructure().getAliases()) {
+					Matcher aliasMatcher = Pattern.compile("^(" + a + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+
+					if(aliasMatcher.matches()) {
+						return new ParsedCommandResult(c, aliasMatcher.group(2) != null ? aliasMatcher.group(2).trim() : "");
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private void executeCommand(Lang lang, Brain brain, ShmamesCommandData data) {
@@ -202,26 +243,6 @@ public class CommandHandler {
 			ShmamesLogger.logException(e);
 			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel());
 		}
-	}
-
-	private ParsedCommandResult getMatchedCommand(String cmd) {
-		for(ICommand c : commands) {
-			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
-
-			if (nameMatcher.matches()) {
-				return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
-			} else {
-				for(String a : c.getCommandStructure().getAliases()) {
-					Matcher aliasMatcher = Pattern.compile("^(" + a + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
-
-					if(aliasMatcher.matches()) {
-						return new ParsedCommandResult(c, aliasMatcher.group(2) != null ? aliasMatcher.group(2).trim() : "");
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private void sendMessageResponse(String r, Message msg){
