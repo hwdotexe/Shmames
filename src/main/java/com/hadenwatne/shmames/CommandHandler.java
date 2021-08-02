@@ -35,8 +35,8 @@ public class CommandHandler {
 		commands = new ArrayList<ICommand>();
 
 		commands.add(new AddResponse());
-		/*
 		commands.add(new AddTally());
+		/*
 		commands.add(new AddTrigger());
 		commands.add(new Blame());
 		commands.add(new Choose());
@@ -62,7 +62,9 @@ public class CommandHandler {
 		commands.add(new ListTallies());
 		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
+		*/
 		commands.add(new Modify());
+		/*
 		commands.add(new Music());
 		commands.add(new Nickname());
 		commands.add(new PinThat());
@@ -106,7 +108,7 @@ public class CommandHandler {
 	public void PerformCommand(String commandText, Message message, @Nullable Guild server, @Nullable Brain brain) {
 		Lang lang = Shmames.getDefaultLang();
 		User author = message.getAuthor();
-		MessageChannel channel = message.getTextChannel();
+		MessageChannel channel = message.getChannel();
 
 		// Log the command.
 		if(server != null) {
@@ -151,7 +153,8 @@ public class CommandHandler {
 						c,
 						new ShmamesCommandArguments(namedArguments),
 						new ShmamesCommandMessagingChannel(message, channel),
-						author
+						author,
+						server
 				);
 
 				// Execute the command
@@ -180,11 +183,11 @@ public class CommandHandler {
 		InteractionHook hook = event.getHook();
 
 		if(server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
+			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName() + " Args =>" + arguments.getAsString());
 			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName());
+			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
 
 			if(command.requiresGuild()) {
 				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()));
@@ -198,7 +201,8 @@ public class CommandHandler {
 				command,
 				arguments,
 				new ShmamesCommandMessagingChannel(hook, event.getChannel()),
-				author
+				author,
+				server
 		);
 
 		// Execute the command.

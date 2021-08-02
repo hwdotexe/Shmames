@@ -116,7 +116,8 @@ public class ReactListener extends ListenerAdapter {
 						c,
 						new ShmamesCommandArguments(tallyArgs),
 						new ShmamesCommandMessagingChannel(message, channel),
-						Shmames.getJDA().getSelfUser()
+						Shmames.getJDA().getSelfUser(),
+						message.getGuild()
 				);
 
 				String response = c.run(Shmames.getLangFor(brain), brain, data);

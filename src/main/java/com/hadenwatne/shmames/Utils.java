@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -245,25 +246,30 @@ public class Utils {
 	 * Checks whether the member complies with the setting's permission
 	 * requirements, if applicable.
 	 * @param setting The setting to check.
-	 * @param member The user to check.
+	 * @param user The user to check.
 	 * @return A boolean representing whether the user complies.
 	 */
-	public static boolean checkUserPermission(BotSetting setting, Member member) {
-		if (setting.getType() == BotSettingType.ROLE) {
-			String sv = setting.getValue();
+	public static boolean checkUserPermission(Guild server, BotSetting setting, User user) {
+		if(server != null) {
+			if (setting.getType() == BotSettingType.ROLE) {
+				Member member = server.getMember(user);
+				String sv = setting.getValue();
 
-			if (Shmames.isDebug)
-				return true;
+				if (member != null) {
+					if (Shmames.isDebug)
+						return true;
 
-			if (sv.equals("everyone"))
-				return true;
+					if (sv.equals("everyone"))
+						return true;
 
-			if (sv.equals("administrator"))
-				return member.hasPermission(Permission.ADMINISTRATOR);
+					if (sv.equals("administrator"))
+						return member.hasPermission(Permission.ADMINISTRATOR);
 
-			Role r = member.getGuild().getRolesByName(sv, true).get(0);
+					Role r = member.getGuild().getRolesByName(sv, true).get(0);
 
-			return member.getRoles().contains(r);
+					return member.getRoles().contains(r);
+				}
+			}
 		}
 
 		return false;
@@ -620,6 +626,20 @@ public class Utils {
 	public static boolean isInt(String test) {
 		try {
 			Integer.parseInt(test);
+			return true;
+		} catch (Exception ignored) {}
+
+		return false;
+	}
+
+	/**
+	 * Figures if the String input is a Long.
+	 * @param test The String to test.
+	 * @return True if and only if the String is a Long.
+	 */
+	public static boolean isLong(String test) {
+		try {
+			Long.parseLong(test);
 			return true;
 		} catch (Exception ignored) {}
 

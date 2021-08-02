@@ -1,11 +1,11 @@
 package com.hadenwatne.shmames.models.command;
 
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.Utils;
+import net.dv8tion.jda.api.entities.*;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ShmamesCommandArguments {
     private HashMap<String, Object> arguments;
@@ -18,32 +18,102 @@ public class ShmamesCommandArguments {
         return this.arguments.size();
     }
 
+    public String getAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        for(String key : arguments.keySet()) {
+            if(sb.length() > 0) {
+                sb.append(" ");
+            }
+            sb.append((String) arguments.get(key));
+        }
+
+        return sb.toString();
+    }
+
     public String getAsString(String key) {
         return (String) this.arguments.get(key);
     }
 
     public boolean getAsBoolean(String key) {
-        return Boolean.parseBoolean(getAsString(key));
+        try {
+            return Boolean.parseBoolean(getAsString(key));
+        }catch (Exception ignored) {}
+
+        return false;
     }
 
     public int getAsInteger(String key) {
-        return Integer.parseInt(getAsString(key));
+        try {
+            return Integer.parseInt(getAsString(key));
+        }catch (Exception ignored) {}
+
+        return -1;
     }
 
-    public Role getAsRole(String key) {
-        return (Role) this.arguments.get(key);
+    public Role getAsRole(String key, Guild server) {
+        try {
+            String id = stripID(getAsString(key));
+
+            if(Utils.isLong(id)) {
+                return server.getRoleById(id);
+            }else{
+                return server.getRolesByName(id, true).get(0);
+            }
+        }catch (Exception ignored) {}
+
+        return null;
     }
 
-    public User getAsUser(String key) {
-        return (User) this.arguments.get(key);
+    public User getAsUser(String key, Guild server) {
+        try {
+            String id = stripID(getAsString(key));
+
+            if(Utils.isLong(id)) {
+                return server.getMemberById(id).getUser();
+            }else{
+                return server.getMembersByName(id, true).get(0).getUser();
+            }
+        }catch (Exception ignored) {}
+
+        return null;
     }
 
-    public Emote getAsEmote(String key) {
-        return (Emote) this.arguments.get(key);
+    public Emote getAsEmote(String key, Guild server) {
+        try {
+            String id = stripID(getAsString(key));
+
+            if(Utils.isLong(id)) {
+                return server.getEmoteById(id);
+            }else{
+                return server.getEmotesByName(id, true).get(0);
+            }
+        }catch (Exception ignored) {}
+
+        return null;
     }
 
-    public MessageChannel getAsChannel(String key) {
-        return (MessageChannel) this.arguments.get(key);
+    public MessageChannel getAsChannel(String key, Guild server) {
+        try {
+            String id = stripID(getAsString(key));
+
+            if(Utils.isLong(id)) {
+                return server.getTextChannelById(id);
+            }else{
+                return server.getTextChannelsByName(id, true).get(0);
+            }
+        }catch (Exception ignored) {}
+
+        return null;
     }
 
+    private String stripID(String discordTag) {
+        Matcher m = Pattern.compile("^<[@!&#:]+([a-z0-9_]+:)?(\\d+)>$", Pattern.CASE_INSENSITIVE).matcher(discordTag);
+
+        if(m.find()) {
+            return m.group(2);
+        }
+
+        return discordTag;
+    }
 }
