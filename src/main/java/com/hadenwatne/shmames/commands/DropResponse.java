@@ -4,20 +4,45 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Response;
 
 import javax.annotation.Nullable;
 
 public class DropResponse implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public DropResponse() {
+		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger this response has", ParameterType.SELECTION);
+
+		for(TriggerType type : TriggerType.values()) {
+			triggerType.addSelectionOptions(type.name());
+		}
+
+		this.commandStructure = CommandBuilder.Create("dropresponse")
+				.addAlias("drop response")
+				.addParameters(
+						triggerType,
+						new CommandParameter("responseIndex", "The response's number in the list", ParameterType.INTEGER)
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -27,7 +52,7 @@ public class DropResponse implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "dropresponse <responseType> <responseNumber>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -36,53 +61,33 @@ public class DropResponse implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^([a-zA-Z]{4,7}) (\\d{1,3})$").matcher(args);
-		
-		if(m.find()) {
-			int rNum = Integer.parseInt(m.group(2));
-			String nrtype = m.group(1);
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		String nrtype = data.getArguments().getAsString("triggerType");
+		int rNum = data.getArguments().getAsInteger("responseIndex");
 
-			// Easter egg: "ronald" -> "hate"
-			nrtype = nrtype.toLowerCase().equals("ronald") ? "HATE" : nrtype;
-	
-			if (TriggerType.byName(nrtype) != null) {
-				List<Response> responses = brain.getResponsesFor(TriggerType.byName(nrtype));
-				
-				if(responses.size() >= rNum) {
-					Response r = responses.get(rNum-1);
-					brain.removeTriggerResponse(r);
+		if (TriggerType.byName(nrtype) != null) {
+			List<Response> responses = brain.getResponsesFor(TriggerType.byName(nrtype));
 
-					return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() });
-				}else {
-					return lang.getError(Errors.NOT_FOUND, true);
-				}
-			} else {
-				StringBuilder types = new StringBuilder();
+			if(responses.size() >= rNum) {
+				Response r = responses.get(rNum-1);
+				brain.removeTriggerResponse(r);
 
-				for (TriggerType t : TriggerType.values()) {
-					if(types.length() > 0)
-						types.append(", ");
-					
-					types.append("`").append(t.name()).append("`");
-				}
-
-				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
+				return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() });
+			}else {
+				return lang.getError(Errors.NOT_FOUND, true);
 			}
 		} else {
-			return lang.wrongUsage(getUsage());
+			StringBuilder types = new StringBuilder();
+
+			for (TriggerType t : TriggerType.values()) {
+				if(types.length() > 0)
+					types.append(", ");
+
+				types.append("`").append(t.name()).append("`");
+			}
+
+			return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
 		}
-	}
-
-	@Override
-	public String[] getAliases() {
-		return new String[] {"dropresponse", "drop response", "removeresponse", "remove response"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
 	}
 	
 	@Override

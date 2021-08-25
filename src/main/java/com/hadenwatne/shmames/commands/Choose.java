@@ -60,16 +60,18 @@ public class Choose implements ICommand {
 		// At this point during runtime, the command has already been validated.
 		if (m.find()) {
 			int mutator = Utils.getRandom(50);
+			String response;
 
 			if (mutator < 5) { // 10%
-				return lang.getMsg(Langs.CHOOSE, new String[]{"Neither"});
+				response = "Neither";
 			} else if (mutator < 10) { // 20%
-				return lang.getMsg(Langs.CHOOSE, new String[]{"Both"});
+				response = "Both";
 			} else {
-				String c = m.group(1 + Utils.getRandom(2));
-
-				return lang.getMsg(Langs.CHOOSE, new String[]{c});
+				// Starting at group 2 base because the pattern is wrapped inside a named group.
+				response = m.group(2 + Utils.getRandom(2));
 			}
+
+			return lang.getMsg(Langs.CHOOSE, new String[]{response});
 		} else {
 			return lang.getError(Errors.INCOMPLETE, true);
 		}

@@ -39,10 +39,12 @@ public class CommandHandler {
 		commands.add(new AddTrigger());
 		commands.add(new Blame());
 		commands.add(new Choose());
-		/*
 		commands.add(new CringeThat());
+		/*
 		commands.add(new Dev());
+		*/
 		commands.add(new DropResponse());
+		/*
 		commands.add(new DropTally());
 		commands.add(new DropTrigger());
 		commands.add(new EightBall());

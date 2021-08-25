@@ -14,7 +14,8 @@ public class CommandBuilder {
 
     public static CommandData BuildCommandData(ICommand command) {
         CommandStructure structure = command.getCommandStructure();
-        CommandData data = new CommandData(structure.getName(), command.getDescription());
+        String shortDesc = command.getDescription().length() > 100 ? (command.getDescription().substring(0, 96) + "...") : command.getDescription();
+        CommandData data = new CommandData(structure.getName(), shortDesc);
 
         for(CommandParameter p : structure.getParameters()) {
             OptionData option = new OptionData(MapParameterType(p.getType()), p.getName().toLowerCase(), p.getDescription())
