@@ -48,6 +48,10 @@ public class CommandBuilder {
             }
 
             sb.append(p.getPattern().pattern());
+
+            if(!p.isRequired()) {
+                sb.append("?");
+            }
         }
 
         sb.insert(0, "^");

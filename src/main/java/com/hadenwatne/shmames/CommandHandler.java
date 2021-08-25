@@ -36,8 +36,8 @@ public class CommandHandler {
 
 		commands.add(new AddResponse());
 		commands.add(new AddTally());
-		/*
 		commands.add(new AddTrigger());
+		/*
 		commands.add(new Blame());
 		commands.add(new Choose());
 		commands.add(new CringeThat());
