@@ -1,17 +1,26 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
 
 public class ListTriggers implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public ListTriggers() {
+		this.commandStructure = CommandBuilder.Create("listtriggers")
+				.addAlias("list triggers")
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -20,7 +29,7 @@ public class ListTriggers implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "listTriggers";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -29,21 +38,10 @@ public class ListTriggers implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		String list = Utils.generateList(brain.getTriggers(), -1, true);
 
 		return lang.getMsg(Langs.TRIGGER_LIST)+"\n"+list;
-	}
-
-	@Override
-	public String[] getAliases() {
-		return new String[] {"listtriggers", "list triggers"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
 	}
 	
 	@Override

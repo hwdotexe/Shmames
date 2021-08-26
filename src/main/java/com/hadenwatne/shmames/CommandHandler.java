@@ -58,20 +58,21 @@ public class CommandHandler {
 		commands.add(new Hangman());
 		*/
 		commands.add(new Help());
-		/*
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());
+		/*
 		commands.add(new ListCmd());
+		*/
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTallies());
 		commands.add(new ListTriggers());
+		/*
 		commands.add(new Minesweeper());
 		*/
 		commands.add(new Modify());
 		/*
 		commands.add(new Music());
-		commands.add(new Nickname());
 		commands.add(new PinThat());
 		commands.add(new Poll());
 		commands.add(new React());
@@ -188,11 +189,11 @@ public class CommandHandler {
 		InteractionHook hook = event.getHook();
 
 		if (server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
+			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + arguments.getAsString());
 			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
+			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + arguments.getAsString());
 
 			if (command.requiresGuild()) {
 				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()));
