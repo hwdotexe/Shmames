@@ -2,6 +2,7 @@ package com.hadenwatne.shmames;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -140,7 +141,7 @@ public class CommandHandler {
 
 			if(usageMatcher.matches()) {
 				// Build map of arguments
-				HashMap<String, Object> namedArguments = new HashMap<>();
+				LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
 
 				for(CommandParameter cp : c.getCommandStructure().getParameters()) {
 					String group = usageMatcher.group(cp.getName());
@@ -184,31 +185,38 @@ public class CommandHandler {
 		User author = event.getUser();
 		InteractionHook hook = event.getHook();
 
-		if(server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] [SLASH COMMAND] "+ event.getName() + " Args =>" + arguments.getAsString());
+		if (server != null) {
+			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
 			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
+			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] [SLASH COMMAND] " + event.getName() + " Args =>" + arguments.getAsString());
 
-			if(command.requiresGuild()) {
+			if (command.requiresGuild()) {
 				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()));
 
 				return;
 			}
 		}
 
-		// Build command data.
-		ShmamesCommandData data = new ShmamesCommandData(
-				command,
-				arguments,
-				new ShmamesCommandMessagingChannel(hook, event.getChannel()),
-				author,
-				server
-		);
+		// Validate the command usage.
+		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(arguments.getAsString());
 
-		// Execute the command.
-		executeCommand(lang, brain, data);
+		if (usageMatcher.matches()) {
+			// Build command data.
+			ShmamesCommandData data = new ShmamesCommandData(
+					command,
+					arguments,
+					new ShmamesCommandMessagingChannel(hook, event.getChannel()),
+					author,
+					server
+			);
+
+			// Execute the command.
+			executeCommand(lang, brain, data);
+		} else {
+			sendMessageResponse(lang.wrongUsage(command.getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()));
+		}
 	}
 
 	public @Nullable ParsedCommandResult parseCommandString(String cmd) {

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class SlashCommandListener extends ListenerAdapter {
 
@@ -20,7 +21,7 @@ public class SlashCommandListener extends ListenerAdapter {
         if (parsedCommand != null) {
             ICommand command = parsedCommand.getCommand();
 
-            HashMap<String, Object> namedArguments = new HashMap<>();
+            LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
 
             // TODO if the user does not TAB to name the parameter, it does not get sent with a name (with optional param)
             // TODO Default to the first optional parameter if this is the case?

@@ -29,7 +29,7 @@ public class CringeThat implements ICommand {
 		this.commandStructure = CommandBuilder.Create("cringethat")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
-								.setPattern("(\\^{1,15})"),
+								.setPattern("([\\^]{1,15})"),
 						new CommandParameter("times", "Number of cringe iterations", ParameterType.INTEGER, false)
 				)
 				.build();
@@ -70,7 +70,8 @@ public class CringeThat implements ICommand {
 		int times = data.getArguments().getAsInteger("times");
 		int iterations = times > 0 ? times : 1;
 
-		Message originMessage = data.getMessagingChannel().getOriginMessage();
+		long latestMessageID = data.getMessagingChannel().getChannel().getLatestMessageIdLong();
+		Message originMessage = data.getMessagingChannel().hasOriginMessage() ? data.getMessagingChannel().getOriginMessage() : data.getMessagingChannel().getChannel().retrieveMessageById(latestMessageID).complete();
 
 		try {
 			List<Message> messageHistory = originMessage.getChannel().getHistoryBefore(originMessage, messages).complete().getRetrievedHistory();
@@ -133,6 +134,7 @@ public class CringeThat implements ICommand {
 					.replace("l", "w")
 					.replace("L", "W")
 					.replace(" th", " d")
+					.replace("ve ", "b ")
 					.replace("th ", "f ");
 
 			// Chooses a random word to stutter.

@@ -4,13 +4,14 @@ import com.hadenwatne.shmames.Utils;
 import net.dv8tion.jda.api.entities.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShmamesCommandArguments {
-    private HashMap<String, Object> arguments;
+    private LinkedHashMap<String, Object> arguments;
 
-    public ShmamesCommandArguments(HashMap<String, Object> arguments) {
+    public ShmamesCommandArguments(LinkedHashMap<String, Object> arguments) {
         this.arguments = arguments;
     }
 
@@ -25,7 +26,8 @@ public class ShmamesCommandArguments {
             if(sb.length() > 0) {
                 sb.append(" ");
             }
-            sb.append((String) arguments.get(key));
+
+            sb.append(arguments.get(key));
         }
 
         return sb.toString();

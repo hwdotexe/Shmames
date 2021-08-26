@@ -16,6 +16,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ReactListener extends ListenerAdapter {
@@ -108,7 +109,7 @@ public class ReactListener extends ListenerAdapter {
 
 		for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
-				HashMap<String, Object> tallyArgs = new HashMap<>();
+				LinkedHashMap<String, Object> tallyArgs = new LinkedHashMap<>();
 
 				tallyArgs.put("toTally", tallyValue);
 
