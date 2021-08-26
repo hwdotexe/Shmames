@@ -45,14 +45,16 @@ public class CommandHandler {
 		commands.add(new Dev());
 		*/
 		commands.add(new DropResponse());
-		/*
 		commands.add(new DropTally());
 		commands.add(new DropTrigger());
 		commands.add(new EightBall());
 		commands.add(new Enhance());
+		/*
 		commands.add(new FamilyCmd());
 		commands.add(new ForumWeapon());
+		*/
 		commands.add(new GIF());
+		/*
 		commands.add(new Hangman());
 		*/
 		commands.add(new Help());

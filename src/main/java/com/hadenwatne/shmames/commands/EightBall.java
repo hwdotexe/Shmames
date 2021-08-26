@@ -1,32 +1,43 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
 
-import javax.annotation.Nullable;
-
 public class EightBall implements ICommand {
-	private String[] replies;
-	
+	private final CommandStructure commandStructure;
+	private final String[] replies = new String[]{"Definitely.", "Without a doubt.", "Yes - of course.",
+			"You can bet on it.", "Most likely.", "It's looking good!", "Duh.", "Signs point to yes.",
+			"Why don't you ask me later?",
+			"Don't count on it.", "My reply is no.", "My sources say no.", "It's not looking good.", "I highly doubt it.",
+			"Nope.", "No way.", "That's a negative."};
+
 	public EightBall() {
-		replies = new String[] {"Definitely.", "Without a doubt.","Yes - of course.",
-				"You can bet on it.","Most likely.","It's looking good!","Duh.","Signs point to yes.",
-				"Why don't you ask me later?",
-				"Don't count on it.","My reply is no.","My sources say no.","It's not looking good.","I highly doubt it.",
-				"Nope.", "No way.", "That's a negative."};
+		this.commandStructure = CommandBuilder.Create("8ball")
+				.addParameters(
+						new CommandParameter("question", "The question to ask the magic 8 ball.", ParameterType.STRING)
+				)
+				.build();
 	}
-	
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
+
 	@Override
 	public String getDescription() {
 		return "Shake a Magic 8 Ball and let me see your future.";
 	}
-	
+
 	@Override
 	public String getUsage() {
-		return "8ball <your question>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -35,20 +46,18 @@ public class EightBall implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		return replies[Utils.getRandom(replies.length)];
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String answer = replies[Utils.getRandom(replies.length)];
+
+		if (data.getMessagingChannel().hasHook()) {
+			String question = data.getArguments().getAsString("question");
+
+			return "> _" + question + "_\n" + answer;
+		}
+
+		return answer;
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"8ball"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return false;

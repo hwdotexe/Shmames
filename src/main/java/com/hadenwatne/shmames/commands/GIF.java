@@ -1,17 +1,32 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
+import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.Utils;
 
-import javax.annotation.Nullable;
-
 public class GIF implements ICommand {
-	private Lang lang;
+	private final CommandStructure commandStructure;
+
+	public GIF() {
+		this.commandStructure = CommandBuilder.Create("gif")
+				.addAlias("who is")
+				.addAlias("what is")
+				.addParameters(
+						new CommandParameter("search", "What to find a GIF for.", ParameterType.STRING)
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -20,7 +35,7 @@ public class GIF implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "gif <search>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -29,28 +44,18 @@ public class GIF implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(args.length() > 0) {
-			if(message.getChannelType() == ChannelType.TEXT){
-				if(message.getTextChannel().isNSFW()){
-					return Utils.getGIF(args, "low");
-				}
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		MessageChannel channel = data.getMessagingChannel().getChannel();
+		String search = data.getArguments().getAsString("search");
+
+		// Obey the channel content settings, if applicable.
+		if(channel.getType() == ChannelType.TEXT){
+			if(((TextChannel)channel).isNSFW()){
+				return Utils.getGIF(search, "low");
 			}
-
-			return Utils.getGIF(args, "high");
-		} else {
-			return lang.getError(Errors.INCOMPLETE, true);
 		}
-	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"gif", "who is", "what is"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
+		return Utils.getGIF(search, "high");
 	}
 	
 	@Override
