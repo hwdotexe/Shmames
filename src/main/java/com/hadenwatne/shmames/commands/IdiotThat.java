@@ -1,6 +1,8 @@
 package com.hadenwatne.shmames.commands;
 
 import java.util.List;
+
+import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -49,12 +51,8 @@ public class IdiotThat implements ICommand {
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		int messages = data.getArguments().getAsString("position").length();
 
-		long latestMessageID = data.getMessagingChannel().getChannel().getLatestMessageIdLong();
-		Message originMessage = data.getMessagingChannel().hasOriginMessage() ? data.getMessagingChannel().getOriginMessage() : data.getMessagingChannel().getChannel().retrieveMessageById(latestMessageID).complete();
-
 		try {
-			List<Message> messageHistory = originMessage.getChannel().getHistoryBefore(originMessage, messages).complete().getRetrievedHistory();
-			Message toIdiot = messageHistory.get(messageHistory.size() - 1);
+			Message toIdiot = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
 			String idiot = toIdiot.getContentDisplay();
 
 			return runIdiotProcess(idiot);

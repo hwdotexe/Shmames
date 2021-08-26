@@ -12,6 +12,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ParsedCommandResult;
@@ -73,22 +74,28 @@ public class CommandHandler {
 		commands.add(new Modify());
 		/*
 		commands.add(new Music());
+		*/
 		commands.add(new PinThat());
+		/*
 		commands.add(new Poll());
 		commands.add(new React());
+		*/
 		commands.add(new Report());
+		/*
 		commands.add(new ResetEmoteStats());
 		commands.add(new Roll());
 		commands.add(new SetTally());
 		commands.add(new SimonSays());
 		commands.add(new Storytime());
-		commands.add(new Thoughts());
 		*/
+		commands.add(new Thoughts());
 		commands.add(new Timer());
 		/*
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
+		*/
 		commands.add(new When());
+		/*
 		commands.add(new Wiki());
 		*/
 
@@ -134,7 +141,7 @@ public class CommandHandler {
 			logCountCommandUsage(c);
 
 			if(server == null && c.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(message, channel));
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(message, channel), lang);
 
 				return;
 			}
@@ -166,10 +173,10 @@ public class CommandHandler {
 				// Execute the command
 				executeCommand(lang, brain, data);
 			}else{
-				sendMessageResponse(lang.wrongUsage(c.getUsage()), new ShmamesCommandMessagingChannel(message, channel));
+				sendMessageResponse(lang.wrongUsage(c.getUsage()), new ShmamesCommandMessagingChannel(message, channel), lang);
 			}
 		} else {
-			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel));
+			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel), lang);
 		}
 	}
 
@@ -196,7 +203,7 @@ public class CommandHandler {
 			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + arguments.getAsString());
 
 			if (command.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()));
+				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()), lang);
 
 				return;
 			}
@@ -218,7 +225,7 @@ public class CommandHandler {
 			// Execute the command.
 			executeCommand(lang, brain, data);
 		} else {
-			sendMessageResponse(lang.wrongUsage(command.getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()));
+			sendMessageResponse(lang.wrongUsage(command.getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()), lang);
 		}
 	}
 
@@ -245,13 +252,13 @@ public class CommandHandler {
 	private void executeCommand(Lang lang, Brain brain, ShmamesCommandData data) {
 		try {
 			CompletableFuture.supplyAsync(() -> data.getCommand().run(lang, brain, data))
-					.thenAccept(r -> sendMessageResponse(r, data.getMessagingChannel()))
+					.thenAccept(r -> sendMessageResponse(r, data.getMessagingChannel(), lang))
 					.exceptionally(exception -> {
 						if(data.getMessagingChannel().hasHook()) {
 							data.getMessagingChannel().getHook().setEphemeral(true);
 						}
 
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel());
+						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
 						ShmamesLogger.logException(exception);
 						return null;
 					});
@@ -261,21 +268,25 @@ public class CommandHandler {
 			}
 
 			ShmamesLogger.logException(e);
-			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel());
+			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
 		}
 	}
 
-	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg){
-		if(msg.hasHook()) {
-			if(r.length() > 0) {
+	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg, Lang lang) {
+		if (msg.hasHook()) {
+			if (r.length() > 0) {
 				for (String m : Utils.splitString(r, 2000)) {
 					msg.getHook().sendMessage(m).queue();
 				}
+			} else {
+				msg.getHook().setEphemeral(true);
+				msg.getHook().sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS)).queue();
 			}
 		} else {
 			new TypingTask(r, msg.getChannel(), false);
 		}
 	}
+
 	private void logCountCommandUsage(ICommand command) {
 		String primaryCommandName = command.getCommandStructure().getName().toLowerCase();
 		HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();

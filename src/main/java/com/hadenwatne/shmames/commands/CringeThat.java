@@ -70,12 +70,8 @@ public class CringeThat implements ICommand {
 		int times = data.getArguments().getAsInteger("times");
 		int iterations = times > 0 ? times : 1;
 
-		long latestMessageID = data.getMessagingChannel().getChannel().getLatestMessageIdLong();
-		Message originMessage = data.getMessagingChannel().hasOriginMessage() ? data.getMessagingChannel().getOriginMessage() : data.getMessagingChannel().getChannel().retrieveMessageById(latestMessageID).complete();
-
 		try {
-			List<Message> messageHistory = originMessage.getChannel().getHistoryBefore(originMessage, messages).complete().getRetrievedHistory();
-			Message toCringe = messageHistory.get(messageHistory.size() - 1);
+			Message toCringe = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
 			String cringe = toCringe.getContentDisplay();
 
 			return runCringeProcess(cringe, iterations);

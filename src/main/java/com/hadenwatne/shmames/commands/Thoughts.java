@@ -1,31 +1,43 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
 
-import javax.annotation.Nullable;
-
 public class Thoughts implements ICommand {
-	private String[] answers;
-	private Lang lang;
-	
+	private final CommandStructure commandStructure;
+	private final String[] answers = new String[]{"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!",
+			"Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.",
+			"I hate that.", "Get that garbage out of my face!"};
+
 	public Thoughts() {
-		answers = new String[] {"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", 
-				"Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.",
-				"I hate that.", "Get that garbage out of my face!"};
+		this.commandStructure = CommandBuilder.Create("thoughts")
+				.addAlias("what do you think about")
+				.addAlias("what do you think of")
+				.addParameters(
+						new CommandParameter("item", "The item to get my thoughts about", ParameterType.STRING)
+				)
+				.build();
 	}
-	
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
+
 	@Override
 	public String getDescription() {
 		return "Get my randomized opinion on something.";
 	}
-	
+
 	@Override
 	public String getUsage() {
-		return "thoughts <item>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -34,23 +46,10 @@ public class Thoughts implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(args.length() > 0)
-			return answers[Utils.getRandom(answers.length)];
-
-		return lang.wrongUsage(getUsage());
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		return answers[Utils.getRandom(answers.length)];
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"thoughts", "what do you think about", "what do you think of"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return false;
