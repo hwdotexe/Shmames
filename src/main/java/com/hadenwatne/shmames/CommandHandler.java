@@ -81,23 +81,21 @@ public class CommandHandler {
 		commands.add(new React());
 		*/
 		commands.add(new Report());
-		/*
 		commands.add(new ResetEmoteStats());
+		/*
 		commands.add(new Roll());
 		commands.add(new SetTally());
 		commands.add(new SimonSays());
-		commands.add(new Storytime());
 		*/
+		commands.add(new Storytime());
 		commands.add(new Thoughts());
 		commands.add(new Timer());
 		/*
 		commands.add(new WhatAreTheOdds());
+		*/
 		commands.add(new WhatShouldIDo());
-		*/
 		commands.add(new When());
-		/*
 		commands.add(new Wiki());
-		*/
 
 		// Send Discord the syntax we plan to use for slash commands.
 		updateSlashCommands(commands);

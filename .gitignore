@@ -1,5 +1,6 @@
 bin
-brains
+brains/motherbrain.json
+brains/servers
 .idea/libraries
 .DS_Store
 target

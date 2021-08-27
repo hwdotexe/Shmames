@@ -1,19 +1,28 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
 
 public class ResetEmoteStats implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public ResetEmoteStats() {
+		this.commandStructure = CommandBuilder.Create("resetemotestats")
+				.addAlias("reset emote stats")
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -22,7 +31,7 @@ public class ResetEmoteStats implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "resetEmoteStats";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -31,25 +40,14 @@ public class ResetEmoteStats implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), message.getMember())){
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		if(Utils.checkUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), data.getAuthor())){
 			brain.getEmoteStats().clear();
 
 			return lang.getMsg(Langs.RESET_EMOTE_STATS);
 		}else{
 			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
-	}
-
-	@Override
-	public String[] getAliases() {
-		return new String[] {"resetemotestats", "reset emote stats"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
 	}
 	
 	@Override
