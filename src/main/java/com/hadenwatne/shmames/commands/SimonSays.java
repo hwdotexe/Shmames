@@ -4,30 +4,46 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Family;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import javax.annotation.Nullable;
 
 public class SimonSays implements ICommand {
-	private Lang lang;
-	private @Nullable Brain brain;
+	private final CommandStructure commandStructure;
+
+	public SimonSays() {
+		this.commandStructure = CommandBuilder.Create("simonsays")
+				.addAlias("echo")
+				.addAlias("repeat")
+				.addParameters(
+						new CommandParameter("message", "The message you want me to repeat.", ParameterType.STRING)
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
 		return "I'll repeat after you! Send messages, links, or server emotes!";
 	}
-	
+
 	@Override
 	public String getUsage() {
-		return "simonsays <message>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -37,94 +53,42 @@ public class SimonSays implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(args.length() > 0) {
-			try {
-				message.delete().complete();
-			} catch(Exception e) { }
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String message = data.getArguments().getAsString("message");
 
-			// :emotename:   =>   <a:emoteName:1234567890>
-			Matcher m = Pattern.compile(":([\\w\\d]+):").matcher(args);
-			
-			// Add a space at the end so we can regex correctly
-			args += " ";
+		// Delete the message that ran this command, if possible.
+		try {
+			if(data.getMessagingChannel().hasOriginMessage()){
+				data.getMessagingChannel().getOriginMessage().delete().queue();
+			}
+		} catch (PermissionException ignored) {}
 
-			if(brain != null) {
-				long thisGuild = message.getGuild().getIdLong();
+		// If the command is being run on a server, check for emotes.
+		if(brain != null && data.getServer() != null) {
+			Matcher m = Pattern.compile(":([a-zA-Z0-9_]):").matcher(message);
 
-				// Check servers for the emote; this one first, then others.
-				while (m.find()) {
-					String eName = m.group(1);
+			while (m.find()) {
+				String eName = m.group(1);
+				Emote emote = Utils.GetFamilyEmote(eName, brain, data.getServer());
 
-					// This guild
-					Emote e = findEmote(message.getGuild(), eName);
-
-					if (e != null) {
-						args = args.replace(":" + eName + ": ", e.getAsMention());
-					} else {
-						boolean found = false;
-
-						for (String fID : brain.getFamilies()) {
-							Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fID);
-
-							if (f != null) {
-								for (long gid : f.getMemberGuilds()) {
-									if (gid != thisGuild) {
-										Guild g = Shmames.getJDA().getGuildById(gid);
-										e = findEmote(g, eName);
-
-										if (e != null) {
-											args = args.replace(":" + eName + ": ", e.getAsMention());
-											found = true;
-											break;
-										}
-									}
-								}
-
-								if (found)
-									break;
-							}
-						}
-					}
+				if(emote != null) {
+					// Replace the emote name with the emote mention.
+					message = message.replaceFirst(m.group(), emote.getAsMention());
 
 					// Tally the emote
-					if (e != null) {
-						Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
-						String eID = Long.toString(e.getIdLong());
+					Brain emoteBrain = Shmames.getBrains().getBrain(emote.getGuild().getId());
+					String eID = Long.toString(emote.getIdLong());
 
-						Utils.incrementEmoteTally(b, eID);
-					}
+					Utils.incrementEmoteTally(emoteBrain, eID);
 				}
 			}
-			
-			return args;
-		}else {
-			return lang.wrongUsage(getUsage());
 		}
+
+		return message;
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"simonsays","simon says", "repeat", "echo"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return false;
-	}
-	
-	private Emote findEmote(Guild g, String n) {
-		List<Emote> em = g.getEmotesByName(n, true);
-		
-		if(em.size() > 0)
-			return em.get(0);
-		
-		return null;
 	}
 }

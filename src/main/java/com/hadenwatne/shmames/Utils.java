@@ -753,17 +753,18 @@ public class Utils {
 	/**
 	 * Returns a list of other Guilds that the provided Guild is connected to via
 	 * Shmames Family, excluding the Guild that was passed in.
-	 * @param g The Guild to search with.
+	 * @param serverBrain The Brain of the Guild being passed in.
+	 * @param server The Guild to search with.
 	 * @return A list of connected Guilds, exclusively.
 	 */
-	public static List<Guild> GetConnectedFamilyGuilds(Guild g) {
+	public static List<Guild> GetConnectedFamilyGuilds(Brain serverBrain, Guild server) {
 		List<Guild> guilds = new ArrayList<>();
 
-		for(String fid : Shmames.getBrains().getBrain(g.getId()).getFamilies()){
+		for(String fid : serverBrain.getFamilies()){
 			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
 
 			for(long mg : f.getMemberGuilds()) {
-				if(mg != g.getIdLong()) {
+				if(mg != server.getIdLong()) {
 					Guild familyGuild = Shmames.getJDA().getGuildById(mg);
 
 					if(familyGuild != null) {
@@ -777,6 +778,35 @@ public class Utils {
 		}
 
 		return guilds;
+	}
+
+	/**
+	 * Returns an Emote from the server's Family, if one can be found.
+	 * @param emoteName The name of the emote to search for.
+	 * @param serverBrain The server's brain to use for the search.
+	 * @param server The server.
+	 * @return An Emote, or null if one cannot be found.
+	 */
+	public static Emote GetFamilyEmote(String emoteName, Brain serverBrain, Guild server) {
+		// Check the server passed in first.
+		List<Emote> serverEmotes = server.getEmotesByName(emoteName, true);
+
+		if (serverEmotes.size() > 0) {
+			return serverEmotes.get(0);
+		} else {
+			// Check the rest of the family.
+			List<Guild> familyServers = GetConnectedFamilyGuilds(serverBrain, server);
+
+			for(Guild familyServer : familyServers) {
+				List<Emote> familyEmotes = familyServer.getEmotesByName(emoteName, true);
+
+				if (familyEmotes.size() > 0) {
+					return familyEmotes.get(0);
+				}
+			}
+
+			return null;
+		}
 	}
 
 	/**

@@ -42,9 +42,7 @@ public class CommandHandler {
 		commands.add(new Blame());
 		commands.add(new Choose());
 		commands.add(new CringeThat());
-		/*
 		commands.add(new Dev());
-		*/
 		commands.add(new DropResponse());
 		commands.add(new DropTally());
 		commands.add(new DropTrigger());
@@ -84,9 +82,7 @@ public class CommandHandler {
 		commands.add(new Roll());
 		*/
 		commands.add(new SetTally());
-		/*
 		commands.add(new SimonSays());
-		*/
 		commands.add(new Storytime());
 		commands.add(new Thoughts());
 		commands.add(new Timer());
@@ -229,13 +225,13 @@ public class CommandHandler {
 
 	public @Nullable ParsedCommandResult parseCommandString(String cmd) {
 		for(ICommand c : commands) {
-			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")\\b(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
 			if (nameMatcher.matches()) {
 				return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
 			} else {
 				for(String a : c.getCommandStructure().getAliases()) {
-					Matcher aliasMatcher = Pattern.compile("^(" + a + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+					Matcher aliasMatcher = Pattern.compile("^(" + a + ")\\b(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
 
 					if(aliasMatcher.matches()) {
 						return new ParsedCommandResult(c, aliasMatcher.group(2) != null ? aliasMatcher.group(2).trim() : "");
@@ -300,7 +296,9 @@ public class CommandHandler {
 				CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById(g.getId()).updateCommands();
 
 				for(ICommand command : commands) {
-					cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+					if(command.getDescription().length() > 0) {
+						cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+					}
 				}
 
 				cUpdate.queue();

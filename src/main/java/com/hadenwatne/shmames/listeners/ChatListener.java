@@ -97,7 +97,7 @@ public class ChatListener extends ListenerAdapter {
 						} else {
 							List<Emote> em = new ArrayList<Emote>(server.getEmotes());
 
-							for(Guild fg : Utils.GetConnectedFamilyGuilds(server)) {
+							for(Guild fg : Utils.GetConnectedFamilyGuilds(brain, server)) {
 								em.addAll(fg.getEmotes());
 							}
 
