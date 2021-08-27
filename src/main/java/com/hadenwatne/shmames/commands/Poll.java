@@ -2,18 +2,22 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.ShmamesLogger;
 import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.PollModel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.tasks.PollTask;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,17 +26,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Poll implements ICommand {
-	private Brain brain;
-	private Lang lang;
+	private final CommandStructure commandStructure;
+
+	public Poll() {
+		this.commandStructure = CommandBuilder.Create("poll")
+				.addParameters(
+						new CommandParameter("action", "The action to perform", ParameterType.SELECTION)
+								.addSelectionOptions("start", "close"),
+						new CommandParameter("data", "Command options", ParameterType.STRING)
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
 		return "Create and manage server polls.";
 	}
-	
+
 	@Override
 	public String getUsage() {
-		return "poll <start|close> [<time> <question> <options>|<pollID>]";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -42,47 +60,30 @@ public class Poll implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(Utils.checkUserPermission(brain.getSettingFor(BotSettingName.ALLOW_POLLS), message.getMember())) {
-			Matcher m = Pattern.compile("^((start)|(close))\\s(.+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		if (Utils.checkUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.ALLOW_POLLS), data.getAuthor())) {
+			String subCmd = data.getArguments().getAsString("action");
+			String subCmdArgs = data.getArguments().getAsString("data");
 
-			if (m.find()) {
-				String subCmd = m.group(1);
-				String subCmdArgs = m.group(4);
-
-				switch(subCmd.toLowerCase()) {
-					case "start":
-						return startPoll(subCmdArgs, message);
-					case "close":
-						return closePoll(subCmdArgs);
-					default:
-						return lang.wrongUsage(getUsage());
-				}
-			} else {
-				return lang.wrongUsage(getUsage());
+			switch (subCmd.toLowerCase()) {
+				case "start":
+					return startPoll(subCmdArgs, lang, brain, data.getServer(), data.getMessagingChannel());
+				case "close":
+					return closePoll(subCmdArgs, brain, lang);
+				default:
+					return lang.wrongUsage(getUsage());
 			}
-		}else{
+		} else {
 			return lang.getError(Errors.NO_PERMISSION_USER, true);
 		}
 	}
 
 	@Override
-	public String[] getAliases() {
-		return new String[] {"poll", "survey"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.brain = brain;
-		this.lang = lang;
-	}
-	
-	@Override
 	public boolean requiresGuild() {
 		return true;
 	}
 
-	private String closePoll(String args) {
+	private String closePoll(String args, Brain brain, Lang lang) {
 		Matcher m = Pattern.compile("^\\#?[a-zA-Z0-9]{5}$").matcher(args);
 
 		if (m.find()) {
@@ -105,7 +106,7 @@ public class Poll implements ICommand {
 		}
 	}
 
-	private String startPoll(String args, Message message) {
+	private String startPoll(String args, Lang lang, Brain brain, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
 		Matcher m = Pattern.compile("^([\\dydhms]+)\\s(.+\\?) ((.+); (.+))$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if (m.find()) {
@@ -113,13 +114,14 @@ public class Poll implements ICommand {
 			String question = m.group(2);
 			String opt = m.group(3);
 
-			if(seconds > 0) {
+			if (seconds > 0) {
+				// Use friendly channel names when possible.
 				Matcher channelReference = Pattern.compile("<#(\\d{15,})>").matcher(question);
 
 				while (channelReference.find()) {
-					TextChannel textChannel = message.getGuild().getTextChannelById(channelReference.group(1));
+					TextChannel textChannel = server.getTextChannelById(channelReference.group(1));
 
-					if(textChannel != null) {
+					if (textChannel != null) {
 						question = question.replaceFirst(channelReference.group(1), textChannel.getName());
 					}
 				}
@@ -132,14 +134,16 @@ public class Poll implements ICommand {
 
 				if (options.size() > 1 && options.size() <= 9) {
 					try {
-						message.delete().queue();
+						if (messagingChannel.hasOriginMessage()) {
+							messagingChannel.getOriginMessage().delete().queue();
+						}
 					} catch (InsufficientPermissionException e) {
 						// Do nothing; we don't have permission
 					} catch (Exception e) {
 						ShmamesLogger.logException(e);
 					}
 
-					PollModel poll = new PollModel(message.getTextChannel(), question, options, seconds, Utils.createID());
+					PollModel poll = new PollModel(messagingChannel.getChannel().getId(), question, options, seconds, Utils.createID());
 					brain.getActivePolls().add(poll);
 
 					return "";
