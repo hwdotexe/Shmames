@@ -68,9 +68,7 @@ public class CommandHandler {
 		commands.add(new ListResponses());
 		commands.add(new ListTallies());
 		commands.add(new ListTriggers());
-		/*
 		commands.add(new Minesweeper());
-		*/
 		commands.add(new Modify());
 		/*
 		commands.add(new Music());
@@ -78,13 +76,15 @@ public class CommandHandler {
 		commands.add(new PinThat());
 		/*
 		commands.add(new Poll());
+		 */
 		commands.add(new React());
-		*/
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		/*
 		commands.add(new Roll());
+		*/
 		commands.add(new SetTally());
+		/*
 		commands.add(new SimonSays());
 		*/
 		commands.add(new Storytime());

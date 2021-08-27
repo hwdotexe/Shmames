@@ -1,8 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -11,12 +8,8 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
-
-import javax.annotation.Nullable;
 
 public class AddTrigger implements ICommand {
 	private final CommandStructure commandStructure;
@@ -24,7 +17,7 @@ public class AddTrigger implements ICommand {
 	public AddTrigger() {
 		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger to add", ParameterType.SELECTION);
 
-		for(TriggerType type : TriggerType.values()) {
+		for (TriggerType type : TriggerType.values()) {
 			triggerType.addSelectionOptions(type.name());
 		}
 
@@ -46,7 +39,7 @@ public class AddTrigger implements ICommand {
 	public String getDescription() {
 		return "Creates a new trigger word or phrase, which then sends a response for the given type.";
 	}
-	
+
 	@Override
 	public String getUsage() {
 		return this.commandStructure.getUsage();
@@ -58,7 +51,7 @@ public class AddTrigger implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		String nttype = data.getArguments().getAsString("triggerType");
 		String newtrigger = data.getArguments().getAsString("triggerWord");
 
@@ -66,24 +59,24 @@ public class AddTrigger implements ICommand {
 			if (TriggerType.byName(nttype) != null) {
 				brain.getTriggers().put(newtrigger, TriggerType.byName(nttype));
 
-				return lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[] { nttype, newtrigger });
+				return lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[]{nttype, newtrigger});
 			} else {
 				StringBuilder types = new StringBuilder();
 
 				for (TriggerType t : TriggerType.values()) {
-					if(types.length() > 0)
+					if (types.length() > 0)
 						types.append(", ");
 
 					types.append("`").append(t.name()).append("`");
 				}
 
-				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
+				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[]{types.toString()});
 			}
 		} else {
 			return lang.getError(Errors.ALREADY_EXISTS, true);
 		}
 	}
-	
+
 	@Override
 	public boolean requiresGuild() {
 		return true;

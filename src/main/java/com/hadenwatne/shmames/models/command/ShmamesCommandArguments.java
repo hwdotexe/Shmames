@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.models.command;
 
+import com.hadenwatne.shmames.ShmamesLogger;
 import com.hadenwatne.shmames.Utils;
 import net.dv8tion.jda.api.entities.*;
 
@@ -40,15 +41,19 @@ public class ShmamesCommandArguments {
     public boolean getAsBoolean(String key) {
         try {
             return Boolean.parseBoolean(getAsString(key));
-        }catch (Exception ignored) {}
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return false;
     }
 
     public int getAsInteger(String key) {
         try {
-            return Integer.parseInt(getAsString(key));
-        }catch (Exception ignored) {}
+            return (Integer)this.arguments.get(key);
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return -1;
     }
@@ -62,7 +67,9 @@ public class ShmamesCommandArguments {
             }else{
                 return server.getRolesByName(id, true).get(0);
             }
-        }catch (Exception ignored) {}
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return null;
     }
@@ -76,7 +83,9 @@ public class ShmamesCommandArguments {
             }else{
                 return server.getMembersByName(id, true).get(0).getUser();
             }
-        }catch (Exception ignored) {}
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return null;
     }
@@ -90,7 +99,9 @@ public class ShmamesCommandArguments {
             }else{
                 return server.getEmotesByName(id, true).get(0);
             }
-        }catch (Exception ignored) {}
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return null;
     }
@@ -104,7 +115,9 @@ public class ShmamesCommandArguments {
             }else{
                 return server.getTextChannelsByName(id, true).get(0);
             }
-        }catch (Exception ignored) {}
+        }catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
 
         return null;
     }

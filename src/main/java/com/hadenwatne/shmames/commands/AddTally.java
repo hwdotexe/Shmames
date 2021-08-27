@@ -18,7 +18,7 @@ public class AddTally implements ICommand {
 				.addAlias("add a tally to")
 				.addParameters(
 						new CommandParameter("tallyName", "The tally to increment.", ParameterType.STRING)
-						.setPattern("[\\w\\d\\s]+")
+								.setPattern("[\\w\\d\\s]+")
 				)
 				.build();
 	}
@@ -44,16 +44,16 @@ public class AddTally implements ICommand {
 	}
 
 	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		String tallyArg = data.getArguments().getAsString("tallyName");
 		String tally = tallyArg.trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
 		int newTally = brain.getTallies().getOrDefault(tally, 0) + 1;
 
 		brain.getTallies().put(tally, newTally);
 
-		return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{ tally, Integer.toString(newTally) });
+		return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)});
 	}
-	
+
 	@Override
 	public boolean requiresGuild() {
 		return true;
