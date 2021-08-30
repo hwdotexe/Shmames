@@ -39,84 +39,96 @@ public class ShmamesCommandArguments {
     }
 
     public boolean getAsBoolean(String key) {
-        try {
-            return Boolean.parseBoolean(getAsString(key));
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
+        if(this.arguments.containsKey(key)) {
+            try {
+                return Boolean.parseBoolean(getAsString(key));
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
+            }
         }
 
         return false;
     }
 
     public int getAsInteger(String key) {
-        try {
-            return (Integer)this.arguments.get(key);
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
+        if(this.arguments.containsKey(key)) {
+            try {
+                return (Integer) this.arguments.get(key);
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
+            }
         }
 
         return -1;
     }
 
     public Role getAsRole(String key, Guild server) {
-        try {
-            String id = stripID(getAsString(key));
+        if(this.arguments.containsKey(key)) {
+            try {
+                String id = stripID(getAsString(key));
 
-            if(Utils.isLong(id)) {
-                return server.getRoleById(id);
-            }else{
-                return server.getRolesByName(id, true).get(0);
+                if (Utils.isLong(id)) {
+                    return server.getRoleById(id);
+                } else {
+                    return server.getRolesByName(id, true).get(0);
+                }
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
             }
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
         }
 
         return null;
     }
 
     public User getAsUser(String key, Guild server) {
-        try {
-            String id = stripID(getAsString(key));
+        if(this.arguments.containsKey(key)) {
+            try {
+                String id = stripID(getAsString(key));
 
-            if(Utils.isLong(id)) {
-                return server.getMemberById(id).getUser();
-            }else{
-                return server.getMembersByName(id, true).get(0).getUser();
+                if (Utils.isLong(id)) {
+                    return server.getMemberById(id).getUser();
+                } else {
+                    return server.getMembersByName(id, true).get(0).getUser();
+                }
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
             }
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
         }
 
         return null;
     }
 
     public Emote getAsEmote(String key, Guild server) {
-        try {
-            String id = stripID(getAsString(key));
+        if(this.arguments.containsKey(key)) {
+            try {
+                String id = stripID(getAsString(key));
 
-            if(Utils.isLong(id)) {
-                return server.getEmoteById(id);
-            }else{
-                return server.getEmotesByName(id, true).get(0);
+                if (Utils.isLong(id)) {
+                    return server.getEmoteById(id);
+                } else {
+                    return server.getEmotesByName(id, true).get(0);
+                }
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
             }
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
         }
 
         return null;
     }
 
     public MessageChannel getAsChannel(String key, Guild server) {
-        try {
-            String id = stripID(getAsString(key));
+        if(this.arguments.containsKey(key)) {
+            try {
+                String id = stripID(getAsString(key));
 
-            if(Utils.isLong(id)) {
-                return server.getTextChannelById(id);
-            }else{
-                return server.getTextChannelsByName(id, true).get(0);
+                if (Utils.isLong(id)) {
+                    return server.getTextChannelById(id);
+                } else {
+                    return server.getTextChannelsByName(id, true).get(0);
+                }
+            } catch (Exception e) {
+                ShmamesLogger.logException(e);
             }
-        }catch (Exception e) {
-            ShmamesLogger.logException(e);
         }
 
         return null;

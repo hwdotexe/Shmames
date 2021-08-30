@@ -2,11 +2,14 @@ package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.models.command.ParsedCommandResult;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.HashMap;
@@ -20,24 +23,36 @@ public class SlashCommandListener extends ListenerAdapter {
 
         if (parsedCommand != null) {
             ICommand command = parsedCommand.getCommand();
+            ShmamesCommandArguments commandArguments = new ShmamesCommandArguments(buildArgumentMap(command.getCommandStructure(), event));
+            ShmamesSubCommandData subCommandData = null;
 
-            LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
+            // If this is a subcommand, build out the subcommand arguments.
+            if(event.getSubcommandName() != null) {
+                for (CommandStructure subCommand : command.getCommandStructure().getSubcommands()) {
+                    if(subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
+                        subCommandData = new ShmamesSubCommandData(event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));
 
-            // TODO if the user does not TAB to name the parameter, it does not get sent with a name (with optional param)
-            // TODO Default to the first optional parameter if this is the case?
-            // TODO This might be a Library limitation
-            for (CommandParameter cp : command.getCommandStructure().getParameters()) {
-                OptionMapping option = event.getOption(cp.getName().toLowerCase());
-
-                if (option != null) {
-                    insertArgumentWithType(namedArguments, option, cp);
+                        break;
+                    }
                 }
             }
 
-            ShmamesCommandArguments sca = new ShmamesCommandArguments(namedArguments);
-
-            Shmames.getCommandHandler().PerformCommand(command, sca, event, event.getGuild());
+            Shmames.getCommandHandler().PerformCommand(command, subCommandData, commandArguments, event, event.getGuild());
         }
+    }
+
+    private LinkedHashMap<String, Object> buildArgumentMap(CommandStructure structure, SlashCommandEvent event) {
+        LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
+
+        for (CommandParameter cp : structure.getParameters()) {
+            OptionMapping option = event.getOption(cp.getName().toLowerCase());
+
+            if (option != null) {
+                insertArgumentWithType(namedArguments, option, cp);
+            }
+        }
+
+        return namedArguments;
     }
 
     private void insertArgumentWithType(HashMap<String, Object> map, OptionMapping option, CommandParameter parameter) {

@@ -4,7 +4,10 @@ import com.hadenwatne.shmames.commands.ICommand;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandBuilder {
@@ -17,23 +20,89 @@ public class CommandBuilder {
         String shortDesc = command.getDescription().length() > 100 ? (command.getDescription().substring(0, 96) + "...") : command.getDescription();
         CommandData data = new CommandData(structure.getName(), shortDesc);
 
-        for(CommandParameter p : structure.getParameters()) {
-            OptionData option = new OptionData(MapParameterType(p.getType()), p.getName().toLowerCase(), p.getDescription())
-                .setRequired(p.isRequired());
+        // If there are subcommands, add these instead.
+        // TODO JDA/Discord limit the ability to have the base command with a mix of parameters and subcommands.
+        if (structure.getSubcommands().size() > 0) {
+            for (CommandStructure subCommand : structure.getSubcommands()) {
+                String subShortDesc = command.getDescription().length() > 100 ? (command.getDescription().substring(0, 96) + "...") : command.getDescription();
+                SubcommandData subCommandData = new SubcommandData(subCommand.getName(), subShortDesc);
 
-            if(p.getSelectionOptions().size() > 0) {
-                for(String so : p.getSelectionOptions()) {
-                    option.addChoice(so, so);
+                // Build sub command's parameter data.
+                for (CommandParameter p : subCommand.getParameters()) {
+                    OptionData option = buildCommandOptionData(p);
+
+                    subCommandData.addOptions(option);
                 }
-            }
 
-            data.addOptions(option);
+                data.addSubcommands(subCommandData);
+            }
+        } else {
+            // TODO if they ever let us combine these, this block can stand on its own.
+            // Build primary command's parameter data.
+            for (CommandParameter p : structure.getParameters()) {
+                OptionData option = buildCommandOptionData(p);
+
+                data.addOptions(option);
+            }
         }
 
         return data;
     }
 
+    private static OptionData buildCommandOptionData(CommandParameter p) {
+        OptionData option = new OptionData(MapParameterType(p.getType()), p.getName().toLowerCase(), p.getDescription())
+                .setRequired(p.isRequired());
+
+        if (p.getSelectionOptions().size() > 0) {
+            for (String so : p.getSelectionOptions()) {
+                option.addChoice(so, so);
+            }
+        }
+
+        return option;
+    }
+
     public static Pattern BuildPattern(CommandStructure command) {
+        StringBuilder sb = new StringBuilder();
+        List<CommandStructure> subCommands = command.getSubcommands();
+
+        // Build pattern for subcommands first
+        if (command.getSubcommands().size() > 0) {
+            boolean anySubCommandsRequired = subCommands.stream().anyMatch(sc -> !sc.isOptional());
+
+            if(!anySubCommandsRequired) {
+                sb.append("(");
+            }
+
+            StringBuilder scb = new StringBuilder();
+            for (CommandStructure subCommand : subCommands) {
+                if(scb.length() > 0) {
+                    scb.append("|");
+                }
+
+                scb.append("(");
+                scb.append(subCommand.getName());
+                scb.append("\\s");
+                scb.append(BuildParameterPattern(subCommand));
+                scb.append(")");
+            }
+
+            sb.append(scb);
+
+            if(!anySubCommandsRequired) {
+                sb.append("\\s)?");
+            }
+        }
+
+        sb.append(BuildParameterPattern(command));
+
+        sb.insert(0, "^");
+        sb.append("$");
+
+        return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
+    private static String BuildParameterPattern(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
 
         for(CommandParameter p : command.getParameters()) {
@@ -55,32 +124,72 @@ public class CommandBuilder {
             }
         }
 
-        sb.insert(0, "^");
-        sb.append("$");
-
-        return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+        return sb.toString();
     }
 
     public static String BuildUsage(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
+        List<CommandStructure> subCommands = command.getSubcommands();
 
         sb.append(command.getName());
 
-        for(CommandParameter p : command.getParameters()) {
+        if(subCommands.size() > 0) {
+            boolean anySubCommandsRequired = subCommands.stream().anyMatch(sc -> !sc.isOptional());
+
             sb.append(" ");
 
-            if(p.isRequired()) {
-                sb.append("<");
-                sb.append(buildUsageLabel(p));
-                sb.append(">");
-            }else{
+            if(subCommands.size() > 1) {
+                if (anySubCommandsRequired) {
+                    sb.append("<");
+                } else {
+                    sb.append("[");
+                }
+
                 sb.append("[");
-                sb.append(buildUsageLabel(p));
+            }
+
+            sb.append(buildSubCommandUsageLabel(subCommands));
+
+            if(subCommands.size() > 1) {
                 sb.append("]");
+
+                if (anySubCommandsRequired) {
+                    sb.append(">");
+                } else {
+                    sb.append("]");
+                }
+            }
+        } else {
+            for (CommandParameter p : command.getParameters()) {
+                sb.append(" ");
+
+                if (p.isRequired()) {
+                    sb.append("<");
+                    sb.append(buildUsageLabel(p));
+                    sb.append(">");
+                } else {
+                    sb.append("[");
+                    sb.append(buildUsageLabel(p));
+                    sb.append("]");
+                }
             }
         }
 
         return sb.toString();
+    }
+
+    private static String buildSubCommandUsageLabel(List<CommandStructure> subCommands) {
+        StringBuilder subCommandData = new StringBuilder();
+
+        for(CommandStructure subCommand : subCommands) {
+            if(subCommandData.length() > 0) {
+                subCommandData.append("|");
+            }
+
+            subCommandData.append(BuildUsage(subCommand));
+        }
+
+        return subCommandData.toString();
     }
 
     private static String buildUsageLabel(CommandParameter p) {

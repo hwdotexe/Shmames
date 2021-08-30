@@ -9,6 +9,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.models.PollModel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
@@ -30,10 +31,22 @@ public class Poll implements ICommand {
 
 	public Poll() {
 		this.commandStructure = CommandBuilder.Create("poll")
-				.addParameters(
-						new CommandParameter("action", "The action to perform", ParameterType.SELECTION)
-								.addSelectionOptions("start", "close"),
-						new CommandParameter("data", "Command options", ParameterType.STRING)
+				.addSubCommands(
+						CommandBuilder.Create("start")
+								.addParameters(
+										new CommandParameter("time", "The amount of time the poll should last.", ParameterType.TIMECODE),
+										new CommandParameter("question", "The question to ask", ParameterType.STRING)
+												.setPattern(".+\\?"),
+										new CommandParameter("options", "The poll's options, separated by ';'", ParameterType.STRING)
+												.setPattern("(.+;)+(.+);?")
+								)
+								.build(),
+						CommandBuilder.Create("close")
+								.addParameters(
+										new CommandParameter("pollID", "The ID of the poll to close.", ParameterType.STRING)
+												.setPattern("#?[a-z0-9]{5}")
+								)
+								.build()
 				)
 				.build();
 	}
@@ -62,8 +75,8 @@ public class Poll implements ICommand {
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		if (Utils.checkUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.ALLOW_POLLS), data.getAuthor())) {
-			String subCmd = data.getArguments().getAsString("action");
-			String subCmdArgs = data.getArguments().getAsString("data");
+			String subCmd = data.getSubCommand().getCommandName();
+			ShmamesCommandArguments subCmdArgs = data.getSubCommand().getArguments();
 
 			switch (subCmd.toLowerCase()) {
 				case "start":
@@ -83,76 +96,69 @@ public class Poll implements ICommand {
 		return true;
 	}
 
-	private String closePoll(String args, Brain brain, Lang lang) {
-		Matcher m = Pattern.compile("^\\#?[a-zA-Z0-9]{5}$").matcher(args);
+	private String closePoll(ShmamesCommandArguments args, Brain brain, Lang lang) {
+		String pollID = args.getAsString("pollID");
 
-		if (m.find()) {
-			if (args.startsWith("#")) {
-				args = args.substring(1);
-			}
-
-			for (PollModel p : brain.getActivePolls()) {
-				if (p.getID().equalsIgnoreCase(args)) {
-					Timer t = new Timer();
-					t.schedule(new PollTask(p), new Date());
-
-					return "";
-				}
-			}
-
-			return lang.getError(Errors.NOT_FOUND, true);
-		} else {
-			return lang.wrongUsage(getUsage());
+		if (pollID.startsWith("#")) {
+			pollID = pollID.substring(1);
 		}
+
+		for (PollModel p : brain.getActivePolls()) {
+			if (p.getID().equalsIgnoreCase(pollID)) {
+				Timer t = new Timer();
+				t.schedule(new PollTask(p), new Date());
+
+				return "";
+			}
+		}
+
+		return lang.getError(Errors.NOT_FOUND, true);
 	}
 
-	private String startPoll(String args, Lang lang, Brain brain, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
-		Matcher m = Pattern.compile("^([\\dydhms]+)\\s(.+\\?) ((.+); (.+))$", Pattern.CASE_INSENSITIVE).matcher(args);
+	private String startPoll(ShmamesCommandArguments args, Lang lang, Brain brain, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
+		String time = args.getAsString("time");
+		String question = args.getAsString("question");
+		String options = args.getAsString("options");
+		int seconds = Utils.convertTimeStringToSeconds(time);
 
-		if (m.find()) {
-			int seconds = Utils.convertTimeStringToSeconds(m.group(1));
-			String question = m.group(2);
-			String opt = m.group(3);
+		if (seconds > 0) {
+			// Use friendly channel names when possible.
+			Matcher channelReference = Pattern.compile("<#(\\d{15,})>").matcher(question);
 
-			if (seconds > 0) {
-				// Use friendly channel names when possible.
-				Matcher channelReference = Pattern.compile("<#(\\d{15,})>").matcher(question);
+			while (channelReference.find()) {
+				TextChannel textChannel = server.getTextChannelById(channelReference.group(1));
 
-				while (channelReference.find()) {
-					TextChannel textChannel = server.getTextChannelById(channelReference.group(1));
-
-					if (textChannel != null) {
-						question = question.replaceFirst(channelReference.group(1), textChannel.getName());
-					}
-				}
-
-				List<String> options = new ArrayList<String>();
-
-				for (String s : opt.split(";")) {
-					options.add(s.trim());
-				}
-
-				if (options.size() > 1 && options.size() <= 9) {
-					try {
-						if (messagingChannel.hasOriginMessage()) {
-							messagingChannel.getOriginMessage().delete().queue();
-						}
-					} catch (InsufficientPermissionException e) {
-						// Do nothing; we don't have permission
-					} catch (Exception e) {
-						ShmamesLogger.logException(e);
-					}
-
-					PollModel poll = new PollModel(messagingChannel.getChannel().getId(), question, options, seconds, Utils.createID());
-					brain.getActivePolls().add(poll);
-
-					return "";
-				} else {
-					return lang.getError(Errors.INCORRECT_ITEM_COUNT, true);
+				if (textChannel != null) {
+					question = question.replaceFirst(channelReference.group(1), textChannel.getName());
 				}
 			}
-		}
 
-		return lang.wrongUsage(getUsage());
+			List<String> optionsList = new ArrayList<>();
+
+			for (String s : options.split(";")) {
+				optionsList.add(s.trim());
+			}
+
+			if (optionsList.size() > 1 && optionsList.size() <= 9) {
+				try {
+					if (messagingChannel.hasOriginMessage()) {
+						messagingChannel.getOriginMessage().delete().queue();
+					}
+				} catch (InsufficientPermissionException e) {
+					// Do nothing; we don't have permission
+				} catch (Exception e) {
+					ShmamesLogger.logException(e);
+				}
+
+				PollModel poll = new PollModel(messagingChannel.getChannel().getId(), question, optionsList, seconds, Utils.createID());
+				brain.getActivePolls().add(poll);
+
+				return "";
+			} else {
+				return lang.getError(Errors.INCORRECT_ITEM_COUNT, true);
+			}
+		} else {
+			return lang.getError(Errors.TIME_VALUE_INCORRECT, false);
+		}
 	}
 }

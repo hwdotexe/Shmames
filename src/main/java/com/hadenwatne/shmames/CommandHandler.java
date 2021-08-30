@@ -10,14 +10,12 @@ import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.command.ParsedCommandResult;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.*;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.*;
@@ -139,20 +137,25 @@ public class CommandHandler {
 
 			if(usageMatcher.matches()) {
 				// Build map of arguments
-				LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
+				ShmamesSubCommandData subCommandData = null;
+				LinkedHashMap<String, Object> commandArgs = buildArgumentsMap(c.getCommandStructure(), usageMatcher, server);
 
-				for(CommandParameter cp : c.getCommandStructure().getParameters()) {
-					String group = usageMatcher.group(cp.getName());
+				// Build data for any subcommands this might have.
+				for(CommandStructure subCommand : c.getCommandStructure().getSubcommands()) {
+					if(args.toLowerCase().startsWith(subCommand.getName())) {
+						LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
 
-					if(group != null) {
-						insertArgumentWithType(namedArguments, group, cp, server);
+						subCommandData = new ShmamesSubCommandData(subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
+
+						break;
 					}
 				}
 
 				// Build command data.
 				ShmamesCommandData data = new ShmamesCommandData(
 						c,
-						new ShmamesCommandArguments(namedArguments),
+						subCommandData,
+						new ShmamesCommandArguments(commandArgs),
 						new ShmamesCommandMessagingChannel(message, channel),
 						author,
 						server
@@ -175,7 +178,7 @@ public class CommandHandler {
 	 * @param event The event that summoned this method.
 	 * @param server The server this command is running on, if applicable.
 	 */
-	public void PerformCommand(ICommand command, ShmamesCommandArguments arguments, SlashCommandEvent event, @Nullable Guild server) {
+	public void PerformCommand(ICommand command, ShmamesSubCommandData subCommand, ShmamesCommandArguments arguments, SlashCommandEvent event, @Nullable Guild server) {
 		event.deferReply().queue();
 
 		Brain brain = null;
@@ -197,13 +200,25 @@ public class CommandHandler {
 			}
 		}
 
+		// Build the command string.
+		StringBuilder cmdString = new StringBuilder();
+
+		if(subCommand != null) {
+			cmdString.append(subCommand.getCommandName());
+			cmdString.append(" ");
+			cmdString.append(subCommand.getArguments().getAsString());
+		} else {
+			cmdString.append(arguments.getAsString());
+		}
+
 		// Validate the command usage.
-		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(arguments.getAsString());
+		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(cmdString.toString());
 
 		if (usageMatcher.matches()) {
 			// Build command data.
 			ShmamesCommandData data = new ShmamesCommandData(
 					command,
+					subCommand,
 					arguments,
 					new ShmamesCommandMessagingChannel(hook, event.getChannel()),
 					author,
@@ -273,6 +288,20 @@ public class CommandHandler {
 		} else {
 			new TypingTask(r, msg.getChannel(), false);
 		}
+	}
+
+	private LinkedHashMap<String, Object> buildArgumentsMap(CommandStructure c, Matcher usageMatcher, Guild server) {
+		LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
+
+		for(CommandParameter cp : c.getParameters()) {
+			String group = usageMatcher.group(cp.getName());
+
+			if(group != null) {
+				insertArgumentWithType(namedArguments, group, cp, server);
+			}
+		}
+
+		return namedArguments;
 	}
 
 	private void logCountCommandUsage(ICommand command) {

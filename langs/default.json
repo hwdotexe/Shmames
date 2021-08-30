@@ -94,6 +94,7 @@
     "RESERVED_WORD": "Sorry, you can't use that totally awesome name!",
     "SERVER_FAMILY_LIST_EMPTY": "This server does not belong to a Family.",
     "SETTING_NOT_FOUND": "I couldn't find that setting.",
+    "TIME_VALUE_INCORRECT": "The amount of time provided is invalid!",
     "TRACK_NOT_PLAYING": "There isn't a track playing right now.",
     "WRONG_USAGE": "I don't think that's how you do it."
   },
