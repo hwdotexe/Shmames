@@ -51,9 +51,7 @@ public class CommandHandler {
 		commands.add(new ForumWeapon());
 		*/
 		commands.add(new GIF());
-		/*
 		commands.add(new Hangman());
-		*/
 		commands.add(new Help());
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());
@@ -186,12 +184,14 @@ public class CommandHandler {
 		User author = event.getUser();
 		InteractionHook hook = event.getHook();
 
+		String cmdString = subCommand == null ? arguments.getAsString() : subCommand.getAsString();
+
 		if (server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + arguments.getAsString());
+			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + arguments.getAsString());
+			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 
 			if (command.requiresGuild()) {
 				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()), lang);
@@ -200,19 +200,8 @@ public class CommandHandler {
 			}
 		}
 
-		// Build the command string.
-		StringBuilder cmdString = new StringBuilder();
-
-		if(subCommand != null) {
-			cmdString.append(subCommand.getCommandName());
-			cmdString.append(" ");
-			cmdString.append(subCommand.getArguments().getAsString());
-		} else {
-			cmdString.append(arguments.getAsString());
-		}
-
 		// Validate the command usage.
-		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(cmdString.toString());
+		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(cmdString);
 
 		if (usageMatcher.matches()) {
 			// Build command data.

@@ -43,7 +43,7 @@ public class Choose implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "choose <item> or <item>";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override

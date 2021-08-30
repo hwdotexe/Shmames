@@ -1,35 +1,63 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.HangmanDictionary;
 import com.hadenwatne.shmames.models.HangmanGame;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
-
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Hangman implements ICommand {
 	private List<HangmanDictionary> dictionaries;
-	private Lang lang;
+	private final CommandStructure commandStructure;
 
-	public Hangman(){
-		dictionaries = new ArrayList<HangmanDictionary>();
+	public Hangman() {
+		dictionaries = new ArrayList<>();
 
 		createDictionaries();
+
+		CommandParameter dictionaryList = new CommandParameter("dictionary", "The word list to choose from.", ParameterType.SELECTION, false);
+
+		for (HangmanDictionary hd : dictionaries) {
+			dictionaryList.addSelectionOptions(hd.getName());
+		}
+
+		this.commandStructure = CommandBuilder.Create("hangman")
+				.addSubCommands(
+						// TODO try registering a duplicate with other parameters (include/exclude)
+						CommandBuilder.Create("start")
+								.addParameters(
+										// TODO what about a ! ?
+										dictionaryList
+								)
+								.build(),
+						CommandBuilder.Create("guess")
+								.addParameters(
+										new CommandParameter("guess", "A letter, word, or phrase.", ParameterType.STRING)
+								)
+								.build(),
+						CommandBuilder.Create("list")
+								.build()
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -39,7 +67,7 @@ public class Hangman implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "hangman <start|guess|list> [[!]dictionary[,dictionary]|letter|answer]";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -53,166 +81,20 @@ public class Hangman implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^((start)|(guess)|(list))( !?([a-z\\s],?)+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		ShmamesSubCommandData subCommand = data.getSubCommand();
+		String subCmd = subCommand.getCommandName();
 
-		if(m.find()) {
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-			if(m.group(1).equalsIgnoreCase("list")){
-				StringBuilder sb = new StringBuilder();
-
-				for(HangmanDictionary hd : dictionaries){
-					if(sb.length() > 0)
-						sb.append(", ");
-
-					sb.append(hd.getName());
-				}
-
-				return "Available dictionaries: "+sb.toString()+", or leave blank to use all.";
-			}else if(m.group(1).equalsIgnoreCase("start")){
-				if(b.getHangmanGame() != null) {
-					TextChannel tc = message.getGuild().getTextChannelById(b.getHangmanGame().getChannelID());
-
-					return "There is already a Hangman game running in " + tc.getAsMention();
-				}
-
-				String word = "";
-				String hint = "";
-				String dictionary = "";
-
-				HangmanDictionary hd = null;
-
-				if(m.group(5) != null){
-					// Try using a custom dictionary, or exclude certain dictionaries, if specified.
-					String dictCmd = m.group(5).trim();
-
-					List<HangmanDictionary> specified = new ArrayList<HangmanDictionary>();
-
-					for(String n : dictCmd.split(",")){
-						if(n.startsWith("!"))
-							n = n.substring(1);
-
-						// Find the dictionary, if it exists.
-						for(HangmanDictionary d1 : dictionaries){
-							if(d1.getName().equalsIgnoreCase(n)){
-								specified.add(d1);
-								break;
-							}
-						}
-					}
-
-					if(specified.size() == 0)
-						return lang.getError(Errors.NOT_FOUND, true);
-
-					if(dictCmd.startsWith("!")){
-						List<HangmanDictionary> drawPool = new ArrayList<HangmanDictionary>(dictionaries);
-
-						for(HangmanDictionary s : specified){
-							if(drawPool.contains(s)){
-								drawPool.remove(s);
-							}
-						}
-
-						if(drawPool.size() == 0)
-							return lang.getError(Errors.NOT_FOUND, true);
-
-						hd = drawPool.get(Utils.getRandom(drawPool.size()));
-					}else{
-						hd = specified.get(Utils.getRandom(specified.size()));
-					}
-				}else{
-					hd = dictionaries.get(Utils.getRandom(dictionaries.size()));
-				}
-
-				word = hd.randomWord();
-				hint = hd.getWords().get(word);
-				dictionary = hd.getName();
-
-				HangmanGame newGame = new HangmanGame(word, hint, dictionary);
-
-				sendEmbeddedMessage(message.getTextChannel(), newGame);
-				b.setHangmanGame(newGame);
-			}else if(m.group(1).equalsIgnoreCase("guess")){
-				if(m.group(5) != null) {
-					if (b.getHangmanGame() == null)
-						return lang.getError(Errors.HANGMAN_NOT_STARTED, true);
-
-					HangmanGame g = b.getHangmanGame();
-					String guess = m.group(5).toLowerCase().trim();
-
-					if(guess.length() == 1){
-						// Make sure they haven't already guessed this one.
-						if(g.getCorrectGuesses().contains(guess.charAt(0)) || g.getIncorrectGuesses().contains(guess.charAt(0))){
-							return lang.getError(Errors.HANGMAN_ALREADY_GUESSED, true);
-						}
-
-						// Ok now continue
-						if(g.getWord().contains(guess)){
-							g.getCorrectGuesses().add(guess.charAt(0));
-						}else{
-							g.getIncorrectGuesses().add(guess.charAt(0));
-							g.removeLife();
-						}
-					} else {
-						if(g.getWord().equalsIgnoreCase(guess)){
-							// They've guessed the puzzle. Update the message and then end the game.
-							for(char c : g.getWord().toCharArray()){
-								g.getCorrectGuesses().add(c);
-							}
-
-							g.deleteMessage(message.getGuild());
-							sendEmbeddedMessage(message.getTextChannel(), g);
-
-							b.setHangmanGame(null);
-							return "You win!";
-						}else{
-							g.removeLife();
-						}
-					}
-
-					// Update the board
-					g.deleteMessage(message.getGuild());
-					sendEmbeddedMessage(message.getTextChannel(), g);
-
-					// Do they win?
-					boolean win = true;
-					for(char c : g.getWord().toCharArray()){
-						if(!g.getCorrectGuesses().contains(c)) {
-							win = false;
-							break;
-						}
-					}
-
-					if(win){
-						b.setHangmanGame(null);
-						return "You win!";
-					}
-
-					// Do they lose?
-					if(g.getLivesRemaining() == 0){
-						b.setHangmanGame(null);
-						return "You lose! The word was \""+g.getWord()+"\"";
-					}
-				}else{
-					return lang.wrongUsage(getUsage());
-				}
-			}
-		}else{
-			return lang.wrongUsage(getUsage());
+		switch(subCmd.toLowerCase()) {
+			case "start":
+				return cmdStart(brain, lang, data.getServer(), data.getMessagingChannel(), subCommand);
+			case "guess":
+				return cmdGuess(brain, lang, data.getServer(), data.getMessagingChannel(), subCommand);
+			case "list":
+				return cmdList();
+			default:
+				return "";
 		}
-
-		return "";
-	}
-
-	@Override
-	public String[] getAliases() {
-		return new String[] {"hangman"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
 	}
 	
 	@Override
@@ -220,7 +102,134 @@ public class Hangman implements ICommand {
 		return true;
 	}
 
-	private void sendEmbeddedMessage(TextChannel c, HangmanGame g){
+	private String cmdList() {
+		StringBuilder sb = new StringBuilder();
+
+		for(HangmanDictionary hd : dictionaries){
+			if(sb.length() > 0)
+				sb.append(", ");
+
+			sb.append(hd.getName());
+		}
+
+		return "Available dictionaries: "+sb.toString()+", or leave blank to use all.";
+	}
+
+	private String cmdStart(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData subCommand) {
+		if(brain.getHangmanGame() != null) {
+			TextChannel tc = server.getTextChannelById(brain.getHangmanGame().getChannelID());
+
+			if(tc != null) {
+				return "There is already a Hangman game running in " + tc.getAsMention();
+			} else {
+				brain.setHangmanGame(null);
+			}
+		}
+
+		String dictionaryNames = subCommand.getArguments().getAsString("dictionary");
+		HangmanDictionary dictionary = null;
+
+		// Select the word list to pull from for this Hangman puzzle.
+		if(dictionaryNames != null) {
+			List<HangmanDictionary> specified = new ArrayList<HangmanDictionary>();
+
+			for(String n : dictionaryNames.split(",")){
+				// Find the dictionary, if it exists.
+				for(HangmanDictionary d1 : dictionaries){
+					if(d1.getName().equalsIgnoreCase(n)){
+						specified.add(d1);
+						break;
+					}
+				}
+			}
+
+			if(specified.size() == 0)
+				return lang.getError(Errors.NOT_FOUND, true);
+
+			dictionary = specified.get(Utils.getRandom(specified.size()));
+		} else {
+			dictionary = dictionaries.get(Utils.getRandom(dictionaries.size()));
+		}
+
+		String word = dictionary.randomWord();
+		String hint = dictionary.getWords().get(word);
+		String dictionaryName = dictionary.getName();
+
+		HangmanGame newGame = new HangmanGame(word, hint, dictionaryName);
+
+		sendEmbeddedMessage(messagingChannel, lang, newGame);
+		brain.setHangmanGame(newGame);
+
+		return "";
+	}
+
+	private String cmdGuess(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData subCommand) {
+		String guess = subCommand.getArguments().getAsString("guess").toLowerCase();
+		HangmanGame game = brain.getHangmanGame();
+
+		if (game == null)
+			return lang.getError(Errors.HANGMAN_NOT_STARTED, true);
+
+		// Guessing a letter.
+		if(guess.length() == 1){
+			// Make sure they haven't already guessed this one.
+			if(game.getCorrectGuesses().contains(guess.charAt(0)) || game.getIncorrectGuesses().contains(guess.charAt(0))){
+				return lang.getError(Errors.HANGMAN_ALREADY_GUESSED, true);
+			}
+
+			// Process their guess.
+			if(game.getWord().contains(guess)){
+				game.getCorrectGuesses().add(guess.charAt(0));
+			}else{
+				game.getIncorrectGuesses().add(guess.charAt(0));
+				game.removeLife();
+			}
+		} else {
+			// They are guessing the puzzle.
+			if(game.getWord().equalsIgnoreCase(guess)){
+				// They've guessed the puzzle. Update the message and then end the game.
+				for(char c : game.getWord().toCharArray()){
+					game.getCorrectGuesses().add(c);
+				}
+
+				game.deleteMessage(server);
+				sendEmbeddedMessage(messagingChannel, lang, game);
+
+				brain.setHangmanGame(null);
+				return "You win!";
+			}else{
+				game.removeLife();
+			}
+		}
+
+		// Update the board.
+		game.deleteMessage(server);
+		sendEmbeddedMessage(messagingChannel, lang, game);
+
+		// Do they win?
+		boolean win = true;
+		for(char c : game.getWord().toCharArray()){
+			if(!game.getCorrectGuesses().contains(c)) {
+				win = false;
+				break;
+			}
+		}
+
+		if(win){
+			brain.setHangmanGame(null);
+			return "You win!";
+		}
+
+		// Do they lose?
+		if(game.getLivesRemaining() == 0){
+			brain.setHangmanGame(null);
+			return "You lose! The word was \""+game.getWord()+"\"";
+		}
+
+		return "";
+	}
+
+	private void sendEmbeddedMessage(ShmamesCommandMessagingChannel messagingChannel, Lang lang, HangmanGame g){
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setAuthor(lang.getMsg(Langs.HANGMAN_TITLE));
@@ -231,9 +240,13 @@ public class Hangman implements ICommand {
 		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
 		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
 
-		MessageEmbed embed = eBuilder.build();
-		MessageAction ma = c.sendMessage(embed);
-		Message m = ma.complete();
+		if(messagingChannel.hasHook()) {
+			messagingChannel.getHook().setEphemeral(true);
+			messagingChannel.getHook().sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS)).queue();
+		}
+
+		MessageChannel c = messagingChannel.getChannel();
+		Message m = messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).complete();
 
 		g.setMessage(c.getIdLong(), m.getIdLong());
 	}

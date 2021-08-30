@@ -9,6 +9,10 @@ public class ShmamesSubCommandData {
         this.arguments = arguments;
     }
 
+    public String getAsString() {
+        return commandName + " " + arguments.getAsString();
+    }
+
     public String getCommandName() {
         return this.commandName;
     }
