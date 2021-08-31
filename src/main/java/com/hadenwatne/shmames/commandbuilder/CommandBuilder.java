@@ -82,8 +82,12 @@ public class CommandBuilder {
 
                 scb.append("(");
                 scb.append(subCommand.getName());
-                scb.append("\\s");
-                scb.append(BuildParameterPattern(subCommand));
+
+                if(subCommand.getParameters().size() > 0) {
+                    scb.append("\\s");
+                    scb.append(BuildParameterPattern(subCommand));
+                }
+
                 scb.append(")");
             }
 

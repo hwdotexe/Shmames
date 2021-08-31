@@ -55,9 +55,7 @@ public class CommandHandler {
 		commands.add(new Help());
 		commands.add(new IdiotThat());
 		commands.add(new Jinping());
-		/*
 		commands.add(new ListCmd());
-		*/
 		commands.add(new ListEmoteStats());
 		commands.add(new ListResponses());
 		commands.add(new ListTallies());
@@ -184,7 +182,7 @@ public class CommandHandler {
 		User author = event.getUser();
 		InteractionHook hook = event.getHook();
 
-		String cmdString = subCommand == null ? arguments.getAsString() : subCommand.getAsString();
+		String cmdString = (subCommand == null ? arguments.getAsString() : subCommand.getAsString()).trim();
 
 		if (server != null) {
 			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);

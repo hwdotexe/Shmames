@@ -2,28 +2,82 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.UserListType;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.UserCustomList;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 
-import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class ListCmd implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
 
-	private final Pattern basePattern = Pattern.compile("^((create)|(add)|(remove)|(delete)|(random)|(list)|([a-z_\\-0-9]+))(\\s(.+))?$", Pattern.CASE_INSENSITIVE);
-	private final Pattern argsPattern = Pattern.compile("^([a-z_\\-0-9]+)(\\s(.+))?$", Pattern.CASE_INSENSITIVE);
+	public ListCmd() {
+		this.commandStructure = CommandBuilder.Create("list")
+				.addSubCommands(
+						CommandBuilder.Create("create")
+								.addParameters(
+										new CommandParameter("newListName", "The name of the list to create.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+"),
+										new CommandParameter("privacy", "Whether others can view and add to the list.", ParameterType.SELECTION, false)
+												.addSelectionOptions("public", "private")
+								)
+								.build(),
+						CommandBuilder.Create("add")
+								.addParameters(
+										new CommandParameter("addListName", "The name of the list to add to.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+"),
+										new CommandParameter("item", "The item to add to the list.", ParameterType.STRING)
+								)
+								.build(),
+						CommandBuilder.Create("remove")
+								.addParameters(
+										new CommandParameter("removeListName", "The name of the list to remove from.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+"),
+										new CommandParameter("index", "The item position to remove.", ParameterType.INTEGER)
+								)
+								.build(),
+						CommandBuilder.Create("delete")
+								.addParameters(
+										new CommandParameter("deleteListName", "The name of the list to delete.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+")
+										)
+								.build(),
+						CommandBuilder.Create("random")
+								.addParameters(
+										new CommandParameter("randomListName", "The name of the list to get a random item from.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+")
+										)
+								.build(),
+						CommandBuilder.Create("list")
+								.build(),
+						CommandBuilder.Create("view")
+								.addParameters(
+										new CommandParameter("viewListName", "The name of the list to view.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+")
+										)
+								.build()
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -32,7 +86,7 @@ public class ListCmd implements ICommand {
 
 	@Override
 	public String getUsage() {
-		return "list <create|add|remove|delete|random|list|[name]> [name] [public|private] [item]";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -43,178 +97,40 @@ public class ListCmd implements ICommand {
 				"`list delete myList`\n" +
 				"`list random myList`\n" +
 				"`list list`\n" +
-				"`list myList`";
+				"`list view myList`";
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = basePattern.matcher(args);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String subCmd = data.getSubCommand().getCommandName();
+		ShmamesCommandArguments subCmdArgs = data.getSubCommand().getArguments();
 
-		if(m.find()) {
-			String cmd = m.group(1).toLowerCase();
-			String cmdArgs = m.group(10);
-			String userID = author.getId();
+		switch(subCmd.toLowerCase()) {
+			case "create":
+				return cmdCreate(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "add":
+				return cmdAdd(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "remove":
+				return cmdRemove(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "delete":
+				return cmdDelete(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "random":
+				return cmdRandom(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "list":
+				EmbedBuilder eBuilder = cmdList(brain, data.getAuthor().getId());
 
-			switch(cmd){
-				case "create":
-					if(cmdArgs != null) {
-						Matcher a = argsPattern.matcher(cmdArgs);
+				if(data.getMessagingChannel().hasHook()) {
+					data.getMessagingChannel().getHook().sendMessageEmbeds(eBuilder.build()).queue();
+				} else {
+					data.getMessagingChannel().getChannel().sendMessageEmbeds(eBuilder.build()).queue();
+				}
 
-						if(a.find() && a.group(3) != null){
-							String listName = a.group(1).toLowerCase();
-							UserListType listType = UserListType.parseOrPrivate(a.group(3));
-
-							if(getList(userID, listName) == null) {
-								UserCustomList newList = new UserCustomList(userID, listType, listName);
-								brain.getUserLists().add((newList));
-
-								return lang.getMsg(Langs.LIST_CREATED);
-							}else{
-								return lang.getError(Errors.ALREADY_EXISTS, true);
-							}
-						}
-					}
-
-					return lang.wrongUsage(getUsage());
-				case "add":
-					if(cmdArgs != null) {
-						Matcher a = argsPattern.matcher(cmdArgs);
-
-						if(a.find()){
-							String listName = a.group(1).toLowerCase();
-							String item = a.group(3);
-
-							if(item != null) {
-								UserCustomList existingList = getList(userID, listName);
-
-								if(existingList != null) {
-									existingList.getValues().add(item);
-
-									return lang.getMsg(Langs.ITEM_ADDED);
-								}else{
-									return lang.getError(Errors.NOT_FOUND, true);
-								}
-							}
-						}
-					}
-
-					return lang.wrongUsage(getUsage());
-				case "remove":
-					if(cmdArgs != null) {
-						Matcher a = argsPattern.matcher(cmdArgs);
-
-						if(a.find()){
-							String listName = a.group(1).toLowerCase();
-							String item = a.group(3);
-
-							if(item != null && Utils.isInt(item)) {
-								UserCustomList existingList = getList(userID, listName);
-								int index = Integer.parseInt(item) - 1;
-
-								if(existingList != null && index >= 0) {
-										if (existingList.getValues().size() > index) {
-											String removed = existingList.getValues().get(index);
-											existingList.getValues().remove(index);
-
-											return lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed});
-										} else {
-											return lang.getError(Errors.NOT_FOUND, true);
-										}
-								}else{
-									return lang.getError(Errors.NOT_FOUND, true);
-								}
-							}
-						}
-					}
-
-					return lang.wrongUsage(getUsage());
-				case "delete":
-					if(cmdArgs != null) {
-						Matcher a = argsPattern.matcher(cmdArgs);
-
-						if(a.find()){
-							String listName = a.group(1).toLowerCase();
-							UserCustomList existingList = getList(userID, listName);
-
-							if(existingList != null) {
-								if(existingList.getOwnerID().equals(userID)) {
-									brain.getUserLists().remove((existingList));
-
-									return lang.getMsg(Langs.LIST_DELETED, new String[]{existingList.getName()});
-								}else{
-									return lang.getError(Errors.NO_PERMISSION_USER, true);
-								}
-							}else{
-								return lang.getError(Errors.NOT_FOUND, true);
-							}
-						}
-					}
-
-					return lang.wrongUsage(getUsage());
-				case "random":
-					if(cmdArgs != null) {
-						Matcher a = argsPattern.matcher(cmdArgs);
-
-						if(a.find()){
-							String listName = a.group(1).toLowerCase();
-							UserCustomList existingList = getList(userID, listName);
-
-							if(existingList != null) {
-								return Utils.getRandomStringFromList(existingList.getValues());
-							}else{
-								return lang.getError(Errors.NOT_FOUND, true);
-							}
-						}
-					}
-
-					return lang.wrongUsage(getUsage());
-				case "list":
-					// List lists
-					HashMap<String, String> listNames = new HashMap<>();
-
-					for(UserCustomList l : brain.getUserLists()) {
-						if(l.getOwnerID().equals(userID)) {
-							listNames.put(l.getName(), l.getType().name());
-						}
-					}
-
-					String userLists = listNames.size() > 0
-							?  Utils.generateList(listNames, 1, false) //Utils.generateList(listNames, 1, false, false)
-							: "No lists found";
-
-					message.getChannel().sendMessage(buildListEmbed("Your Lists", userLists).build()).queue();
-
-					return "";
-				default:
-					// List elements in the list
-					UserCustomList list = getList(userID, cmd.toLowerCase());
-
-					if(list != null) {
-						String listValues = list.getValues().size() > 0
-								? Utils.generateList(list.getValues(), 1, true, false)
-								: "No items found";
-
-						message.getChannel().sendMessage(buildListEmbed(list.getName(), listValues).build()).queue();
-
-						return "";
-					}else{
-						return lang.getError(Errors.NOT_FOUND, true);
-					}
-			}
-		}else{
-			return lang.wrongUsage(getUsage());
+				return "";
+			case "view":
+				return cmdView(brain, lang, data.getAuthor().getId(), subCmdArgs, data.getMessagingChannel());
+			default:
+				return "";
 		}
-	}
-
-	@Override
-	public String[] getAliases() {
-		return new String[] {"list"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
 	}
 	
 	@Override
@@ -222,21 +138,158 @@ public class ListCmd implements ICommand {
 		return true;
 	}
 
-	private EmbedBuilder buildListEmbed(String title, String list) {
+	private String cmdCreate(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("newListName").toLowerCase();
+		String privacy = subCmdArgs.getAsString("privacy");
+		UserListType listType = privacy != null ? UserListType.parseOrPrivate(privacy) : UserListType.PRIVATE;
+
+		if(getList(userID, listName, brain) == null) {
+			UserCustomList newList = new UserCustomList(userID, listType, listName);
+			brain.getUserLists().add((newList));
+
+			return lang.getMsg(Langs.LIST_CREATED);
+		}else{
+			return lang.getError(Errors.ALREADY_EXISTS, true);
+		}
+	}
+
+	private String cmdAdd(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("addListName").toLowerCase();
+		String item = subCmdArgs.getAsString("item");
+		UserCustomList existingList = getList(userID, listName, brain);
+
+		if(existingList != null) {
+			existingList.getValues().add(item);
+
+			return lang.getMsg(Langs.ITEM_ADDED);
+		}else{
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
+	private String cmdRemove(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("removeListName").toLowerCase();
+		int index = subCmdArgs.getAsInteger("index");
+		UserCustomList existingList = getList(userID, listName, brain);
+
+		if(existingList != null && index >= 0) {
+			if (existingList.getValues().size() > index) {
+				String removed = existingList.getValues().get(index);
+				existingList.getValues().remove(index);
+
+				return lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed});
+			} else {
+				return lang.getError(Errors.NOT_FOUND, true);
+			}
+		}else{
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
+	private String cmdDelete(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("deleteListName").toLowerCase();
+		UserCustomList existingList = getList(userID, listName, brain);
+
+		if(existingList != null) {
+			if(existingList.getOwnerID().equals(userID)) {
+				brain.getUserLists().remove((existingList));
+
+				return lang.getMsg(Langs.LIST_DELETED, new String[]{existingList.getName()});
+			}else{
+				return lang.getError(Errors.NO_PERMISSION_USER, true);
+			}
+		}else{
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
+	private String cmdRandom(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("randomListName").toLowerCase();
+		UserCustomList existingList = getList(userID, listName, brain);
+
+		if(existingList != null) {
+			return Utils.getRandomStringFromList(existingList.getValues());
+		}else{
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
+	private EmbedBuilder cmdList(Brain brain, String userID) {
+		HashMap<String, String> userLists = new HashMap<>();
+		List<String> publicLists = new ArrayList<>();
+
+		for(UserCustomList l : brain.getUserLists()) {
+			if(l.getOwnerID().equals(userID)) {
+				userLists.put(l.getName(), l.getType().name());
+			}
+
+			if(l.getType() == UserListType.PUBLIC) {
+				publicLists.add(l.getName());
+			}
+		}
+
+		String userListsFormatted = userLists.size() > 0
+				?  Utils.generateList(userLists, 1, false)
+				: "No lists found";
+
+		String publicListsFormatted = publicLists.size() > 0
+				? Utils.generateList(publicLists, -1, false, false)
+				: "No lists found";
+
+		return buildListEmbed(userListsFormatted, publicListsFormatted);
+	}
+
+	private String cmdView(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
+		String listName = subCmdArgs.getAsString("viewListName").toLowerCase();
+		UserCustomList list = getList(userID, listName, brain);
+
+		if(list != null) {
+			String listValues = list.getValues().size() > 0
+					? Utils.generateList(list.getValues(), 1, true, false)
+					: "No items found";
+
+			EmbedBuilder eBuilder = buildViewEmbed(list.getName(), listValues);
+
+			if(messagingChannel.hasHook()) {
+				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
+			} else {
+				messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
+			}
+
+			return "";
+		}else{
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
+	private EmbedBuilder buildListEmbed(String userLists, String publicLists) {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(new Color(219, 217, 157));
 		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
-		eBuilder.addField(title,list,false);
+
+		eBuilder.addField("Your Lists",userLists,false);
+		eBuilder.addField("Public Lists",publicLists,false);
 
 		return eBuilder;
 	}
 
-	private UserCustomList getList(String userID, String name) {
+	private EmbedBuilder buildViewEmbed(String listName, String listString) {
+		EmbedBuilder eBuilder = new EmbedBuilder();
+
+		eBuilder.setColor(new Color(219, 217, 157));
+		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+
+		eBuilder.addField(listName,listString,false);
+
+		return eBuilder;
+	}
+
+	private UserCustomList getList(String userID, String listName, Brain brain) {
 		UserCustomList list = null;
 
 		for (UserCustomList l : brain.getUserLists()) {
-			if(l.getName().equalsIgnoreCase(name)) {
+			if(l.getName().equalsIgnoreCase(listName)) {
 				list = l;
 				break;
 			}
