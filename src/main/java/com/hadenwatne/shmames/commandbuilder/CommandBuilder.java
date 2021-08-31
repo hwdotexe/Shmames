@@ -183,7 +183,7 @@ public class CommandBuilder {
 
         for(CommandStructure subCommand : subCommands) {
             if(subCommandData.length() > 0) {
-                subCommandData.append("|");
+                subCommandData.append(" | ");
             }
 
             subCommandData.append(BuildUsage(subCommand));

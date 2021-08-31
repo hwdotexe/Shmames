@@ -41,7 +41,7 @@ public class ShmamesCommandArguments {
     public boolean getAsBoolean(String key) {
         if(this.arguments.containsKey(key)) {
             try {
-                return Boolean.parseBoolean(getAsString(key));
+                return (boolean) this.arguments.get(key);
             } catch (Exception e) {
                 ShmamesLogger.logException(e);
             }

@@ -12,6 +12,7 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import jdk.internal.jline.internal.Nullable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
@@ -29,19 +30,13 @@ public class Hangman implements ICommand {
 
 		createDictionaries();
 
-		CommandParameter dictionaryList = new CommandParameter("dictionary", "The word list to choose from.", ParameterType.SELECTION, false);
-
-		for (HangmanDictionary hd : dictionaries) {
-			dictionaryList.addSelectionOptions(hd.getName());
-		}
-
 		this.commandStructure = CommandBuilder.Create("hangman")
 				.addSubCommands(
-						// TODO try registering a duplicate with other parameters (include/exclude)
 						CommandBuilder.Create("start")
 								.addParameters(
-										// TODO what about a ! ?
-										dictionaryList
+										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.SELECTION, false)
+										.setPattern("[a-z0-9,]+"),
+										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN,false)
 								)
 								.build(),
 						CommandBuilder.Create("guess")
@@ -74,7 +69,7 @@ public class Hangman implements ICommand {
 	public String getExamples() {
 		return "`hangman start`\n" +
 				"`hangman start media,anime`\n" +
-				"`hangman start !dnd`\n" +
+				"`hangman start dnd true`\n" +
 				"`hangman guess A`\n" +
 				"`hangman guess The Answer`" +
 				"`hangman list`";
@@ -127,26 +122,43 @@ public class Hangman implements ICommand {
 		}
 
 		String dictionaryNames = subCommand.getArguments().getAsString("dictionary");
+		boolean doExclude = subCommand.getArguments().getAsBoolean("exclude");
 		HangmanDictionary dictionary = null;
 
 		// Select the word list to pull from for this Hangman puzzle.
 		if(dictionaryNames != null) {
-			List<HangmanDictionary> specified = new ArrayList<HangmanDictionary>();
+			List<HangmanDictionary> availableDictionaries = new ArrayList<>();
 
-			for(String n : dictionaryNames.split(",")){
-				// Find the dictionary, if it exists.
-				for(HangmanDictionary d1 : dictionaries){
-					if(d1.getName().equalsIgnoreCase(n)){
-						specified.add(d1);
-						break;
+			if(doExclude) {
+				// Add all except the ones mentioned.
+				for(HangmanDictionary dict : dictionaries) {
+					boolean shouldAdd = true;
+
+					for (String n : dictionaryNames.split(",")) {
+						if(dict.getName().equalsIgnoreCase(n)){
+							shouldAdd = false;
+						}
+					}
+
+					if(shouldAdd) {
+						availableDictionaries.add(dict);
+					}
+				}
+			} else {
+				// Only add the mentioned dictionaries.
+				for (String n : dictionaryNames.split(",")) {
+					HangmanDictionary namedDictionary = getDictionaryByName(n);
+
+					if (namedDictionary != null) {
+						availableDictionaries.add(namedDictionary);
 					}
 				}
 			}
 
-			if(specified.size() == 0)
+			if(availableDictionaries.size() == 0)
 				return lang.getError(Errors.NOT_FOUND, true);
 
-			dictionary = specified.get(Utils.getRandom(specified.size()));
+			dictionary = availableDictionaries.get(Utils.getRandom(availableDictionaries.size()));
 		} else {
 			dictionary = dictionaries.get(Utils.getRandom(dictionaries.size()));
 		}
@@ -169,6 +181,11 @@ public class Hangman implements ICommand {
 
 		if (game == null)
 			return lang.getError(Errors.HANGMAN_NOT_STARTED, true);
+
+		// If there is a slash command, don't make it Ephemeral.
+		if(messagingChannel.hasHook()) {
+			messagingChannel.getHook().setEphemeral(false);
+		}
 
 		// Guessing a letter.
 		if(guess.length() == 1){
@@ -227,6 +244,16 @@ public class Hangman implements ICommand {
 		}
 
 		return "";
+	}
+
+	private @Nullable HangmanDictionary getDictionaryByName(String name) {
+		for(HangmanDictionary dictionary : dictionaries) {
+			if(dictionary.getName().equalsIgnoreCase(name)) {
+				return dictionary;
+			}
+		}
+
+		return null;
 	}
 
 	private void sendEmbeddedMessage(ShmamesCommandMessagingChannel messagingChannel, Lang lang, HangmanGame g){
