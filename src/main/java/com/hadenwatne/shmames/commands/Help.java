@@ -78,11 +78,7 @@ public class Help implements ICommand {
 					eBuilder.addField("Usage", c.getUsage(), false);
 					eBuilder.addField("Examples", c.getExamples(), false);
 
-					if(messagingChannel.hasHook()) {
-						messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
-					} else {
-						messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
-					}
+					messagingChannel.sendMessage(eBuilder);
 
 					return "";
 				}
@@ -109,14 +105,14 @@ public class Help implements ICommand {
 			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
 
 			if(messagingChannel.hasHook()) {
-				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
+				messagingChannel.sendMessage(eBuilder);
 			} else {
 				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
 					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
 
 					return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
 				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {
-					messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
+					messagingChannel.sendMessage(eBuilder);
 				}
 			}
 

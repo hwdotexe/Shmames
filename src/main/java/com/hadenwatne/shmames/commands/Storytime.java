@@ -55,11 +55,7 @@ public class Storytime implements ICommand {
 			embed.addField("", s, false);
 		}
 
-		if(data.getMessagingChannel().hasHook()) {
-			data.getMessagingChannel().getHook().sendMessageEmbeds(embed.build()).queue();
-		} else {
-			data.getMessagingChannel().getChannel().sendMessageEmbeds(embed.build()).queue();
-		}
+		data.getMessagingChannel().sendMessage(embed);
 
 		return "";
 	}

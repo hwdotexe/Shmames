@@ -85,7 +85,7 @@ public class Modify implements ICommand {
 					appendValueEmbedField(eBuilder, v, server);
 				}
 
-				sendToMessagingChannel(messagingChannel, eBuilder);
+				messagingChannel.sendMessage(eBuilder);
 
 				return "";
 			}
@@ -172,7 +172,7 @@ public class Modify implements ICommand {
 					appendValueEmbedField(eBuilder, setting, server);
 					eBuilder.addField("Status", lang.getMsg(Langs.SETTING_UPDATED_SUCCESS), false);
 
-					sendToMessagingChannel(messagingChannel, eBuilder);
+					messagingChannel.sendMessage(eBuilder);
 
 					return "";
 				} else {
@@ -233,7 +233,7 @@ public class Modify implements ICommand {
 			default:
 		}
 
-		sendToMessagingChannel(messagingChannel, eBuilder);
+		messagingChannel.sendMessage(eBuilder);
 	}
 
 	private void appendValueEmbedField(EmbedBuilder eBuilder, BotSetting setting, Guild g){
@@ -271,14 +271,6 @@ public class Modify implements ICommand {
 		String value = "**Type:** " + setting.getType() + "\n**Value:** " + mention;
 
 		eBuilder.addField("**__"+setting.getName()+"__**", value, true);
-	}
-
-	private void sendToMessagingChannel(ShmamesCommandMessagingChannel messagingChannel, EmbedBuilder eBuilder) {
-		if(messagingChannel.hasHook()) {
-			messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
-		} else {
-			messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
-		}
 	}
 
 	@Override

@@ -267,9 +267,9 @@ public class Hangman implements ICommand {
 		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
 		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
 
-		if(messagingChannel.hasHook()) {
+		if(!messagingChannel.hasSentMessage() && messagingChannel.hasHook()) {
 			messagingChannel.getHook().setEphemeral(true);
-			messagingChannel.getHook().sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS)).queue();
+			messagingChannel.sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS));
 		}
 
 		MessageChannel c = messagingChannel.getChannel();

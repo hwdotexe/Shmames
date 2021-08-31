@@ -266,11 +266,14 @@ public class CommandHandler {
 		if (msg.hasHook()) {
 			if (r.length() > 0) {
 				for (String m : Utils.splitString(r, 2000)) {
-					msg.getHook().sendMessage(m).queue();
+					msg.sendMessage(m);
 				}
 			} else {
-				msg.getHook().setEphemeral(true);
-				msg.getHook().sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS)).queue();
+				// Send a generic message to this InteractionHook only if we haven't responded to it yet.
+				if(!msg.hasSentMessage()) {
+					msg.getHook().setEphemeral(true);
+					msg.sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS));
+				}
 			}
 		} else {
 			new TypingTask(r, msg.getChannel(), false);

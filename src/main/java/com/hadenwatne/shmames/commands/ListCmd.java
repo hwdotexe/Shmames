@@ -119,11 +119,7 @@ public class ListCmd implements ICommand {
 			case "list":
 				EmbedBuilder eBuilder = cmdList(brain, data.getAuthor().getId());
 
-				if(data.getMessagingChannel().hasHook()) {
-					data.getMessagingChannel().getHook().sendMessageEmbeds(eBuilder.build()).queue();
-				} else {
-					data.getMessagingChannel().getChannel().sendMessageEmbeds(eBuilder.build()).queue();
-				}
+				data.getMessagingChannel().sendMessage(eBuilder);
 
 				return "";
 			case "view":
@@ -250,11 +246,7 @@ public class ListCmd implements ICommand {
 
 			EmbedBuilder eBuilder = buildViewEmbed(list.getName(), listValues);
 
-			if(messagingChannel.hasHook()) {
-				messagingChannel.getHook().sendMessageEmbeds(eBuilder.build()).queue();
-			} else {
-				messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).queue();
-			}
+			messagingChannel.sendMessage(eBuilder);
 
 			return "";
 		}else{
