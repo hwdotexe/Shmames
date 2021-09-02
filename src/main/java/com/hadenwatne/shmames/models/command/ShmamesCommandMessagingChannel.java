@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
+import java.util.function.Consumer;
+
 public class ShmamesCommandMessagingChannel {
     private MessageChannel channel;
     private InteractionHook hook;
@@ -58,11 +60,31 @@ public class ShmamesCommandMessagingChannel {
         this.hasSentMessage = true;
     }
 
+    public void sendMessageWithConsumers(String message, Consumer<Message> success, Consumer<Throwable> failure) {
+        if(hasHook()) {
+            this.hook.sendMessage(message).queue(success, failure);
+        } else {
+            this.channel.sendMessage(message).queue(success, failure);
+        }
+
+        this.hasSentMessage = true;
+    }
+
     public void sendMessage(EmbedBuilder embedBuilder) {
         if(hasHook()) {
             this.hook.sendMessageEmbeds(embedBuilder.build()).queue();
         } else {
             this.channel.sendMessageEmbeds(embedBuilder.build()).queue();
+        }
+
+        this.hasSentMessage = true;
+    }
+
+    public void sendMessageWithConsumers(EmbedBuilder embedBuilder, Consumer<Message> success, Consumer<Throwable> failure) {
+        if(hasHook()) {
+            this.hook.sendMessageEmbeds(embedBuilder.build()).queue(success, failure);
+        } else {
+            this.channel.sendMessageEmbeds(embedBuilder.build()).queue(success, failure);
         }
 
         this.hasSentMessage = true;

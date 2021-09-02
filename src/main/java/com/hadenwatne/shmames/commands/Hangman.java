@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -26,17 +27,15 @@ public class Hangman implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Hangman() {
-		dictionaries = new ArrayList<>();
-
-		createDictionaries();
+		dictionaries = Shmames.getBrains().getDictionaries().getDictionaries();
 
 		this.commandStructure = CommandBuilder.Create("hangman")
 				.addSubCommands(
 						CommandBuilder.Create("start")
 								.addParameters(
-										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.SELECTION, false)
-										.setPattern("[a-z0-9,]+"),
-										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN,false)
+										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
+												.setPattern("[a-z0-9,]+"),
+										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 								)
 								.build(),
 						CommandBuilder.Create("guess")
@@ -169,6 +168,7 @@ public class Hangman implements ICommand {
 
 		HangmanGame newGame = new HangmanGame(word, hint, dictionaryName);
 
+		newGame.setChannel(messagingChannel.getChannel().getIdLong());
 		sendEmbeddedMessage(messagingChannel, lang, newGame);
 		brain.setHangmanGame(newGame);
 
@@ -187,14 +187,14 @@ public class Hangman implements ICommand {
 			messagingChannel.getHook().setEphemeral(false);
 		}
 
-		// Guessing a letter.
+		// Process the guess.
 		if(guess.length() == 1){
-			// Make sure they haven't already guessed this one.
+			// Avoid re-guesses.
 			if(game.getCorrectGuesses().contains(guess.charAt(0)) || game.getIncorrectGuesses().contains(guess.charAt(0))){
 				return lang.getError(Errors.HANGMAN_ALREADY_GUESSED, true);
 			}
 
-			// Process their guess.
+			// Process their letter guess.
 			if(game.getWord().contains(guess)){
 				game.getCorrectGuesses().add(guess.charAt(0));
 			}else{
@@ -204,43 +204,30 @@ public class Hangman implements ICommand {
 		} else {
 			// They are guessing the puzzle.
 			if(game.getWord().equalsIgnoreCase(guess)){
-				// They've guessed the puzzle. Update the message and then end the game.
+				// They guessed the puzzle. Add all of the remaining letters to the list.
 				for(char c : game.getWord().toCharArray()){
-					game.getCorrectGuesses().add(c);
+					if(!game.getCorrectGuesses().contains(c)) {
+						game.getCorrectGuesses().add(c);
+					}
 				}
-
-				game.deleteMessage(server);
-				sendEmbeddedMessage(messagingChannel, lang, game);
-
-				brain.setHangmanGame(null);
-				return "You win!";
 			}else{
+				// They guessed wrong.
 				game.removeLife();
 			}
 		}
 
-		// Update the board.
+		// Update the game state if it is over.
+		if(game.getLivesRemaining() == 0 || game.didWin()) {
+			game.finish();
+		}
+
+		// Send an updated game board.
 		game.deleteMessage(server);
 		sendEmbeddedMessage(messagingChannel, lang, game);
 
-		// Do they win?
-		boolean win = true;
-		for(char c : game.getWord().toCharArray()){
-			if(!game.getCorrectGuesses().contains(c)) {
-				win = false;
-				break;
-			}
-		}
-
-		if(win){
+		// If the game is over, clean up.
+		if(game.isFinished()) {
 			brain.setHangmanGame(null);
-			return "You win!";
-		}
-
-		// Do they lose?
-		if(game.getLivesRemaining() == 0){
-			brain.setHangmanGame(null);
-			return "You lose! The word was \""+game.getWord()+"\"";
 		}
 
 		return "";
@@ -259,7 +246,16 @@ public class Hangman implements ICommand {
 	private void sendEmbeddedMessage(ShmamesCommandMessagingChannel messagingChannel, Lang lang, HangmanGame g){
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
-		eBuilder.setAuthor(lang.getMsg(Langs.HANGMAN_TITLE));
+		if(g.isFinished()) {
+			if(g.didWin()) {
+				eBuilder.setAuthor("You win!");
+			} else {
+				eBuilder.setAuthor("You lose! The word was \""+g.getWord()+"\"");
+			}
+		} else {
+			eBuilder.setAuthor(lang.getMsg(Langs.HANGMAN_TITLE));
+		}
+
 		eBuilder.setTitle(g.getDictionary()+" » "+g.getHint());
 		eBuilder.setColor(Color.WHITE);
 		eBuilder.setFooter(lang.getMsg(Langs.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
@@ -267,15 +263,8 @@ public class Hangman implements ICommand {
 		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
 		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
 
-		if(!messagingChannel.hasSentMessage() && messagingChannel.hasHook()) {
-			messagingChannel.getHook().setEphemeral(true);
-			messagingChannel.sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS));
-		}
 
-		MessageChannel c = messagingChannel.getChannel();
-		Message m = messagingChannel.getChannel().sendMessageEmbeds(eBuilder.build()).complete();
-
-		g.setMessage(c.getIdLong(), m.getIdLong());
+		messagingChannel.sendMessageWithConsumers(eBuilder, (message -> g.setMessage(message.getIdLong())), (error -> {}));
 	}
 
 	private String getWordProgressEmotes(HangmanGame g){
@@ -297,233 +286,6 @@ public class Hangman implements ICommand {
 		}
 
 		return sb.toString();
-	}
-
-	private void createDictionaries(){
-		HangmanDictionary videoGames = new HangmanDictionary("VideoGames");
-		HangmanDictionary dnd = new HangmanDictionary("DnD");
-		HangmanDictionary anime = new HangmanDictionary("Anime");
-		HangmanDictionary media = new HangmanDictionary("Media");
-		HangmanDictionary lancer = new HangmanDictionary("Lancer");
-
-		videoGames.addWord("King Dedede", "Character");
-		videoGames.addWord("Princess Zelda", "Character");
-		videoGames.addWord("Ganondorf", "Character");
-		videoGames.addWord("Bokoblin", "Creature");
-		videoGames.addWord("Triforce", "Thing");
-		videoGames.addWord("Gargoyle", "Creature");
-		videoGames.addWord("Archgriffin", "Creature");
-		videoGames.addWord("Godling", "Creature");
-		videoGames.addWord("Grave Hag", "Creature");
-		videoGames.addWord("Cockatrice", "Creature");
-		videoGames.addWord("Drowner", "Creature");
-		videoGames.addWord("Endrega", "Creature");
-		videoGames.addWord("Moblin", "Creature");
-		videoGames.addWord("Werewolf", "Creature");
-		videoGames.addWord("Nightwraith", "Creature");
-		videoGames.addWord("Necromancer", "Thing");
-		videoGames.addWord("Dark Brotherhood", "Thing");
-		videoGames.addWord("Cloud Strife", "Character");
-		videoGames.addWord("Edelgard von Hresvelg", "Character");
-		videoGames.addWord("Sylvain Jose Gautier", "Character");
-		videoGames.addWord("Harrow", "Character");
-		videoGames.addWord("Wukong", "Character");
-		videoGames.addWord("Octavia", "Character");
-		videoGames.addWord("Valkyr", "Character");
-		videoGames.addWord("Dangerous Mute Lunatic", "Quote");
-		videoGames.addWord("Combustible Lemons", "Quote");
-		videoGames.addWord("Structurally Superfluous", "Quote");
-		videoGames.addWord("Mean Mother Hubbard", "Quote");
-		videoGames.addWord("Song of Storms", "Thing");
-		videoGames.addWord("Handsome Jack", "Character");
-		videoGames.addWord("Braccus Rex", "Character");
-		videoGames.addWord("Solaire", "Character");
-		videoGames.addWord("Lautrec", "Character");
-		videoGames.addWord("Siegmeyer", "Character");
-		videoGames.addWord("Link", "Character");
-		videoGames.addWord("Skull Kid", "Character");
-		videoGames.addWord("Tingle", "Character");
-		videoGames.addWord("Kaepora Gaebora", "Character");
-		videoGames.addWord("Vaati", "Character");
-		videoGames.addWord("Richter Belmont", "Character");
-		videoGames.addWord("Count Dracula", "Character");
-		videoGames.addWord("Roald", "Character");
-		videoGames.addWord("Ferdinand bon Aegir", "Character");
-		videoGames.addWord("Miles Edgeworth", "Character");
-		videoGames.addWord("Phoenix Wright", "Character");
-		videoGames.addWord("Professor Layton", "Character");
-		videoGames.addWord("Lucina", "Character");
-		videoGames.addWord("Happy Mask Salesman", "Character");
-		videoGames.addWord("Sephiroth", "Character");
-		videoGames.addWord("Revolver Ocelot", "Character");
-		videoGames.addWord("Kiryu Kazuma", "Character");
-		videoGames.addWord("Darth Revan", "Character");
-		videoGames.addWord("Glory to Mankind", "Quote");
-
-		dnd.addWord("Warlock", "Thing");
-		dnd.addWord("Changeling", "Creature");
-		dnd.addWord("Dragonborn", "Creature");
-		dnd.addWord("Mage Hand", "Spell");
-		dnd.addWord("Prestidigitation", "Spell");
-		dnd.addWord("Natural Twenty", "Thing");
-		dnd.addWord("Tiefling", "Creature");
-		dnd.addWord("Mindflayer", "Creature");
-		dnd.addWord("Beholder", "Creature");
-		dnd.addWord("Philter of Love", "Thing");
-		dnd.addWord("Blade Ward", "Spell");
-		dnd.addWord("Mending", "Spell");
-		dnd.addWord("Patron", "Thing");
-		dnd.addWord("Thunderwave", "Spell");
-		dnd.addWord("Detect Magic", "Spell");
-		dnd.addWord("Speak with Animals", "Spell");
-		dnd.addWord("Ray of Enfeeblement", "Spell");
-		dnd.addWord("Cockatrice", "Creature");
-		dnd.addWord("Werewolf", "Creature");
-		dnd.addWord("Necromancer", "Thing");
-		dnd.addWord("How do You Want to Do This", "Quote");
-		dnd.addWord("Eldritch Blast", "Spell");
-		dnd.addWord("Goblin", "Creature");
-		dnd.addWord("Tiamat", "Creature");
-		dnd.addWord("Book of Shadows", "Thing");
-		dnd.addWord("Sneak Attack", "Thing");
-		dnd.addWord("Bag of Holding", "Thing");
-		dnd.addWord("Armor Class", "Thing");
-		dnd.addWord("Light Crossbow", "Thing");
-		dnd.addWord("War Caster", "Thing");
-		dnd.addWord("Eldritch Knight", "Thing");
-		dnd.addWord("Tarrasque", "Creature");
-		dnd.addWord("Flameskull", "Creature");
-		dnd.addWord("Pseudodragon", "Creature");
-		dnd.addWord("Crawling Claw", "Creature");
-		dnd.addWord("Medusa", "Creature");
-		dnd.addWord("Warforged", "Creature");
-		dnd.addWord("Dragonmark", "Thing");
-		dnd.addWord("Charlatan", "Thing");
-		dnd.addWord("Folk Hero", "Thing");
-		dnd.addWord("Multiclass", "Thing");
-
-		anime.addWord("Tetsutetsu Tetsutetsu", "Character");
-		anime.addWord("Van Hohenheim", "Character");
-		anime.addWord("Edward Elric", "Character");
-		anime.addWord("Roy Mustang", "Character");
-		anime.addWord("Shou Tucker", "Character");
-		anime.addWord("Jonathan Joestar", "Character");
-		anime.addWord("Dio Brando", "Character");
-		anime.addWord("Jotaro Kujo", "Character");
-		anime.addWord("Guren Mk II", "Thing");
-		anime.addWord("Lelouch Vi Britannia", "Character");
-		anime.addWord("Lancelot", "Thing");
-		anime.addWord("Suzaku Kururugi", "Character");
-		anime.addWord("Over Nine Thousand", "Quote");
-		anime.addWord("A Cruel Angels Thesis", "Song");
-		anime.addWord("Again", "Song");
-		anime.addWord("Rewrite", "Song");
-		anime.addWord("Stand Proud", "Song");
-		anime.addWord("Yang Wenli", "Character");
-		anime.addWord("Reinhard von Lohengramm", "Character");
-		anime.addWord("Hajime No Ippo", "Series");
-		anime.addWord("NERV", "Thing");
-		anime.addWord("Shinji Ikari", "Character");
-		anime.addWord("Rin Okumura", "Character");
-		anime.addWord("Eijiro Kirishima", "Character");
-
-		media.addWord("Dolores Umbridge", "Character");
-		media.addWord("Harry Potter", "Character");
-		media.addWord("Mike Stoklasa", "Person");
-		media.addWord("Nicolas Cage", "Person");
-		media.addWord("Albus Dumbledore", "Character");
-		media.addWord("Jerry Seinfeld", "Person");
-		media.addWord("Darth Vader", "Character");
-		media.addWord("Sheev Palpatine", "Character");
-		media.addWord("Jarjar Binx", "Character");
-		media.addWord("Shawshank Redemption", "Film");
-		media.addWord("Morgan Freeman", "Person");
-		media.addWord("Thanos", "Character");
-		media.addWord("Iron Man", "Character");
-		media.addWord("Peter Parker", "Character");
-		media.addWord("Rowan Atkinson", "Person");
-		media.addWord("Citizen Kane", "Film");
-		media.addWord("Inception", "Film");
-		media.addWord("The Matrix", "Film");
-		media.addWord("Ricky Gervais", "Person");
-		media.addWord("James Spader", "Person");
-		media.addWord("A Clockwork Orange", "Book");
-		media.addWord("The Hobbit", "Book");
-		media.addWord("The Lion The Witch and the Wardrobe", "Book");
-		media.addWord("The Da Vinci Code", "Book");
-		media.addWord("To Kill a Mockingbird", "Book");
-		media.addWord("War and Peace", "Book");
-		media.addWord("The Diary of Anne Frank", "Book");
-		media.addWord("Gone with the Wind", "Book");
-		media.addWord("The Great Gatsby", "Book");
-		media.addWord("Oliver Twist", "Book");
-		media.addWord("A Christmas Carol", "Book");
-		media.addWord("The Hound of the Baskervilles", "Book");
-		media.addWord("Twenty Thousand Leagues Under the Sea", "Book");
-		media.addWord("The Hunger Games", "Book");
-		media.addWord("Charlie and the Chocolate Factory", "Book");
-		media.addWord("Treasure Island", "Book");
-		media.addWord("Harry Potter and the Sorcerers Stone", "Book");
-
-		lancer.addWord("Sparri", "Faction");
-		lancer.addWord("Albatross", "Faction");
-		lancer.addWord("Ungratefuls", "Faction");
-		lancer.addWord("Voladores", "Faction");
-		lancer.addWord("Union", "Faction");
-		lancer.addWord("Horizon Collective", "Faction");
-		lancer.addWord("Mirrorsmoke Mercenary Company", "Faction");
-		lancer.addWord("Karrakin Trade Baronies", "Faction");
-		lancer.addWord("Second Committee", "Faction");
-		lancer.addWord("Third Committee", "Faction");
-		lancer.addWord("Blackbeard", "Frame");
-		lancer.addWord("Drake", "Frame");
-		lancer.addWord("Lancaster", "Frame");
-		lancer.addWord("Nelson", "Frame");
-		lancer.addWord("Raleigh", "Frame");
-		lancer.addWord("Tortuga", "Frame");
-		lancer.addWord("Vlad", "Frame");
-		lancer.addWord("Caliban", "Frame");
-		lancer.addWord("Zheng", "Frame");
-		lancer.addWord("Black Witch", "Frame");
-		lancer.addWord("Deaths Head", "Frame");
-		lancer.addWord("Dusk Wing", "Frame");
-		lancer.addWord("Metalmark", "Frame");
-		lancer.addWord("Monarch", "Frame");
-		lancer.addWord("Mourning Cloak", "Frame");
-		lancer.addWord("Swallowtail", "Frame");
-		lancer.addWord("White Witch", "Frame");
-		lancer.addWord("Emperor", "Frame");
-		lancer.addWord("Atlas", "Frame");
-		lancer.addWord("Balor", "Frame");
-		lancer.addWord("Goblin", "Frame");
-		lancer.addWord("Gorgon", "Frame");
-		lancer.addWord("Genghis", "Frame");
-		lancer.addWord("Hydra", "Frame");
-		lancer.addWord("Manticore", "Frame");
-		lancer.addWord("Minotaur", "Frame");
-		lancer.addWord("Pegasus", "Frame");
-		lancer.addWord("Kobold", "Frame");
-		lancer.addWord("Lich", "Frame");
-		lancer.addWord("Iskander", "Frame");
-		lancer.addWord("Saladin", "Frame");
-		lancer.addWord("Tokugawa", "Frame");
-		lancer.addWord("Sunzi", "Frame");
-		lancer.addWord("Smith Shimano Corporation", "Manufacturer");
-		lancer.addWord("Harrison Armory", "Manufacturer");
-		lancer.addWord("General Massive Systems", "Manufacturer");
-		lancer.addWord("Interplanetary Shipping NorthStar", "Manufacturer");
-		lancer.addWord("Horus", "Manufacturer");
-		lancer.addWord("Non Human Person", "Thing");
-		lancer.addWord("Galsim", "Thing");
-		lancer.addWord("Blinkspace", "Thing");
-		lancer.addWord("Core Power", "Thing");
-		lancer.addWord("The Hercynian Crisis", "Thing");
-
-		this.dictionaries.add(videoGames);
-		this.dictionaries.add(dnd);
-		this.dictionaries.add(anime);
-		this.dictionaries.add(media);
-		this.dictionaries.add(lancer);
 	}
 
 	private String getHangmanASCII(int lives){
