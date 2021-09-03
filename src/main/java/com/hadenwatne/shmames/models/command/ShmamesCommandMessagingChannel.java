@@ -1,11 +1,12 @@
 package com.hadenwatne.shmames.models.command;
 
-import jdk.internal.jline.internal.Nullable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
+import javax.annotation.Nullable;
+import java.io.File;
 import java.util.function.Consumer;
 
 public class ShmamesCommandMessagingChannel {
@@ -60,7 +61,7 @@ public class ShmamesCommandMessagingChannel {
         this.hasSentMessage = true;
     }
 
-    public void sendMessageWithConsumers(String message, Consumer<Message> success, Consumer<Throwable> failure) {
+    public void sendMessage(String message, Consumer<Message> success, Consumer<Throwable> failure) {
         if(hasHook()) {
             this.hook.sendMessage(message).queue(success, failure);
         } else {
@@ -80,7 +81,7 @@ public class ShmamesCommandMessagingChannel {
         this.hasSentMessage = true;
     }
 
-    public void sendMessageWithConsumers(EmbedBuilder embedBuilder, Consumer<Message> success, Consumer<Throwable> failure) {
+    public void sendMessage(EmbedBuilder embedBuilder, Consumer<Message> success, Consumer<Throwable> failure) {
         if(hasHook()) {
             this.hook.sendMessageEmbeds(embedBuilder.build()).queue(success, failure);
         } else {
@@ -88,5 +89,11 @@ public class ShmamesCommandMessagingChannel {
         }
 
         this.hasSentMessage = true;
+    }
+
+    public void sendFile(File file, Consumer<Message> success, Consumer<Throwable> failure) {
+        if(hasHook()) {
+            this.hook.sendFile(file).queue(success, failure);
+        }
     }
 }

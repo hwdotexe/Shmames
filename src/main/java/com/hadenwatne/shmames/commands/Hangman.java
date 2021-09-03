@@ -13,11 +13,12 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import jdk.internal.jline.internal.Nullable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Utils;
+
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -264,7 +265,7 @@ public class Hangman implements ICommand {
 		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
 
 
-		messagingChannel.sendMessageWithConsumers(eBuilder, (message -> g.setMessage(message.getIdLong())), (error -> {}));
+		messagingChannel.sendMessage(eBuilder, (message -> g.setMessage(message.getIdLong())), (error -> {}));
 	}
 
 	private String getWordProgressEmotes(HangmanGame g){
