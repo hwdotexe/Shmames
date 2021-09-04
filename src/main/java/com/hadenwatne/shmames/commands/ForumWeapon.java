@@ -28,10 +28,10 @@ public class ForumWeapon implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ForumWeapon() {
-		this.commandStructure = CommandBuilder.Create("forumweapon")
+		this.commandStructure = CommandBuilder.Create("forumweapon", "Create shorthand names for your favorite links, and share them in a snap.")
 				.addAlias("fw")
 				.addSubCommands(
-						CommandBuilder.Create("create")
+						CommandBuilder.Create("create", "Create a new Forum Weapon.")
 								.addParameters(
 										new CommandParameter("createWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
@@ -39,7 +39,7 @@ public class ForumWeapon implements ICommand {
 												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
 								)
 								.build(),
-						CommandBuilder.Create("update")
+						CommandBuilder.Create("update", "Change the URL of an existing Forum Weapon.")
 								.addParameters(
 										new CommandParameter("updateWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
@@ -47,24 +47,24 @@ public class ForumWeapon implements ICommand {
 												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
 								)
 								.build(),
-						CommandBuilder.Create("remove")
+						CommandBuilder.Create("remove", "Delete a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("removeWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
 								.build(),
-						CommandBuilder.Create("list")
+						CommandBuilder.Create("list", "List all available Forum Weapons.")
 								.addParameters(
 										new CommandParameter("all", "Whether to search all connected guilds.", ParameterType.BOOLEAN, false)
 								)
 								.build(),
-						CommandBuilder.Create("search")
+						CommandBuilder.Create("search", "Search for a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("searchTerm", "The partial name of the Forum Weapon to search for.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
 								.build(),
-						CommandBuilder.Create("alias")
+						CommandBuilder.Create("alias", "Add an alternative name for a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("aliasWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
@@ -72,13 +72,13 @@ public class ForumWeapon implements ICommand {
 												.setPattern("\\w{3,}")
 								)
 								.build(),
-						CommandBuilder.Create("send")
+						CommandBuilder.Create("send", "Send a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
 								.build(),
-						CommandBuilder.Create("prune")
+						CommandBuilder.Create("prune", "List and delete unused Forum Weapons.")
 								.build()
 				)
 				.build();
@@ -87,16 +87,6 @@ public class ForumWeapon implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Create shorthand names for your favorite links, and share them in a snap.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

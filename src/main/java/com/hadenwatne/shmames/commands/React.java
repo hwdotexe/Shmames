@@ -19,7 +19,7 @@ public class React implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public React() {
-		this.commandStructure = CommandBuilder.Create("react")
+		this.commandStructure = CommandBuilder.Create("react", "Reacts to the specified message with emoji that spell out your word.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})"),
@@ -32,17 +32,6 @@ public class React implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Reacts to the specified message with emoji that spell out your word. Works " +
-				"best with shorter words.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

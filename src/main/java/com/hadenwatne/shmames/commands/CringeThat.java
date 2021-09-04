@@ -26,7 +26,7 @@ public class CringeThat implements ICommand {
 	private HashMap<String, String> cringeDict = new HashMap<>();
 
 	public CringeThat() {
-		this.commandStructure = CommandBuilder.Create("cringethat")
+		this.commandStructure = CommandBuilder.Create("cringethat", "Rewrite a previous message in a cringy way.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})"),
@@ -45,17 +45,6 @@ public class CringeThat implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Rewrite a previous message in a cringy way. Use `^` symbols to specify the " +
-				"message to rewrite.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

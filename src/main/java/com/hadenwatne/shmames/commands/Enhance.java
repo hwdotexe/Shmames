@@ -21,7 +21,7 @@ public class Enhance implements ICommand {
 			"Done - @PH is now radioactive."};
 
 	public Enhance() {
-		this.commandStructure = CommandBuilder.Create("enhance")
+		this.commandStructure = CommandBuilder.Create("enhance", "Enhance things.")
 				.addParameters(
 						new CommandParameter("thing", "The item you want to enhance.", ParameterType.STRING)
 				)
@@ -31,16 +31,6 @@ public class Enhance implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Enhance things.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

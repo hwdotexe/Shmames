@@ -13,7 +13,7 @@ public class Wiki implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Wiki() {
-		this.commandStructure = CommandBuilder.Create("wiki")
+		this.commandStructure = CommandBuilder.Create("wiki", "Ask the oracle your question, and I shall answer. That, or the Internet will.")
 				.addParameters(
 						new CommandParameter("query", "A short search query", ParameterType.STRING)
 						.setPattern(".{3,150}")
@@ -24,16 +24,6 @@ public class Wiki implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Ask the oracle your question, and I shall answer. That, or the Internet will.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

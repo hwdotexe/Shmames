@@ -17,7 +17,7 @@ public class ListEmoteStats implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ListEmoteStats() {
-		this.commandStructure = CommandBuilder.Create("listemotestats")
+		this.commandStructure = CommandBuilder.Create("listemotestats", "View emote usage statistics.")
 				.addAlias("list emote stats")
 				.addAlias("showemotestats")
 				.addAlias("show emote stats")
@@ -27,16 +27,6 @@ public class ListEmoteStats implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "View emote usage statistics.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

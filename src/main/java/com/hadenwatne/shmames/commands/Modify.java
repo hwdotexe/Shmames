@@ -32,7 +32,7 @@ public class Modify implements ICommand {
 			setting.addSelectionOptions(name.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("modify")
+		this.commandStructure = CommandBuilder.Create("modify", "The Administrator's command to customize bot settings and behavior.")
 				.addParameters(
 						setting,
 						// TODO will check the type later. May need to add "isRole()..." checks onto parameter
@@ -44,15 +44,6 @@ public class Modify implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-	@Override
-	public String getDescription() {
-		return "The Administrator's command to customize bot settings and behavior.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

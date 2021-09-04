@@ -22,7 +22,7 @@ public class SimonSays implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public SimonSays() {
-		this.commandStructure = CommandBuilder.Create("simonsays")
+		this.commandStructure = CommandBuilder.Create("simonsays", "I'll repeat after you! Send messages, links, or server emotes!")
 				.addAlias("echo")
 				.addAlias("repeat")
 				.addParameters(
@@ -34,16 +34,6 @@ public class SimonSays implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "I'll repeat after you! Send messages, links, or server emotes!";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

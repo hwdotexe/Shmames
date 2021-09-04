@@ -30,9 +30,9 @@ public class Poll implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Poll() {
-		this.commandStructure = CommandBuilder.Create("poll")
+		this.commandStructure = CommandBuilder.Create("poll", "Create and manage server polls.")
 				.addSubCommands(
-						CommandBuilder.Create("start")
+						CommandBuilder.Create("start", "Begin a new poll in the channel.")
 								.addParameters(
 										new CommandParameter("time", "The amount of time the poll should last.", ParameterType.TIMECODE),
 										new CommandParameter("question", "The question to ask", ParameterType.STRING)
@@ -41,7 +41,7 @@ public class Poll implements ICommand {
 												.setPattern("(.+;)+(.+);?")
 								)
 								.build(),
-						CommandBuilder.Create("close")
+						CommandBuilder.Create("close", "Close an existing poll.")
 								.addParameters(
 										new CommandParameter("pollID", "The ID of the poll to close.", ParameterType.STRING)
 												.setPattern("#?[a-z0-9]{5}")
@@ -54,16 +54,6 @@ public class Poll implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Create and manage server polls.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

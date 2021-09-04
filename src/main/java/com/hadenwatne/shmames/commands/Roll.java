@@ -21,7 +21,7 @@ public class Roll implements ICommand {
 	private final Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
 
 	public Roll() {
-		this.commandStructure = CommandBuilder.Create("roll")
+		this.commandStructure = CommandBuilder.Create("roll", "Roll some dice with optional modifiers.")
 				.addParameters(
 						new CommandParameter("dice", "The dice to roll.", ParameterType.STRING)
 								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
@@ -32,16 +32,6 @@ public class Roll implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Roll some dice!\nEach operation is done to the result of the previous.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

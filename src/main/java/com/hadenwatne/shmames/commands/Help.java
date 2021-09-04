@@ -24,7 +24,7 @@ public class Help implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Help() {
-		this.commandStructure = CommandBuilder.Create("help")
+		this.commandStructure = CommandBuilder.Create("help", "Shows help & additional information.")
 				.addAlias("how do i use")
 				.addAlias("how do you use")
 				.addParameters(
@@ -36,16 +36,6 @@ public class Help implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Shows help & additional information.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

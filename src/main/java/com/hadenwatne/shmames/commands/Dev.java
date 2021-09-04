@@ -29,7 +29,7 @@ public class Dev implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Dev() {
-		this.commandStructure = CommandBuilder.Create("dev")
+		this.commandStructure = CommandBuilder.Create("dev", "")
 				.addAlias("developer")
 				.addParameters(
 						new CommandParameter("subCommand", "The subcommand to run", ParameterType.SELECTION)
@@ -48,16 +48,6 @@ public class Dev implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

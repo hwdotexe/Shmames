@@ -20,7 +20,7 @@ public class Timer implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Timer() {
-		this.commandStructure = CommandBuilder.Create("timer")
+		this.commandStructure = CommandBuilder.Create("timer", "Start a timer and be alerted when it's ready.")
 				.addAlias("remind me in")
 				.addAlias("alert")
 				.addParameters(
@@ -33,16 +33,6 @@ public class Timer implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Start a timer, and "+Shmames.getBotName()+" will alert you when it's ready.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

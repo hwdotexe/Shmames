@@ -18,7 +18,7 @@ public class EightBall implements ICommand {
 			"Nope.", "No way.", "That's a negative."};
 
 	public EightBall() {
-		this.commandStructure = CommandBuilder.Create("8ball")
+		this.commandStructure = CommandBuilder.Create("8ball", "Shake a Magic 8 Ball and let me see your future.")
 				.addParameters(
 						new CommandParameter("question", "The question to ask the magic 8 ball.", ParameterType.STRING)
 				)
@@ -28,16 +28,6 @@ public class EightBall implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Shake a Magic 8 Ball and let me see your future.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

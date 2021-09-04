@@ -18,7 +18,7 @@ public class IdiotThat implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public IdiotThat() {
-		this.commandStructure = CommandBuilder.Create("idiotthat")
+		this.commandStructure = CommandBuilder.Create("idiotthat", "Rewrite a previous message with poor grammar.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})")
@@ -29,17 +29,6 @@ public class IdiotThat implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Rewrite a previous message with poor grammar. Use `^` symbols to specify the " +
-				"message to rewrite.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class Minesweeper implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Minesweeper() {
-		this.commandStructure = CommandBuilder.Create("minesweeper")
+		this.commandStructure = CommandBuilder.Create("minesweeper", "Play a game of Minesweeper, using a grid size of 6 through 11.")
 				.addParameters(
 						new CommandParameter("size", "The size of the minefield, 6-11", ParameterType.INTEGER)
 				)
@@ -23,16 +23,6 @@ public class Minesweeper implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Play a game of Minesweeper, using a grid size of 6 through 11.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

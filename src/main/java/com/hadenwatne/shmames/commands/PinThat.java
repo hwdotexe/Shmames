@@ -23,7 +23,7 @@ public class PinThat implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public PinThat() {
-		this.commandStructure = CommandBuilder.Create("pinthat")
+		this.commandStructure = CommandBuilder.Create("pinthat", "Sends a copy of the specified message over to the Pin Channel, if configured.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})")
@@ -34,16 +34,6 @@ public class PinThat implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Sends a copy of the specified message over to the Pin Channel, if configured.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

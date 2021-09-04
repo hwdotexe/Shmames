@@ -14,7 +14,7 @@ public class ResetEmoteStats implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ResetEmoteStats() {
-		this.commandStructure = CommandBuilder.Create("resetemotestats")
+		this.commandStructure = CommandBuilder.Create("resetemotestats", "Reset emote usage statistics.")
 				.addAlias("reset emote stats")
 				.build();
 	}
@@ -22,16 +22,6 @@ public class ResetEmoteStats implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Reset emote usage statistics.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

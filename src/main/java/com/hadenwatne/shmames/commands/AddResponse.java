@@ -21,7 +21,7 @@ public class AddResponse implements ICommand {
 			triggerType.addSelectionOptions(type.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("addresponse")
+		this.commandStructure = CommandBuilder.Create("addresponse", "Adds a new random response for the chosen trigger type.")
 				.addAlias("add response")
 				.addParameters(
 						triggerType,
@@ -33,16 +33,6 @@ public class AddResponse implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Adds a new random response for the chosen trigger type.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

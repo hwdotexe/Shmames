@@ -16,7 +16,7 @@ public class WhatAreTheOdds implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public WhatAreTheOdds() {
-		this.commandStructure = CommandBuilder.Create("whataretheodds")
+		this.commandStructure = CommandBuilder.Create("whataretheodds", "Get the odds out of 100 of something happening.")
 				.addAlias("what are the odds")
 				.addParameters(
 						new CommandParameter("query", "The event to determine the odds of.", ParameterType.STRING)
@@ -27,16 +27,6 @@ public class WhatAreTheOdds implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Get the odds out of 100 of something happening.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

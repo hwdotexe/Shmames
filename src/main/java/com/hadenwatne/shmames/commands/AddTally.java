@@ -13,7 +13,7 @@ public class AddTally implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public AddTally() {
-		this.commandStructure = CommandBuilder.Create("addtally")
+		this.commandStructure = CommandBuilder.Create("addtally", "Increments a tally, or creates one if it doesn't exist.")
 				.addAlias("add tally")
 				.addAlias("add a tally to")
 				.addParameters(
@@ -26,16 +26,6 @@ public class AddTally implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Increments a tally, or creates one if it doesn't exist.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

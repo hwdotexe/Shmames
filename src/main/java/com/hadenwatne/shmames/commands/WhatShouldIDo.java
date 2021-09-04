@@ -27,7 +27,7 @@ public class WhatShouldIDo implements ICommand {
 			"drink questionable chemicals", "throw a prom in the McDonalds Playplace"};
 
 	public WhatShouldIDo() {
-		this.commandStructure = CommandBuilder.Create("whatshouldido")
+		this.commandStructure = CommandBuilder.Create("whatshouldido", "Get a randomized, possibly sarcastic suggestion to cure your boredom.")
 				.addAlias("what should i do")
 				.build();
 	}
@@ -35,16 +35,6 @@ public class WhatShouldIDo implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Get a randomized, possibly sarcastic suggestion to cure your boredom.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

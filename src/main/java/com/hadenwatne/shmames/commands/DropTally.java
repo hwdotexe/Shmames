@@ -20,7 +20,7 @@ public class DropTally implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public DropTally() {
-		this.commandStructure = CommandBuilder.Create("droptally")
+		this.commandStructure = CommandBuilder.Create("droptally", "Decrements a tally, or removes it if the tally reaches 0.")
 				.addAlias("drop tally")
 				.addAlias("remove a tally from")
 				.addParameters(
@@ -33,16 +33,6 @@ public class DropTally implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Decrements a tally, or removes it if the tally reaches 0.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

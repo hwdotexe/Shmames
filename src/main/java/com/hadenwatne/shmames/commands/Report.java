@@ -17,7 +17,7 @@ public class Report implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Report() {
-		this.commandStructure = CommandBuilder.Create("report")
+		this.commandStructure = CommandBuilder.Create("report", "Send feedback to the bot developer")
 				.addAlias("feedback")
 				.addParameters(
 						new CommandParameter("reportType", "The type of report you are sending.", ParameterType.SELECTION)
@@ -30,15 +30,6 @@ public class Report implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Send feedback about " + Shmames.getBotName() + " to the developer. Your username, server's name, and message will be recorded.";
-	}
-
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

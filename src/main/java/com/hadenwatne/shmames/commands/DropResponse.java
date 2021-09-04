@@ -30,7 +30,7 @@ public class DropResponse implements ICommand {
 			triggerType.addSelectionOptions(type.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("dropresponse")
+		this.commandStructure = CommandBuilder.Create("dropresponse", "Removes an existing response from the list for the specified type.")
 				.addAlias("drop response")
 				.addParameters(
 						triggerType,
@@ -42,17 +42,6 @@ public class DropResponse implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Removes an existing response from the list for the specified type. Use the `listResponses` command " +
-				"to view response numbers.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

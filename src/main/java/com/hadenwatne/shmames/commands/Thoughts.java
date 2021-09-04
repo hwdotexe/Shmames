@@ -16,7 +16,7 @@ public class Thoughts implements ICommand {
 			"I hate that.", "Get that garbage out of my face!"};
 
 	public Thoughts() {
-		this.commandStructure = CommandBuilder.Create("thoughts")
+		this.commandStructure = CommandBuilder.Create("thoughts", "Get my randomized opinion on something.")
 				.addAlias("what do you think about")
 				.addAlias("what do you think of")
 				.addParameters(
@@ -28,16 +28,6 @@ public class Thoughts implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Get my randomized opinion on something.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

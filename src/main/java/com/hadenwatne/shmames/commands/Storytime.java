@@ -17,23 +17,13 @@ public class Storytime implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Storytime() {
-		this.commandStructure = CommandBuilder.Create("storytime")
+		this.commandStructure = CommandBuilder.Create("storytime", "I tell you a high-quality story.")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "I tell you a high-quality story.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

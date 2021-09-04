@@ -26,9 +26,9 @@ public class ListCmd implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ListCmd() {
-		this.commandStructure = CommandBuilder.Create("list")
+		this.commandStructure = CommandBuilder.Create("list", "Create and manage custom lists for all your things.")
 				.addSubCommands(
-						CommandBuilder.Create("create")
+						CommandBuilder.Create("create", "Create a new list.")
 								.addParameters(
 										new CommandParameter("newListName", "The name of the list to create.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
@@ -36,35 +36,35 @@ public class ListCmd implements ICommand {
 												.addSelectionOptions("public", "private")
 								)
 								.build(),
-						CommandBuilder.Create("add")
+						CommandBuilder.Create("add", "Add an item to a list.")
 								.addParameters(
 										new CommandParameter("addListName", "The name of the list to add to.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("item", "The item to add to the list.", ParameterType.STRING)
 								)
 								.build(),
-						CommandBuilder.Create("remove")
+						CommandBuilder.Create("remove", "Remove an item from a list.")
 								.addParameters(
 										new CommandParameter("removeListName", "The name of the list to remove from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("index", "The item position to remove.", ParameterType.INTEGER)
 								)
 								.build(),
-						CommandBuilder.Create("delete")
+						CommandBuilder.Create("delete", "Delete a list.")
 								.addParameters(
 										new CommandParameter("deleteListName", "The name of the list to delete.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 										)
 								.build(),
-						CommandBuilder.Create("random")
+						CommandBuilder.Create("random", "Get a random item from a list.")
 								.addParameters(
 										new CommandParameter("randomListName", "The name of the list to get a random item from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 										)
 								.build(),
-						CommandBuilder.Create("list")
+						CommandBuilder.Create("list", "Show all available lists.")
 								.build(),
-						CommandBuilder.Create("view")
+						CommandBuilder.Create("view", "View the items in a list.")
 								.addParameters(
 										new CommandParameter("viewListName", "The name of the list to view.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
@@ -77,16 +77,6 @@ public class ListCmd implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Create and manage custom lists for all your things. Other server members can add to public lists, or you can keep it private for just yourself.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

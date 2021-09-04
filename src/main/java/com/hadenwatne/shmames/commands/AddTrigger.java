@@ -21,7 +21,7 @@ public class AddTrigger implements ICommand {
 			triggerType.addSelectionOptions(type.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("addtrigger")
+		this.commandStructure = CommandBuilder.Create("addtrigger", "Creates a new trigger word or phrase, which then sends a response for the given type.")
 				.addAlias("add trigger")
 				.addParameters(
 						triggerType,
@@ -33,16 +33,6 @@ public class AddTrigger implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Creates a new trigger word or phrase, which then sends a response for the given type.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

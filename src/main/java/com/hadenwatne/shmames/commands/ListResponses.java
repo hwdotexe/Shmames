@@ -26,7 +26,7 @@ public class ListResponses implements ICommand {
 			responseType.addSelectionOptions(type.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("listresponses")
+		this.commandStructure = CommandBuilder.Create("listresponses", "Displays the list of random responses for the specified trigger type.")
 				.addAlias("list responses")
 				.addParameters(
 						responseType
@@ -37,16 +37,6 @@ public class ListResponses implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Displays the list of random responses for the specified trigger type.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

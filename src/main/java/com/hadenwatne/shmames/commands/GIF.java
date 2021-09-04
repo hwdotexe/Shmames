@@ -14,7 +14,7 @@ public class GIF implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public GIF() {
-		this.commandStructure = CommandBuilder.Create("gif")
+		this.commandStructure = CommandBuilder.Create("gif", "Send an awesome, randomly-selected GIF based on a search term.")
 				.addAlias("who is")
 				.addAlias("what is")
 				.addParameters(
@@ -26,16 +26,6 @@ public class GIF implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Send an awesome, randomly-selected GIF based on a search term.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

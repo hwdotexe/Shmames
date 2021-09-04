@@ -30,21 +30,21 @@ public class Hangman implements ICommand {
 	public Hangman() {
 		dictionaries = Shmames.getBrains().getDictionaries().getDictionaries();
 
-		this.commandStructure = CommandBuilder.Create("hangman")
+		this.commandStructure = CommandBuilder.Create("hangman", "Play a game of Hangman!")
 				.addSubCommands(
-						CommandBuilder.Create("start")
+						CommandBuilder.Create("start", "Begin a new game.")
 								.addParameters(
 										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
 												.setPattern("[a-z0-9,]+"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 								)
 								.build(),
-						CommandBuilder.Create("guess")
+						CommandBuilder.Create("guess", "Submit a guess for a letter or solution.")
 								.addParameters(
 										new CommandParameter("guess", "A letter, word, or phrase.", ParameterType.STRING)
 								)
 								.build(),
-						CommandBuilder.Create("list")
+						CommandBuilder.Create("list", "List available dictionaries.")
 								.build()
 				)
 				.build();
@@ -53,16 +53,6 @@ public class Hangman implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Play a game of Hangman!";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

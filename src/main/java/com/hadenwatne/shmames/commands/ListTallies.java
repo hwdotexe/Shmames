@@ -14,7 +14,7 @@ public class ListTallies implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ListTallies() {
-		this.commandStructure = CommandBuilder.Create("listtallies")
+		this.commandStructure = CommandBuilder.Create("listtallies", "Displays all the current tallies.")
 				.addAlias("list tallies")
 				.build();
 	}
@@ -22,16 +22,6 @@ public class ListTallies implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Displays all the current tallies.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

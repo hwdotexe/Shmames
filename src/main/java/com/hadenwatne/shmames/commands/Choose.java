@@ -23,7 +23,7 @@ public class Choose implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Choose() {
-		this.commandStructure = CommandBuilder.Create("choose")
+		this.commandStructure = CommandBuilder.Create("choose", "Let me make a decision for you.")
 				.addParameters(
 						new CommandParameter("thisOrThat", "Two options, separated by 'or'.", ParameterType.STRING)
 						.setPattern("(.{1,}) or (.{1,})")
@@ -34,16 +34,6 @@ public class Choose implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Let me make a decision for you.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

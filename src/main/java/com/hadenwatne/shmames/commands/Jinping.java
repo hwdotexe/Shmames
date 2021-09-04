@@ -11,23 +11,13 @@ public class Jinping implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Jinping() {
-		this.commandStructure = CommandBuilder.Create("jinping")
+		this.commandStructure = CommandBuilder.Create("jinping", "Spam :ping_pong: for one minute in support of the Hong Kong pro-democracy protesters.")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Spam :ping_pong: for one minute in support of the Hong Kong pro-democracy protesters.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

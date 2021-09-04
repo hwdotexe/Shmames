@@ -24,7 +24,7 @@ public class Blame implements ICommand {
 			"Google", "Starbucks", "NASA", "Keanu Reeves", "Oscar the Grouch", "Ohio"};
 
 	public Blame() {
-		this.commandStructure = CommandBuilder.Create("blame")
+		this.commandStructure = CommandBuilder.Create("blame", "I'll blame stuff for you.")
 				.addAlias("why")
 				.addParameters(
 						new CommandParameter("item", "The item to blame", ParameterType.STRING)
@@ -35,16 +35,6 @@ public class Blame implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-	
-	@Override
-	public String getDescription() {
-		return "I'll blame stuff for you.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class ListTriggers implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public ListTriggers() {
-		this.commandStructure = CommandBuilder.Create("listtriggers")
+		this.commandStructure = CommandBuilder.Create("listtriggers", "Displays all the current message trigger words or phrases, along with their types.")
 				.addAlias("list triggers")
 				.build();
 	}
@@ -20,16 +20,6 @@ public class ListTriggers implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Displays all the current message trigger words or phrases, along with their types.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

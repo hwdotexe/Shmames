@@ -22,7 +22,7 @@ public class When implements ICommand {
 			"Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"};
 
 	public When() {
-		this.commandStructure = CommandBuilder.Create("when")
+		this.commandStructure = CommandBuilder.Create("when", "I'll tell you when something will happen.")
 				.addParameters(
 						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING, false)
 				)
@@ -32,16 +32,6 @@ public class When implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "I'll tell you when something will happen.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

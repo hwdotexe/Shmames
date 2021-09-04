@@ -17,7 +17,7 @@ public class DropTrigger implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public DropTrigger() {
-		this.commandStructure = CommandBuilder.Create("droptrigger")
+		this.commandStructure = CommandBuilder.Create("droptrigger", "Removes an existing trigger word or phrase.")
 				.addAlias("drop trigger")
 				.addParameters(
 						new CommandParameter("triggerWord", "The trigger to remove.", ParameterType.STRING)
@@ -28,16 +28,6 @@ public class DropTrigger implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Removes an existing trigger word or phrase.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override

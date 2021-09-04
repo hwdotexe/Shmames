@@ -16,7 +16,7 @@ public class SetTally implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public SetTally() {
-		this.commandStructure = CommandBuilder.Create("settally")
+		this.commandStructure = CommandBuilder.Create("settally", "Overrides a tally with a new value, creating it if it didn't already exist.")
 				.addAlias("set tally")
 				.addParameters(
 						new CommandParameter("tallyName", "The tally to set.", ParameterType.STRING)
@@ -29,16 +29,6 @@ public class SetTally implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Overrides a tally with a new value, creating it if it didn't already exist.";
-	}
-
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override
