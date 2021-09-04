@@ -35,7 +35,13 @@ public class ShmamesCommandArguments {
     }
 
     public String getAsString(String key) {
-        return (String) this.arguments.get(key);
+        try {
+            return (String) this.arguments.get(key);
+        } catch (Exception e) {
+            ShmamesLogger.logException(e);
+        }
+
+        return null;
     }
 
     public boolean getAsBoolean(String key) {

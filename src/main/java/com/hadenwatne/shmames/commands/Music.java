@@ -11,11 +11,12 @@ import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.Playlist;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -32,9 +33,9 @@ public class Music implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Music() {
-		this.commandStructure = CommandBuilder.Create("music")
+		this.commandStructure = CommandBuilder.Create("music", "Play music, create playlists, and chill out.")
 				.addSubCommands(
-						CommandBuilder.Create("play")
+						CommandBuilder.Create("play", "Play a track or playlist.")
 								.addAlias("p")
 								.addParameters(
 										new CommandParameter("playPlaylist", "The playlist to play.", ParameterType.STRING, false)
@@ -43,27 +44,27 @@ public class Music implements ICommand {
 												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
 								)
 								.build(),
-						CommandBuilder.Create("pause")
+						CommandBuilder.Create("pause", "Pause any playing music.")
 								.build(),
-						CommandBuilder.Create("resume")
+						CommandBuilder.Create("resume", "Resume after pausing.")
 								.addAlias("r")
 								.build(),
-						CommandBuilder.Create("skip")
+						CommandBuilder.Create("skip", "Skip the current track.")
 								.addParameters(
 										new CommandParameter("number", "How many tracks to skip.", ParameterType.INTEGER, false)
 								)
 								.build(),
-						CommandBuilder.Create("stop")
+						CommandBuilder.Create("stop", "Stop playing music.")
 								.build(),
-						CommandBuilder.Create("loop")
+						CommandBuilder.Create("loop", "Loop the track or queue.")
 								.addParameters(
 										new CommandParameter("loopQueue", "Whether to loop the queue.", ParameterType.BOOLEAN)
 								)
 								.build(),
-						CommandBuilder.Create("playing")
+						CommandBuilder.Create("playing", "See what's playing.")
 								.addAlias("np")
 								.build(),
-						CommandBuilder.Create("convert")
+						CommandBuilder.Create("convert", "Convert the queue to a playlist.")
 								.addParameters(
 										new CommandParameter("newPlaylistName", "The name to use for the new playlist.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
@@ -71,30 +72,39 @@ public class Music implements ICommand {
 								.build()
 				)
 				.addSubCommandGroups(
-						new SubCommandGroup("playlist")
+						new SubCommandGroup("playlist", "Manage playlists.")
 								.addAlias("pl")
 								.addSubCommands(
-										CommandBuilder.Create("create")
+										CommandBuilder.Create("create", "Create a new playlist.")
+												.addAlias("c")
 												.build(),
-										CommandBuilder.Create("add")
+										CommandBuilder.Create("add", "Add a track to a playlist.")
+												.addAlias("a")
 												.build(),
-										CommandBuilder.Create("list")
+										CommandBuilder.Create("list", "Show available playlists.")
+												.addAlias("l")
 												.build(),
-										CommandBuilder.Create("remove")
+										CommandBuilder.Create("remove", "Remove a track from a playlist.")
+												.addAlias("r")
 												.build(),
-										CommandBuilder.Create("delete")
+										CommandBuilder.Create("delete", "Delete a playlist.")
+												.addAlias("d")
 												.build()
 								),
-						new SubCommandGroup("queue")
+						new SubCommandGroup("queue", "Manage the queue.")
 								.addAlias("q")
 								.addSubCommands(
-										CommandBuilder.Create("clear")
+										CommandBuilder.Create("clear", "Clear the list of upcoming tracks.")
+												.addAlias("c")
 												.build(),
-										CommandBuilder.Create("reverse")
+										CommandBuilder.Create("reverse", "Reverse the order of the queue.")
+												.addAlias("r")
 												.build(),
-										CommandBuilder.Create("shuffle")
+										CommandBuilder.Create("shuffle", "Shuffle the upcoming tracks.")
+												.addAlias("s")
 												.build(),
-										CommandBuilder.Create("append")
+										CommandBuilder.Create("append", "Add more tracks or playlists to the queue.")
+												.addAlias("a")
 												.build()
 								)
 				)
@@ -104,16 +114,6 @@ public class Music implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Play music, create playlists, and chill out.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -131,133 +131,127 @@ public class Music implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+		ShmamesSubCommandData subCommand = data.getSubCommand();
+		GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(data.getServer().getId());
+		User author = data.getAuthor();
+		Guild server = data.getServer();
 
-		if(m.find()){
-			String mainCmd = m.group(1);
-			GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(message.getGuild().getId());
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
-
-			switch(mainCmd) {
-				case "p":
-				case "play":
-					if (canUse(b, message.getMember())) {
-						return cmdPlay(message.getMember(), message.getTextChannel(), ocarina, m.group(2));
-					} else {
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
-					}
-				case "pause":
-					ocarina.togglePause(true);
-					break;
-				case "r":
-				case "resume":
-					ocarina.togglePause(false);
-					break;
-				case "skip":
-					if(ocarina.getNowPlaying() != null) {
-						if (canUse(b, message.getMember())) {
-							if(m.group(2) != null && Utils.isInt(m.group(2))){
-								ocarina.skipMany((Integer.parseInt( m.group(2))));
-							}else{
-								ocarina.skip();
-							}
+		switch (subCommand.getCommandName()) {
+			case "play":
+				if (canUse(server, brain, author)) {
+					return cmdPlay(lang, brain, server.getMember(author), data.getMessagingChannel(), ocarina, subCommand.getArguments());
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			case "pause":
+				ocarina.togglePause(true);
+				break;
+			case "resume":
+				ocarina.togglePause(false);
+				break;
+			case "skip":
+				if (ocarina.getNowPlaying() != null) {
+					if (canUse(server, brain, author)) {
+						if (m.group(2) != null && Utils.isInt(m.group(2))) {
+							ocarina.skipMany((Integer.parseInt(m.group(2))));
 						} else {
-							return lang.getError(Errors.NO_PERMISSION_USER, true);
+							ocarina.skip();
 						}
-					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
+					} else {
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
-					break;
-				case "stop":
-					if(ocarina.getNowPlaying() != null) {
-						if (canUse(b, message.getMember())) {
-							ocarina.stop();
+				} else {
+					return lang.getError(Errors.TRACK_NOT_PLAYING, false);
+				}
+				break;
+			case "stop":
+				if (ocarina.getNowPlaying() != null) {
+					if (canUse(server, brain, author)) {
+						ocarina.stop();
+					} else {
+						return lang.getError(Errors.NO_PERMISSION_USER, true);
+					}
+				} else {
+					return lang.getError(Errors.TRACK_NOT_PLAYING, true);
+				}
+				break;
+			case "loop":
+				if (canUse(server, brain, author)) {
+					String g2 = m.group(2);
+
+					if (g2 != null) {
+						if (g2.equalsIgnoreCase("queue")) {
+							boolean isLoopQueue = ocarina.toggleLoopQueue();
+							return lang.getMsg(Langs.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{isLoopQueue ? "ON" : "OFF"});
 						} else {
-							return lang.getError(Errors.NO_PERMISSION_USER, true);
+							return lang.getError(Errors.COMMAND_NOT_FOUND, false);
 						}
-					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, true);
-					}
-					break;
-				case "loop":
-					if (canUse(b, message.getMember())) {
-						String g2 = m.group(2);
-
-						if(g2 != null) {
-							if(g2.equalsIgnoreCase("queue")) {
-								boolean isLoopQueue = ocarina.toggleLoopQueue();
-								return lang.getMsg(Langs.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{ isLoopQueue ? "ON" : "OFF" });
-							}else{
-								return lang.getError(Errors.COMMAND_NOT_FOUND, false);
-							}
-						}else {
-							boolean isLoop = ocarina.toggleLoop();
-							return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"});
-						}
-					}else{
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
-					}
-				case "np":
-				case "playing":
-					AudioTrack track = ocarina.getNowPlaying();
-
-					if(track != null){
-						showTrackData(track, message.getChannel(), ocarina);
-					}else{
-						return lang.getError(Errors.TRACK_NOT_PLAYING, false);
-					}
-
-					break;
-				case "pl":
-				case "playlist":
-					if (canUse(b, message.getMember())) {
-						return cmdPlaylist(b, message.getChannel(), m.group(2));
-					}else{
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
-					}
-				case "q":
-				case "queue":
-					if (canUse(b, message.getMember())) {
-						return cmdQueue(ocarina, message.getChannel(), m.group(2));
 					} else {
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
+						boolean isLoop = ocarina.toggleLoop();
+						return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"});
 					}
-				case "convert":
-					if (canUse(b, message.getMember())) {
-						return cmdConvert(ocarina, m.group(2));
-					} else {
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
-					}
-				default:
-					return lang.wrongUsage(commandStructure.getUsage());
-			}
-		}else{
-			sendMusicCmdHelp(message.getChannel());
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			case "np":
+			case "playing":
+				AudioTrack track = ocarina.getNowPlaying();
 
-			return "";
+				if (track != null) {
+					showTrackData(track, message.getChannel(), ocarina);
+				} else {
+					return lang.getError(Errors.TRACK_NOT_PLAYING, false);
+				}
+
+				break;
+			case "pl":
+			case "playlist":
+				if (canUse(server, brain, author)) {
+					return cmdPlaylist(brain, message.getChannel(), m.group(2));
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			case "q":
+			case "queue":
+				if (canUse(server, brain, author)) {
+					return cmdQueue(ocarina, message.getChannel(), m.group(2));
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			case "convert":
+				if (canUse(server, brain, author)) {
+					return cmdConvert(ocarina, m.group(2));
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			default:
+				return lang.wrongUsage(commandStructure.getUsage());
 		}
 
 		return "";
 	}
 
-	private String cmdPlay(Member m, TextChannel c, GuildOcarina ocarina, @Nullable String args) {
-		if (args != null) {
-			if (!ocarina.isInVoiceChannel()) {
-				if (m.getVoiceState() != null && m.getVoiceState().inVoiceChannel()) {
-					VoiceChannel vchannel = m.getVoiceState().getChannel();
+	private String cmdPlay(Lang lang, Brain brain, Member member, ShmamesCommandMessagingChannel messagingChannel, GuildOcarina ocarina, ShmamesCommandArguments args) {
+		String playlist = args.getAsString("playPlaylist");
+		String url = args.getAsString("playURL");
 
-					ocarina.connect(vchannel, c);
+		if (playlist != null || url != null) {
+			if (!ocarina.isInVoiceChannel()) {
+				if (member.getVoiceState() != null && member.getVoiceState().inVoiceChannel()) {
+					VoiceChannel vchannel = member.getVoiceState().getChannel();
+
+					ocarina.connect(vchannel, messagingChannel.getChannel());
 				} else {
 					return lang.getError(Errors.MUSIC_NOT_IN_CHANNEL, false);
 				}
 			}
 
-			if (isUrl(args)) {
-				ocarina.loadTrack(args, false);
+			if (url != null) {
+				ocarina.loadTrack(url, false);
 
 				return lang.getMsg(Langs.MUSIC_PLAYING);
 			} else {
-				Playlist pl = findPlaylistFamily(args, brain);
+				Playlist pl = findPlaylistFamily(playlist, brain);
 
 				if(pl != null) {
 					ocarina.loadCustomPlaylist(pl.getTracks(), false);
@@ -268,6 +262,7 @@ public class Music implements ICommand {
 				}
 			}
 		} else {
+			// No options provided; resume if paused, or send an error.
 			if (ocarina.isPaused()) {
 				ocarina.togglePause(false);
 
@@ -538,7 +533,7 @@ public class Music implements ICommand {
 		return "";
 	}
 
-	private void showTrackData(AudioTrack t, MessageChannel c, GuildOcarina o) {
+	private void showTrackData(AudioTrack t, ShmamesCommandMessagingChannel messagingChannel, GuildOcarina o) {
 		EmbedBuilder eBuilder = buildBasicEmbed();
 
 		if (!t.getInfo().isStream) {
@@ -557,10 +552,10 @@ public class Music implements ICommand {
 			eBuilder.addField("Info", Shmames.getBotName()+" is currently playing from an audio livestream.", false);
 		}
 
-		c.sendMessage(eBuilder.build()).queue();
+		messagingChannel.sendMessage(eBuilder);
 	}
 
-	private void showQueue(List<AudioTrack> queue, MessageChannel c, int page) {
+	private void showQueue(Lang lang, List<AudioTrack> queue, ShmamesCommandMessagingChannel messagingChannel, int page) {
 		// Build the page.
 		StringBuilder sb = new StringBuilder();
 		page = Math.max(page, 1)-1;
@@ -598,10 +593,10 @@ public class Music implements ICommand {
 
 		eBuilder.addField("Up Next", sb.toString(), false);
 
-		c.sendMessage(eBuilder.build()).queue();
+		messagingChannel.sendMessage(eBuilder);
 	}
 
-	private void showList(Playlist playlist, MessageChannel c, int page) {
+	private void showList(Lang lang, Playlist playlist, ShmamesCommandMessagingChannel messagingChannel, int page) {
 		// Build the page.
 		StringBuilder sb = new StringBuilder();
 		page = Math.max(page, 1)-1;
@@ -649,7 +644,7 @@ public class Music implements ICommand {
 
 		eBuilder.addField("Tracks", sb.toString(), false);
 
-		c.sendMessage(eBuilder.build()).queue();
+		messagingChannel.sendMessage(eBuilder);
 	}
 
 	private void sendMusicCmdHelp(MessageChannel c) {
@@ -713,14 +708,8 @@ public class Music implements ICommand {
 		}
 	}
 
-	private boolean isUrl(String test) {
-		Matcher m = Pattern.compile("^https?://.+$", Pattern.CASE_INSENSITIVE).matcher(test);
-
-		return m.find();
-	}
-
-	private boolean canUse(Brain b, Member m) {
-		return Utils.checkUserPermission(b.getSettingFor(BotSettingName.MANAGE_MUSIC), m);
+	private boolean canUse(Guild server, Brain brain, User user) {
+		return Utils.checkUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_MUSIC), user);
 	}
 
 	private Playlist findPlaylistServer(String name, Brain b) {
@@ -735,35 +724,27 @@ public class Music implements ICommand {
 		return null;
 	}
 
-	private Playlist findPlaylistFamily(String name, Brain b) {
-		Playlist server = findPlaylistServer(name, b);
+	private Playlist findPlaylistFamily(String name, Brain brain, Guild server) {
+		Playlist serverPlaylist = findPlaylistServer(name, brain);
 
-		if (server != null) {
-			return server;
+		if (serverPlaylist != null) {
+			return serverPlaylist;
 		}
 
 		// Check other Family servers.
-		for(String fid : b.getFamilies()){
-			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+		for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
+			Playlist otherServerPlaylist = findPlaylistServer(name, familyBrain);
 
-			if(f != null){
-				for(long gid : f.getMemberGuilds()){
-					if(!Long.toString(gid).equals(b.getGuildID())){
-						Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
-						Playlist otherServer = findPlaylistServer(name, ob);
-
-						if (otherServer != null) {
-							return otherServer;
-						}
-					}
-				}
+			if (otherServerPlaylist != null) {
+				return otherServerPlaylist;
 			}
 		}
 
 		return null;
 	}
 
-	private String createPlaylistNameList(List<Playlist> playlist) {
+	private String createPlaylistNameList(Lang lang, List<Playlist> playlist) {
 		List<String> playlistNames = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 
