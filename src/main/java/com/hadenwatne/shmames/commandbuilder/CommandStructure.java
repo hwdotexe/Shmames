@@ -8,15 +8,18 @@ import java.util.regex.Pattern;
 
 public class CommandStructure {
     private String name;
+    private String description;
     private List<String> aliases;
     private List<CommandParameter> parameters;
     private Pattern pattern;
     private String usage;
     private List<CommandStructure> subcommands;
+    private List<SubCommandGroup> subCommandGroups;
     private boolean isOptional;
 
-    public CommandStructure(String name) {
+    public CommandStructure(String name, String description) {
         this.name = name;
+        this.description = description;
         this.aliases = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.subcommands = new ArrayList<>();
@@ -33,6 +36,10 @@ public class CommandStructure {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
     }
 
     public List<String> getAliases() {
@@ -77,6 +84,16 @@ public class CommandStructure {
 
     public CommandStructure addSubCommands(CommandStructure... subcommand){
         this.subcommands.addAll(Arrays.asList(subcommand));
+
+        return this;
+    }
+
+    public List<SubCommandGroup> getSubcommandGroups() {
+        return this.subCommandGroups;
+    }
+
+    public CommandStructure addSubCommandGroups(SubCommandGroup... subCommandGroups){
+        this.subCommandGroups.addAll(Arrays.asList(subCommandGroups));
 
         return this;
     }

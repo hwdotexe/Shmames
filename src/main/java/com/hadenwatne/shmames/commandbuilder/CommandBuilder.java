@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandBuilder {
-    public static CommandStructure Create(String name) {
-        return new CommandStructure(name);
+    public static CommandStructure Create(String name, String description) {
+        return new CommandStructure(name, description);
     }
 
     public static CommandData BuildCommandData(ICommand command) {
@@ -21,10 +21,10 @@ public class CommandBuilder {
         CommandData data = new CommandData(structure.getName(), shortDesc);
 
         // If there are subcommands, add these instead.
-        // TODO JDA/Discord limit the ability to have the base command with a mix of parameters and subcommands.
-        if (structure.getSubcommands().size() > 0) {
+        if (structure.getSubcommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
+            // Add SubCommands.
             for (CommandStructure subCommand : structure.getSubcommands()) {
-                String subShortDesc = command.getDescription().length() > 100 ? (command.getDescription().substring(0, 96) + "...") : command.getDescription();
+                String subShortDesc = subCommand.getDescription().length() > 100 ? (subCommand.getDescription().substring(0, 96) + "...") : subCommand.getDescription();
                 SubcommandData subCommandData = new SubcommandData(subCommand.getName(), subShortDesc);
 
                 // Build sub command's parameter data.
@@ -36,8 +36,28 @@ public class CommandBuilder {
 
                 data.addSubcommands(subCommandData);
             }
+
+            // Add SubCommand groups.
+            for(SubCommandGroup subCommandGroup : structure.getSubcommandGroups()) {
+                SubcommandGroupData group = new SubcommandGroupData(subCommandGroup.getName(), subCommandGroup.getDescription());
+
+                for (CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+                    String subShortDesc = subCommand.getDescription().length() > 100 ? (subCommand.getDescription().substring(0, 96) + "...") : subCommand.getDescription();
+                    SubcommandData subCommandData = new SubcommandData(subCommand.getName(), subShortDesc);
+
+                    // Build sub command's parameter data.
+                    for (CommandParameter p : subCommand.getParameters()) {
+                        OptionData option = buildCommandOptionData(p);
+
+                        subCommandData.addOptions(option);
+                    }
+
+                    group.addSubcommands(subCommandData);
+                }
+
+                data.addSubcommandGroups(group);
+            }
         } else {
-            // TODO if they ever let us combine these, this block can stand on its own.
             // Build primary command's parameter data.
             for (CommandParameter p : structure.getParameters()) {
                 OptionData option = buildCommandOptionData(p);
@@ -62,6 +82,7 @@ public class CommandBuilder {
         return option;
     }
 
+    // TODO regex for subcommandgroups
     public static Pattern BuildPattern(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
         List<CommandStructure> subCommands = command.getSubcommands();
@@ -81,8 +102,30 @@ public class CommandBuilder {
                 }
 
                 scb.append("(");
+
+                // Add subcommand name & aliases
+                if(subCommand.getAliases().size() > 0) {
+                    scb.append("(");
+                }
+
                 scb.append(subCommand.getName());
 
+                if(subCommand.getAliases().size() > 0) {
+                    StringBuilder asb = new StringBuilder();
+
+                    for(String alias : subCommand.getAliases()) {
+                        if(asb.length() > 0) {
+                            asb.append("|");
+                        }
+
+                        asb.append(alias);
+                    }
+
+                    scb.append(asb);
+                    scb.append(")");
+                }
+
+                // Add subcommand parameters
                 if(subCommand.getParameters().size() > 0) {
                     boolean anySubCommandParameterRequired = subCommand.getParameters().stream().anyMatch(CommandParameter::isRequired);
 
@@ -108,6 +151,7 @@ public class CommandBuilder {
             }
         }
 
+        // If the command has parameters of its own, add them after.
         sb.append(BuildParameterPattern(command));
 
         sb.insert(0, "^");
