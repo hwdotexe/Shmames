@@ -72,10 +72,10 @@ public class Help implements ICommand {
 
 					eBuilder.setAuthor("Help » "+c.getCommandStructure().getName());
 					eBuilder.setColor(Color.MAGENTA);
-					eBuilder.addField("Description", c.getDescription(), false);
+					eBuilder.addField("Description", c.getCommandStructure().getDescription(), false);
 					eBuilder.addField("Aliases", list, true);
 					eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
-					eBuilder.addField("Usage", c.getUsage(), false);
+					eBuilder.addField("Usage", c.getCommandStructure().getUsage(), false);
 					eBuilder.addField("Examples", c.getExamples(), false);
 
 					messagingChannel.sendMessage(eBuilder);
@@ -90,7 +90,7 @@ public class Help implements ICommand {
 			List<String> cmds = new ArrayList<>();
 
 			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
-				if(c.getDescription().length() > 0) {
+				if(c.getCommandStructure().getDescription().length() > 0) {
 					cmds.add(c.getCommandStructure().getName());
 				}
 			}

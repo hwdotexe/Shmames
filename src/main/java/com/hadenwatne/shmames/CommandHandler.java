@@ -160,7 +160,7 @@ public class CommandHandler {
 				// Execute the command
 				executeCommand(lang, brain, data);
 			}else{
-				sendMessageResponse(lang.wrongUsage(c.getUsage()), new ShmamesCommandMessagingChannel(message, channel), lang);
+				sendMessageResponse(lang.wrongUsage(c.getCommandStructure().getUsage()), new ShmamesCommandMessagingChannel(message, channel), lang);
 			}
 		} else {
 			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel), lang);
@@ -215,7 +215,7 @@ public class CommandHandler {
 			// Execute the command.
 			executeCommand(lang, brain, data);
 		} else {
-			sendMessageResponse(lang.wrongUsage(command.getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()), lang);
+			sendMessageResponse(lang.wrongUsage(command.getCommandStructure().getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()), lang);
 		}
 	}
 
@@ -309,7 +309,7 @@ public class CommandHandler {
 				CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById(g.getId()).updateCommands();
 
 				for(ICommand command : commands) {
-					if(command.getDescription().length() > 0) {
+					if(command.getCommandStructure().getDescription().length() > 0) {
 						cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
 					}
 				}

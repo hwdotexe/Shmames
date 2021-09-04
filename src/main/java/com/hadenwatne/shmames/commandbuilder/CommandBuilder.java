@@ -17,7 +17,8 @@ public class CommandBuilder {
 
     public static CommandData BuildCommandData(ICommand command) {
         CommandStructure structure = command.getCommandStructure();
-        String shortDesc = command.getDescription().length() > 100 ? (command.getDescription().substring(0, 96) + "...") : command.getDescription();
+        String description = structure.getDescription();
+        String shortDesc = description.length() > 100 ? (description.substring(0, 96) + "...") : description;
         CommandData data = new CommandData(structure.getName(), shortDesc);
 
         // If there are subcommands, add these instead.
@@ -85,70 +86,21 @@ public class CommandBuilder {
     // TODO regex for subcommandgroups
     public static Pattern BuildPattern(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
-        List<CommandStructure> subCommands = command.getSubcommands();
 
-        // Build pattern for subcommands first
+        // Build pattern for subCommandGroups.
+        if(command.getSubcommandGroups().size() > 0) {
+            for(SubCommandGroup group : command.getSubcommandGroups()) {
+//                sb.append("(");
+                sb.append(group.getName());
+                sb.append("\\s");
+                sb.append(BuildSubCommandPattern(group.getSubcommands()));
+//                sb.append(")");
+            }
+        }
+
+        // Build pattern for subcommands.
         if (command.getSubcommands().size() > 0) {
-            boolean anySubCommandsRequired = subCommands.stream().anyMatch(sc -> !sc.isOptional());
-
-            if(!anySubCommandsRequired) {
-                sb.append("(");
-            }
-
-            StringBuilder scb = new StringBuilder();
-            for (CommandStructure subCommand : subCommands) {
-                if(scb.length() > 0) {
-                    scb.append("|");
-                }
-
-                scb.append("(");
-
-                // Add subcommand name & aliases
-                if(subCommand.getAliases().size() > 0) {
-                    scb.append("(");
-                }
-
-                scb.append(subCommand.getName());
-
-                if(subCommand.getAliases().size() > 0) {
-                    StringBuilder asb = new StringBuilder();
-
-                    for(String alias : subCommand.getAliases()) {
-                        if(asb.length() > 0) {
-                            asb.append("|");
-                        }
-
-                        asb.append(alias);
-                    }
-
-                    scb.append(asb);
-                    scb.append(")");
-                }
-
-                // Add subcommand parameters
-                if(subCommand.getParameters().size() > 0) {
-                    boolean anySubCommandParameterRequired = subCommand.getParameters().stream().anyMatch(CommandParameter::isRequired);
-
-                    if(!anySubCommandParameterRequired) {
-                        scb.append("(");
-                    }
-
-                    scb.append("\\s");
-                    scb.append(BuildParameterPattern(subCommand));
-
-                    if(!anySubCommandParameterRequired) {
-                        scb.append(")?");
-                    }
-                }
-
-                scb.append(")");
-            }
-
-            sb.append(scb);
-
-            if(!anySubCommandsRequired) {
-                sb.append("\\s)?");
-            }
+            sb.append(BuildSubCommandPattern(command.getSubcommands()));
         }
 
         // If the command has parameters of its own, add them after.
@@ -158,6 +110,60 @@ public class CommandBuilder {
         sb.append("$");
 
         return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
+    private static String BuildSubCommandPattern(List<CommandStructure> subCommands) {
+        StringBuilder scb = new StringBuilder();
+
+        for (CommandStructure subCommand : subCommands) {
+            if(scb.length() > 0) {
+                scb.append("|");
+            }
+
+            scb.append("(");
+
+            // Add subcommand name & aliases
+            if(subCommand.getAliases().size() > 0) {
+                scb.append("(");
+            }
+
+            scb.append(subCommand.getName());
+
+            if(subCommand.getAliases().size() > 0) {
+                StringBuilder asb = new StringBuilder();
+
+                for(String alias : subCommand.getAliases()) {
+                    if(asb.length() > 0) {
+                        asb.append("|");
+                    }
+
+                    asb.append(alias);
+                }
+
+                scb.append(asb);
+                scb.append(")");
+            }
+
+            // Add subcommand parameters
+            if(subCommand.getParameters().size() > 0) {
+                boolean anySubCommandParameterRequired = subCommand.getParameters().stream().anyMatch(CommandParameter::isRequired);
+
+                if(!anySubCommandParameterRequired) {
+                    scb.append("(");
+                }
+
+                scb.append("\\s");
+                scb.append(BuildParameterPattern(subCommand));
+
+                if(!anySubCommandParameterRequired) {
+                    scb.append(")?");
+                }
+            }
+
+            scb.append(")");
+        }
+
+        return scb.toString();
     }
 
     private static String BuildParameterPattern(CommandStructure command) {
@@ -192,30 +198,16 @@ public class CommandBuilder {
         sb.append(command.getName());
 
         if(subCommands.size() > 0) {
-            boolean anySubCommandsRequired = subCommands.stream().anyMatch(sc -> !sc.isOptional());
-
             sb.append(" ");
 
             if(subCommands.size() > 1) {
-                if (anySubCommandsRequired) {
-                    sb.append("<");
-                } else {
-                    sb.append("[");
-                }
-
-                sb.append("[");
+                sb.append("<[");
             }
 
             sb.append(buildSubCommandUsageLabel(subCommands));
 
             if(subCommands.size() > 1) {
-                sb.append("]");
-
-                if (anySubCommandsRequired) {
-                    sb.append(">");
-                } else {
-                    sb.append("]");
-                }
+                sb.append("]>");
             }
         } else {
             for (CommandParameter p : command.getParameters()) {

@@ -15,7 +15,6 @@ public class CommandStructure {
     private String usage;
     private List<CommandStructure> subcommands;
     private List<SubCommandGroup> subCommandGroups;
-    private boolean isOptional;
 
     public CommandStructure(String name, String description) {
         this.name = name;
@@ -23,7 +22,6 @@ public class CommandStructure {
         this.aliases = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.subcommands = new ArrayList<>();
-        this.isOptional = false;
     }
 
     public Pattern getPattern() {
@@ -44,16 +42,6 @@ public class CommandStructure {
 
     public List<String> getAliases() {
         return this.aliases;
-    }
-
-    public boolean isOptional() {
-        return this.isOptional;
-    }
-
-    public CommandStructure setOptional(boolean optional) {
-        this.isOptional = optional;
-
-        return this;
     }
 
     public CommandStructure addAlias(String alias) {

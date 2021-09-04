@@ -8,12 +8,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.Brain;
 import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.models.Playlist;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -25,8 +29,82 @@ import com.hadenwatne.shmames.Shmames;
 import javax.annotation.Nullable;
 
 public class Music implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public Music() {
+		this.commandStructure = CommandBuilder.Create("music")
+				.addSubCommands(
+						CommandBuilder.Create("play")
+								.addAlias("p")
+								.addParameters(
+										new CommandParameter("playPlaylist", "The playlist to play.", ParameterType.STRING, false)
+												.setPattern("[\\w\\d-_]+"),
+										new CommandParameter("playURL", "The URL of the song to play.", ParameterType.STRING, false)
+												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
+								)
+								.build(),
+						CommandBuilder.Create("pause")
+								.build(),
+						CommandBuilder.Create("resume")
+								.addAlias("r")
+								.build(),
+						CommandBuilder.Create("skip")
+								.addParameters(
+										new CommandParameter("number", "How many tracks to skip.", ParameterType.INTEGER, false)
+								)
+								.build(),
+						CommandBuilder.Create("stop")
+								.build(),
+						CommandBuilder.Create("loop")
+								.addParameters(
+										new CommandParameter("loopQueue", "Whether to loop the queue.", ParameterType.BOOLEAN)
+								)
+								.build(),
+						CommandBuilder.Create("playing")
+								.addAlias("np")
+								.build(),
+						CommandBuilder.Create("convert")
+								.addParameters(
+										new CommandParameter("newPlaylistName", "The name to use for the new playlist.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+")
+								)
+								.build()
+				)
+				.addSubCommandGroups(
+						new SubCommandGroup("playlist")
+								.addAlias("pl")
+								.addSubCommands(
+										CommandBuilder.Create("create")
+												.build(),
+										CommandBuilder.Create("add")
+												.build(),
+										CommandBuilder.Create("list")
+												.build(),
+										CommandBuilder.Create("remove")
+												.build(),
+										CommandBuilder.Create("delete")
+												.build()
+								),
+						new SubCommandGroup("queue")
+								.addAlias("q")
+								.addSubCommands(
+										CommandBuilder.Create("clear")
+												.build(),
+										CommandBuilder.Create("reverse")
+												.build(),
+										CommandBuilder.Create("shuffle")
+												.build(),
+										CommandBuilder.Create("append")
+												.build()
+								)
+				)
+				.build();
+	}
+
+	@Override
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
+	}
 
 	@Override
 	public String getDescription() {
@@ -35,7 +113,7 @@ public class Music implements ICommand {
 	
 	@Override
 	public String getUsage() {
-		return "music";
+		return this.commandStructure.getUsage();
 	}
 
 	@Override
@@ -47,23 +125,12 @@ public class Music implements ICommand {
 	}
 
 	@Override
-	public String[] getAliases() {
-		return new String[] {"music", "bops"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-
-	@Override
 	public boolean requiresGuild() {
 		return true;
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		Matcher m = Pattern.compile("^([a-z]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if(m.find()){
@@ -162,7 +229,7 @@ public class Music implements ICommand {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				default:
-					return lang.wrongUsage(getUsage());
+					return lang.wrongUsage(commandStructure.getUsage());
 			}
 		}else{
 			sendMusicCmdHelp(message.getChannel());

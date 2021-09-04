@@ -16,18 +16,6 @@ public interface ICommand {
 	CommandStructure getCommandStructure();
 
 	/**
-	 * Returns a description of the command.
-	 * @return About information.
-	 */
-	String getDescription();
-	
-	/**
-	 * Returns the basic command structure string.
-	 * @return Usage information.
-	 */
-	String getUsage();
-
-	/**
 	 * Returns command examples.
 	 * @return Command examples.
 	 */

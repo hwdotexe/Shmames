@@ -99,7 +99,7 @@ public class Timer implements ICommand {
 				return resultMessage;
 			}
 		} else {
-			return lang.wrongUsage(getUsage());
+			return lang.wrongUsage(commandStructure.getUsage());
 		}
 	}
 	

@@ -84,7 +84,7 @@ public class Poll implements ICommand {
 				case "close":
 					return closePoll(subCmdArgs, brain, lang);
 				default:
-					return lang.wrongUsage(getUsage());
+					return lang.wrongUsage(commandStructure.getUsage());
 			}
 		} else {
 			return lang.getError(Errors.NO_PERMISSION_USER, true);
