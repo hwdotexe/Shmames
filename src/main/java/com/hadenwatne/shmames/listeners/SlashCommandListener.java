@@ -27,8 +27,6 @@ public class SlashCommandListener extends ListenerAdapter {
             ShmamesCommandArguments commandArguments = new ShmamesCommandArguments(buildArgumentMap(command.getCommandStructure(), event));
             ShmamesSubCommandData subCommandData = null;
 
-            // TODO subcommandgroup
-
             // If this is a subcommand, build out the subcommand arguments.
             if(event.getSubcommandGroup() != null) {
                 for(SubCommandGroup subCommandGroup : command.getCommandStructure().getSubcommandGroups()) {

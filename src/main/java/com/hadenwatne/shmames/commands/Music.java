@@ -11,6 +11,7 @@ import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.Playlist;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
@@ -39,9 +40,9 @@ public class Music implements ICommand {
 								.addAlias("p")
 								.addParameters(
 										new CommandParameter("playPlaylist", "The playlist to play.", ParameterType.STRING, false)
-												.setPattern("[\\w\\d-_]+"),
+												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 										new CommandParameter("playURL", "The URL of the song to play.", ParameterType.STRING, false)
-												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
+												.setPattern(RegexPatterns.URL.getPattern())
 								)
 								.build(),
 						CommandBuilder.Create("pause", "Pause any playing music.")
@@ -67,7 +68,7 @@ public class Music implements ICommand {
 						CommandBuilder.Create("convert", "Convert the queue to a playlist.")
 								.addParameters(
 										new CommandParameter("newPlaylistName", "The name to use for the new playlist.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+")
+												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 								)
 								.build()
 				)
@@ -77,12 +78,29 @@ public class Music implements ICommand {
 								.addSubCommands(
 										CommandBuilder.Create("create", "Create a new playlist.")
 												.addAlias("c")
+												.addParameters(
+														new CommandParameter("createPlaylistName", "The name of the new playlist.", ParameterType.STRING)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												)
 												.build(),
 										CommandBuilder.Create("add", "Add a track to a playlist.")
 												.addAlias("a")
+												.addParameters(
+														new CommandParameter("addPlaylistName", "The name of the new playlist.", ParameterType.STRING)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+														new CommandParameter("addPlaylistURL", "The name of the new playlist.", ParameterType.STRING)
+																.setPattern(RegexPatterns.URL.getPattern()),
+														new CommandParameter("addPlaylistMemo", "The name of the new playlist.", ParameterType.STRING, false)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												)
 												.build(),
 										CommandBuilder.Create("list", "Show available playlists.")
 												.addAlias("l")
+												.addParameters(
+														new CommandParameter("listPlaylistName", "The name of the playlist.", ParameterType.STRING, false)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+														new CommandParameter("listPlaylistPage", "The page to view.", ParameterType.INTEGER, false)
+												)
 												.build(),
 										CommandBuilder.Create("remove", "Remove a track from a playlist.")
 												.addAlias("r")
@@ -105,6 +123,15 @@ public class Music implements ICommand {
 												.build(),
 										CommandBuilder.Create("append", "Add more tracks or playlists to the queue.")
 												.addAlias("a")
+												.addParameters(
+														new CommandParameter("appendPlaylist", "The playlist to append.", ParameterType.STRING, false)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+														new CommandParameter("appendURL", "The URL of the song to append.", ParameterType.STRING, false)
+																.setPattern(RegexPatterns.URL.getPattern())
+												)
+												.build(),
+										CommandBuilder.Create("view", "View the queue.")
+												.addAlias("v")
 												.build()
 								)
 				)
@@ -135,8 +162,9 @@ public class Music implements ICommand {
 		GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(data.getServer().getId());
 		User author = data.getAuthor();
 		Guild server = data.getServer();
+		String nameOrGroup = subCommand.getGroupName() != null ? subCommand.getGroupName() : subCommand.getCommandName();
 
-		switch (subCommand.getCommandName()) {
+		switch (nameOrGroup) {
 			case "play":
 				if (canUse(server, brain, author)) {
 					return cmdPlay(lang, brain, server, server.getMember(author), data.getMessagingChannel(), ocarina, subCommand.getArguments());
@@ -190,14 +218,13 @@ public class Music implements ICommand {
 				break;
 			case "playlist":
 				if (canUse(server, brain, author)) {
-					return cmdPlaylist(brain, message.getChannel(), m.group(2));
+					return cmdPlaylist(brain, lang, server, data.getMessagingChannel(), subCommand);
 				} else {
 					return lang.getError(Errors.NO_PERMISSION_USER, true);
 				}
-			case "q":
 			case "queue":
 				if (canUse(server, brain, author)) {
-					return cmdQueue(ocarina, message.getChannel(), m.group(2));
+					return cmdQueue(brain, lang, ocarina, server, data.getMessagingChannel(), subCommand);
 				} else {
 					return lang.getError(Errors.NO_PERMISSION_USER, true);
 				}
@@ -278,47 +305,50 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdQueue(GuildOcarina ocarina, MessageChannel c, @Nullable String args) {
+	private String cmdQueue(Brain brain, Lang lang, GuildOcarina ocarina, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData commandData) {
+		ShmamesCommandArguments args = commandData.getArguments();
+		String subCommand = commandData.getCommandName();
+
 		if (ocarina.isInVoiceChannel()) {
-			if (args != null) {
-				if (isUrl(args)) {
-					ocarina.loadTrack(args, true);
+			switch(subCommand.toLowerCase()) {
+				case "append":
+					String appendPlaylist = args.getAsString("appendPlaylist");
+					String appendURL = args.getAsString("appendURL");
 
-					return lang.getMsg(Langs.MUSIC_ADDED_TO_QUEUE);
-				} else if (args.equalsIgnoreCase("clear")) {
-					ocarina.getQueue().clear();
+					if(appendURL != null) {
+						ocarina.loadTrack(appendURL, true);
 
-					return lang.getMsg(Langs.MUSIC_QUEUE_CLEARED);
-				}
-				else if (args.equalsIgnoreCase("reverse")) {
+						return lang.getMsg(Langs.MUSIC_ADDED_TO_QUEUE);
+					} else if(appendPlaylist != null) {
+						Playlist pl = findPlaylistFamily(appendPlaylist, brain, server);
+
+						if(pl != null) {
+							ocarina.loadCustomPlaylist(pl.getTracks(), true);
+
+							return lang.getMsg(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{ pl.getName() });
+						} else {
+							return lang.getError(Errors.ITEMS_NOT_FOUND, false);
+						}
+					} else {
+						return lang.getError(Errors.MUSIC_WRONG_INPUT, false);
+					}
+				case "reverse":
 					ocarina.reverseQueue();
 
 					return lang.getMsg(Langs.MUSIC_QUEUE_REVERSED);
-				}
-				else if (args.equalsIgnoreCase("shuffle")) {
+				case "shuffle":
 					ocarina.shuffleQueue();
 
 					return lang.getMsg(Langs.MUSIC_QUEUE_SHUFFLED);
-				}
-				else if (Utils.isInt(args)) {
-					showQueue(ocarina.getQueue(), c, Integer.parseInt(args));
+				case "clear":
+					ocarina.getQueue().clear();
+
+					return lang.getMsg(Langs.MUSIC_QUEUE_CLEARED);
+				default:
+					// TODO page support
+					showQueue(lang, ocarina.getQueue(), messagingChannel, 1);
 
 					return "";
-				} else {
-					Playlist pl = findPlaylistFamily(args, brain);
-
-					if(pl != null) {
-						ocarina.loadCustomPlaylist(pl.getTracks(), true);
-
-						return lang.getMsg(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{ pl.getName() });
-					} else {
-						return lang.getError(Errors.ITEMS_NOT_FOUND, false);
-					}
-				}
-			} else {
-				showQueue(ocarina.getQueue(), c, 1);
-
-				return "";
 			}
 		} else {
 			return lang.getError(Errors.MUSIC_NOT_IN_CHANNEL, false);
@@ -351,104 +381,74 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdPlaylist(Brain b, MessageChannel c, @Nullable String args) {
-		if(args != null) {
-			Matcher m = Pattern.compile("^([a-z]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(args);
+	private String cmdPlaylist(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData commandData) {
+		ShmamesCommandArguments args = commandData.getArguments();
+		String subCommand = commandData.getCommandName();
 
-			if (m.find()) {
-				String subCmd = m.group(1).toLowerCase();
-				String subArgs = m.group(2) != null ? m.group(2) : "";
+		switch (subCommand) {
+			case "create":
+				String createPlaylistName = args.getAsString("createPlaylistName");
 
-				switch (subCmd) {
-					case "c":
-					case "create":
-						Matcher create = Pattern.compile("^([a-z0-9_]+)\\s?(https?://[./\\w\\d-_&?=*%:]+)?\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+				return cmdPlaylistCreate(lang, brain, createPlaylistName);
+			case "add":
+				String addPlaylistName = args.getAsString("addPlaylistName");
+				String addPlaylistURL = args.getAsString("addPlaylistURL");
+				String addPlaylistMemo = args.getAsString("addPlaylistMemo");
 
-						if (create.find()) {
-							return cmdPlaylistCreate(b, create.group(1), create.group(2), create.group(3));
+				return cmdPlaylistAdd(lang, brain, addPlaylistName, addPlaylistURL, addPlaylistMemo);
+			case "list":
+				String listPlaylistName = args.getAsString("listPlaylistName");
+				int listPlaylistPage = args.getAsInteger("listPlaylistPage");
+
+				return cmdPlaylistList(lang, brain, listPlaylistName, server, messagingChannel, listPlaylistPage);
+			case "remove":
+				Matcher remove = Pattern.compile("^([a-z0-9_]+)\\s(\\d{1,2})$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+
+				if (remove.find()) {
+					String listName = remove.group(1);
+					int position = Integer.parseInt(remove.group(2));
+					Playlist pRemove = findPlaylistServer(listName, b);
+
+					if (pRemove != null) {
+						if (pRemove.removeTrack(position - 1)) {
+							return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_REMOVED);
 						} else {
-							return lang.getError(Errors.WRONG_USAGE, true);
+							return lang.getError(Errors.NOT_FOUND, false);
 						}
-					case "a":
-					case "add":
-						Matcher add = Pattern.compile("^([a-z0-9_]+)\\s(https?://[./\\w\\d-_&?=*%:]+)\\s?(.+)?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
-
-						if (add.find()) {
-							return cmdPlaylistAdd(b, add.group(1), add.group(2), add.group(3));
-						} else {
-							return lang.getError(Errors.WRONG_USAGE, true);
-						}
-					case "l":
-					case "list":
-						Matcher list = Pattern.compile("^([a-z0-9_]+)?\\s?(\\d{1,3})?$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
-
-						if (list.find()) {
-							return cmdPlaylistList(b, list.group(1), c, list.group(2));
-						} else {
-							return lang.getError(Errors.WRONG_USAGE, true);
-						}
-					case "r":
-					case "remove":
-						Matcher remove = Pattern.compile("^([a-z0-9_]+)\\s(\\d{1,2})$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
-
-						if (remove.find()) {
-							String listName = remove.group(1);
-							int position = Integer.parseInt(remove.group(2));
-							Playlist pRemove = findPlaylistServer(listName, b);
-
-							if (pRemove != null) {
-								if (pRemove.removeTrack(position - 1)) {
-									return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_REMOVED);
-								} else {
-									return lang.getError(Errors.NOT_FOUND, false);
-								}
-							} else {
-								return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
-							}
-						} else {
-							return lang.getError(Errors.WRONG_USAGE, true);
-						}
-					case "d":
-					case "delete":
-						Matcher delete = Pattern.compile("^([a-z0-9_]+)$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
-
-						if (delete.find()) {
-							String listName = delete.group(1);
-							Playlist pDelete = findPlaylistServer(listName, b);
-
-							if (pDelete != null) {
-								b.getPlaylists().remove(pDelete);
-
-								return lang.getMsg(Langs.MUSIC_PLAYLIST_DELETED);
-							} else {
-								return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
-							}
-						} else {
-							return lang.getError(Errors.WRONG_USAGE, true);
-						}
-					default:
-						return lang.getError(Errors.COMMAND_NOT_FOUND, true);
+					} else {
+						return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
+					}
+				} else {
+					return lang.getError(Errors.WRONG_USAGE, true);
 				}
-			} else {
-				return lang.getError(Errors.WRONG_USAGE, true);
-			}
-		} else {
-			sendPlaylistCmdHelp(c);
+			case "delete":
+				Matcher delete = Pattern.compile("^([a-z0-9_]+)$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
 
-			return "";
+				if (delete.find()) {
+					String listName = delete.group(1);
+					Playlist pDelete = findPlaylistServer(listName, b);
+
+					if (pDelete != null) {
+						b.getPlaylists().remove(pDelete);
+
+						return lang.getMsg(Langs.MUSIC_PLAYLIST_DELETED);
+					} else {
+						return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
+					}
+				} else {
+					return lang.getError(Errors.WRONG_USAGE, true);
+				}
+			default:
+				return lang.getError(Errors.COMMAND_NOT_FOUND, true);
 		}
 	}
 
-	private String cmdPlaylistCreate(Brain b, String listName, @Nullable String url, @Nullable String memo) {
-		if(findPlaylistServer(listName, b) == null) {
+	private String cmdPlaylistCreate(Lang lang, Brain brain, String listName) {
+		if(findPlaylistServer(listName, brain) == null) {
 			if(!listName.equalsIgnoreCase("all")) {
 				Playlist newList = new Playlist(listName);
 
-				if (url != null) {
-					newList.addTrack(url, memo);
-				}
-
-				b.getPlaylists().add(newList);
+				brain.getPlaylists().add(newList);
 
 				return lang.getMsg(Langs.MUSIC_PLAYLIST_CREATED, new String[]{listName});
 			}else{
@@ -459,8 +459,8 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdPlaylistAdd(Brain b, String listName, String url, @Nullable String memo) {
-		Playlist p = findPlaylistServer(listName, b);
+	private String cmdPlaylistAdd(Lang lang, Brain brain, String listName, String url, String memo) {
+		Playlist p = findPlaylistServer(listName, brain);
 
 		if (p != null) {
 			if(p.getTracks().size() < 50) {
@@ -475,41 +475,33 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdPlaylistList(Brain b, @Nullable String listName, MessageChannel c, @Nullable String p) {
+	private String cmdPlaylistList(Lang lang, Brain brain, String listName, Guild server, ShmamesCommandMessagingChannel messagingChannel, int page) {
 		if(listName != null) {
 			if(listName.equalsIgnoreCase("all")) {
 				// List families' playlists
 				EmbedBuilder eBuilder = buildBasicEmbed();
-				String playlistNames = createPlaylistNameList(b.getPlaylists());
+				String playlistNames = createPlaylistNameList(lang, brain.getPlaylists());
 
-				eBuilder.addField(Shmames.getJDA().getGuildById(b.getGuildID()).getName(), playlistNames, false);
+				eBuilder.addField(server.getName(), playlistNames, false);
 
 				// Then add each server in our family's playlists
-				for(String fid : b.getFamilies()) {
-					Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+				for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+					Brain otherBrain = Shmames.getBrains().getBrain(family.getId());
+					String playlistNamesOther = createPlaylistNameList(lang, otherBrain.getPlaylists());
 
-					if(f != null){
-						for(long gid : f.getMemberGuilds()){
-							if(!Long.toString(gid).equals(b.getGuildID())){
-								Brain ob = Shmames.getBrains().getBrain(Long.toString(gid));
-								String playlistNamesOther = createPlaylistNameList(ob.getPlaylists());
-
-								eBuilder.addField(Shmames.getJDA().getGuildById(ob.getGuildID()).getName(), playlistNamesOther, false);
-							}
-						}
-					}
+					eBuilder.addField(family.getName(), playlistNamesOther, false);
 				}
 
-				c.sendMessage(eBuilder.build()).queue();
+				messagingChannel.sendMessage(eBuilder);
 
 				return "";
 			}else{
-				Playlist pList = findPlaylistServer(listName, b);
+				Playlist pList = findPlaylistServer(listName, brain);
 
 				if (pList != null) {
-					int page = p != null ? Math.max(Integer.parseInt(p), 1) : 1;
+					int viewPage = page > 0 ? page : 1;
 
-					showList(pList, c, page);
+					showList(lang, pList, messagingChannel, viewPage);
 
 					return "";
 				} else {
@@ -520,10 +512,11 @@ public class Music implements ICommand {
 
 		// Just list out this server's playlists
 		EmbedBuilder eBuilder = buildBasicEmbed();
-		String playlistNames = createPlaylistNameList(b.getPlaylists());
+		String playlistNames = createPlaylistNameList(lang, brain.getPlaylists());
 
 		eBuilder.addField("Playlists", playlistNames, false);
-		c.sendMessage(eBuilder.build()).queue();
+
+		messagingChannel.sendMessage(eBuilder);
 
 		return "";
 	}
