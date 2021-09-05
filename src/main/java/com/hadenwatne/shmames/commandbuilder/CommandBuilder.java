@@ -83,19 +83,30 @@ public class CommandBuilder {
         return option;
     }
 
-    // TODO regex for subcommandgroups
     public static Pattern BuildPattern(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
 
         // Build pattern for subCommandGroups.
-        if(command.getSubcommandGroups().size() > 0) {
+        boolean hasSubCommandGroups = command.getSubcommandGroups().size() > 0;
+
+        if(hasSubCommandGroups) {
             for(SubCommandGroup group : command.getSubcommandGroups()) {
-//                sb.append("(");
+                if(sb.length() > 0) {
+                    sb.append("|");
+                }
+
+                sb.append("(");
                 sb.append(group.getName());
                 sb.append("\\s");
+                sb.append("(");
                 sb.append(BuildSubCommandPattern(group.getSubcommands()));
-//                sb.append(")");
+                sb.append("))");
             }
+        }
+
+        // Make sure that additional SubCommands are OR'd properly.
+        if(hasSubCommandGroups) {
+            sb.append("|(");
         }
 
         // Build pattern for subcommands.
@@ -106,6 +117,12 @@ public class CommandBuilder {
         // If the command has parameters of its own, add them after.
         sb.append(BuildParameterPattern(command));
 
+        // Make sure that additional SubCommands are OR'd properly.
+        if(hasSubCommandGroups) {
+            sb.append(")");
+        }
+
+        // Seal the pattern to match the whole string.
         sb.insert(0, "^");
         sb.append("$");
 
@@ -120,28 +137,27 @@ public class CommandBuilder {
                 scb.append("|");
             }
 
+            // Begins the subcommand group.
             scb.append("(");
 
             // Add subcommand name & aliases
             if(subCommand.getAliases().size() > 0) {
-                scb.append("(");
-            }
+                // Begin a group to OR each name and alias.
+                scb.append("((");
+                scb.append(subCommand.getName());
+                scb.append(")");
 
-            scb.append(subCommand.getName());
-
-            if(subCommand.getAliases().size() > 0) {
-                StringBuilder asb = new StringBuilder();
-
+                // Add each additional alias as an OR group.
                 for(String alias : subCommand.getAliases()) {
-                    if(asb.length() > 0) {
-                        asb.append("|");
-                    }
-
-                    asb.append(alias);
+                    scb.append("|(");
+                    scb.append(alias);
+                    scb.append(")");
                 }
 
-                scb.append(asb);
+                // End the alias group
                 scb.append(")");
+            } else {
+                scb.append(subCommand.getName());
             }
 
             // Add subcommand parameters
@@ -160,6 +176,7 @@ public class CommandBuilder {
                 }
             }
 
+            // Ends the subcommand group.
             scb.append(")");
         }
 
@@ -191,6 +208,7 @@ public class CommandBuilder {
         return sb.toString();
     }
 
+    // TODO update for subcommands
     public static String BuildUsage(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
         List<CommandStructure> subCommands = command.getSubcommands();

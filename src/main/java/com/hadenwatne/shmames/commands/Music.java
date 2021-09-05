@@ -86,12 +86,11 @@ public class Music implements ICommand {
 										CommandBuilder.Create("add", "Add a track to a playlist.")
 												.addAlias("a")
 												.addParameters(
-														new CommandParameter("addPlaylistName", "The name of the new playlist.", ParameterType.STRING)
+														new CommandParameter("addPlaylistName", "The name of the playlist to add to.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-														new CommandParameter("addPlaylistURL", "The name of the new playlist.", ParameterType.STRING)
+														new CommandParameter("addPlaylistURL", "The URL of the track to add.", ParameterType.STRING)
 																.setPattern(RegexPatterns.URL.getPattern()),
-														new CommandParameter("addPlaylistMemo", "The name of the new playlist.", ParameterType.STRING, false)
-																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+														new CommandParameter("addPlaylistMemo", "A memo about the track being added.", ParameterType.STRING, false)
 												)
 												.build(),
 										CommandBuilder.Create("list", "Show available playlists.")
@@ -104,9 +103,18 @@ public class Music implements ICommand {
 												.build(),
 										CommandBuilder.Create("remove", "Remove a track from a playlist.")
 												.addAlias("r")
+												.addParameters(
+														new CommandParameter("removePlaylist", "The playlist to remove an item from.", ParameterType.STRING)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+														new CommandParameter("removePosition", "The position of the item to remove.", ParameterType.INTEGER)
+												)
 												.build(),
 										CommandBuilder.Create("delete", "Delete a playlist.")
 												.addAlias("d")
+												.addParameters(
+														new CommandParameter("deletePlaylistName", "The name of the playlist to delete.", ParameterType.STRING)
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												)
 												.build()
 								),
 						new SubCommandGroup("queue", "Manage the queue.")
@@ -402,41 +410,30 @@ public class Music implements ICommand {
 
 				return cmdPlaylistList(lang, brain, listPlaylistName, server, messagingChannel, listPlaylistPage);
 			case "remove":
-				Matcher remove = Pattern.compile("^([a-z0-9_]+)\\s(\\d{1,2})$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+				String removePlaylist = args.getAsString("removePlaylist");
+				int removePosition = args.getAsInteger("removePosition");
 
-				if (remove.find()) {
-					String listName = remove.group(1);
-					int position = Integer.parseInt(remove.group(2));
-					Playlist pRemove = findPlaylistServer(listName, b);
+				Playlist pRemove = findPlaylistServer(removePlaylist, brain);
 
-					if (pRemove != null) {
-						if (pRemove.removeTrack(position - 1)) {
-							return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_REMOVED);
-						} else {
-							return lang.getError(Errors.NOT_FOUND, false);
-						}
+				if (pRemove != null) {
+					if (pRemove.removeTrack(removePosition - 1)) {
+						return lang.getMsg(Langs.MUSIC_PLAYLIST_TRACK_REMOVED);
 					} else {
-						return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
+						return lang.getError(Errors.NOT_FOUND, false);
 					}
 				} else {
-					return lang.getError(Errors.WRONG_USAGE, true);
+					return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
 				}
 			case "delete":
-				Matcher delete = Pattern.compile("^([a-z0-9_]+)$", Pattern.CASE_INSENSITIVE).matcher(subArgs);
+				String deletePlaylist = args.getAsString("deletePlaylistName");
+				Playlist pDelete = findPlaylistServer(deletePlaylist, brain);
 
-				if (delete.find()) {
-					String listName = delete.group(1);
-					Playlist pDelete = findPlaylistServer(listName, b);
+				if (pDelete != null) {
+					brain.getPlaylists().remove(pDelete);
 
-					if (pDelete != null) {
-						b.getPlaylists().remove(pDelete);
-
-						return lang.getMsg(Langs.MUSIC_PLAYLIST_DELETED);
-					} else {
-						return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
-					}
+					return lang.getMsg(Langs.MUSIC_PLAYLIST_DELETED);
 				} else {
-					return lang.getError(Errors.WRONG_USAGE, true);
+					return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
 				}
 			default:
 				return lang.getError(Errors.COMMAND_NOT_FOUND, true);

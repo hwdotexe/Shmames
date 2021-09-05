@@ -22,6 +22,7 @@ public class CommandStructure {
         this.aliases = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.subcommands = new ArrayList<>();
+        this.subCommandGroups = new ArrayList<>();
     }
 
     public Pattern getPattern() {
