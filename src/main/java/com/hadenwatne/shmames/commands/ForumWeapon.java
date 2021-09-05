@@ -104,7 +104,7 @@ public class ForumWeapon implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		ShmamesSubCommandData subCommand = data.getSubCommand();
+		ShmamesSubCommandData subCommand = data.getSubCommandData();
 
 		switch (subCommand.getCommandName().toLowerCase()) {
 			case "create":

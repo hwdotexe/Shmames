@@ -5,8 +5,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class ShmamesCommandData {
     private ICommand command;
@@ -24,10 +22,9 @@ public class ShmamesCommandData {
         this.server = server;
     }
 
-    public ShmamesCommandData(ICommand command, ShmamesSubCommandData subCommands, ShmamesCommandArguments arguments, ShmamesCommandMessagingChannel messagingChannel, User author, @Nullable Guild server) {
+    public ShmamesCommandData(ICommand command, ShmamesSubCommandData subCommands, ShmamesCommandMessagingChannel messagingChannel, User author, @Nullable Guild server) {
         this.command = command;
         this.subCommand = subCommands;
-        this.arguments = arguments;
         this.messagingChannel = messagingChannel;
         this.author = author;
         this.server = server;
@@ -45,7 +42,7 @@ public class ShmamesCommandData {
         return this.arguments;
     }
 
-    public ShmamesSubCommandData getSubCommand() {
+    public ShmamesSubCommandData getSubCommandData() {
         return this.subCommand;
     }
 

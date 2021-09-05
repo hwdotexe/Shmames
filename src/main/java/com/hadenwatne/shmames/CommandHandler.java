@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
@@ -134,28 +135,62 @@ public class CommandHandler {
 			if(usageMatcher.matches()) {
 				// Build map of arguments
 				ShmamesSubCommandData subCommandData = null;
-				LinkedHashMap<String, Object> commandArgs = buildArgumentsMap(c.getCommandStructure(), usageMatcher, server);
 
-				// Build data for any subcommands this might have.
-				for(CommandStructure subCommand : c.getCommandStructure().getSubcommands()) {
-					if(args.toLowerCase().startsWith(subCommand.getName())) {
-						LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
+				// Build data for any subcommand groups this might have.
+				boolean hasGroup = false;
+				for(SubCommandGroup subCommandGroup : c.getCommandStructure().getSubcommandGroups()) {
+					if(args.toLowerCase().startsWith(subCommandGroup.getName())) {
+						String subArgs = args.replace("^"+subCommandGroup.getName(), "").trim();
+						hasGroup = true;
 
-						subCommandData = new ShmamesSubCommandData(subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
+						for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+							if(subArgs.toLowerCase().startsWith(subCommand.getName())) {
+								LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
+
+								subCommandData = new ShmamesSubCommandData(subCommandGroup.getName(), subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
+
+								break;
+							}
+						}
 
 						break;
 					}
 				}
 
-				// Build command data.
-				ShmamesCommandData data = new ShmamesCommandData(
-						c,
-						subCommandData,
-						new ShmamesCommandArguments(commandArgs),
-						new ShmamesCommandMessagingChannel(message, channel),
-						author,
-						server
-				);
+				if(!hasGroup) {
+					// Build data for any subcommands this might have.
+					for (CommandStructure subCommand : c.getCommandStructure().getSubcommands()) {
+						if (args.toLowerCase().startsWith(subCommand.getName())) {
+							LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
+
+							subCommandData = new ShmamesSubCommandData(subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
+							hasGroup = true;
+
+							break;
+						}
+					}
+				}
+
+				ShmamesCommandData data;
+				if(hasGroup) {
+					data = new ShmamesCommandData(
+							c,
+							subCommandData,
+							new ShmamesCommandMessagingChannel(message, channel),
+							author,
+							server
+					);
+				} else {
+					LinkedHashMap<String, Object> commandArgs = buildArgumentsMap(c.getCommandStructure(), usageMatcher, server);
+
+					data = new ShmamesCommandData(
+							c,
+							new ShmamesCommandArguments(commandArgs),
+							new ShmamesCommandMessagingChannel(message, channel),
+							author,
+							server
+					);
+				}
 
 				// Execute the command
 				executeCommand(lang, brain, data);
@@ -181,9 +216,9 @@ public class CommandHandler {
 		Lang lang = Shmames.getDefaultLang();
 		User author = event.getUser();
 		InteractionHook hook = event.getHook();
-
 		String cmdString = (subCommand == null ? arguments.getAsString() : subCommand.getAsString()).trim();
 
+		// Log the command statistic.
 		if (server != null) {
 			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 			lang = Shmames.getLangFor(server);
@@ -203,14 +238,24 @@ public class CommandHandler {
 
 		if (usageMatcher.matches()) {
 			// Build command data.
-			ShmamesCommandData data = new ShmamesCommandData(
-					command,
-					subCommand,
-					arguments,
-					new ShmamesCommandMessagingChannel(hook, event.getChannel()),
-					author,
-					server
-			);
+			ShmamesCommandData data;
+			if(subCommand != null) {
+				 data = new ShmamesCommandData(
+						command,
+						subCommand,
+						new ShmamesCommandMessagingChannel(hook, event.getChannel()),
+						author,
+						server
+				);
+			} else {
+				data = new ShmamesCommandData(
+						command,
+						arguments,
+						new ShmamesCommandMessagingChannel(hook, event.getChannel()),
+						author,
+						server
+				);
+			}
 
 			// Execute the command.
 			executeCommand(lang, brain, data);

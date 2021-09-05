@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.models.command.ParsedCommandResult;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
@@ -26,8 +27,24 @@ public class SlashCommandListener extends ListenerAdapter {
             ShmamesCommandArguments commandArguments = new ShmamesCommandArguments(buildArgumentMap(command.getCommandStructure(), event));
             ShmamesSubCommandData subCommandData = null;
 
+            // TODO subcommandgroup
+
             // If this is a subcommand, build out the subcommand arguments.
-            if(event.getSubcommandName() != null) {
+            if(event.getSubcommandGroup() != null) {
+                for(SubCommandGroup subCommandGroup : command.getCommandStructure().getSubcommandGroups()) {
+                    if(subCommandGroup.getName().equalsIgnoreCase(event.getSubcommandGroup())) {
+                        for (CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+                            if (subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
+                                subCommandData = new ShmamesSubCommandData(subCommandGroup.getName(), event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));
+
+                                break;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            } else if(event.getSubcommandName() != null) {
                 for (CommandStructure subCommand : command.getCommandStructure().getSubcommands()) {
                     if(subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
                         subCommandData = new ShmamesSubCommandData(event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));

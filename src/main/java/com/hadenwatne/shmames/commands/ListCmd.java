@@ -92,8 +92,8 @@ public class ListCmd implements ICommand {
 
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String subCmd = data.getSubCommand().getCommandName();
-		ShmamesCommandArguments subCmdArgs = data.getSubCommand().getArguments();
+		String subCmd = data.getSubCommandData().getCommandName();
+		ShmamesCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
 
 		switch(subCmd.toLowerCase()) {
 			case "create":
