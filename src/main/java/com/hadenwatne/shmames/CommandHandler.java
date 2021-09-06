@@ -138,7 +138,7 @@ public class CommandHandler {
 				boolean hasGroup = false;
 				for(SubCommandGroup subCommandGroup : c.getCommandStructure().getSubcommandGroups()) {
 					if(args.toLowerCase().startsWith(subCommandGroup.getName())) {
-						String subArgs = args.replace("^"+subCommandGroup.getName(), "").trim();
+						String subArgs = args.replaceFirst("^"+subCommandGroup.getName(), "").trim();
 						hasGroup = true;
 
 						for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
@@ -327,7 +327,7 @@ public class CommandHandler {
 		LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
 
 		for(CommandParameter cp : c.getParameters()) {
-			String group = usageMatcher.group(cp.getName());
+			String group = usageMatcher.group(cp.getName()+c.getName());
 
 			if(group != null) {
 				insertArgumentWithType(namedArguments, group, cp, server);

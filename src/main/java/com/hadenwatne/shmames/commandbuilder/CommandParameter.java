@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class CommandParameter {
     private final String name;
+    private String regexName;
     private final String description;
     private final Boolean isRequired;
     private final ParameterType type;
@@ -15,26 +16,30 @@ public class CommandParameter {
 
     public CommandParameter(String name, String description, ParameterType type) {
         this.name = name;
+        this.regexName = name;
         this.description = description;
         this.isRequired = true;
         this.type = type;
         this.selectionOptions = new ArrayList<>();
-
-        setInitialMatchPattern();
     }
 
     public CommandParameter(String name, String description, ParameterType type, Boolean isRequired) {
         this.name = name;
+        this.regexName = name;
         this.description = description;
         this.isRequired = isRequired;
         this.type = type;
         this.selectionOptions = new ArrayList<>();
-
-        setInitialMatchPattern();
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public void setRegexName(String regexName) {
+        this.regexName = regexName;
+
+        setInitialMatchPattern();
     }
 
     public String getDescription() {
@@ -92,31 +97,31 @@ public class CommandParameter {
                 sb.append(psb);
                 sb.append(")");
 
-                this.matchPattern = Pattern.compile("(?<"+this.name+">"+sb+")");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+">"+sb+")");
                 break;
             case BOOLEAN:
-                this.matchPattern = Pattern.compile("(?<"+this.name+">((true)|(false)))");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+">((true)|(false)))");
                 break;
             case TIMECODE:
-                this.matchPattern = Pattern.compile("(?<"+this.name+">[\\dydhms]+)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+">[\\dydhms]+)");
                 break;
             case INTEGER:
-                this.matchPattern = Pattern.compile("(?<"+this.name+">\\d+)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+">\\d+)");
                 break;
             case DISCORD_ROLE:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><@&(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><@&(\\d+)>)");
                 break;
             case DISCORD_CHANNEL:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><#(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><#(\\d+)>)");
                 break;
             case DISCORD_USER:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><@!(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><@!(\\d+)>)");
                 break;
             case DISCORD_EMOTE:
-                this.matchPattern = Pattern.compile("(?<"+this.name+"><:[a-zA-Z0-9_]:(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><:[a-zA-Z0-9_]:(\\d+)>)");
                 break;
             default:
-                this.matchPattern = Pattern.compile("(?<"+this.name+">.+)");
+                this.matchPattern = Pattern.compile("(?<"+this.regexName+">.+)");
         }
     }
 }

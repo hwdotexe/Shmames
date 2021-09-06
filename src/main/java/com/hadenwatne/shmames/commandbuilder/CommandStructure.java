@@ -55,14 +55,12 @@ public class CommandStructure {
         return this.parameters;
     }
 
-    public CommandStructure addParameter(CommandParameter parameter) {
-        this.parameters.add(parameter);
-
-        return this;
-    }
-
     public CommandStructure addParameters(CommandParameter... parameters) {
-        Collections.addAll(this.parameters, parameters);
+        for(CommandParameter parameter : parameters) {
+            parameter.setRegexName(parameter.getName()+this.name);
+
+            this.parameters.add(parameter);
+        }
 
         return this;
     }

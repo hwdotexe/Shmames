@@ -39,9 +39,9 @@ public class Music implements ICommand {
 						CommandBuilder.Create("play", "Play a track or playlist.")
 								.addAlias("p")
 								.addParameters(
-										new CommandParameter("playPlaylist", "The playlist to play.", ParameterType.STRING, false)
+										new CommandParameter("playlistName", "The playlist to play.", ParameterType.STRING, false)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-										new CommandParameter("playURL", "The URL of the song to play.", ParameterType.STRING, false)
+										new CommandParameter("URL", "The URL of the song to play.", ParameterType.STRING, false)
 												.setPattern(RegexPatterns.URL.getPattern())
 								)
 								.build(),
@@ -67,7 +67,7 @@ public class Music implements ICommand {
 								.build(),
 						CommandBuilder.Create("convert", "Convert the queue to a playlist.")
 								.addParameters(
-										new CommandParameter("newPlaylistName", "The name to use for the new playlist.", ParameterType.STRING)
+										new CommandParameter("playlistName", "The name to use for the new playlist.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 								)
 								.build()
@@ -79,40 +79,40 @@ public class Music implements ICommand {
 										CommandBuilder.Create("create", "Create a new playlist.")
 												.addAlias("c")
 												.addParameters(
-														new CommandParameter("createPlaylistName", "The name of the new playlist.", ParameterType.STRING)
+														new CommandParameter("playlistName", "The name of the new playlist.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
 												.build(),
 										CommandBuilder.Create("add", "Add a track to a playlist.")
 												.addAlias("a")
 												.addParameters(
-														new CommandParameter("addPlaylistName", "The name of the playlist to add to.", ParameterType.STRING)
+														new CommandParameter("playlistName", "The name of the playlist to add to.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-														new CommandParameter("addPlaylistURL", "The URL of the track to add.", ParameterType.STRING)
+														new CommandParameter("URL", "The URL of the track to add.", ParameterType.STRING)
 																.setPattern(RegexPatterns.URL.getPattern()),
-														new CommandParameter("addPlaylistMemo", "A memo about the track being added.", ParameterType.STRING, false)
+														new CommandParameter("memo", "A memo about the track being added.", ParameterType.STRING, false)
 												)
 												.build(),
 										CommandBuilder.Create("list", "Show available playlists.")
 												.addAlias("l")
 												.addParameters(
-														new CommandParameter("listPlaylistName", "The name of the playlist.", ParameterType.STRING, false)
+														new CommandParameter("playlistName", "The name of the playlist.", ParameterType.STRING, false)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-														new CommandParameter("listPlaylistPage", "The page to view.", ParameterType.INTEGER, false)
+														new CommandParameter("page", "The page to view.", ParameterType.INTEGER, false)
 												)
 												.build(),
 										CommandBuilder.Create("remove", "Remove a track from a playlist.")
 												.addAlias("r")
 												.addParameters(
-														new CommandParameter("removePlaylist", "The playlist to remove an item from.", ParameterType.STRING)
+														new CommandParameter("playlistName", "The playlist to remove an item from.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-														new CommandParameter("removePosition", "The position of the item to remove.", ParameterType.INTEGER)
+														new CommandParameter("position", "The position of the item to remove.", ParameterType.INTEGER)
 												)
 												.build(),
 										CommandBuilder.Create("delete", "Delete a playlist.")
 												.addAlias("d")
 												.addParameters(
-														new CommandParameter("deletePlaylistName", "The name of the playlist to delete.", ParameterType.STRING)
+														new CommandParameter("playlistName", "The name of the playlist to delete.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
 												.build()
@@ -132,9 +132,9 @@ public class Music implements ICommand {
 										CommandBuilder.Create("append", "Add more tracks or playlists to the queue.")
 												.addAlias("a")
 												.addParameters(
-														new CommandParameter("appendPlaylist", "The playlist to append.", ParameterType.STRING, false)
+														new CommandParameter("playlistName", "The playlist to append.", ParameterType.STRING, false)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
-														new CommandParameter("appendURL", "The URL of the song to append.", ParameterType.STRING, false)
+														new CommandParameter("URL", "The URL of the song to append.", ParameterType.STRING, false)
 																.setPattern(RegexPatterns.URL.getPattern())
 												)
 												.build(),
@@ -250,8 +250,8 @@ public class Music implements ICommand {
 	}
 
 	private String cmdPlay(Lang lang, Brain brain, Guild server, Member member, ShmamesCommandMessagingChannel messagingChannel, GuildOcarina ocarina, ShmamesCommandArguments args) {
-		String playlist = args.getAsString("playPlaylist");
-		String url = args.getAsString("playURL");
+		String playlist = args.getAsString("playlistName");
+		String url = args.getAsString("URL");
 
 		if (playlist != null || url != null) {
 			if (!ocarina.isInVoiceChannel()) {
@@ -320,8 +320,8 @@ public class Music implements ICommand {
 		if (ocarina.isInVoiceChannel()) {
 			switch(subCommand.toLowerCase()) {
 				case "append":
-					String appendPlaylist = args.getAsString("appendPlaylist");
-					String appendURL = args.getAsString("appendURL");
+					String appendPlaylist = args.getAsString("playlistName");
+					String appendURL = args.getAsString("URL");
 
 					if(appendURL != null) {
 						ocarina.loadTrack(appendURL, true);
@@ -364,7 +364,7 @@ public class Music implements ICommand {
 	}
 
 	private String cmdConvert(Brain brain, Lang lang, GuildOcarina ocarina, ShmamesCommandArguments args) {
-		String newPlaylistName = args.getAsString("newPlaylistName");
+		String newPlaylistName = args.getAsString("playlistName");
 
 		if (ocarina.getNowPlaying() != null) {
 			if (findPlaylistServer(newPlaylistName, brain) == null) {
@@ -395,23 +395,23 @@ public class Music implements ICommand {
 
 		switch (subCommand) {
 			case "create":
-				String createPlaylistName = args.getAsString("createPlaylistName");
+				String createPlaylistName = args.getAsString("playlistName");
 
 				return cmdPlaylistCreate(lang, brain, createPlaylistName);
 			case "add":
-				String addPlaylistName = args.getAsString("addPlaylistName");
-				String addPlaylistURL = args.getAsString("addPlaylistURL");
-				String addPlaylistMemo = args.getAsString("addPlaylistMemo");
+				String addPlaylistName = args.getAsString("playlistName");
+				String addPlaylistURL = args.getAsString("URL");
+				String addPlaylistMemo = args.getAsString("memo");
 
 				return cmdPlaylistAdd(lang, brain, addPlaylistName, addPlaylistURL, addPlaylistMemo);
 			case "list":
-				String listPlaylistName = args.getAsString("listPlaylistName");
-				int listPlaylistPage = args.getAsInteger("listPlaylistPage");
+				String listPlaylistName = args.getAsString("playlistName");
+				int listPlaylistPage = args.getAsInteger("page");
 
 				return cmdPlaylistList(lang, brain, listPlaylistName, server, messagingChannel, listPlaylistPage);
 			case "remove":
-				String removePlaylist = args.getAsString("removePlaylist");
-				int removePosition = args.getAsInteger("removePosition");
+				String removePlaylist = args.getAsString("playlistName");
+				int removePosition = args.getAsInteger("position");
 
 				Playlist pRemove = findPlaylistServer(removePlaylist, brain);
 
@@ -425,7 +425,7 @@ public class Music implements ICommand {
 					return lang.getError(Errors.MUSIC_PLAYLIST_DOESNT_EXIST, false);
 				}
 			case "delete":
-				String deletePlaylist = args.getAsString("deletePlaylistName");
+				String deletePlaylist = args.getAsString("playlistName");
 				Playlist pDelete = findPlaylistServer(deletePlaylist, brain);
 
 				if (pDelete != null) {
