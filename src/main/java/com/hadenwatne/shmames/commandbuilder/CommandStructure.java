@@ -87,7 +87,7 @@ public class CommandStructure {
 
     public CommandStructure build() {
         this.pattern = CommandBuilder.BuildPattern(this);
-        this.usage = CommandBuilder.BuildUsage(this);
+        this.usage = CommandBuilder.BuildUsage(this, false);
 
         return this;
     }

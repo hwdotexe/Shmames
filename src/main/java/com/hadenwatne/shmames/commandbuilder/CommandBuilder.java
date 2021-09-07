@@ -208,38 +208,53 @@ public class CommandBuilder {
         return sb.toString();
     }
 
-    // TODO update for subcommands
-    public static String BuildUsage(CommandStructure command) {
+    public static String BuildUsage(CommandStructure command, boolean boldCommandName) {
         StringBuilder sb = new StringBuilder();
         List<CommandStructure> subCommands = command.getSubcommands();
+        List<SubCommandGroup> subCommandGroups = command.getSubcommandGroups();
+
+        if(boldCommandName) {
+            sb.append("**");
+        }
 
         sb.append(command.getName());
 
-        if(subCommands.size() > 0) {
+        if(boldCommandName) {
+            sb.append("**");
+        }
+
+        // Add subcommands and groups.
+        if(subCommands.size() > 0 || subCommandGroups.size() > 0) {
+            sb.append("...");
+            sb.append("\n• ");
+
+            if(subCommands.size() > 0) {
+                sb.append(buildSubCommandUsageLabel(subCommands));
+            }
+
+            if(subCommandGroups.size() > 0) {
+                if(subCommands.size() > 0 ) {
+                    sb.append("\n• ");
+                }
+
+                sb.append(buildSubCommandGroupUsageLabel(subCommandGroups));
+            }
+        }
+
+        // Now add any command parameters.
+        for (CommandParameter p : command.getParameters()) {
             sb.append(" ");
 
-            if(subCommands.size() > 1) {
-                sb.append("<[");
-            }
-
-            sb.append(buildSubCommandUsageLabel(subCommands));
-
-            if(subCommands.size() > 1) {
-                sb.append("]>");
-            }
-        } else {
-            for (CommandParameter p : command.getParameters()) {
-                sb.append(" ");
-
-                if (p.isRequired()) {
-                    sb.append("<");
-                    sb.append(buildUsageLabel(p));
-                    sb.append(">");
-                } else {
-                    sb.append("[");
-                    sb.append(buildUsageLabel(p));
-                    sb.append("]");
-                }
+            if (p.isRequired()) {
+                sb.append("<");
+                sb.append(buildUsageLabel(p));
+                sb.append(">");
+            } else {
+                sb.append("_");
+                sb.append("[");
+                sb.append(buildUsageLabel(p));
+                sb.append("]");
+                sb.append("_");
             }
         }
 
@@ -251,13 +266,41 @@ public class CommandBuilder {
 
         for(CommandStructure subCommand : subCommands) {
             if(subCommandData.length() > 0) {
-                subCommandData.append(" | ");
+                subCommandData.append("\n• ");
             }
 
-            subCommandData.append(BuildUsage(subCommand));
+            subCommandData.append(BuildUsage(subCommand, true));
         }
 
         return subCommandData.toString();
+    }
+
+    private static String buildSubCommandGroupUsageLabel(List<SubCommandGroup> subCommandGroups) {
+        StringBuilder subCommandGroupData = new StringBuilder();
+
+        for(SubCommandGroup group : subCommandGroups) {
+            StringBuilder subCommandData = new StringBuilder();
+
+            if (subCommandGroupData.length() > 0) {
+                subCommandGroupData.append("\n• ");
+            }
+
+            for (CommandStructure subCommand : group.getSubcommands()) {
+                if (subCommandData.length() > 0) {
+                    subCommandData.append("\n• ");
+                }
+
+                subCommandData.append("**");
+                subCommandData.append(group.getName());
+                subCommandData.append("**");
+                subCommandData.append(" ");
+                subCommandData.append(BuildUsage(subCommand, true));
+            }
+
+            subCommandGroupData.append(subCommandData);
+        }
+
+        return subCommandGroupData.toString();
     }
 
     private static String buildUsageLabel(CommandParameter p) {

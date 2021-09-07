@@ -35,6 +35,7 @@ public class Music implements ICommand {
 
 	public Music() {
 		this.commandStructure = CommandBuilder.Create("music", "Play music, create playlists, and chill out.")
+				.addAlias("bops")
 				.addSubCommands(
 						CommandBuilder.Create("play", "Play a track or playlist.")
 								.addAlias("p")
