@@ -96,7 +96,28 @@ public class CommandBuilder {
                 }
 
                 sb.append("(");
-                sb.append(group.getName());
+
+                if(group.getAliases().size() > 0) {
+                    sb.append("(");
+
+                    // Add the main command
+                    sb.append("(");
+                    sb.append(group.getName());
+                    sb.append(")");
+
+                    // Add aliases
+                    for(String alias : group.getAliases()) {
+                        sb.append("|");
+                        sb.append("(");
+                        sb.append(alias);
+                        sb.append(")");
+                    }
+
+                    sb.append(")");
+                } else {
+                    sb.append(group.getName());
+                }
+
                 sb.append("\\s");
                 sb.append("(");
                 sb.append(BuildSubCommandPattern(group.getSubcommands()));
@@ -220,6 +241,15 @@ public class CommandBuilder {
         sb.append(command.getName());
 
         if(boldCommandName) {
+            // We currently bold the subcommand only, so if this command is being bolded,
+            // add the first alias it has.
+            if(command.getAliases().size() > 0) {
+                sb.append(" ");
+                sb.append("(");
+                sb.append(command.getAliases().get(0));
+                sb.append(")");
+            }
+
             sb.append("**");
         }
 
@@ -292,6 +322,14 @@ public class CommandBuilder {
 
                 subCommandData.append("**");
                 subCommandData.append(group.getName());
+
+                if(group.getAliases().size() > 0) {
+                    subCommandData.append(" ");
+                    subCommandData.append("(");
+                    subCommandData.append(group.getAliases().get(0));
+                    subCommandData.append(")");
+                }
+
                 subCommandData.append("**");
                 subCommandData.append(" ");
                 subCommandData.append(BuildUsage(subCommand, true));

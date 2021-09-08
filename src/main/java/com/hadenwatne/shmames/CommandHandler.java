@@ -137,12 +137,16 @@ public class CommandHandler {
 				// Build data for any subcommand groups this might have.
 				boolean hasGroup = false;
 				for(SubCommandGroup subCommandGroup : c.getCommandStructure().getSubcommandGroups()) {
-					if(args.toLowerCase().startsWith(subCommandGroup.getName())) {
-						String subArgs = args.replaceFirst("^"+subCommandGroup.getName(), "").trim();
+					String startsWithGroupNameMatch = matchStringToCommand(args.toLowerCase(), subCommandGroup.getName(), subCommandGroup.getAliases());
+
+					if(startsWithGroupNameMatch != null) {
+						String subArgs = args.replaceFirst("^"+startsWithGroupNameMatch, "").trim();
 						hasGroup = true;
 
 						for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
-							if(subArgs.toLowerCase().startsWith(subCommand.getName())) {
+							String startsWithSubCommandMatch = matchStringToCommand(subArgs.toLowerCase(), subCommand.getName(), subCommand.getAliases());
+
+							if(startsWithSubCommandMatch != null) {
 								LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
 
 								subCommandData = new ShmamesSubCommandData(subCommandGroup.getName(), subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
@@ -158,7 +162,9 @@ public class CommandHandler {
 				if(!hasGroup) {
 					// Build data for any subcommands this might have.
 					for (CommandStructure subCommand : c.getCommandStructure().getSubcommands()) {
-						if (args.toLowerCase().startsWith(subCommand.getName())) {
+						String startsWithSubCommandMatch = matchStringToCommand(args.toLowerCase(), subCommand.getName(), subCommand.getAliases());
+
+						if (startsWithSubCommandMatch != null) {
 							LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
 
 							subCommandData = new ShmamesSubCommandData(subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
@@ -280,6 +286,23 @@ public class CommandHandler {
 		}
 
 		return null;
+	}
+
+	private String matchStringToCommand(String toMatch, String commandName, List<String> aliases) {
+		String match = null;
+
+		if(toMatch.startsWith(commandName)) {
+			match = commandName;
+		} else {
+			for(String alias : aliases) {
+				if(toMatch.startsWith(alias)) {
+					match = alias;
+					break;
+				}
+			}
+		}
+
+		return match;
 	}
 
 	private void executeCommand(Lang lang, Brain brain, ShmamesCommandData data) {
