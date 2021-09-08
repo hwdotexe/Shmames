@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,6 +20,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.command.*;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -199,7 +201,7 @@ public class CommandHandler {
 				// Execute the command
 				executeCommand(lang, brain, data);
 			}else{
-				sendMessageResponse(lang.wrongUsage(c.getCommandStructure().getUsage()), new ShmamesCommandMessagingChannel(message, channel), lang);
+				sendWrongUsageEmbed(lang, new ShmamesCommandMessagingChannel(message, channel), c.getCommandStructure().getUsage());
 			}
 		} else {
 			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel), lang);
@@ -326,6 +328,23 @@ public class CommandHandler {
 			ShmamesLogger.logException(e);
 			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
 		}
+	}
+
+	private void sendWrongUsageEmbed(Lang lang, ShmamesCommandMessagingChannel msg, String usage) {
+		EmbedBuilder eBuilder = new EmbedBuilder();
+
+		eBuilder.setColor(new Color(166, 36, 36));
+		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+
+		eBuilder.setTitle("Error: "+Errors.WRONG_USAGE.name());
+		eBuilder.setDescription(lang.getError(Errors.WRONG_USAGE, false));
+		eBuilder.addField("Command Help", usage, false);
+
+		if(msg.hasHook()) {
+			msg.getHook().setEphemeral(true);
+		}
+
+		msg.sendMessage(eBuilder);
 	}
 
 	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg, Lang lang) {

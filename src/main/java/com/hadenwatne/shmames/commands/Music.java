@@ -633,40 +633,6 @@ public class Music implements ICommand {
 		messagingChannel.sendMessage(eBuilder);
 	}
 
-	private void sendMusicCmdHelp(MessageChannel c) {
-		StringBuilder sb = new StringBuilder();
-		EmbedBuilder eBuilder = buildBasicEmbed();
-
-		sb.append("`(p)lay <url|playlist>` - Begin playing a track or playlist.\n");
-		sb.append("`pause` - Toggle pause.\n");
-		sb.append("`skip [count]` - Skip tracks.\n");
-		sb.append("`stop` - Stop playing and disconnect from the channel.\n");
-		sb.append("`loop [queue]` - Toggle track or queue looping.\n");
-		sb.append("`playing|np` - See details about the current track.\n");
-		sb.append("`(q)ueue [url|playlist|clear|page|reverse|shuffle]` - Manage the music queue.\n");
-		sb.append("`convert <name>` - Create a new playlist from the tracks in the queue.\n");
-		sb.append("`(pl)aylist` - Manage a playlist.");
-
-		eBuilder.addField("Commands", sb.toString(), false);
-
-		c.sendMessage(eBuilder.build()).queue();
-	}
-
-	private void sendPlaylistCmdHelp(MessageChannel c) {
-		StringBuilder sb = new StringBuilder();
-		EmbedBuilder eBuilder = buildBasicEmbed();
-
-		sb.append("`(c)reate <name> [track url] [track memo]` - Create a new playlist with an optional track and memo.\n");
-		sb.append("`(a)dd <playlist> <track url> [memo]` - Add a new track to a playlist with an optional memo.\n");
-		sb.append("`(l)ist [playlist|all] [page]` - List all playlists or all tracks in a playlist.\n");
-		sb.append("`(r)emove <playlist> <track number>` - Remove a track from a playlist.\n");
-		sb.append("`(d)elete <playlist>` - Delete a playlist and all tracks it contains.\n");
-
-		eBuilder.addField("Commands", sb.toString(), false);
-
-		c.sendMessage(eBuilder.build()).queue();
-	}
-
 	private EmbedBuilder buildBasicEmbed() {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
