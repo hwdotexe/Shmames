@@ -171,7 +171,7 @@ public class Music implements ICommand {
 		GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(data.getServer().getId());
 		User author = data.getAuthor();
 		Guild server = data.getServer();
-		String nameOrGroup = subCommand.getGroupName() != null ? subCommand.getGroupName() : subCommand.getCommandName();
+		String nameOrGroup = subCommand.getNameOrGroup();
 
 		switch (nameOrGroup) {
 			case "play":

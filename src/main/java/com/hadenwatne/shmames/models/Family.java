@@ -54,9 +54,9 @@ public class Family {
         return false;
     }
 
-    public void addToFamily(Guild g){
-        if(!memberGuilds.contains(g.getIdLong()))
-            memberGuilds.add(g.getIdLong());
+    public void addToFamily(long guildID){
+        if(!memberGuilds.contains(guildID))
+            memberGuilds.add(guildID);
 
         this.joinCode = "";
     }

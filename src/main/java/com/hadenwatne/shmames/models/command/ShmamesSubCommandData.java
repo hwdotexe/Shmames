@@ -29,6 +29,14 @@ public class ShmamesSubCommandData {
         return this.commandName;
     }
 
+    public String getNameOrGroup() {
+        if(this.groupName != null) {
+            return this.groupName;
+        }
+
+        return this.commandName;
+    }
+
     public ShmamesCommandArguments getArguments() {
         return this.arguments;
     }

@@ -39,8 +39,8 @@ public class SubCommandGroup {
         return this;
     }
 
-    public SubCommandGroup addSubCommands(CommandStructure... subcommand){
-        this.subcommands.addAll(Arrays.asList(subcommand));
+    public SubCommandGroup addSubCommands(CommandStructure... subCommands){
+        this.subcommands.addAll(Arrays.asList(subCommands));
 
         return this;
     }
