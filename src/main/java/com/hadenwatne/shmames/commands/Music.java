@@ -141,6 +141,9 @@ public class Music implements ICommand {
 												.build(),
 										CommandBuilder.Create("view", "View the queue.")
 												.addAlias("v")
+												.addParameters(
+														new CommandParameter("page", "The page of the queue to view.", ParameterType.INTEGER, false)
+												)
 												.build()
 								)
 				)
@@ -354,8 +357,9 @@ public class Music implements ICommand {
 
 					return lang.getMsg(Langs.MUSIC_QUEUE_CLEARED);
 				default:
-					// TODO page support
-					showQueue(lang, ocarina.getQueue(), messagingChannel, 1);
+					int queuePage = args.getAsInteger("page");
+
+					showQueue(lang, ocarina.getQueue(), messagingChannel, Math.max(queuePage, 1));
 
 					return "";
 			}

@@ -35,7 +35,6 @@ public class Modify implements ICommand {
 		this.commandStructure = CommandBuilder.Create("modify", "The Administrator's command to customize bot settings and behavior.")
 				.addParameters(
 						setting,
-						// TODO will check the type later. May need to add "isRole()..." checks onto parameter
 						new CommandParameter("value", "The new value for this setting.", ParameterType.STRING, false)
 				)
 				.build();
