@@ -391,13 +391,7 @@ public class CommandHandler {
 			for(Guild g : Shmames.getJDA().getGuilds()) {
 				CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById(g.getId()).updateCommands();
 
-				for(ICommand command : commands) {
-					if(command.getCommandStructure().getDescription().length() > 0) {
-						cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
-					}
-				}
-
-				cUpdate.queue();
+				issueSlashCommandUpdate(cUpdate);
 			}
 
 			return;
@@ -407,13 +401,19 @@ public class CommandHandler {
 		if(Shmames.getBrains().getMotherBrain().doUpdateDiscordSlashCommands()) {
 			CommandListUpdateAction cUpdate = Shmames.getJDA().updateCommands();
 
-			for(ICommand command : commands) {
-				cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
-			}
-
-			cUpdate.queue();
+			issueSlashCommandUpdate(cUpdate);
 			Shmames.getBrains().getMotherBrain().setUpdateDiscordSlashCommands(false);
 		}
+	}
+
+	private void issueSlashCommandUpdate(CommandListUpdateAction cUpdate) {
+		for(ICommand command : commands) {
+			if(command.getCommandStructure().getDescription().length() > 0) {
+				cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+			}
+		}
+
+		cUpdate.queue();
 	}
 
 	private void insertArgumentWithType(HashMap<String, Object> map, String value, CommandParameter parameter, @Nullable Guild guild) {
