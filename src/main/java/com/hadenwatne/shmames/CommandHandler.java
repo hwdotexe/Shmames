@@ -367,7 +367,7 @@ public class CommandHandler {
 		LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
 
 		for(CommandParameter cp : c.getParameters()) {
-			String group = usageMatcher.group(cp.getName()+c.getName());
+			String group = usageMatcher.group(cp.getRegexName());
 
 			if(group != null) {
 				insertArgumentWithType(namedArguments, group, cp, server);
@@ -407,13 +407,17 @@ public class CommandHandler {
 	}
 
 	private void issueSlashCommandUpdate(CommandListUpdateAction cUpdate) {
-		for(ICommand command : commands) {
-			if(command.getCommandStructure().getDescription().length() > 0) {
-				cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+		try {
+			for (ICommand command : commands) {
+				if (command.getCommandStructure().getDescription().length() > 0) {
+					cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+				}
 			}
-		}
 
-		cUpdate.queue();
+			cUpdate.queue();
+		}catch (Exception e) {
+			ShmamesLogger.logException(e);
+		}
 	}
 
 	private void insertArgumentWithType(HashMap<String, Object> map, String value, CommandParameter parameter, @Nullable Guild guild) {

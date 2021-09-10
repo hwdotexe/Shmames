@@ -50,25 +50,30 @@ public class FamilyCmd implements ICommand {
 				.addSubCommandGroups(
 						new SubCommandGroup("code", "Create or redeem Join Codes.")
 								.addSubCommands(
-										new CommandStructure("generate", "Create a new Join Code.")
+										CommandBuilder.Create("generate", "Create a new Join Code.")
 												.addParameters(
 														new CommandParameter("familyName", "The Family to create a Join Code for.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
-												),
-										new CommandStructure("redeem", "Redeem a Join Code to join a Family.")
+												)
+												.build(),
+										CommandBuilder.Create("redeem", "Redeem a Join Code to join a Family.")
 												.addParameters(
 														new CommandParameter("joinCode", "The Join Code to use.", ParameterType.STRING)
 												)
+												.build()
 								),
 						new SubCommandGroup("view", "View Family information.")
 								.addSubCommands(
-										new CommandStructure("servers", "View a list of servers in a Family.")
+										CommandBuilder.Create("servers", "View a list of servers in a Family.")
 												.addParameters(
 														new CommandParameter("familyName", "The Family to view.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
-												),
-										new CommandStructure("emotes", "View a list of Family emotes the server has access to."),
-										new CommandStructure("families", "View a list of Families this server belongs to.")
+												)
+												.build(),
+										CommandBuilder.Create("emotes", "View a list of Family emotes the server has access to.")
+												.build(),
+										CommandBuilder.Create("families", "View a list of Families this server belongs to.")
+												.build()
 								)
 				)
 				.build();

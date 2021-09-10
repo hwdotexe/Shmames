@@ -11,6 +11,7 @@ public class CommandParameter {
     private final String description;
     private final Boolean isRequired;
     private final ParameterType type;
+    private String customPattern;
     private Pattern matchPattern;
     private List<String> selectionOptions;
 
@@ -38,8 +39,10 @@ public class CommandParameter {
 
     public void setRegexName(String regexName) {
         this.regexName = regexName;
+    }
 
-        setInitialMatchPattern();
+    public String getRegexName() {
+        return this.regexName;
     }
 
     public String getDescription() {
@@ -59,7 +62,7 @@ public class CommandParameter {
     }
 
     public CommandParameter setPattern(String pattern) {
-        this.matchPattern = Pattern.compile("(?<"+this.name+">"+pattern+")");
+        this.customPattern = pattern;
 
         return this;
     }
@@ -71,21 +74,25 @@ public class CommandParameter {
     public CommandParameter addSelectionOptions(String... options) {
         this.selectionOptions.addAll(Arrays.asList(options));
 
-        setInitialMatchPattern();
-
         return this;
     }
 
-    private void setInitialMatchPattern() {
-        switch(this.type) {
+    public void buildRegexPattern() {
+        if(this.customPattern != null) {
+            this.matchPattern = Pattern.compile("(?<"+this.regexName+">"+this.customPattern+")");
+
+            return;
+        }
+
+        switch (this.type) {
             case SELECTION:
                 StringBuilder sb = new StringBuilder();
                 StringBuilder psb = new StringBuilder();
 
                 sb.append("(");
 
-                for(String o : this.selectionOptions) {
-                    if(psb.length() > 0) {
+                for (String o : this.selectionOptions) {
+                    if (psb.length() > 0) {
                         psb.append("|");
                     }
 
@@ -97,31 +104,31 @@ public class CommandParameter {
                 sb.append(psb);
                 sb.append(")");
 
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+">"+sb+")");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">" + sb + ")");
                 break;
             case BOOLEAN:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+">((true)|(false)))");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">((true)|(false)))");
                 break;
             case TIMECODE:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+">[\\dydhms]+)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">[\\dydhms]+)");
                 break;
             case INTEGER:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+">\\d+)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">\\d+)");
                 break;
             case DISCORD_ROLE:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><@&(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><@&(\\d+)>)");
                 break;
             case DISCORD_CHANNEL:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><#(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><#(\\d+)>)");
                 break;
             case DISCORD_USER:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><@!(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><@!(\\d+)>)");
                 break;
             case DISCORD_EMOTE:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+"><:[a-zA-Z0-9_]:(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><:[a-zA-Z0-9_]:(\\d+)>)");
                 break;
             default:
-                this.matchPattern = Pattern.compile("(?<"+this.regexName+">.+)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">.+)");
         }
     }
 }

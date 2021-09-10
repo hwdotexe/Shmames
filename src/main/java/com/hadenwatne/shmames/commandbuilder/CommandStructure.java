@@ -86,6 +86,10 @@ public class CommandStructure {
     }
 
     public CommandStructure build() {
+        for(CommandParameter parameter : this.parameters) {
+            parameter.buildRegexPattern();
+        }
+
         this.pattern = CommandBuilder.BuildPattern(this);
         this.usage = CommandBuilder.BuildUsage(this, false);
 
