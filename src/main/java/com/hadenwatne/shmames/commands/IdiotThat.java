@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.Message;
 import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
+// TODO watch this command for uses, and delete if no longer used.
 public class IdiotThat implements ICommand {
 	private final CommandStructure commandStructure;
 

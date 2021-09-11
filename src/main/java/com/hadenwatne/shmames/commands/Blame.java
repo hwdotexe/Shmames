@@ -50,7 +50,15 @@ public class Blame implements ICommand {
 			}
 		}
 
-		return lang.getMsg(Langs.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
+		String answer =  lang.getMsg(Langs.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
+
+		if (data.getMessagingChannel().hasHook()) {
+			String question = data.getArguments().getAsString("item");
+
+			return "> _Why " + question + "_\n" + answer;
+		}
+
+		return answer;
 	}
 	
 	@Override

@@ -61,7 +61,15 @@ public class Choose implements ICommand {
 				response = m.group(2 + Utils.getRandom(2));
 			}
 
-			return lang.getMsg(Langs.CHOOSE, new String[]{response});
+			String choice = lang.getMsg(Langs.CHOOSE, new String[]{response});
+
+			if (data.getMessagingChannel().hasHook()) {
+				String question = data.getArguments().getAsString("thisOrThat");
+
+				return "> _" + question + "_\n" + choice;
+			}
+
+			return choice;
 		} else {
 			return lang.getError(Errors.INCOMPLETE, true);
 		}

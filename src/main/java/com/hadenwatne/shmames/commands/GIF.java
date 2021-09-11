@@ -45,7 +45,13 @@ public class GIF implements ICommand {
 			}
 		}
 
-		return Utils.getGIF(search, "high");
+		String gif = Utils.getGIF(search, "high");
+
+		if (data.getMessagingChannel().hasHook()) {
+			return "> _" + search + "_\n" + gif;
+		}
+
+		return gif;
 	}
 	
 	@Override

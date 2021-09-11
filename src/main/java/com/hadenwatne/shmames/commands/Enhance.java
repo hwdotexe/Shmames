@@ -9,6 +9,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
 
+// TODO watch this command for uses, and delete if no longer used.
 public class Enhance implements ICommand {
 	private final CommandStructure commandStructure;
 	private String[] answers = new String[]{"Done - @PH is now solid gold.", "Done - @PH now smells nice.",
@@ -41,8 +42,13 @@ public class Enhance implements ICommand {
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		String item = data.getArguments().getAsString("thing");
+		String answer = answers[Utils.getRandom(answers.length)].replace("@PH", item);
 
-		return answers[Utils.getRandom(answers.length)].replace("@PH", item);
+		if (data.getMessagingChannel().hasHook()) {
+			return "> _Enhance " + item + "_\n" + answer;
+		}
+
+		return answer;
 	}
 
 	@Override

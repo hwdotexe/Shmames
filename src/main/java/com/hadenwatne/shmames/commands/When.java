@@ -24,7 +24,7 @@ public class When implements ICommand {
 	public When() {
 		this.commandStructure = CommandBuilder.Create("when", "I'll tell you when something will happen.")
 				.addParameters(
-						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING, false)
+						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING)
 				)
 				.build();
 	}
@@ -46,6 +46,12 @@ public class When implements ICommand {
 
 		while (m.find()) {
 			msg = msg.replaceFirst(m.group(), Integer.toString(Utils.getRandom(150) + 1));
+		}
+
+		if (data.getMessagingChannel().hasHook()) {
+			String question = data.getArguments().getAsString("event");
+
+			return "> _When " + question + "_\n" + msg;
 		}
 
 		return msg;
