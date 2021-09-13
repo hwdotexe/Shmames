@@ -295,7 +295,9 @@ public class CommandHandler {
 			match = commandName;
 		} else {
 			for(String alias : aliases) {
-				if(toMatch.startsWith(alias)) {
+				Matcher aliasBorderMatcher = Pattern.compile("^"+alias+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
+
+				if(aliasBorderMatcher.find()) {
 					match = alias;
 					break;
 				}

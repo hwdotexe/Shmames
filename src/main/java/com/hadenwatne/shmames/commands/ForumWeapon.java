@@ -73,6 +73,7 @@ public class ForumWeapon implements ICommand {
 								)
 								.build(),
 						CommandBuilder.Create("send", "Send a Forum Weapon.")
+								.addAlias("s")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
