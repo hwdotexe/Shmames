@@ -111,7 +111,7 @@ public class ReactListener extends ListenerAdapter {
 			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
 				LinkedHashMap<String, Object> tallyArgs = new LinkedHashMap<>();
 
-				tallyArgs.put("toTally", tallyValue);
+				tallyArgs.put("tallyName", tallyValue);
 
 				ShmamesCommandData data = new ShmamesCommandData(
 						c,

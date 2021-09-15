@@ -69,7 +69,7 @@ public class Modify implements ICommand {
 
 				eBuilder.setColor(Color.ORANGE);
 				eBuilder.setTitle(lang.getMsg(Langs.SETTING_LIST_TITLE));
-				eBuilder.setFooter("Do not include \"#\" or \":\" symbols. // Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
+				eBuilder.setFooter("Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
 
 				for(BotSetting v : brain.getSettings()) {
 					appendValueEmbedField(eBuilder, v, server);
