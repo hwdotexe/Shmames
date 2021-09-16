@@ -2,7 +2,6 @@ package com.hadenwatne.shmames.commandbuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -13,7 +12,7 @@ public class CommandStructure {
     private List<CommandParameter> parameters;
     private Pattern pattern;
     private String usage;
-    private List<CommandStructure> subcommands;
+    private List<CommandStructure> subCommands;
     private List<SubCommandGroup> subCommandGroups;
 
     public CommandStructure(String name, String description) {
@@ -21,7 +20,7 @@ public class CommandStructure {
         this.description = description;
         this.aliases = new ArrayList<>();
         this.parameters = new ArrayList<>();
-        this.subcommands = new ArrayList<>();
+        this.subCommands = new ArrayList<>();
         this.subCommandGroups = new ArrayList<>();
     }
 
@@ -65,12 +64,12 @@ public class CommandStructure {
         return this;
     }
 
-    public List<CommandStructure> getSubcommands() {
-        return this.subcommands;
+    public List<CommandStructure> getSubCommands() {
+        return this.subCommands;
     }
 
     public CommandStructure addSubCommands(CommandStructure... subcommand){
-        this.subcommands.addAll(Arrays.asList(subcommand));
+        this.subCommands.addAll(Arrays.asList(subcommand));
 
         return this;
     }

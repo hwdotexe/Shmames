@@ -22,9 +22,9 @@ public class CommandBuilder {
         CommandData data = new CommandData(structure.getName(), shortDesc);
 
         // If there are subcommands, add these instead.
-        if (structure.getSubcommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
+        if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
             // Add SubCommands.
-            for (CommandStructure subCommand : structure.getSubcommands()) {
+            for (CommandStructure subCommand : structure.getSubCommands()) {
                 String subShortDesc = subCommand.getDescription().length() > 100 ? (subCommand.getDescription().substring(0, 96) + "...") : subCommand.getDescription();
                 SubcommandData subCommandData = new SubcommandData(subCommand.getName(), subShortDesc);
 
@@ -131,8 +131,8 @@ public class CommandBuilder {
         }
 
         // Build pattern for subcommands.
-        if (command.getSubcommands().size() > 0) {
-            sb.append(BuildSubCommandPattern(command.getSubcommands()));
+        if (command.getSubCommands().size() > 0) {
+            sb.append(BuildSubCommandPattern(command.getSubCommands()));
         }
 
         // If the command has parameters of its own, add them after.
@@ -185,11 +185,12 @@ public class CommandBuilder {
             if(subCommand.getParameters().size() > 0) {
                 boolean anySubCommandParameterRequired = subCommand.getParameters().stream().anyMatch(CommandParameter::isRequired);
 
+                scb.append("\\s");
+
                 if(!anySubCommandParameterRequired) {
-                    scb.append("(");
+                    scb.append("?(");
                 }
 
-                scb.append("\\s");
                 scb.append(BuildParameterPattern(subCommand));
 
                 if(!anySubCommandParameterRequired) {
@@ -231,7 +232,7 @@ public class CommandBuilder {
 
     public static String BuildUsage(CommandStructure command, boolean boldCommandName) {
         StringBuilder sb = new StringBuilder();
-        List<CommandStructure> subCommands = command.getSubcommands();
+        List<CommandStructure> subCommands = command.getSubCommands();
         List<SubCommandGroup> subCommandGroups = command.getSubcommandGroups();
 
         if(boldCommandName) {

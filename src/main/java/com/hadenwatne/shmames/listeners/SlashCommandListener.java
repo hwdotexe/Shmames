@@ -10,7 +10,6 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class SlashCommandListener extends ListenerAdapter {
                     }
                 }
             } else if(event.getSubcommandName() != null) {
-                for (CommandStructure subCommand : command.getCommandStructure().getSubcommands()) {
+                for (CommandStructure subCommand : command.getCommandStructure().getSubCommands()) {
                     if(subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
                         subCommandData = new ShmamesSubCommandData(event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));
 

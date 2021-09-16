@@ -161,7 +161,7 @@ public class CommandHandler {
 
 				if(!hasGroup) {
 					// Build data for any subcommands this might have.
-					for (CommandStructure subCommand : c.getCommandStructure().getSubcommands()) {
+					for (CommandStructure subCommand : c.getCommandStructure().getSubCommands()) {
 						String startsWithSubCommandMatch = matchStringToCommand(args.toLowerCase(), subCommand.getName(), subCommand.getAliases());
 
 						if (startsWithSubCommandMatch != null) {
