@@ -3,26 +3,32 @@ package com.hadenwatne.shmames.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 
 public class SetTally implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public SetTally() {
+		this.commandStructure = CommandBuilder.Create("settally", "Overrides a tally with a new value, creating it if it didn't already exist.")
+				.addAlias("set tally")
+				.addParameters(
+						new CommandParameter("tallyName", "The tally to set.", ParameterType.STRING)
+								.setPattern("[\\w\\d\\s]+"),
+						new CommandParameter("count", "The new count of the tally", ParameterType.INTEGER)
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Overrides a tally with a new value, creating it if it didn't already exist.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "settally <tallyname> <count>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -31,40 +37,25 @@ public class SetTally implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^([\\w\\d\\s]+)\\s(\\d{1,3})$", Pattern.CASE_INSENSITIVE).matcher(args);
-		
-		if(m.find()) {
-			String tally = m.group(1).trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
-			int count = Integer.parseInt(m.group(2));
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String tallyName = data.getArguments().getAsString("tallyName");
+		tallyName = tallyName.trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
+		int tallyCount = data.getArguments().getAsInteger("count");
 
-			if(count > 0) {
-				brain.getTallies().put(tally, count);
+		if (tallyCount > 0) {
+			brain.getTallies().put(tallyName, tallyCount);
 
-				return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[] { tally, Integer.toString(count) });
-			} else {
-				brain.getTallies().remove(tally);
-
-				return lang.getMsg(Langs.TALLY_REMOVED, new String[] { tally });
-			}
+			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tallyName, Integer.toString(tallyCount)});
 		} else {
-			return lang.wrongUsage(getUsage());
+			brain.getTallies().remove(tallyName);
+
+			return lang.getMsg(Langs.TALLY_REMOVED, new String[]{tallyName});
 		}
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"settally", "set tally"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return true;
 	}
 }
+

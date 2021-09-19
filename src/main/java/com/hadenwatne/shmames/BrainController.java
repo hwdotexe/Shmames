@@ -9,10 +9,8 @@ import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.enums.UserListType;
 import com.hadenwatne.shmames.models.*;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import com.hadenwatne.shmames.models.data.*;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 
@@ -23,16 +21,64 @@ public class BrainController {
 	private MotherBrain motherBrain;
 	private Gson gson;
 	private List<Brain> brains;
+	private StorytimeStories stories;
+	private HangmanDictionaries dictionaries;
 
 	private final String BRAIN_PARENT_DIRECTORY = "brains";
 	private final String BRAIN_SERVER_DIRECTORY = BRAIN_PARENT_DIRECTORY + File.separator + "servers";
 	private final String MOTHER_BRAIN_FILE = "motherBrain.json";
+	private final String STORIES_FILE = "stories.json";
+	private final String HANGMAN_FILE = "hangman.json";
 
 	public BrainController() {
 		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		brains = new ArrayList<Brain>();
 
+		loadStories();
+		loadHangmanDictionaries();
 		loadMotherBrain();
+	}
+
+	public void loadStories() {
+		File storiesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + STORIES_FILE);
+
+		if(!storiesFile.exists()) {
+			try {
+				storiesFile.createNewFile();
+			}catch (Exception ignored) {}
+		}
+
+		String storiesData = Utils.loadFileAsString(storiesFile);
+
+		if (storiesData.length() > 0) {
+			stories = gson.fromJson(storiesData, StorytimeStories.class);
+		} else {
+			stories = new StorytimeStories();
+
+			stories.loadDefaults();
+			saveStories();
+		}
+	}
+
+	public void loadHangmanDictionaries() {
+		File dictionariesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + HANGMAN_FILE);
+
+		if(!dictionariesFile.exists()) {
+			try {
+				dictionariesFile.createNewFile();
+			}catch (Exception ignored) {}
+		}
+
+		String dictionariesData = Utils.loadFileAsString(dictionariesFile);
+
+		if (dictionariesData.length() > 0) {
+			dictionaries = gson.fromJson(dictionariesData, HangmanDictionaries.class);
+		} else {
+			dictionaries = new HangmanDictionaries();
+
+			dictionaries.loadDefaults();
+			saveDictionaries();
+		}
 	}
 
 	public void loadMotherBrain() {
@@ -137,7 +183,23 @@ public class BrainController {
 		
 		return b;
 	}
-	
+
+	/**
+	 * Retrieves the stories file.
+	 * @return The stories file.
+	 */
+	public StorytimeStories getStories() {
+		return stories;
+	}
+
+	/**
+	 * Retrieves the hangman dictionaries file.
+	 * @return The dictionaries file.
+	 */
+	public HangmanDictionaries getDictionaries() {
+		return dictionaries;
+	}
+
 	/**
 	 * Retrieves the global settings file for the bot.
 	 * @return The global settings file.
@@ -167,5 +229,19 @@ public class BrainController {
 	 */
 	public void saveMotherBrain() {
 		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, MOTHER_BRAIN_FILE , gson.toJson(motherBrain).getBytes());
+	}
+
+	/**
+	 * Saves the file that contains stories.
+	 */
+	public void saveStories() {
+		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, STORIES_FILE , gson.toJson(stories).getBytes());
+	}
+
+	/**
+	 * Saves the file that contains hangman dictionaries.
+	 */
+	public void saveDictionaries() {
+		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, HANGMAN_FILE , gson.toJson(dictionaries).getBytes());
 	}
 }

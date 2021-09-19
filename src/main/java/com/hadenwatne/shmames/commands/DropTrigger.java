@@ -1,27 +1,33 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.models.Lang;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.models.Brain;
 
 import javax.annotation.Nullable;
 
 public class DropTrigger implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public DropTrigger() {
+		this.commandStructure = CommandBuilder.Create("droptrigger", "Removes an existing trigger word or phrase.")
+				.addAlias("drop trigger")
+				.addParameters(
+						new CommandParameter("triggerWord", "The trigger to remove.", ParameterType.STRING)
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Removes an existing trigger word or phrase.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "droptrigger <triggerWord>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -30,32 +36,20 @@ public class DropTrigger implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(args.length() > 0) {
-			if (!args.equalsIgnoreCase(Shmames.getBotName())) {
-				if (brain.getTriggers().containsKey(args)) {
-					brain.getTriggers().remove(args);
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		String triggerWord = data.getArguments().getAsString("triggerWord");
 
-					return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ args });
-				} else
-					return lang.getError(Errors.NOT_FOUND, true);
-			} else {
-				return lang.getError(Errors.CANNOT_DELETE, true);
-			}
-		} else {
-			return lang.getError(Errors.INCOMPLETE, true);
+		if(triggerWord.equalsIgnoreCase(Shmames.getBotName())) {
+			return lang.getError(Errors.CANNOT_DELETE, true);
 		}
-	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"droptrigger", "drop trigger", "remove trigger"};
-	}
+		if (brain.getTriggers().containsKey(triggerWord)) {
+			brain.getTriggers().remove(triggerWord);
 
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
+			return lang.getMsg(Langs.ITEM_REMOVED, new String[]{ triggerWord });
+		} else {
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
 	}
 	
 	@Override

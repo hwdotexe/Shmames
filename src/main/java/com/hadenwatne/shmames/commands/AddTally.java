@@ -1,28 +1,31 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 
 public class AddTally implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public AddTally() {
+		this.commandStructure = CommandBuilder.Create("addtally", "Increments a tally, or creates one if it doesn't exist.")
+				.addAlias("add tally")
+				.addAlias("add a tally to")
+				.addParameters(
+						new CommandParameter("tallyName", "The tally to increment.", ParameterType.STRING)
+								.setPattern("[\\w\\d\\s]+")
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Increments a tally, or creates one if it doesn't exist.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "addtally <tallyname>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -31,38 +34,16 @@ public class AddTally implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^[\\w\\d\\s]+$", Pattern.CASE_INSENSITIVE).matcher(args);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String tallyArg = data.getArguments().getAsString("tallyName");
+		String tally = tallyArg.trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
+		int newTally = brain.getTallies().getOrDefault(tally, 0) + 1;
 
-		if(m.find()) {
-			String tally = m.group().trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
-			int tallyNum = 0;
+		brain.getTallies().put(tally, newTally);
 
-			if (brain.getTallies().containsKey(tally)) {
-				tallyNum = brain.getTallies().get(tally) + 1;
-			} else {
-				tallyNum = 1;
-			}
-
-			brain.getTallies().put(tally, tallyNum);
-
-			return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{ tally, Integer.toString(tallyNum) });
-		}else{
-			return lang.getError(Errors.WRONG_USAGE, true);
-		}
+		return lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)});
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"addtally", "add tally", "add a tally to"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return true;

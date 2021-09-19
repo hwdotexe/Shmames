@@ -1,31 +1,38 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
 
 public class AddTrigger implements ICommand {
-	private Lang lang;
-	private Brain brain;
+	private final CommandStructure commandStructure;
+
+	public AddTrigger() {
+		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger to add", ParameterType.SELECTION);
+
+		for (TriggerType type : TriggerType.values()) {
+			triggerType.addSelectionOptions(type.name());
+		}
+
+		this.commandStructure = CommandBuilder.Create("addtrigger", "Creates a new trigger word or phrase, which then sends a response for the given type.")
+				.addAlias("add trigger")
+				.addParameters(
+						triggerType,
+						new CommandParameter("triggerWord", "The trigger word to use", ParameterType.STRING)
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Creates a new trigger word or phrase, which then sends a response for the " +
-				"given type.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "addtrigger <triggerType> <triggerWord>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -34,52 +41,32 @@ public class AddTrigger implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^([a-zA-Z]{3,7}) ([\\w \\-]{3,})$").matcher(args);
-		
-		if(m.find()) {
-			String newtrigger = m.group(2);
-			String nttype = m.group(1);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String nttype = data.getArguments().getAsString("triggerType");
+		String newtrigger = data.getArguments().getAsString("triggerWord");
 
-			// Easter egg: "ronald" -> "hate"
-			nttype = nttype.toLowerCase().equals("ronald") ? "HATE" : nttype;
-			
-			if (!brain.getTriggers().keySet().contains(newtrigger)) {
-				if (TriggerType.byName(nttype) != null) {
-					brain.getTriggers().put(newtrigger, TriggerType.byName(nttype));
+		if (!brain.getTriggers().containsKey(newtrigger)) {
+			if (TriggerType.byName(nttype) != null) {
+				brain.getTriggers().put(newtrigger, TriggerType.byName(nttype));
 
-					return lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[] { TriggerType.byName(nttype).toString(), newtrigger });
-				} else {
-					StringBuilder types = new StringBuilder();
-
-					for (TriggerType t : TriggerType.values()) {
-						if(types.length() > 0)
-							types.append(", ");
-						
-						types.append("`").append(t.name()).append("`");
-					}
-
-					return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[] { types.toString() });
-				}
+				return lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[]{nttype, newtrigger});
 			} else {
-				return lang.getError(Errors.ALREADY_EXISTS, true);
+				StringBuilder types = new StringBuilder();
+
+				for (TriggerType t : TriggerType.values()) {
+					if (types.length() > 0)
+						types.append(", ");
+
+					types.append("`").append(t.name()).append("`");
+				}
+
+				return lang.getMsg(Langs.INVALID_TRIGGER_TYPE, new String[]{types.toString()});
 			}
 		} else {
-			return lang.wrongUsage(getUsage());
+			return lang.getError(Errors.ALREADY_EXISTS, true);
 		}
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"addtrigger", "add trigger"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return true;

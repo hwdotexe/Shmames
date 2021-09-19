@@ -9,9 +9,10 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
-import com.hadenwatne.shmames.models.BotSetting;
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.listeners.SlashCommandListener;
+import com.hadenwatne.shmames.models.data.BotSetting;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -28,6 +29,7 @@ public final class Shmames {
 	private static LangLoader langs;
 	private static String botName;
 	private static MusicManager musicManager;
+	private static CommandHandler commandHandler;
 	
 	public static boolean isDebug;
 	public static List<BotSetting> defaultBotSettings;
@@ -65,8 +67,12 @@ public final class Shmames {
 				// Set the bot name.
 				botName = getJDA().getSelfUser().getName();
 
+				// Load commands.
+				commandHandler = new CommandHandler();
+
 				// Begin listening for events.
 				jda.addEventListener(new ChatListener());
+				jda.addEventListener(new SlashCommandListener());
 				jda.addEventListener(new ReactListener());
 				jda.addEventListener(new FirstJoinListener());
 
@@ -94,6 +100,10 @@ public final class Shmames {
 
 	public static MusicManager getMusicManager() {
 		return musicManager;
+	}
+
+	public static CommandHandler getCommandHandler() {
+		return commandHandler;
 	}
 	
 	/**

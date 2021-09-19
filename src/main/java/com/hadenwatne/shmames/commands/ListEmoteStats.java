@@ -3,28 +3,30 @@ package com.hadenwatne.shmames.commands;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
 import com.hadenwatne.shmames.Utils;
-import com.hadenwatne.shmames.models.Brain;
-
-import javax.annotation.Nullable;
 
 public class ListEmoteStats implements ICommand {
-	private Brain brain;
-	private Lang lang;
+	private final CommandStructure commandStructure;
+
+	public ListEmoteStats() {
+		this.commandStructure = CommandBuilder.Create("listemotestats", "View emote usage statistics.")
+				.addAlias("list emote stats")
+				.addAlias("showemotestats")
+				.addAlias("show emote stats")
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "View emote usage statistics.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "listEmoteStats";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -33,59 +35,49 @@ public class ListEmoteStats implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		Guild server = data.getServer();
 		StringBuilder statMsg = new StringBuilder("**" + lang.getMsg(Langs.EMOTE_STATS_TITLE) + "**\n");
 		HashMap<String, Integer> emStats = new HashMap<String, Integer>(brain.getEmoteStats());
-		
+
 		// Add emotes without any uses
-		for(Emote e : message.getGuild().getEmotes()) {
-			if(!emStats.containsKey(Long.toString(e.getIdLong()))) {
+		for (Emote e : server.getEmotes()) {
+			if (!emStats.containsKey(Long.toString(e.getIdLong()))) {
 				emStats.put(Long.toString(e.getIdLong()), 0);
 			}
 		}
-		
+
 		// Sort
 		LinkedHashMap<String, Integer> emotes = Utils.sortHashMap(emStats);
-		
+
 		// Send to the server
-		if(emotes.keySet().size() > 0) {
+		if (emotes.keySet().size() > 0) {
 			int i = 0;
-			
-			for(String em : emotes.keySet()) {
-				Emote emote = message.getGuild().getEmoteById(em);
-				
-				if(emote != null) {
+
+			for (String em : emotes.keySet()) {
+				Emote emote = server.getEmoteById(em);
+
+				if (emote != null) {
 					i++;
-					
-					if(i > 5) {
+
+					if (i > 5) {
 						statMsg.append("\n");
 						i = 1;
 					}
-					
+
 					statMsg.append(emote.getAsMention())
 							.append(": ")
 							.append(emotes.get(em))
 							.append("  ");
 				}
 			}
-		}else {
+		} else {
 			statMsg.append("\nThere's nothing here!");
 		}
 
 		return statMsg.toString();
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"listemotestats", "list emote stats", "show emote stats", "showemotestats"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-		this.brain = brain;
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return true;

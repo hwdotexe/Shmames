@@ -1,25 +1,29 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
 
-import javax.annotation.Nullable;
-
 public class Wiki implements ICommand {
-	private Lang lang;
+	private final CommandStructure commandStructure;
+
+	public Wiki() {
+		this.commandStructure = CommandBuilder.Create("wiki", "Ask the oracle your question, and I shall answer. That, or the Internet will.")
+				.addParameters(
+						new CommandParameter("query", "A short search query", ParameterType.STRING)
+						.setPattern(".{3,150}")
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Ask the oracle your question, and I shall answer. That, or the Internet will.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "wiki <short question>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -28,22 +32,10 @@ public class Wiki implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		if(args.length() > 0)
-			return Utils.getWolfram(args);
-		else {
-			return lang.getError(Errors.INCOMPLETE, true);
-		}
-	}
+	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+		String query = data.getArguments().getAsString("query");
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"wiki"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
+		return Utils.getWolfram(query);
 	}
 	
 	@Override

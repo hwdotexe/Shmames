@@ -1,149 +1,129 @@
 package com.hadenwatne.shmames.listeners;
 
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageReaction;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.shmames.CommandHandler;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.data.Brain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ReactListener extends ListenerAdapter {
-	private List<String> goodTallyCache;
-	private List<String> badTallyCache;
+	private List<String> talliedMessageCache;
 
 	public ReactListener(){
-		goodTallyCache = new ArrayList<String>();
-		badTallyCache = new ArrayList<String>();
+		talliedMessageCache = new ArrayList<>();
 	}
 
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
 		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
-			ReactionEmote emo = e.getReaction().getReactionEmote();
-			Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+			if(e.isFromGuild()) {
+				ReactionEmote emo = e.getReaction().getReactionEmote();
 
-			// Tally up the emote.
-			if(emo.isEmote()) {
-				if(e.getGuild().getEmotes().contains(emo.getEmote())) {
-					Utils.incrementEmoteTally(b, emo.getId());
-				}
+				// Only test custom server Emotes.
+				if (emo.isEmote()) {
+					Guild server = e.getGuild();
 
-				// Removal emote.
-				String removalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
+					if (server.getEmotes().contains(emo.getEmote())) {
+						Brain b = Shmames.getBrains().getBrain(server.getId());
+						Message message = e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete();
+						String removalEmoteID = b.getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
+						String approvalEmoteID = b.getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
 
-				if (emo.getId().equals(removalEmote)) {
-					badTallyMessage(removalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete(), b);
-					return;
-				}
+						Utils.incrementEmoteTally(b, emo.getId());
 
-				// Approval emote.
-				String approvalEmote = Shmames.getBrains().getBrain(e.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
-
-				if (emo.getId().equals(approvalEmote)) {
-					goodTallyMessage(approvalEmote, e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete(), b);
-					return;
-				}
-			}
-		}
-	}
-
-	/**
-	 * When a message receives the "badtally" emote, check to see if it hit the threshold. If so,
-	 * delete the message and increment the tally.
-	 * @param removalEmote The name of the emote used to remove messages.
-	 * @param m The Message this reaction occurred on.
-	 */
-	private void badTallyMessage(String removalEmote, Message m, Brain b) {
-		int threshold = Integer.parseInt(Shmames.getBrains().getBrain(m.getGuild().getId()).getSettingFor(BotSettingName.REMOVAL_THRESHOLD).getValue());
-		int votes = 0;
-
-		for(MessageReaction r : m.getReactions()) {
-			if(r.getReactionEmote().isEmote()) {
-				if (r.getReactionEmote().getId().equalsIgnoreCase(removalEmote)) {
-					votes = r.getCount();
-
-					break;
-				}
-			}
-		}
-
-		if(votes == threshold){
-			if(!badTallyCache.contains(m.getId())) {
-				badTallyCache.add(m.getId());
-
-				String name = m.getAuthor().getName();
-				name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
-				String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "badbot" : "bad" + name;
-
-				// Remove the message & process
-				try {
-					m.getChannel().deleteMessageById(m.getIdLong()).queue();
-
-					for (ICommand c : CommandHandler.getLoadedCommands()) {
-						for (String a : c.getAliases()) {
-							if (a.equalsIgnoreCase("addtally")) {
-								c.setRunContext(Shmames.getLangFor(b), b);
-								String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-								m.getChannel().sendMessage(response).queue();
-								return;
-							}
-						}
-					}
-				} catch (Exception ex) {
-					m.getChannel().sendMessage(Shmames.getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
-				}
-			}
-		}
-	}
-
-	/**
-	 * When a message receives the "goodtally" emote, check to see if it hit the threshold. If so,
-	 * give the user a good tally.
-	 * @param approvalEmote The name of the emote used to remove messages.
-	 * @param m The Message this reaction occurred on.
-	 */
-	private void goodTallyMessage(String approvalEmote, Message m ,Brain b) {
-		int threshold = Integer.parseInt(Shmames.getBrains().getBrain(m.getGuild().getId()).getSettingFor(BotSettingName.APPROVAL_THRESHOLD).getValue());
-		int votes = 0;
-
-		for(MessageReaction r : m.getReactions()) {
-			if(r.getReactionEmote().isEmote()) {
-				if (r.getReactionEmote().getId().equalsIgnoreCase(approvalEmote)) {
-					votes = r.getCount();
-
-					break;
-				}
-			}
-		}
-
-		if(votes == threshold){
-			if(!goodTallyCache.contains(m.getId())) {
-				goodTallyCache.add(m.getId());
-
-				String name = m.getAuthor().getName();
-				name = name.replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
-				String toTally = name.equalsIgnoreCase(Shmames.getJDA().getSelfUser().getName()) ? "goodbot" : "good" + name;
-
-				// Process.
-				for (ICommand c : CommandHandler.getLoadedCommands()) {
-					for (String a : c.getAliases()) {
-						if (a.equalsIgnoreCase("addtally")) {
-							c.setRunContext(Shmames.getLangFor(b), b);
-							String response = c.run(toTally, Shmames.getJDA().getSelfUser(), m);
-							m.getChannel().sendMessage(response).queue();
+						if (emo.getId().equals(removalEmoteID)) {
+							tallyMessage(removalEmoteID, message, b, BotSettingName.REMOVAL_THRESHOLD);
 							return;
 						}
+
+						if (emo.getId().equals(approvalEmoteID)) {
+							tallyMessage(approvalEmoteID, message, b, BotSettingName.APPROVAL_THRESHOLD);
+						}
 					}
 				}
+			}
+		}
+	}
+
+	private void tallyMessage(String emoteID, Message message, Brain brain, BotSettingName setting) {
+		int threshold = Integer.parseInt(brain.getSettingFor(setting).getValue());
+		int votes = 0;
+
+		// Set the votes variable to this emote's count on the message.
+		for(MessageReaction r : message.getReactions()) {
+			if(r.getReactionEmote().isEmote()) {
+				if (r.getReactionEmote().getId().equalsIgnoreCase(emoteID)) {
+					votes = r.getCount();
+
+					break;
+				}
+			}
+		}
+
+		// Give the user a tally based on the emote used.
+		if(votes == threshold){
+			if(!talliedMessageCache.contains(message.getId())) {
+				talliedMessageCache.add(message.getId());
+
+				User author = message.getAuthor();
+				MessageChannel channel = message.getChannel();
+				String tallyPrefix = setting == BotSettingName.APPROVAL_THRESHOLD ? "bad" : "good";
+				String toTally;
+
+				if(author.getId().equals(Shmames.getJDA().getSelfUser().getId())) {
+					toTally = tallyPrefix+"bot";
+				} else {
+					String authorName = author.getName().replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
+					toTally = tallyPrefix+authorName;
+				}
+
+				runAddTallyCommand(toTally, brain, message);
+
+				// Try to delete the message if this was a "bad" tally.
+				if(setting == BotSettingName.REMOVAL_THRESHOLD) {
+					try {
+						channel.deleteMessageById(message.getIdLong()).queue();
+					} catch (Exception ex) {
+						channel.sendMessage(Shmames.getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
+					}
+				}
+			}
+		}
+	}
+
+	private void runAddTallyCommand(String tallyValue, Brain brain, Message message) {
+		MessageChannel channel = message.getTextChannel();
+
+		for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
+			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
+				LinkedHashMap<String, Object> tallyArgs = new LinkedHashMap<>();
+
+				tallyArgs.put("tallyName", tallyValue);
+
+				ShmamesCommandData data = new ShmamesCommandData(
+						c,
+						new ShmamesCommandArguments(tallyArgs),
+						new ShmamesCommandMessagingChannel(message, channel),
+						Shmames.getJDA().getSelfUser(),
+						message.getGuild()
+				);
+
+				String response = c.run(Shmames.getLangFor(brain), brain, data);
+				channel.sendMessage(response).queue();
+				return;
 			}
 		}
 	}

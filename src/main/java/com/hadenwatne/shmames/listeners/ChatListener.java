@@ -8,117 +8,109 @@ import java.util.regex.Pattern;
 import com.hadenwatne.shmames.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.command.ParsedCommandResult;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.models.Response;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ChatListener extends ListenerAdapter {
-	private CommandHandler cmd;
-	private Lang defLang;
-	
-	public ChatListener() {
-		cmd = new CommandHandler();
-		defLang = Shmames.getDefaultLang();
-	}
+	private final Lang defaultLang = Shmames.getDefaultLang();
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if (!e.getAuthor().isBot()) {
-			String message = e.getMessage().getContentRaw();
+			Message message = e.getMessage();
+			String messageText = message.getContentRaw();
 
-			// Process the message based on the channel type and message text.
-			if (e.getChannelType() == ChannelType.TEXT) {
+			if(e.isFromGuild()) {
 				Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
+				Guild server = e.getGuild();
 
-				// Jinping reactions.
+				// React to every message, even commands, with a PingPong emoji if Jinping Mode is on.
 				if (brain.getJinping())
 					e.getMessage().addReaction("\uD83C\uDFD3").queue();
 
-				if (!brain.getTimeout()) {
-					// Check for command triggers.
-					for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
-						Matcher m = Pattern.compile("^(" + trigger + ")(.+)?$", Pattern.CASE_INSENSITIVE).matcher(message);
+				// Check if this message is trying to run a command.
+				for (String trigger : brain.getTriggers(TriggerType.COMMAND)) {
+					if (messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
+						String command = messageText.substring(trigger.length()).trim();
 
-						if (m.matches()) {
-							if(m.group(2) != null){
-								String command = m.group(2).trim();
+						// Send to the command handler for further processing.
+						Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), server, brain);
 
-								// Send to the command handler for further processing.
-								cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), e.getGuild());
-							}else{
-								e.getTextChannel().sendMessage(defLang.getError(Errors.HEY_THERE, false, new String[] { Shmames.getBotName() })).queue();
-							}
-
-							return;
-						}
+						return;
 					}
+				}
 
-					// Gather emoji stats.
-					for (Emote emo : e.getMessage().getEmotes()) {
-						if (e.getGuild().getEmotes().contains(emo)) {
-							String id = Long.toString(emo.getIdLong());
-							Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+				// A command did not run, so perform other tasks.
+				tallyServerEmotes(message, server, brain);
 
-							Utils.incrementEmoteTally(b, id);
-						}
-					}
+				// Handle other trigger types.
+				boolean didTrigger = handleResponseTriggers(brain, message, server);
 
-					// Process other triggers.
-					for (TriggerType type : TriggerType.values()) {
-						for (String trigger : brain.getTriggers(type)) {
-							Matcher m = Pattern.compile("\\b"+trigger+"\\b", Pattern.CASE_INSENSITIVE).matcher(message);
-
-							if (m.find()) {
-								if (type != TriggerType.COMMAND) {
-									if (type != TriggerType.REACT) {
-										sendRandom(e.getTextChannel(), type, e.getMessage());
-									} else {
-										List<Emote> em = new ArrayList<Emote>(e.getGuild().getEmotes());
-
-										for(String s : brain.getFamilies()){
-											Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(s);
-
-											if(f != null){
-												for(long g : f.getMemberGuilds()){
-													if(e.getGuild().getIdLong() == g)
-														continue;
-
-													Guild guild = Shmames.getJDA().getGuildById(g);
-
-													if(guild == null)
-														continue;
-
-													em.addAll(guild.getEmotes());
-												}
-											}
-										}
-
-										e.getMessage().addReaction(em.get(Utils.getRandom(em.size()))).queue();
-									}
-
-									return;
-								}
-							}
-						}
-					}
-
-					// Bot gives its two cents.
-					if (Utils.getRandom(150) == 0) {
+				// Send a random message. Randomly.
+				if(!didTrigger) {
+					if (Utils.getRandom(175) == 0) {
 						sendRandom(e.getTextChannel(), TriggerType.RANDOM, e.getMessage());
 					}
 				}
-			} else if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
-				if (message.toLowerCase().startsWith(Shmames.getBotName().toLowerCase())) {
-					String command = message.substring(Shmames.getBotName().length()).trim();
+			} else {
+				if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
+					final String botNameLower = Shmames.getBotName().toLowerCase();
 
-					cmd.PerformCommand(command, e.getMessage(), e.getAuthor(), null);
+					if (messageText.toLowerCase().startsWith(botNameLower)) {
+						String command = messageText.substring(botNameLower.length()).trim();
+
+						// Send to the command handler for further processing.
+						Shmames.getCommandHandler().PerformCommand(command, message,null, null);
+					}
 				}
 			}
 		}
+	}
+
+	private void tallyServerEmotes(Message message, Guild server, Brain brain) {
+		for (Emote emo : message.getEmotes()) {
+			if (server.getEmotes().contains(emo)) {
+				String id = Long.toString(emo.getIdLong());
+
+				Utils.incrementEmoteTally(brain, id);
+			}
+		}
+	}
+
+	private boolean handleResponseTriggers(Brain brain, Message message, Guild server) {
+		for (TriggerType type : TriggerType.values()) {
+			if (type != TriggerType.COMMAND) {
+				for (String trigger : brain.getTriggers(type)) {
+					Matcher m = Pattern.compile("\\b" + trigger + "\\b", Pattern.CASE_INSENSITIVE).matcher(message.getContentRaw());
+
+					if (m.find()) {
+						TextChannel channel = message.getTextChannel();
+
+						if (type != TriggerType.REACT) {
+							sendRandom(channel, type, message);
+						} else {
+							List<Emote> em = new ArrayList<Emote>(server.getEmotes());
+
+							for(Guild fg : Utils.GetConnectedFamilyGuilds(brain, server)) {
+								em.addAll(fg.getEmotes());
+							}
+
+							message.addReaction(em.get(Utils.getRandom(em.size()))).queue();
+						}
+
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

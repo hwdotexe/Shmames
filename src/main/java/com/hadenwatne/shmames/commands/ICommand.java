@@ -1,24 +1,19 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 
 import javax.annotation.Nullable;
 
 public interface ICommand {
 	/**
-	 * Returns a description of the command.
-	 * @return About information.
+	 * Returns structure data for how to validate
+	 * and use this command.
+	 * @return A CommandStructure object.
 	 */
-	String getDescription();
-	
-	/**
-	 * Returns the basic command structure string.
-	 * @return Usage information.
-	 */
-	String getUsage();
+	CommandStructure getCommandStructure();
 
 	/**
 	 * Returns command examples.
@@ -28,24 +23,13 @@ public interface ICommand {
 	
 	/**
 	 * Runs the command code.
-	 * @param args Command arguments.
-	 * @param author The user trying to run the command.
-	 * @param message The message that triggered this command.
+	 * @param lang The language file to use.
+	 * @param brain The brain of the server this command is calling from, if available.
+	 * @param data Data about the command call and how to return the result.
 	 * @return A string response, if applicable.
 	 */
-	String run(String args, User author, Message message);
-	
-	/**
-	 * Returns a list of command aliases for this item.
-	 * @return A list of aliases.
-	 */
-	String[] getAliases();
-	
-	/**
-	 * Used to provide context data to the command.
-	 */
-	void setRunContext(Lang lang, @Nullable Brain brain);
-	
+	String run(Lang lang, @Nullable Brain brain, ShmamesCommandData data);
+
 	/**
 	 * Sets whether this command must be run in a Guild.
 	 * @return Whether this must be a Guild.

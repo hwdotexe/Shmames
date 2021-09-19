@@ -7,23 +7,31 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.Utils;
 
-import javax.annotation.Nullable;
-
 public class Roll implements ICommand {
-	@Override
-	public String getDescription() {
-		return "Roll some dice!\nEach operation is done to the result of the previous.";
+	private final CommandStructure commandStructure;
+	private final Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
+
+	public Roll() {
+		this.commandStructure = CommandBuilder.Create("roll", "Roll some dice with optional modifiers.")
+				.addParameters(
+						new CommandParameter("dice", "The dice to roll.", ParameterType.STRING)
+								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
+				)
+				.build();
 	}
-	
+
 	@Override
-	public String getUsage() {
-		return "roll a #d#";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -36,53 +44,40 @@ public class Roll implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
-		Matcher cmdFormat = Pattern.compile("^([+\\-*/\\d\\s()d\\^tkhl]+)$", Pattern.CASE_INSENSITIVE).matcher(args);
-		Matcher dice = dicePattern.matcher(args);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		String diceArg = data.getArguments().getAsString("dice");
+		Matcher dice = dicePattern.matcher(diceArg);
+		List<String> diceOps = new ArrayList<String>();
 
-		if(cmdFormat.matches()){
-			List<String> diceOps = new ArrayList<String>();
-
-			while(dice.find()){
-				diceOps.add(dice.group().replaceAll("\\s", ""));
-			}
-
-			try {
-				message.delete().queue();
-			} catch (Exception ignored) {}
-
-			String rollResult = processRoll(dicePattern, diceOps);
-
-			return ":game_die: "+author.getAsMention()+"\n> "+rollResult;
-		}else{
-			return "Try `roll a d20`, or use `help roll` for more details!";
+		while (dice.find()) {
+			diceOps.add(dice.group().replaceAll("\\s", ""));
 		}
+
+		try {
+			if (data.getMessagingChannel().hasOriginMessage()) {
+				data.getMessagingChannel().getOriginMessage().delete().queue();
+			}
+		} catch (Exception ignored) {
+		}
+
+		String rollResult = processRoll(dicePattern, diceOps);
+
+		return ":game_die: " + data.getAuthor().getAsMention() + "\n> " + rollResult;
 	}
 
-	@Override
-	public String[] getAliases() {
-		return new String[] {"roll a", "roll"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-
-	}
-	
 	@Override
 	public boolean requiresGuild() {
 		return false;
 	}
 
-	private String processRoll(Pattern p, List<String> diceRolls){
+	private String processRoll(Pattern p, List<String> diceRolls) {
 		int runningTotal = 0;
 		StringBuilder rollSB = new StringBuilder();
 
-		for(String dRollString : diceRolls){
+		for (String dRollString : diceRolls) {
 			Matcher m = p.matcher(dRollString);
 
-			if(m.find()) {
+			if (m.find()) {
 				String opGroup = m.group(1);
 				String diceGroup = m.group(3);
 				String takeHighLowGroup = m.group(6);
@@ -99,35 +94,35 @@ public class Roll implements ICommand {
 				StringBuilder diceSB = new StringBuilder();
 
 				// Run some safety checks first.
-				if(diceToRoll == 0)
+				if (diceToRoll == 0)
 					diceToRoll = 1;
 
-				if(isDice){
+				if (isDice) {
 					// Random
-					HashMap<Integer, Integer> rolls = new HashMap<Integer,Integer>();
+					HashMap<Integer, Integer> rolls = new HashMap<Integer, Integer>();
 
 					diceSB.append(diceToRoll);
 					diceSB.append("d");
 					diceSB.append(diceSizeOrFlat);
 					diceSB.append(" [");
 
-					for(int i=0; i<diceToRoll; i++){
-						int roll = Utils.getRandom(diceSizeOrFlat)+1;
+					for (int i = 0; i < diceToRoll; i++) {
+						int roll = Utils.getRandom(diceSizeOrFlat) + 1;
 
 						rolls.put(i, roll);
 					}
 
-					switch(takeHighLow) {
+					switch (takeHighLow) {
 						case 'h':
-							if(takeHighLowCount > 0) {
+							if (takeHighLowCount > 0) {
 								// Safety
-								if(rolls.size() < takeHighLowCount)
+								if (rolls.size() < takeHighLowCount)
 									takeHighLowCount = rolls.size();
 
 								List<Integer> highestRolls = new ArrayList<Integer>();
-								HashMap<Integer, Integer> tempRolls = new HashMap<Integer,Integer>(rolls);
+								HashMap<Integer, Integer> tempRolls = new HashMap<Integer, Integer>(rolls);
 
-								for(int i=0; i<takeHighLowCount; i++){
+								for (int i = 0; i < takeHighLowCount; i++) {
 									int max = Collections.max(tempRolls.values());
 									int roll = getMapKeyFromValue(tempRolls, max);
 
@@ -151,15 +146,15 @@ public class Roll implements ICommand {
 							}
 							break;
 						case 'l':
-							if(takeHighLowCount > 0) {
+							if (takeHighLowCount > 0) {
 								// Safety
-								if(rolls.size() < takeHighLowCount)
+								if (rolls.size() < takeHighLowCount)
 									takeHighLowCount = rolls.size();
 
 								List<Integer> lowestRolls = new ArrayList<Integer>();
-								HashMap<Integer, Integer> tempRolls = new HashMap<Integer,Integer>(rolls);
+								HashMap<Integer, Integer> tempRolls = new HashMap<Integer, Integer>(rolls);
 
-								for(int i=0; i<takeHighLowCount; i++){
+								for (int i = 0; i < takeHighLowCount; i++) {
 									int min = Collections.min(tempRolls.values());
 									int roll = getMapKeyFromValue(tempRolls, min);
 
@@ -183,7 +178,7 @@ public class Roll implements ICommand {
 							}
 							break;
 						default:
-							for(int roll : rolls.values()){
+							for (int roll : rolls.values()) {
 								subTotal += roll;
 							}
 
@@ -191,13 +186,13 @@ public class Roll implements ICommand {
 					}
 
 					diceSB.append("]");
-				}else{
+				} else {
 					// Flat modifier.
 					subTotal += diceSizeOrFlat;
 					diceSB.append(diceSizeOrFlat);
 				}
 
-				switch(operation){
+				switch (operation) {
 					case '-':
 						runningTotal -= subTotal;
 						break;
@@ -211,7 +206,7 @@ public class Roll implements ICommand {
 						runningTotal += subTotal;
 				}
 
-				if(rollSB.length() > 0) {
+				if (rollSB.length() > 0) {
 					rollSB.append(" ");
 					rollSB.append(operation);
 					rollSB.append(" ");
@@ -229,8 +224,8 @@ public class Roll implements ICommand {
 	}
 
 	private int getMapKeyFromValue(HashMap<Integer, Integer> map, int check) {
-		for(int key : map.keySet()) {
-			if(map.get(key) == check){
+		for (int key : map.keySet()) {
+			if (map.get(key) == check) {
 				return key;
 			}
 		}
@@ -241,26 +236,26 @@ public class Roll implements ICommand {
 	private String drawRollResults(HashMap<Integer, Integer> rolls, List<Integer> keepRolls, int toBold) {
 		StringBuilder sb = new StringBuilder();
 
-		for(int rollNum : rolls.keySet()) {
+		for (int rollNum : rolls.keySet()) {
 			int roll = rolls.get(rollNum);
 
-			if(sb.length() > 0){
+			if (sb.length() > 0) {
 				sb.append(", ");
 			}
 
-			if(keepRolls != null && !keepRolls.contains(rollNum)){
+			if (keepRolls != null && !keepRolls.contains(rollNum)) {
 				sb.append("~~");
 			}
 
-			if(roll == toBold || (toBold == 20 && roll == 1)){
+			if (roll == toBold || (toBold == 20 && roll == 1)) {
 				sb.append("**");
 				sb.append(roll);
 				sb.append("**");
-			}else{
+			} else {
 				sb.append(roll);
 			}
 
-			if(keepRolls != null && !keepRolls.contains(rollNum)){
+			if (keepRolls != null && !keepRolls.contains(rollNum)) {
 				sb.append("~~");
 			}
 		}

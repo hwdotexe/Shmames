@@ -15,7 +15,7 @@ public enum BotSettingName {
 	SERVER_LANG("Sets which Lang preset to use on this server."),
 	PRUNE_FW("Sets the role (other than Administrator) allowed to prune Forum Weapons.");
 
-	private String description;
+	private final String description;
 
 	BotSettingName(String desc){
 		this.description = desc;

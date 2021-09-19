@@ -2,12 +2,9 @@ package com.hadenwatne.shmames;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hadenwatne.shmames.ShmamesLogger;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.data.Lang;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -12,14 +12,14 @@ import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.BotSetting;
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.data.BotSetting;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -245,25 +245,30 @@ public class Utils {
 	 * Checks whether the member complies with the setting's permission
 	 * requirements, if applicable.
 	 * @param setting The setting to check.
-	 * @param member The user to check.
+	 * @param user The user to check.
 	 * @return A boolean representing whether the user complies.
 	 */
-	public static boolean checkUserPermission(BotSetting setting, Member member) {
-		if (setting.getType() == BotSettingType.ROLE) {
-			String sv = setting.getValue();
+	public static boolean checkUserPermission(Guild server, BotSetting setting, User user) {
+		if(server != null) {
+			if (setting.getType() == BotSettingType.ROLE) {
+				Member member = server.getMember(user);
+				String sv = setting.getValue();
 
-			if (Shmames.isDebug)
-				return true;
+				if (member != null) {
+					if (Shmames.isDebug)
+						return true;
 
-			if (sv.equals("everyone"))
-				return true;
+					if (sv.equals("everyone"))
+						return true;
 
-			if (sv.equals("administrator"))
-				return member.hasPermission(Permission.ADMINISTRATOR);
+					if (sv.equals("administrator"))
+						return member.hasPermission(Permission.ADMINISTRATOR);
 
-			Role r = member.getGuild().getRolesByName(sv, true).get(0);
+					Role r = member.getGuild().getRolesByName(sv, true).get(0);
 
-			return member.getRoles().contains(r);
+					return member.getRoles().contains(r);
+				}
+			}
 		}
 
 		return false;
@@ -543,6 +548,111 @@ public class Utils {
 	}
 
 	/**
+	 * Converts a character letter to an emoji representation.
+	 * @param letter The letter to convert.
+	 * @return A Unicode string for the emoji.
+	 */
+	public static String letterToEmoji(char letter) {
+		switch(letter) {
+			case 'a':
+				return "\uD83C\uDDE6";
+			case 'b':
+				return "\uD83C\uDDE7";
+			case 'c':
+				return "\uD83C\uDDE8";
+			case 'd':
+				return "\uD83C\uDDE9";
+			case 'e':
+				return "\uD83C\uDDEA";
+			case 'f':
+				return "\uD83C\uDDEB";
+			case 'g':
+				return "\uD83C\uDDEC";
+			case 'h':
+				return "\uD83C\uDDED";
+			case 'i':
+				return "\uD83C\uDDEE";
+			case 'j':
+				return "\uD83C\uDDEF";
+			case 'k':
+				return "\uD83C\uDDF0";
+			case 'l':
+				return "\uD83C\uDDF1";
+			case 'm':
+				return "\uD83C\uDDF2";
+			case 'n':
+				return "\uD83C\uDDF3";
+			case 'o':
+				return "\uD83C\uDDF4";
+			case 'p':
+				return "\uD83C\uDDF5";
+			case 'q':
+				return "\uD83C\uDDF6";
+			case 'r':
+				return "\uD83C\uDDF7";
+			case 's':
+				return "\uD83C\uDDF8";
+			case 't':
+				return "\uD83C\uDDF9";
+			case 'u':
+				return "\uD83C\uDDFA";
+			case 'v':
+				return "\uD83C\uDDFB";
+			case 'w':
+				return "\uD83C\uDDFC";
+			case 'x':
+				return "\uD83C\uDDFD";
+			case 'y':
+				return "\uD83C\uDDFE";
+			case 'z':
+				return "\uD83C\uDDFF";
+			case '-':
+				return "\u2796";
+			case '_':
+				return "\u2796";
+			case '$':
+				return "\uD83D\uDCB2";
+			default:
+				return "\uD83D\uDD95";
+		}
+	}
+
+	/**
+	 * Same as @letterToEmoji, but returns different emoji
+	 * in order to provide duplicates.
+	 * @param letter The letter to convert.
+	 * @return A Unicode string for the emoji.
+	 */
+	public static String duplicateLetterToEmoji(char letter) {
+		switch(letter) {
+			case 'a':
+				return "\uD83C\uDD70";
+			case 'b':
+				return "\uD83C\uDD71";
+			case 'e':
+				return "\u0033\u20E3";
+			case 'i':
+				return "\u2139";
+			case 'l':
+				return "\u0031\u20E3";
+			case 'm':
+				return "\u24C2";
+			case 'o':
+				return "\u0030\u20E3";
+			case 'p':
+				return "\uD83C\uDD7F";
+			case 's':
+				return "\u0035\u20E3";
+			case 'x':
+				return "\u2716";
+			case 'z':
+				return "\u0032\u20E3";
+			default:
+				return null;
+		}
+	}
+
+	/**
 	 * Uses a filter to build a list of files in a given directory path. Creates the directory if it does not exist.
 	 * @param directoryPath The path to list child files.
 	 * @param filter A filter to use in the search.
@@ -627,19 +737,34 @@ public class Utils {
 	}
 
 	/**
+	 * Figures if the String input is a Long.
+	 * @param test The String to test.
+	 * @return True if and only if the String is a Long.
+	 */
+	public static boolean isLong(String test) {
+		try {
+			Long.parseLong(test);
+			return true;
+		} catch (Exception ignored) {}
+
+		return false;
+	}
+
+	/**
 	 * Returns a list of other Guilds that the provided Guild is connected to via
 	 * Shmames Family, excluding the Guild that was passed in.
-	 * @param g The Guild to search with.
+	 * @param serverBrain The Brain of the Guild being passed in.
+	 * @param server The Guild to search with.
 	 * @return A list of connected Guilds, exclusively.
 	 */
-	public static List<Guild> GetConnectedFamilyGuilds(Guild g) {
+	public static List<Guild> GetConnectedFamilyGuilds(Brain serverBrain, Guild server) {
 		List<Guild> guilds = new ArrayList<>();
 
-		for(String fid : Shmames.getBrains().getBrain(g.getId()).getFamilies()){
+		for(String fid : serverBrain.getFamilies()){
 			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
 
 			for(long mg : f.getMemberGuilds()) {
-				if(mg != g.getIdLong()) {
+				if(mg != server.getIdLong()) {
 					Guild familyGuild = Shmames.getJDA().getGuildById(mg);
 
 					if(familyGuild != null) {
@@ -653,5 +778,71 @@ public class Utils {
 		}
 
 		return guilds;
+	}
+
+	/**
+	 * Returns an Emote from the server's Family, if one can be found.
+	 * @param emoteName The name of the emote to search for.
+	 * @param serverBrain The server's brain to use for the search.
+	 * @param server The server.
+	 * @return An Emote, or null if one cannot be found.
+	 */
+	public static Emote GetFamilyEmote(String emoteName, Brain serverBrain, Guild server) {
+		// Check the server passed in first.
+		List<Emote> serverEmotes = server.getEmotesByName(emoteName, true);
+
+		if (serverEmotes.size() > 0) {
+			return serverEmotes.get(0);
+		} else {
+			// Check the rest of the family.
+			List<Guild> familyServers = GetConnectedFamilyGuilds(serverBrain, server);
+
+			for(Guild familyServer : familyServers) {
+				List<Emote> familyEmotes = familyServer.getEmotesByName(emoteName, true);
+
+				if (familyEmotes.size() > 0) {
+					return familyEmotes.get(0);
+				}
+			}
+
+			return null;
+		}
+	}
+
+	/**
+	 * Retrieves a Message indicated by the user. Aware of slash commands & traditional commands.
+	 * @param messagingChannel The channel data to use.
+	 * @param count The number of messages above to retrieve.
+	 * @return A Message, if possible.
+	 */
+	public static Message GetMessageIndicated(ShmamesCommandMessagingChannel messagingChannel, int count) {
+		try {
+			long latestMessageID = messagingChannel.getChannel().getLatestMessageIdLong();
+			Message originMessage = messagingChannel.hasOriginMessage() ? messagingChannel.getOriginMessage() : messagingChannel.getChannel().retrieveMessageById(latestMessageID).complete();
+
+			Message indicated = null;
+			List<Message> messageHistory;
+			int limit = count;
+
+			if (messagingChannel.hasHook()) {
+				if (count == 1) {
+					indicated = originMessage;
+					limit = 0;
+				} else {
+					limit -= 1;
+				}
+			}
+
+			if (limit > 0) {
+				messageHistory = messagingChannel.getChannel().getHistoryBefore(originMessage, limit).complete().getRetrievedHistory();
+
+				// The oldest message in the history we fetched.
+				indicated = messageHistory.get(messageHistory.size() - 1);
+			}
+
+			return indicated;
+		} catch (PermissionException pe) {
+			return null;
+		}
 	}
 }

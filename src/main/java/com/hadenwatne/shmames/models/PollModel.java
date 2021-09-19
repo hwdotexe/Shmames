@@ -28,11 +28,11 @@ public class PollModel {
 	private final List<String> options;
 	private boolean isActive;
 	
-	public PollModel(TextChannel ch, String q, List<String> o, int seconds, String pollID) {
+	public PollModel(String channelID, String q, List<String> o, int seconds, String pollID) {
 		this.question = q;
 		this.options = o;
 		this.pollID = pollID;
-		this.channelID = ch.getId();
+		this.channelID = channelID;
 		this.messageID = null;
 		this.isActive = true;
 		

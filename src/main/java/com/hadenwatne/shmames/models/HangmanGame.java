@@ -16,6 +16,7 @@ public class HangmanGame {
     private int lives;
     private long channelID;
     private long messageID;
+    private boolean isFinished;
 
     public HangmanGame(String answer, String hint, String dictionary){
         this.word = answer.toLowerCase();
@@ -24,10 +25,33 @@ public class HangmanGame {
         this.correctGuesses = new ArrayList<Character>();
         this.incorrectGuesses = new ArrayList<Character>();
         this.lives = 6;
+        this.isFinished = false;
 
         // If there are any spaces in the word, add them to the correct guesses.
         if(this.word.contains(" "))
             this.correctGuesses.add(' ');
+    }
+
+    public boolean isFinished() {
+        return this.isFinished;
+    }
+
+    public void finish() {
+        this.isFinished = true;
+    }
+
+    public boolean didWin() {
+        for(char wc : word.toCharArray()) {
+            if(!correctGuesses.contains(wc)) {
+                return false;
+            }
+        }
+
+        if(lives == 0) {
+            return false;
+        }
+
+        return true;
     }
 
     public void deleteMessage(Guild g){
@@ -39,8 +63,11 @@ public class HangmanGame {
         }
     }
 
-    public void setMessage(long channel, long message){
+    public void setChannel(long channel) {
         this.channelID = channel;
+    }
+
+    public void setMessage(long message){
         this.messageID = message;
     }
 

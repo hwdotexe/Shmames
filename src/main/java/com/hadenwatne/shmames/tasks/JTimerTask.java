@@ -2,7 +2,7 @@ package com.hadenwatne.shmames.tasks;
 
 import java.util.*;
 
-import com.hadenwatne.shmames.models.Brain;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.ShmamesLogger;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -11,18 +11,18 @@ import com.hadenwatne.shmames.Shmames;
 public class JTimerTask {
 	private final String userMention;
 	private final long channelID;
-	private final long messageID;
+	private final String messageID;
 	private final String message;
 	private Date execTime;
 	
-	public JTimerTask(String mention, long channelID, long messageID, int seconds, String msg) {
+	public JTimerTask(String mention, long channelID, String messageID, int seconds, String msg) {
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
 
 		c.setTime(new Date());
 		c.add(Calendar.SECOND, seconds);
 
-		this.message = msg;
+		this.message = msg != null ? msg : "";
 		this.userMention = mention;
     	this.channelID = channelID;
     	this.messageID = messageID;
@@ -67,12 +67,12 @@ public class JTimerTask {
 			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
 
 			if (tc != null) {
-				Message originMessage;
+				Message originMessage = null;
 
-				try {
-					originMessage = tc.retrieveMessageById(this.messageID).complete();
-				} catch (Exception e) {
-					originMessage = null;
+				if(this.messageID != null) {
+					try {
+						originMessage = tc.retrieveMessageById(this.messageID).complete();
+					} catch (Exception ignored) {}
 				}
 
 				if(originMessage != null) {

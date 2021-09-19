@@ -1,29 +1,35 @@
 package com.hadenwatne.shmames.commands;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.models.Brain;
-import com.hadenwatne.shmames.models.Lang;
+import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
+import com.hadenwatne.shmames.commandbuilder.CommandParameter;
+import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import com.hadenwatne.shmames.enums.Errors;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-import javax.annotation.Nullable;
-
+// TODO watch this command for uses, and delete if no longer used.
 public class IdiotThat implements ICommand {
-	private Lang lang;
+	private final CommandStructure commandStructure;
+
+	public IdiotThat() {
+		this.commandStructure = CommandBuilder.Create("idiotthat", "Rewrite a previous message with poor grammar.")
+				.addParameters(
+						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
+								.setPattern("([\\^]{1,15})")
+				)
+				.build();
+	}
 
 	@Override
-	public String getDescription() {
-		return "Rewrite a previous message with poor grammar. Use `^` symbols to specify the " +
-				"message to rewrite.";
-	}
-	
-	@Override
-	public String getUsage() {
-		return "idiotthat <^...>";
+	public CommandStructure getCommandStructure() {
+		return this.commandStructure;
 	}
 
 	@Override
@@ -32,70 +38,65 @@ public class IdiotThat implements ICommand {
 	}
 
 	@Override
-	public String run(String args, User author, Message message) {
-		Matcher m = Pattern.compile("^([\\^]{1,15})?$").matcher(args);
-		
-		if(m.find()) {
-			int messages = m.group(1).length();
-			List<Message> msgs = message.getChannel().getHistoryBefore(message, messages).complete().getRetrievedHistory();
-			Message toPin = msgs.get(msgs.size()-1);
-			String idiotOrig = toPin.getContentDisplay();
-			String idiot = "";
-			
-			// PascalCase
-			for(String w : idiotOrig.split(" ")) {
-				idiot += w.substring(0,1).toUpperCase()+w.substring(1).toLowerCase();
-				
-				if(w.length()>4 && idiot.endsWith("s")) {
-					idiot = idiot.substring(0, idiot.length()-1);
-					idiot += "'s";
-				}
-				
-				idiot += " ";
-			}
-			
-			// Exclamation Points
-			idiot = idiot.replaceAll("!", "!!1");
-			
-			// Horrible Emojis
-			idiotOrig = idiot;
-			idiot = "";
-			for(String w : idiotOrig.split(" ")) {
-				idiot += w;
-				
-				if(w.equalsIgnoreCase("okay") || w.equalsIgnoreCase("ok"))
-					idiot += " :ok_hand:";
-				
-				if(w.equalsIgnoreCase("love"))
-					idiot += " :heart:";
-				
-				if(w.equalsIgnoreCase("lol") || w.equalsIgnoreCase("haha"))
-					idiot += " :joy:";
-				
-				if(w.equalsIgnoreCase("wow"))
-					idiot += " :open_mouth:";
-				
-				idiot += " ";
-			}
-			
-			return idiot;
-		}else {
-			return lang.getError(Errors.INCOMPLETE, true);
+	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
+		int messages = data.getArguments().getAsString("position").length();
+
+		try {
+			Message toIdiot = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
+			String idiot = toIdiot.getContentDisplay();
+
+			return runIdiotProcess(idiot);
+		} catch (InsufficientPermissionException ex) {
+			ex.printStackTrace();
+
+			return lang.getError(Errors.NO_PERMISSION_BOT, true);
 		}
 	}
 
 	@Override
-	public String[] getAliases() {
-		return new String[] {"idiotthat"};
-	}
-
-	@Override
-	public void setRunContext(Lang lang, @Nullable Brain brain) {
-		this.lang = lang;
-	}
-	
-	@Override
 	public boolean requiresGuild() {
 		return false;
+	}
+
+	private String runIdiotProcess(String idiotOrig) {
+		String idiot = "";
+
+		// PascalCase
+		for (String w : idiotOrig.split(" ")) {
+			idiot += w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase();
+
+			if (w.length() > 4 && idiot.endsWith("s")) {
+				idiot = idiot.substring(0, idiot.length() - 1);
+				idiot += "'s";
+			}
+
+			idiot += " ";
+		}
+
+		// Exclamation Points
+		idiot = idiot.replaceAll("!", "!!1");
+
+		// Horrible Emojis
+		idiotOrig = idiot;
+		idiot = "";
+		for (String w : idiotOrig.split(" ")) {
+			idiot += w;
+
+			if (w.equalsIgnoreCase("okay") || w.equalsIgnoreCase("ok"))
+				idiot += " :ok_hand:";
+
+			if (w.equalsIgnoreCase("love"))
+				idiot += " :heart:";
+
+			if (w.equalsIgnoreCase("lol") || w.equalsIgnoreCase("haha"))
+				idiot += " :joy:";
+
+			if (w.equalsIgnoreCase("wow"))
+				idiot += " :open_mouth:";
+
+			idiot += " ";
+		}
+
+		return idiot;
 	}
 }

@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;
@@ -125,6 +125,7 @@ public class Lang {
         errors.put(Errors.RESERVED_WORD,                        "Sorry, you can't use that totally awesome name!");
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY,             "This server does not belong to a Family.");
         errors.put(Errors.SETTING_NOT_FOUND,                    "I couldn't find that setting.");
+        errors.put(Errors.TIME_VALUE_INCORRECT,                 "The amount of time provided is invalid!");
         errors.put(Errors.TRACK_NOT_PLAYING,                    "There isn't a track playing right now.");
         errors.put(Errors.WRONG_USAGE,                          "I don't think that's how you do it.");
 

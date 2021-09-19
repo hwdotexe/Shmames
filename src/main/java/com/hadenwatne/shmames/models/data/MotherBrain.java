@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +15,17 @@ public class MotherBrain {
 	private String botAPIKeySecondary;
 	private String tenorAPIKey;
 	private String wolframAPIKey;
+	private boolean updateDiscordSlashCommands;
 	
 	public MotherBrain() {
-		statuses = new HashMap<String, ActivityType>();
-		commandStats = new HashMap<String, Integer>();
-		serverFamilies = new ArrayList<Family>();
-		botAPIKey = "API_KEY_HERE";
-		botAPIKeySecondary = "API_KEY_HERE";
-		tenorAPIKey = "API_KEY_HERE";
-		wolframAPIKey = "API_KEY_HERE";
+		this.statuses = new HashMap<String, ActivityType>();
+		this.commandStats = new HashMap<String, Integer>();
+		this.serverFamilies = new ArrayList<Family>();
+		this.botAPIKey = "API_KEY_HERE";
+		this.botAPIKeySecondary = "API_KEY_HERE";
+		this.tenorAPIKey = "API_KEY_HERE";
+		this.wolframAPIKey = "API_KEY_HERE";
+		this.updateDiscordSlashCommands = false;
 	}
 	
 	public HashMap<String, ActivityType> getStatuses(){
@@ -80,6 +82,14 @@ public class MotherBrain {
 			wolframAPIKey = "API_KEY_HERE";
 
 		return wolframAPIKey;
+	}
+
+	public boolean doUpdateDiscordSlashCommands() {
+		return this.updateDiscordSlashCommands;
+	}
+
+	public void setUpdateDiscordSlashCommands(boolean update) {
+		this.updateDiscordSlashCommands = update;
 	}
 	
 	/**

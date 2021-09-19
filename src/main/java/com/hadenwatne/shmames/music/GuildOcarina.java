@@ -15,6 +15,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -29,7 +30,7 @@ public class GuildOcarina extends AudioEventAdapter {
 	private AudioPlayer player;
 	private AudioManager manager;
 	private List<AudioTrack> queue;
-	private TextChannel msgChannel;
+	private MessageChannel msgChannel;
 	private GuildOcarinaResultHandler loader;
 	private boolean isLoop;
 	private boolean isLoopQueue;
@@ -64,7 +65,7 @@ public class GuildOcarina extends AudioEventAdapter {
 		return queue;
 	}
 	
-	public void connect(VoiceChannel vc, TextChannel ch) {
+	public void connect(VoiceChannel vc, MessageChannel ch) {
 		msgChannel = ch;
 		manager.openAudioConnection(vc);
 	}
