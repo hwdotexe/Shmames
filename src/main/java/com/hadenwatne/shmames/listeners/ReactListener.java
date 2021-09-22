@@ -80,7 +80,7 @@ public class ReactListener extends ListenerAdapter {
 
 				User author = message.getAuthor();
 				MessageChannel channel = message.getChannel();
-				String tallyPrefix = setting == BotSettingName.APPROVAL_THRESHOLD ? "bad" : "good";
+				String tallyPrefix = setting == BotSettingName.APPROVAL_THRESHOLD ? "good" : "bad";
 				String toTally;
 
 				if(author.getId().equals(Shmames.getJDA().getSelfUser().getId())) {
