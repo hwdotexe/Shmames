@@ -243,6 +243,7 @@ public class ForumWeapon implements ICommand {
 		// Search the Family.
 		for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
 			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
+			sb.append(System.lineSeparator());
 			sb.append(searchServerFWList(familyBrain, family.getName(), searchTerm));
 		}
 

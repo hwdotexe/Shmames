@@ -406,13 +406,15 @@ public class Utils {
 	 * @param interval The number of characters to split on.
 	 * @return An array of split strings.
 	 */
-	public static String[] splitString(String s, int interval) {
-		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
-		String[] result = new String[breaks];
+	public static List<String> splitString(String s, int interval) {
+//		int breaks = (int) Math.ceil((double) s.length() / (double) interval);
+//		String[] result = new String[breaks];
+		List<String> splits = new ArrayList<>();
 
 		if (s.length() > interval) {
 			int lastIndex = 0;
-			for (int i = 0; i < breaks; i++) {
+
+			while(lastIndex < s.length()-1) {
 				String sub = s.length() >= lastIndex + interval ? s.substring(lastIndex, lastIndex + interval) : s.substring(lastIndex);
 
 				// Remove any breaks at the beginning
@@ -423,31 +425,33 @@ public class Utils {
 				// Experiment: Break on newline chars when possible.
 				if(sub.contains(System.lineSeparator())) {
 					if (sub.endsWith(System.lineSeparator())|| sub.length() < interval) {
-						result[i] = sub;
+						splits.add(sub);
 						lastIndex += interval;
 					} else {
 						int lastSpace = sub.lastIndexOf(System.lineSeparator());
 
-						result[i] = sub.substring(0, lastSpace);
-						lastIndex = s.indexOf(result[i]) + result[i].length();
+						String newSplit = sub.substring(0, lastSpace);
+						splits.add(newSplit);
+						lastIndex = s.indexOf(newSplit) + newSplit.length();
 					}
 				} else {
 					if (sub.charAt(sub.length() - 1) == ' ' || sub.length() < interval) {
-						result[i] = sub;
+						splits.add(sub);
 						lastIndex += interval;
 					} else {
 						int lastSpace = sub.lastIndexOf(" ");
 
-						result[i] = sub.substring(0, lastSpace);
-						lastIndex = s.indexOf(result[i]) + result[i].length();
+						String newSplit = sub.substring(0, lastSpace);
+						splits.add(newSplit);
+						lastIndex = s.indexOf(newSplit) + newSplit.length();
 					}
 				}
 			}
 		} else {
-			result[0] = s;
+			splits.add(s);
 		}
 
-		return result;
+		return splits;
 	}
 
 	/**

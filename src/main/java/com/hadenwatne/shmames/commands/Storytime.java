@@ -35,7 +35,7 @@ public class Storytime implements ICommand {
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		List<String> stories = Shmames.getBrains().getStories().getStories();
 		String randomStory = stories.get(Utils.getRandom(stories.size()));
-		String[] story = Utils.splitString(randomStory, MessageEmbed.VALUE_MAX_LENGTH);
+		List<String> story = Utils.splitString(randomStory, MessageEmbed.VALUE_MAX_LENGTH);
 		EmbedBuilder embed = new EmbedBuilder();
 
 		embed.setTitle("Let's read a story!");

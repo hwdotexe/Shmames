@@ -403,25 +403,25 @@ public class FamilyCmd implements ICommand {
 			}
 		}
 
-		String[] emoteLists = Utils.splitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+		List<String> emoteLists = Utils.splitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
 
-		if((embed.length() + emoteLists[0].length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
+		if((embed.length() + emoteLists.get(0).length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
 			channel.sendMessage(embed);
 
 			embed.clearFields();
 		}
 
-		embed.addField(g.getName(), emoteLists[0], false);
+		embed.addField(g.getName(), emoteLists.get(0), false);
 
-		if(emoteLists.length > 1) {
-			for(int i=1; i<emoteLists.length; i++) {
-				if((embed.length() + emoteLists[i].length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
+		if(emoteLists.size() > 1) {
+			for(int i=1; i<emoteLists.size(); i++) {
+				if((embed.length() + emoteLists.get(i).length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
 					channel.sendMessage(embed);
 
 					embed.clearFields();
 				}
 
-				embed.addField("", emoteLists[i], false);
+				embed.addField("", emoteLists.get(i), false);
 			}
 		}
 	}
