@@ -6,14 +6,37 @@
     "BLAME": [
       "I bet it's probably %WC%."
     ],
+	"BLAME_OPTIONS": [
+      "Shinji",
+	  "you",
+	  "Japan",
+	  "my developer",
+	  "anyone but me"
+    ],
     "CHOOSE": [
       "%WC%, but it's not like I care or anything."
     ],
     "COMMAND_USAGE": [
       "Could you be any worse at using `%WC%`?!"
     ],
+	"EIGHT_BALL_OPTIONS": [
+      "Like that would ever happen.",
+	  "I guess so, if you really tried.",
+	  "No way, stop wasting my time!",
+	  "Sure, but just barely.",
+	  "You've got to be insane to ask me that!",
+	  "Are you joking? It sounds like you're joking. No.",
+	  "Yes! I thought you'd never ask!"
+    ],
     "EMOTE_STATS_TITLE": [
       "You sure do use these a lot:"
+    ],
+	"ENHANCE_OPTIONS": [
+      "Okay! %WC% isn't a total loser anymore.",
+      "Of course: %WC% took a bath for once.",
+      "Right! I tossed %WC% out the window. Problem solved!",
+      "Sure! %WC% finally got in the robot.",
+      "Yeah, sure, okay. %WC% noticed me for once!"
     ],
     "FAMILY_CREATED": [
       "You want to make a Family? Nobody would ever join something like that! Would they?"
@@ -156,11 +179,44 @@
     "TALLY_REMOVED": [
       "`%WC%` has bit the dust."
     ],
+	"THOUGHTS_OPTIONS": [
+      "That is insulting! Why would you even ask me that?",
+	  "It's pretty good, I guess.",
+	  "Eww, no way, yuck!",
+	  "It's not so bad after you get used to it.",
+	  "It cries itself to sleep every night!",
+	  "I don't see why I should hate it. Yet."
+    ],
     "TIMER_STARTED": [
       "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
     ],
     "TRIGGER_LIST": [
       "I'm not your _dog, Baka!_"
+    ],
+	"WHATSHOULDIDO_INTRO_OPTIONS": [
+      "Well, if you ask me, you should",
+      "Why should I care if you",
+      "You seem like the kind of person who would",
+      "Why do I have to decide? For all I care, you should"
+    ],
+	"WHATSHOULDIDO_OPTIONS": [
+      "bury that robot in the bottom of the ocean",
+      "apologize for being so rude",
+      "give me flowers and gifts",
+      "pay my rent this month",
+      "just admit your feelings",
+      "stop being such a pervert",
+      "let me win Monopoly next time",
+      "tell me I'm your princess",
+      "roll for initiative"
+    ],
+	"WHEN_OPTIONS": [
+      "Like that'll ever happen",
+	  "Uh, when you turn %WC%, dork",
+	  "Close your eyes and count to %WC%",
+	  "You kept me waiting for %WC% hours, so you'll be waiting %WC% weeks",
+	  "Never! Ew! Not ever!",
+	  "In your dreams, loser."
     ]
   },
   "errors": {
