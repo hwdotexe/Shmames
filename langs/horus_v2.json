@@ -1,0 +1,297 @@
+{
+  "messages": {
+    "ADD_TRIGGER_SUCCESS": [
+      "I werde drone  `%WC%` were you comply `%WC%`!"
+    ],
+    "BLAME": [
+      "I hose %WC%"
+    ],
+    "CHOOSE": [
+      "My gribbed: %WC%!"
+    ],
+    "COMMAND_USAGE": [
+      "gid et a fink: `%WC%`"
+    ],
+    "EMOTE_STATS_TITLE": [
+      "Skanning Basilisks:"
+    ],
+    "FAMILY_CREATED": [
+       "Legionspace manifested!"
+    ],
+    "FAMILY_JOIN_CODE": [
+      "**Code %WC%**%BR%`%WC%`%BR%_Comply code far sees Legionspace._"
+    ],
+    "FAMILY_JOIN_CODE_INVALIDATED": [
+      "[Tha Cee-seek grib wavedown for' nada crawbar]"
+    ],
+    "FAMILY_JOINED": [
+      "Pass **%WC%** conjured to tha **%WC%** Legionspace!"
+    ],
+    "FAMILY_REMOVED_SERVER": [
+      "Zeroed tha **%WC%** O't **%WC%** Legionspace!"
+    ],
+    "FAMILY_SERVER_LIST": [
+       "Tha \"%WC%\" Legionspace sardines thas Knee-hips:"
+    ],
+    "FEEDBACK_COOLDOWN": [
+      "Nag time afore comply again."
+    ],
+    "FEEDBACK_SENT": [
+      ":notepad_spiral: Thyne papermaize gribbed ice! %BR%You comply again en **5 minutes**."
+    ],
+    "FORUM_WEAPON_ADDED_ALIAS": [
+       "Tha masquing werde manisfest!"
+    ],
+    "FORUM_WEAPON_CREATED": [
+      "Manifest nuevo Longunne: **%WC%**"
+    ],
+    "FORUM_WEAPON_DESTROYED": [
+      "Longunne x-ed."
+    ],
+    "FORUM_WEAPON_DUPLICATE": [
+      ":warning: Discover already Cicada tha baypass: **%WC%**"
+    ],
+    "FORUM_WEAPON_UPDATED": [
+      "Tha Longonne gribbed tha juice!"
+    ],
+    "FORUM_WEAPONS_PRUNED": [
+      "Pruned **%WC%** unused Forum Weapons!"
+    ],
+    "GENERIC_SUCCESS": [
+      "Baypass!"
+    ],
+    "HANGMAN_FOOTER_GUESSED": [
+      "Try some-fink nuevo, Priyatel :"
+    ],
+    "HANGMAN_TITLE": [
+       "Hangman Time Maguses!"
+    ],
+    "INVALID_TRIGGER_TYPE": [
+      ":scream: Plebes! Thyne comply: %WC%"
+    ],
+    "ITEM_ADDED": [
+      "Comply up :+1:"
+    ],
+    "ITEM_REMOVED": [
+       "I've X-ed \"%WC%\"!"
+    ],
+    "LIST_CREATED": [
+      "Tha papermaize manisfest!!"
+    ],
+    "LIST_DELETED": [
+      "`%WC%` zeroed!"
+    ],
+    "LIST_PRIVACY_TOGGLED": [
+      "The `%WC%` List is now `%WC%`!"
+    ],
+    "MUSIC_ADDED_TO_QUEUE": [
+      "Added to queue!"
+    ],
+    "MUSIC_LOOPING_TOGGLED": [
+      "Music looping is now **%WC%**"
+    ],
+    "MUSIC_LOOPING_QUEUE_TOGGLED": [
+      "Music Queue looping is now **%WC%**"
+    ],
+    "MUSIC_PLAYING": [
+      "Playing!"
+    ],
+    "MUSIC_PLAYING_PLAYLIST": [
+      "Playing the `%WC%` Playlist!"
+    ],
+    "MUSIC_PLAYLIST_CREATED": [
+      "Created a new Playlist `%WC%`!"
+    ],
+    "MUSIC_PLAYLIST_CONVERTED": [
+      "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+    ],
+    "MUSIC_PLAYLIST_DELETED": [
+      "Playlist deleted!"
+    ],
+    "MUSIC_PLAYLIST_TRACK_ADDED": [
+      "Track added!"
+    ],
+    "MUSIC_PLAYLIST_TRACK_REMOVED": [
+      "Track removed!"
+    ],
+    "MUSIC_QUEUE_CLEARED": [
+      "Cleared the music queue!"
+    ],
+    "MUSIC_QUEUE_SHUFFLED": [
+      "Shuffled the music queue!"
+    ],
+    "MUSIC_QUEUE_REVERSED": [
+      "Reversed the music queue!"
+    ],
+    "MUSIC_QUEUED_PLAYLIST": [
+      "Queued the `%WC%` Playlist!"
+    ],
+    "POLL_TITLE": [
+      "== Thyne Commie Cypher =="
+    ],
+    "POLL_TITLE_RESULTS": [
+      "== Thyne Commie Cypher (Results) =="
+    ],
+    "RESET_EMOTE_STATS": [
+      "XXX-d tha Stats."
+    ],
+    "SENT_PRIVATE_MESSAGE": [
+      "Subvoxed commie."
+    ],
+    "SERVER_FAMILY_LIST": [
+      "Thar Knee-hip hath conjured ento tha Legionspaces:"
+    ],
+    "SETTING_LIST_TITLE": [
+      "StandOP:"
+    ],
+    "SETTING_UPDATED_SUCCESS": [
+      "Sys Op success!"
+    ],
+    "TALLY_CURRENT_VALUE": [
+      "Skanned count far `%WC%`: `%WC%`"
+    ],
+    "TALLY_LIST": [
+      "Wysiwyg:"
+    ],
+    "TALLY_REMOVED": [
+      "`%WC%` comply zeroe'd."
+    ],
+    "TIMER_STARTED": [
+      "Timed far %WC%"
+    ],
+    "TRIGGER_LIST": [
+      "Code speaks werde flaps:"
+    ]
+  },
+  "errors": {
+    "ALREADY_EXISTS": [
+      "Nada dupes, causing wavedown."
+    ],
+    "BOT_ERROR": [
+      "You tryna grib me Wyrm and Horsies?"
+    ],
+    "CANNOT_DELETE": [
+      "Secured codes: Can't be zeroed."
+    ],
+    "CHANNEL_NOT_FOUND": [
+      "Missing channel: Perhaps you werde finking meatspace."
+    ],
+    "COMMAND_NOT_FOUND": [
+      "Comply nada exist."
+    ],
+    "FAMILY_ALREADY_EXISTS": [
+      "Unique Legionspace locales only. Nuevo id comply."
+    ],
+    "FAMILY_ALREADY_JOINED": [
+      "Dis Legionspace already gribbed Knee-hip"
+    ],
+    "FAMILY_INVALID_DETAIL": [
+      "Invalid Baypass."
+    ],
+    "FAMILY_NOT_JOINED": [
+      "Knee-hip nada Legionspace."
+    ],
+    "FAMILY_MEMBER_MAXIMUM_REACHED": [
+      "Legionspace is occupado!"
+    ],
+    "FAMILY_MAXIMUM_REACHED": [
+      "Max 3 Legionspace."
+    ],
+    "FAMILY_SERVER_LIST_EMPTY": [
+      "Legionspace hath nad Knee-hips, get some."
+    ],
+    "FORUM_WEAPON_MAXIMUM_REACHED": [
+      "100 longunnes Max. Anymore and Yun-Yun B jealous."
+    ],
+    "FORUM_WEAPON_OWNED_OTHER": [
+      "Far Longunne over da Legionspace."
+    ],
+    "GUILD_REQUIRED": [
+      "Nada hand-fabbing, need Knee-hip//Woodworking"
+    ],
+    "HANGMAN_ALREADY_GUESSED": [
+       "Pick some-fink new, Priyatel."
+    ],
+    "HANGMAN_NOT_STARTED": [
+      "Need conjure game to play, Priyatel."
+    ],
+    "HEY_THERE": [
+      "Gi! Comply `%WC% help`!"
+    ],
+    "INCOMPLETE": [
+      "Baypass more commie, Priyatel."
+    ],
+    "INCORRECT_ITEM_COUNT": [
+       "Missing args, ya Planted Plebes."
+    ],
+    "ITEMS_NOT_FOUND": [
+      "Hose it, empty handed."
+    ],
+    "MUSIC_NOT_IN_CHANNEL": [
+      "Please join a voice channel and run this command again."
+    ],
+    "MUSIC_PLAYLIST_ALREADY_EXISTS": [
+      "A Playlist with that name already exists on this server!"
+    ],
+    "MUSIC_PLAYLIST_DOESNT_EXIST": [
+      "That Playlist doesn't exist!"
+    ],
+    "MUSIC_PLAYLIST_EMPTY": [
+      "There are no tracks in that Playlist."
+    ],
+    "MUSIC_PLAYLIST_LIST_EMPTY": [
+      "There aren't any Playlists yet!"
+    ],
+    "MUSIC_PLAYLIST_NAME_INVALID": [
+      "Playlist names must be alphanumeric!"
+    ],
+    "MUSIC_PLAYLIST_NAME_MISSING": [
+      "Please enter a name for the new Playlist."
+    ],
+    "MUSIC_PLAYLIST_PAGE_EMPTY": [
+      "There are no tracks in that Playlist on this page."
+    ],
+    "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED": [
+      "Playlists currently support a max of 50 tracks."
+    ],
+    "MUSIC_QUEUE_EMPTY": [
+      "There are no tracks in the Queue."
+    ],
+    "MUSIC_QUEUE_PAGE_EMPTY": [
+      "There are no tracks in the Queue on this page."
+    ],
+    "MUSIC_WRONG_INPUT": [
+      "Please enter a media URL or playlist name!"
+    ],
+    "NO_PERMISSION_BOT": [
+      "Yun-yun is Unrechtssystem [nad permission]"
+    ],
+    "NO_PERMISSION_USER": [
+      "Nada juice here, apprentice."
+    ],
+    "NOT_FOUND": [
+      "Fatz Out: you sees nada exist."
+    ],
+    "RESERVED_WORD": [
+      "Denied: Unique words preserved: nada wyrming allowed."
+    ],
+    "SERVER_FAMILY_LIST_EMPTY": [
+      "Far Knee-hip nada Legionspace"
+    ],
+    "SETTING_NOT_FOUND": [
+       "Skanning found nada-fink en Wink"
+    ],
+    "TIME_VALUE_INCORRECT": [
+      "The amount of time provided is invalid!"
+    ],
+    "TRACK_NOT_PLAYING": [
+      "S.O.S. [Sound of space] (nada beats running, you Plebes)"
+    ],
+    "WRONG_USAGE": [
+      "Screamer detected: Mangled comply, Plebe."
+    ]
+  },
+  "wildcard": "%WC%",
+  "linebreak": "%BR%",
+  "langName": "horus"
+}

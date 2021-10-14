@@ -5,6 +5,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
@@ -15,11 +16,6 @@ import java.util.regex.Pattern;
 
 public class When implements ICommand {
 	private final CommandStructure commandStructure;
-	private final String[] answers = new String[]{"In %T years", "In %T minutes", "%T days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe",
-			"Not sure, ask your mom", "%T years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe",
-			"In precisely %T", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall",
-			"Probably within %T days", "I'd say in %T months", "In %T? %T? Maybe %T?", "Between %T and %T centuries", "Sooner shall %T days pass", "%T seconds", "%T hours, %T minutes, and %T seconds",
-			"Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"};
 
 	public When() {
 		this.commandStructure = CommandBuilder.Create("when", "I'll tell you when something will happen.")
@@ -41,8 +37,8 @@ public class When implements ICommand {
 
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String msg = answers[Utils.getRandom(answers.length)];
-		Matcher m = Pattern.compile("%T").matcher(msg);
+		String msg = lang.getMsg(Langs.WHEN_OPTIONS);
+		Matcher m = Pattern.compile(lang.wildcard).matcher(msg);
 
 		while (m.find()) {
 			msg = msg.replaceFirst(m.group(), Integer.toString(Utils.getRandom(150) + 1));

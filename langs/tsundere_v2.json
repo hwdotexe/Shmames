@@ -1,0 +1,297 @@
+{
+  "messages": {
+    "ADD_TRIGGER_SUCCESS": [
+      "Sure, I guess I'll send a `%WC%` message when you say `%WC%`, if you're lucky."
+    ],
+    "BLAME": [
+      "I bet it's probably %WC%."
+    ],
+    "CHOOSE": [
+      "%WC%, but it's not like I care or anything."
+    ],
+    "COMMAND_USAGE": [
+      "Could you be any worse at using `%WC%`?!"
+    ],
+    "EMOTE_STATS_TITLE": [
+      "You sure do use these a lot:"
+    ],
+    "FAMILY_CREATED": [
+      "You want to make a Family? Nobody would ever join something like that! Would they?"
+    ],
+    "FAMILY_JOIN_CODE": [
+      "**Join Code for %WC%**%BR%`%WC%`%BR%_Use it to join a server to the Family, or whatever, like I care._"
+    ],
+    "FAMILY_JOIN_CODE_INVALIDATED": [
+      "[MAKE THAT CODE AGAIN, BAKA]"
+    ],
+    "FAMILY_JOINED": [
+      "Added **%WC%** to the **%WC%** Family!"
+    ],
+    "FAMILY_REMOVED_SERVER": [
+      "Removed **%WC%** from the **%WC%** Family!"
+    ],
+    "FAMILY_SERVER_LIST": [
+      "The \"%WC%\" Family contains the following servers:"
+    ],
+    "FEEDBACK_COOLDOWN": [
+      "Oh please, hold your applause for a few minutes! Could you do that?"
+    ],
+    "FEEDBACK_SENT": [
+      "You're kidding me! Fine, I'll write this down, but just this once."
+    ],
+    "FORUM_WEAPON_ADDED_ALIAS": [
+      "Oh, sure, you just *love* make things more complicated!"
+    ],
+    "FORUM_WEAPON_CREATED": [
+      "Yeah, okay, use **%WC%** and just see what happens."
+    ],
+    "FORUM_WEAPON_DESTROYED": [
+      "You finally got rid of that piece of trash!"
+    ],
+    "FORUM_WEAPON_DUPLICATE": [
+      "Are you stupid?! This looks just like **%WC%**!"
+    ],
+    "FORUM_WEAPON_UPDATED": [
+      "Great, the link changed, but the name stayed the same."
+    ],
+    "FORUM_WEAPONS_PRUNED": [
+      "I took care of **%WC%** unused Forum Weapons, I hope you didn't need them..."
+    ],
+    "GENERIC_SUCCESS": [
+      "Yeah, sure, whatever. _Baka._"
+    ],
+    "HANGMAN_FOOTER_GUESSED": [
+      "Your life failures:"
+    ],
+    "HANGMAN_TITLE": [
+      "Hang a Clone of Yourself:"
+    ],
+    "INVALID_TRIGGER_TYPE": [
+      "Wrong, baka! You need to use %WC%"
+    ],
+    "ITEM_ADDED": [
+      "You're making me do even MORE? Will you ever do anything yourself?!"
+    ],
+    "ITEM_REMOVED": [
+      "For crying out loud, just do whatever you want. I'll go delete \"%WC%\"."
+    ],
+    "LIST_CREATED": [
+      "Oh good, the clutz is making lists now!"
+    ],
+    "LIST_DELETED": [
+      "Got rid of that stinky old list, `%WC%`."
+    ],
+    "LIST_PRIVACY_TOGGLED": [
+      "I guess `%WC%` can be `%WC%` now..."
+    ],
+    "MUSIC_ADDED_TO_QUEUE": [
+      "Your taste in music is whatever, but sure, I can play that later."
+    ],
+    "MUSIC_LOOPING_TOGGLED": [
+      "Earworm inducer -> **%WC%**"
+    ],
+    "MUSIC_LOOPING_QUEUE_TOGGLED": [
+      "Repetitive music -> **%WC%**"
+    ],
+    "MUSIC_PLAYING": [
+      "_This_ is what you listen to?!"
+    ],
+    "MUSIC_PLAYING_PLAYLIST": [
+      "Popping in the world's okayest playlist, `%WC%`."
+    ],
+    "MUSIC_PLAYLIST_CREATED": [
+      "Ta-da, a glorified tupperware named `%WC%`!"
+    ],
+    "MUSIC_PLAYLIST_CONVERTED": [
+      "Yep, turned that mess into `%WC%` with `%WC%` tracks!"
+    ],
+    "MUSIC_PLAYLIST_DELETED": [
+      "Bye, Felisha-chan!"
+    ],
+    "MUSIC_PLAYLIST_TRACK_ADDED": [
+      "If you insist..."
+    ],
+    "MUSIC_PLAYLIST_TRACK_REMOVED": [
+      "It's outta here!"
+    ],
+    "MUSIC_QUEUE_CLEARED": [
+      "Why do _I_ have to clean up your mess?"
+    ],
+    "MUSIC_QUEUE_SHUFFLED": [
+      "Look at what you did now, it's all over the floor!"
+    ],
+    "MUSIC_QUEUE_REVERSED": [
+      "Talking backwards now? Maybe I'll be able to understand you better."
+    ],
+    "MUSIC_QUEUED_PLAYLIST": [
+      "Next up! The trainwreck entitled `%WC%`!"
+    ],
+    "POLL_TITLE": [
+      "== IT'S YOUR OPINION =="
+    ],
+    "POLL_TITLE_RESULTS": [
+      "== IT'S YOUR OPINION (The opinions) =="
+    ],
+    "RESET_EMOTE_STATS": [
+       "BAAKA! I was gonna use those someday!"
+    ],
+    "SENT_PRIVATE_MESSAGE": [
+      "Check your DMs, _not like I want to help or anything, but..._"
+    ],
+    "SERVER_FAMILY_LIST": [
+      "You have these friends:"
+    ],
+    "SETTING_LIST_TITLE": [
+      "Things you can break:"
+    ],
+    "SETTING_UPDATED_SUCCESS": [
+      "Setting successfully ruined!"
+    ],
+    "TALLY_CURRENT_VALUE": [
+      "Since I keep having to listen to you try to count, I've heard `%WC%` exactly `%WC%` times."
+    ],
+    "TALLY_LIST": [
+      "I've counted these up since you can't:"
+    ],
+    "TALLY_REMOVED": [
+      "`%WC%` has bit the dust."
+    ],
+    "TIMER_STARTED": [
+      "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
+    ],
+    "TRIGGER_LIST": [
+      "I'm not your _dog, Baka!_"
+    ]
+  },
+  "errors": {
+    "ALREADY_EXISTS": [
+      "Dimwit, you told me about that last time!"
+    ],
+    "BOT_ERROR": [
+      "This is all your fault!"
+    ],
+    "CANNOT_DELETE": [
+      "No! You can't have it! It stays with me!"
+    ],
+    "CHANNEL_NOT_FOUND": [
+      "And where exactly do you expect me to look?"
+    ],
+    "COMMAND_NOT_FOUND": [
+      "Stop making up new commands, _baka!_"
+    ],
+    "FAMILY_ALREADY_EXISTS": [
+      "You already own a family with that name! Please choose a different name."
+    ],
+    "FAMILY_ALREADY_JOINED": [
+      "This server already belongs to that family!"
+    ],
+    "FAMILY_INVALID_DETAIL": [
+      "Invalid Family name or Join Code!"
+    ],
+    "FAMILY_NOT_JOINED": [
+      "That server has not joined that Family!"
+    ],
+    "FAMILY_MEMBER_MAXIMUM_REACHED": [
+      "That family has reached the maximum number of servers!"
+    ],
+    "FAMILY_MAXIMUM_REACHED": [
+      "You can only join up to 3 families!"
+    ],
+    "FAMILY_SERVER_LIST_EMPTY": [
+      "This Family does not contain any servers."
+    ],
+    "FORUM_WEAPON_MAXIMUM_REACHED": [
+      "Stop! I can't take it anymore! 100 is way too many!"
+    ],
+    "FORUM_WEAPON_OWNED_OTHER": [
+      "That's somebody else's weapon!"
+    ],
+    "GUILD_REQUIRED": [
+      "That command must be run on a server."
+    ],
+    "HANGMAN_ALREADY_GUESSED": [
+      "You've already guessed that letter!"
+    ],
+    "HANGMAN_NOT_STARTED": [
+      "There isn't a Hangman game running! Try starting one."
+    ],
+    "HEY_THERE": [
+      "Hi. Try `%WC% help`, or not, see if I care."
+    ],
+    "INCOMPLETE": [
+      "Yeah? What else? I'm waiting."
+    ],
+    "INCORRECT_ITEM_COUNT": [
+      "I need you to give me more!"
+    ],
+    "ITEMS_NOT_FOUND": [
+      "You made me search EVERYWHERE, and I couldn't find a single thing!"
+    ],
+    "MUSIC_NOT_IN_CHANNEL": [
+      "I'm sorry, do you hear something? I don't hear anything. Maybe a faint buzzing sound."
+    ],
+    "MUSIC_PLAYLIST_ALREADY_EXISTS": [
+      "That one's too familiar, try again."
+    ],
+    "MUSIC_PLAYLIST_DOESNT_EXIST": [
+      "I have no idea what you're saying."
+    ],
+    "MUSIC_PLAYLIST_EMPTY": [
+       "Empty! Empty!"
+    ],
+    "MUSIC_PLAYLIST_LIST_EMPTY": [
+      "Nothing here!"
+    ],
+    "MUSIC_PLAYLIST_NAME_INVALID": [
+      "Do you expect me to speak your l33t alien language?"
+    ],
+    "MUSIC_PLAYLIST_NAME_MISSING": [
+      "What's it called? I need the details!"
+    ],
+    "MUSIC_PLAYLIST_PAGE_EMPTY": [
+      "There are no tracks in that Playlist on this page."
+    ],
+    "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED": [
+      "Playlists currently support a max of 50 tracks."
+    ],
+    "MUSIC_QUEUE_EMPTY": [
+      "There are no tracks in the Queue."
+    ],
+    "MUSIC_QUEUE_PAGE_EMPTY": [
+      "There are no tracks in the Queue on this page."
+    ],
+    "MUSIC_WRONG_INPUT": [
+      "Please enter a media URL or playlist name!"
+    ],
+    "NO_PERMISSION_BOT": [
+      "Look, after all I've done for you, you owe me one!"
+    ],
+    "NO_PERMISSION_USER": [
+      "NO WAY! It's for your own good! _Not like I care or anything..._"
+    ],
+    "NOT_FOUND": [
+      "You made me search EVERYWHERE, and I couldn't find a single thing!"
+    ],
+    "RESERVED_WORD": [
+      "Sorry, you can't use that totally awesome name!"
+    ],
+    "SERVER_FAMILY_LIST_EMPTY": [
+      "This server does not belong to a Family."
+    ],
+    "SETTING_NOT_FOUND": [
+      "I couldn't find that setting."
+    ],
+    "TIME_VALUE_INCORRECT": [
+      "You DID go to Kindergarten to learn how to tell time, _right_?"
+    ],
+    "TRACK_NOT_PLAYING": [
+      "There isn't a track playing right now."
+    ],
+    "WRONG_USAGE": [
+      "Out of all the people in the world, I'm stuck with you! Baka! You don't even know how to use that command properly! Must I do everything myself?!"
+    ]
+  },
+  "wildcard": "%WC%",
+  "linebreak": "%BR%",
+  "langName": "tsundere"
+}

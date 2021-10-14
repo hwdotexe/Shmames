@@ -17,11 +17,6 @@ import javax.annotation.Nullable;
 
 public class Blame implements ICommand {
 	private final CommandStructure commandStructure;
-	private final String[] answers = new String[] {"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom",
-			"the economy", "Big Pharma", "India", "Nigeria", "Mexico", "Chemtrails", "GMOs",
-			"vaccines", "#VapeLife", "weebs", "essential oils", "Karen", "Epic Games",
-			"video games", "hip hop", "Fortnite", "Source Filmmaker", "Discord", "Coronavirus", "Apple",
-			"Google", "Starbucks", "NASA", "Keanu Reeves", "Oscar the Grouch", "Ohio"};
 
 	public Blame() {
 		this.commandStructure = CommandBuilder.Create("blame", "I'll blame stuff for you.")
@@ -44,21 +39,22 @@ public class Blame implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		if(brain != null) {
-			if(brain.getJinping()) {
-				return lang.getMsg(Langs.BLAME, new String[]{ "Jinping" });
+		if (brain != null) {
+			if (brain.getJinping()) {
+				return lang.getMsg(Langs.BLAME, new String[]{"Jinping"});
 			}
 		}
 
-		String answer =  lang.getMsg(Langs.BLAME, new String[]{ answers[Utils.getRandom(answers.length)] });
+		String randomAnswer = lang.getMsg(Langs.BLAME_OPTIONS);
+		String answerMessage = lang.getMsg(Langs.BLAME, new String[]{randomAnswer});
 
 		if (data.getMessagingChannel().hasHook()) {
 			String question = data.getArguments().getAsString("item");
 
-			return "> _Why " + question + "_\n" + answer;
+			return "> _Why " + question + "_\n" + answerMessage;
 		}
 
-		return answer;
+		return answerMessage;
 	}
 	
 	@Override
