@@ -47,7 +47,7 @@ public class React implements ICommand {
 		try {
 			Message toReact = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
 
-			reactToMessageWithEmoji(toReact, word);
+			reactToMessageWithEmoji(toReact, word.toLowerCase());
 
 			// Remove the querying message
 			try {

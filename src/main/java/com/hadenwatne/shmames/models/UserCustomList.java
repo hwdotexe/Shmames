@@ -27,6 +27,10 @@ public class UserCustomList {
         return this.type;
     }
 
+    public void setType(UserListType newType) {
+        this.type = newType;
+    }
+
     public String getName() {
         return this.name;
     }

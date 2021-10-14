@@ -196,7 +196,6 @@ public class Modify implements ICommand {
 			case MANAGE_MUSIC:
 			case ALLOW_MODIFY:
 			case ALLOW_POLLS:
-			case ALLOW_NICKNAME:
 			case RESET_EMOTE_STATS:
 				eBuilder.addField("Possible Values", "Any role, `administrator`, `everyone`", false);
 				break;

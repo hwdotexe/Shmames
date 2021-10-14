@@ -119,7 +119,6 @@ public final class Shmames {
 		defaultBotSettings.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaultBotSettings.add(new BotSetting(BotSettingName.APPROVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
 		defaultBotSettings.add(new BotSetting(BotSettingName.ALLOW_MODIFY, BotSettingType.ROLE, "administrator"));
-		defaultBotSettings.add(new BotSetting(BotSettingName.ALLOW_NICKNAME, BotSettingType.ROLE, "everyone"));
 		defaultBotSettings.add(new BotSetting(BotSettingName.ALLOW_POLLS, BotSettingType.ROLE, "everyone"));
 		defaultBotSettings.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
 		defaultBotSettings.add(new BotSetting(BotSettingName.MANAGE_MUSIC, BotSettingType.ROLE, "administrator"));

@@ -1,8 +1,10 @@
 package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.ShmamesLogger;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.LogType;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -60,6 +62,7 @@ public class Lang {
             if (!langName.equalsIgnoreCase("default")) {
                 return Shmames.getDefaultLang().getError(key, showError) + s;
             } else {
+                ShmamesLogger.log(LogType.ERROR, "An unknown Lang key was used: "+key);
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
             }
         }
@@ -156,6 +159,7 @@ public class Lang {
         messages.put(Langs.ITEM_REMOVED,                        "I've removed \""+wildcard+"\"!");
         messages.put(Langs.LIST_CREATED,                        "The List was created!");
         messages.put(Langs.LIST_DELETED,                        "Deleted the `"+wildcard+"` List!");
+        messages.put(Langs.LIST_PRIVACY_TOGGLED,                "The `"+wildcard+"` List is now `"+wildcard+"`!");
         messages.put(Langs.MUSIC_ADDED_TO_QUEUE,                "Added to queue!");
         messages.put(Langs.MUSIC_LOOPING_TOGGLED,               "Music looping is now **"+wildcard+"**");
         messages.put(Langs.MUSIC_LOOPING_QUEUE_TOGGLED,         "Music Queue looping is now **"+wildcard+"**");

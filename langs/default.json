@@ -27,6 +27,7 @@
     "ITEM_REMOVED": "I've removed \"%WC%\"!",
     "LIST_CREATED": "The List was created!",
     "LIST_DELETED": "Deleted the `%WC%` List!",
+    "LIST_PRIVACY_TOGGLED": "The `%WC%` List is now `%WC%`!",
     "MUSIC_ADDED_TO_QUEUE": "Added to queue!",
     "MUSIC_LOOPING_TOGGLED": "Music looping is now **%WC%**",
     "MUSIC_LOOPING_QUEUE_TOGGLED": "Music Queue looping is now **%WC%**",

@@ -30,7 +30,7 @@ public class ListCmd implements ICommand {
 				.addSubCommands(
 						CommandBuilder.Create("create", "Create a new list.")
 								.addParameters(
-										new CommandParameter("newListName", "The name of the list to create.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to create.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("privacy", "Whether others can view and add to the list.", ParameterType.SELECTION, false)
 												.addSelectionOptions("public", "private")
@@ -38,27 +38,33 @@ public class ListCmd implements ICommand {
 								.build(),
 						CommandBuilder.Create("add", "Add an item to a list.")
 								.addParameters(
-										new CommandParameter("addListName", "The name of the list to add to.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to add to.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("item", "The item to add to the list.", ParameterType.STRING)
 								)
 								.build(),
 						CommandBuilder.Create("remove", "Remove an item from a list.")
 								.addParameters(
-										new CommandParameter("removeListName", "The name of the list to remove from.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to remove from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("index", "The item position to remove.", ParameterType.INTEGER)
 								)
 								.build(),
 						CommandBuilder.Create("delete", "Delete a list.")
 								.addParameters(
-										new CommandParameter("deleteListName", "The name of the list to delete.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to delete.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 										)
 								.build(),
+						CommandBuilder.Create("toggle", "Toggle a List between Public and Private.")
+								.addParameters(
+										new CommandParameter("listName", "The name of the list to toggle.", ParameterType.STRING)
+												.setPattern("[\\w\\d-_]+")
+								)
+								.build(),
 						CommandBuilder.Create("random", "Get a random item from a list.")
 								.addParameters(
-										new CommandParameter("randomListName", "The name of the list to get a random item from.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to get a random item from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 										)
 								.build(),
@@ -66,7 +72,7 @@ public class ListCmd implements ICommand {
 								.build(),
 						CommandBuilder.Create("view", "View the items in a list.")
 								.addParameters(
-										new CommandParameter("viewListName", "The name of the list to view.", ParameterType.STRING)
+										new CommandParameter("listName", "The name of the list to view.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 										)
 								.build()
@@ -85,6 +91,7 @@ public class ListCmd implements ICommand {
 				"`list add myList Eggs`\n" +
 				"`list remove myList 1`\n" +
 				"`list delete myList`\n" +
+				"`list toggle myList`\n" +
 				"`list random myList`\n" +
 				"`list list`\n" +
 				"`list view myList`";
@@ -104,6 +111,8 @@ public class ListCmd implements ICommand {
 				return cmdRemove(brain, lang, data.getAuthor().getId(), subCmdArgs);
 			case "delete":
 				return cmdDelete(brain, lang, data.getAuthor().getId(), subCmdArgs);
+			case "toggle":
+				return cmdToggle(brain, lang, data.getAuthor().getId(), subCmdArgs);
 			case "random":
 				return cmdRandom(brain, lang, data.getAuthor().getId(), subCmdArgs);
 			case "list":
@@ -125,7 +134,7 @@ public class ListCmd implements ICommand {
 	}
 
 	private String cmdCreate(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("newListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String privacy = subCmdArgs.getAsString("privacy");
 		UserListType listType = privacy != null ? UserListType.parseOrPrivate(privacy) : UserListType.PRIVATE;
 
@@ -140,7 +149,7 @@ public class ListCmd implements ICommand {
 	}
 
 	private String cmdAdd(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("addListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String item = subCmdArgs.getAsString("item");
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -154,7 +163,7 @@ public class ListCmd implements ICommand {
 	}
 
 	private String cmdRemove(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("removeListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		int index = subCmdArgs.getAsInteger("index");
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -173,7 +182,7 @@ public class ListCmd implements ICommand {
 	}
 
 	private String cmdDelete(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("deleteListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
 		if(existingList != null) {
@@ -189,8 +198,29 @@ public class ListCmd implements ICommand {
 		}
 	}
 
+	private String cmdToggle(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
+		UserCustomList existingList = getList(userID, listName, brain);
+
+		if (existingList != null) {
+			if (existingList.getOwnerID().equals(userID)) {
+				if (existingList.getType() == UserListType.PUBLIC) {
+					existingList.setType(UserListType.PRIVATE);
+				} else {
+					existingList.setType(UserListType.PUBLIC);
+				}
+
+				return lang.getMsg(Langs.LIST_PRIVACY_TOGGLED, new String[]{existingList.getName(), existingList.getType().toString()});
+			} else {
+				return lang.getError(Errors.NO_PERMISSION_USER, true);
+			}
+		} else {
+			return lang.getError(Errors.NOT_FOUND, true);
+		}
+	}
+
 	private String cmdRandom(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("randomListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
 		if(existingList != null) {
@@ -226,7 +256,7 @@ public class ListCmd implements ICommand {
 	}
 
 	private String cmdView(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
-		String listName = subCmdArgs.getAsString("viewListName").toLowerCase();
+		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList list = getList(userID, listName, brain);
 
 		if(list != null) {
