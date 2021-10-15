@@ -164,10 +164,10 @@ public class ListCmd implements ICommand {
 
 	private String cmdRemove(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
-		int index = subCmdArgs.getAsInteger("index");
+		int index = subCmdArgs.getAsInteger("index") - 1;
 		UserCustomList existingList = getList(userID, listName, brain);
 
-		if(existingList != null && index >= 0) {
+		if (existingList != null && index >= 0) {
 			if (existingList.getValues().size() > index) {
 				String removed = existingList.getValues().get(index);
 				existingList.getValues().remove(index);
@@ -176,7 +176,7 @@ public class ListCmd implements ICommand {
 			} else {
 				return lang.getError(Errors.NOT_FOUND, true);
 			}
-		}else{
+		} else {
 			return lang.getError(Errors.NOT_FOUND, true);
 		}
 	}
