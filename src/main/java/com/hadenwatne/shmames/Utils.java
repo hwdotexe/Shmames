@@ -251,20 +251,21 @@ public class Utils {
 	public static boolean checkUserPermission(Guild server, BotSetting setting, User user) {
 		if(server != null) {
 			if (setting.getType() == BotSettingType.ROLE) {
-				Member member = server.getMember(user);
 				String sv = setting.getValue();
 
+				if (Shmames.isDebug)
+					return true;
+
+				if (sv.equals("everyone"))
+					return true;
+
+				Member member = server.retrieveMember(user).complete();
+
 				if (member != null) {
-					if (Shmames.isDebug)
-						return true;
-
-					if (sv.equals("everyone"))
-						return true;
-
 					if (sv.equals("administrator"))
 						return member.hasPermission(Permission.ADMINISTRATOR);
 
-					Role r = member.getGuild().getRolesByName(sv, true).get(0);
+					Role r = server.getRolesByName(sv, true).get(0);
 
 					return member.getRoles().contains(r);
 				}
