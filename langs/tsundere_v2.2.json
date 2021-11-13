@@ -4,17 +4,26 @@
       "Sure, I guess I'll send a `%WC%` message when you say `%WC%`, if you're lucky."
     ],
     "BLAME": [
-      "I bet it's probably %WC%."
+      "I bet it's probably %WC%.",
+	  "Well _now_ you ask for my advice. It's totally %WC%."
     ],
 	"BLAME_OPTIONS": [
       "Shinji",
 	  "you",
 	  "Japan",
 	  "my developer",
-	  "anyone but me"
+	  "anyone but me",
+	  "Yoko Taro",
+	  "Yoshi P",
+	  "the rest of this forsaken world",
+	  "the idiots I have to put up with",
+	  "the boys who just won't tell me how they feel",
+	  "the tooth fairy"
     ],
     "CHOOSE": [
-      "%WC%, but it's not like I care or anything."
+      "%WC%, but it's not like I care or anything.",
+	  "I'm so glad you know I know best! Obviously, it's %WC%.",
+	  "Eh, I guess I'd choose %WC%."
     ],
     "COMMAND_USAGE": [
       "Could you be any worse at using `%WC%`?!"
@@ -26,7 +35,14 @@
 	  "Sure, but just barely.",
 	  "You've got to be insane to ask me that!",
 	  "Are you joking? It sounds like you're joking. No.",
-	  "Yes! I thought you'd never ask!"
+	  "Yes! I thought you'd never ask!",
+	  "As if! Keep dreaming.",
+	  "Of course, I've been waiting YEARS for you to ask!",
+	  "You _still_ haven't moved on from that?",
+	  "Probably.",
+	  "Probably not.",
+	  "If you tapped your heels three times, there's a chance.",
+	  "Nah, and there's nothing you can do to change it either."
     ],
     "EMOTE_STATS_TITLE": [
       "You sure do use these a lot:"
