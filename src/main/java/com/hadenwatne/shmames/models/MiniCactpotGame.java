@@ -143,32 +143,7 @@ public class MiniCactpotGame {
 			}
 		}
 
-		if(isWinnerFirstPrize) {
-			// Check that 7,8,9 don't line up at all.
-			for(int indexToCheck : indexesToCheck) {
-				int[] accidentalWins = detectWinningPattern(numberPool, indexToCheck, false);
-
-				if(accidentalWins.length > 0) {
-					if(accidentalWins[0] <= 3) {
-						// Swap the lowest index with another number 5 spaces higher
-						int swapA = numberPool.get(accidentalWins[0]);
-						int swapB = numberPool.get(accidentalWins[0] + 5);
-
-						numberPool.set(accidentalWins[0], swapB);
-						numberPool.set(accidentalWins[0] + 5, swapA);
-					} else if (accidentalWins[2] >= 5){
-						// Swap the highest index with another number 5 spaces lower
-						int swapA = numberPool.get(accidentalWins[2]);
-						int swapB = numberPool.get(accidentalWins[2] - 5);
-
-						numberPool.set(accidentalWins[2], swapB);
-						numberPool.set(accidentalWins[2] - 5, swapA);
-					}
-
-					break;
-				}
-			}
-		} else if(isWinnerSecondPrize) {
+		if(isWinnerSecondPrize) {
 			// Check that 1,2,3 don't line up at all.
 			for(int indexToCheck : indexesToCheck) {
 				int[] accidentalWins = detectWinningPattern(numberPool, indexToCheck, true);
