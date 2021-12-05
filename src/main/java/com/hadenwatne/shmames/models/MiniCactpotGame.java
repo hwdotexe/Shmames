@@ -86,8 +86,10 @@ public class MiniCactpotGame {
 			rowCount++;
 
 			if(rowCount == 3) {
-				cp.append("\n");
+				cp.append(System.lineSeparator());
 				rowCount = 0;
+			} else {
+				cp.append("-");
 			}
 		}
 
