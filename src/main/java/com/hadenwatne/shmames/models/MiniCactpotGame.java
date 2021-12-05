@@ -66,7 +66,7 @@ public class MiniCactpotGame {
 		}
 
 		// Determine the number that gets revealed for free.
-		int revealedIdx = Utils.getRandom(10);
+		int revealedIdx = Utils.getRandom(9);
 		
 		// Convert it to a string and send it back.
 		StringBuilder cp = new StringBuilder();
