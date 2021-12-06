@@ -68,6 +68,7 @@ public class GuildOcarina extends AudioEventAdapter {
 	public void connect(VoiceChannel vc, MessageChannel ch) {
 		msgChannel = ch;
 		manager.openAudioConnection(vc);
+		manager.setSelfDeafened(true);
 	}
 	
 	public void stop() {
