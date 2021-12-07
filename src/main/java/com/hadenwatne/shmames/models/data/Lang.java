@@ -102,8 +102,8 @@ public class Lang {
     }
 
     private void populateDefaultValues() {
-        errors.put(Errors.ALREADY_EXISTS, new String[]{"I think you've already done that!"});
-        errors.put(Errors.BOT_ERROR, new String[]{"I sense a plot to destroy me."});
+        errors.put(Errors.ALREADY_EXISTS, new String[]{"That item already exists!"});
+        errors.put(Errors.BOT_ERROR, new String[]{"There was an internal error, and your request did not complete."});
         errors.put(Errors.CANNOT_DELETE, new String[]{"Sorry, I can't let you delete that. It's very precious to me."});
         errors.put(Errors.CHANNEL_NOT_FOUND, new String[]{"I can't find the correct channel for that."});
         errors.put(Errors.COMMAND_NOT_FOUND, new String[]{"That command hasn't been invented yet!"});
@@ -121,7 +121,7 @@ public class Lang {
         errors.put(Errors.HANGMAN_NOT_STARTED, new String[]{"There isn't a Hangman game running! Try starting one."});
         errors.put(Errors.HEY_THERE, new String[]{"Hey there! Try using `" + wildcard + " help`!"});
         errors.put(Errors.INCOMPLETE, new String[]{"I'm gonna need a few more details."});
-        errors.put(Errors.INCORRECT_ITEM_COUNT, new String[]{"You've supplied an incorrect number of thingz!"});
+        errors.put(Errors.INCORRECT_ITEM_COUNT, new String[]{"Incorrect number of arguments provided!"});
         errors.put(Errors.ITEMS_NOT_FOUND, new String[]{"There weren't any results."});
         errors.put(Errors.MUSIC_NOT_IN_CHANNEL, new String[]{"Please join a voice channel and run this command again."});
         errors.put(Errors.MUSIC_PLAYLIST_ALREADY_EXISTS, new String[]{"A Playlist with that name already exists on this server!"});
@@ -135,10 +135,10 @@ public class Lang {
         errors.put(Errors.MUSIC_QUEUE_EMPTY, new String[]{"There are no tracks in the Queue."});
         errors.put(Errors.MUSIC_QUEUE_PAGE_EMPTY, new String[]{"There are no tracks in the Queue on this page."});
         errors.put(Errors.MUSIC_WRONG_INPUT, new String[]{"Please enter a media URL or playlist name!"});
-        errors.put(Errors.NO_PERMISSION_BOT, new String[]{"I ran into some trouble with the law..."});
+        errors.put(Errors.NO_PERMISSION_BOT, new String[]{"I don't have permission to do that on this server."});
         errors.put(Errors.NO_PERMISSION_USER, new String[]{"I'm afraid I can't let you do that."});
-        errors.put(Errors.NOT_FOUND, new String[]{"That thing you said... I'm not sure what it is."});
-        errors.put(Errors.RESERVED_WORD, new String[]{"Sorry, you can't use that totally awesome name!"});
+        errors.put(Errors.NOT_FOUND, new String[]{"There were no results."});
+        errors.put(Errors.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"});
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."});
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});
         errors.put(Errors.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"});
@@ -151,7 +151,7 @@ public class Lang {
         messages.put(Langs.CHOOSE, new String[]{"I choose: " + wildcard + "!"});
         messages.put(Langs.COMMAND_USAGE, new String[]{"Give this a try: `" + wildcard + "`"});
         messages.put(Langs.EIGHT_BALL_OPTIONS, new String[]{"Definitely.", "Without a doubt.", "Yes - of course.", "You can bet on it.", "Most likely.", "It's looking good!", "Duh.", "Signs point to yes.", "Why don't you ask me later?", "Don't count on it.", "My reply is no.", "My sources say no.", "It's not looking good.", "I highly doubt it.", "Nope.", "No way.", "That's a negative."});
-        messages.put(Langs.EMOTE_STATS_TITLE, new String[]{"The Emoji Abacus doth say:"});
+        messages.put(Langs.EMOTE_STATS_TITLE, new String[]{"Here are your emoji tallies:"});
         messages.put(Langs.ENHANCE_OPTIONS, new String[]{"Done - " + wildcard + " is now solid gold.", "Done - " + wildcard + " now smells nice.", "Done - " + wildcard + " is now 10GP richer.", "Done - " + wildcard + " won a Nobel Prize.", "Done - " + wildcard + " now has friends.", "Done - " + wildcard + " just made the newspaper", "Done - " + wildcard + " is now part Dragon", "Done - " + wildcard + " now owns the One Ring", "Done - " + wildcard + " is now a wizard, Harry.", "Done - " + wildcard + " came back from the dead.", "Done - " + wildcard + " is now a weeb.", "Done - " + wildcard + " just won the lottery.", "Done - " + wildcard + " now plays Minecraft.", "Done - " + wildcard + " can now rap mad rhymes.", "Done - " + wildcard + "'s ex lover just moved to Madagascar.", "Done - " + wildcard + " is now good at archery.", "Done - " + wildcard + " can now cast magic.", "Done - " + wildcard + " now has a college degree", "Done - " + wildcard + " just invented the lightsaber.", "Done - " + wildcard + " is now radioactive."});
         messages.put(Langs.FAMILY_CREATED, new String[]{"The Family was created! Now let's go add other servers!"});
         messages.put(Langs.FAMILY_JOIN_CODE, new String[]{"**Join Code for " + wildcard + "**" + linebreak + "`" + wildcard + "`" + linebreak + "_Use this one-time code to join a server to the Family._"});
@@ -192,8 +192,8 @@ public class Lang {
         messages.put(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{"Queued the `" + wildcard + "` Playlist!"});
         messages.put(Langs.POLL_TITLE, new String[]{"== POLL =="});
         messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"== POLL (Results) =="});
-        messages.put(Langs.RESET_EMOTE_STATS, new String[]{"We didn't need those anyway ;} #StatsCleared!"});
-        messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"PM'd you the deets :punch:"});
+        messages.put(Langs.RESET_EMOTE_STATS, new String[]{"Emoji usage stats have been reset!"});
+        messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."});
         messages.put(Langs.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"});
         messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings:"});
         messages.put(Langs.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"});
@@ -204,7 +204,7 @@ public class Lang {
         messages.put(Langs.TIMER_STARTED, new String[]{"Started a new :alarm_clock: for " + wildcard});
         messages.put(Langs.TRIGGER_LIST, new String[]{"I'll respond to these things:"});
         messages.put(Langs.WHATSHOULDIDO_INTRO_OPTIONS, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"});
-        messages.put(Langs.WHATSHOULDIDO_OPTIONS, new String[]{"defile a grave", "rob a candy store", "deface a subway", "steal a baby's candy", "pirate a low-budget film", "start a riot about gas prices", "rewatch the Star Wars sequels", "curse at an old woman", "donate to a shady charity in Saudi Arabia", "prank call insurance companies", "sell drugs to minors", "write a program in PHP", "narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic", "confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky", "create a reaction video for YouTube", "invite me to other servers >:}", "sell essential oils", "demand to see the manager", "start a Flat Earth rally", "uncover the truth behind 9/11", "vaguepost on Instagram for attention", "play Madden", "scam impressionable old women out of their retirement funds", "get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant", "steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "write a furry comic", "protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner", "drink questionable chemicals", "throw a prom in the McDonalds Playplace"});
+        messages.put(Langs.WHATSHOULDIDO_OPTIONS, new String[]{"defile a grave", "rob a candy store", "deface a subway", "steal a baby's candy", "pirate a low-budget film", "start a riot about gas prices", "rewatch the Star Wars sequels", "curse at an old woman", "donate to a shady charity in Saudi Arabia", "prank call insurance companies", "sell drugs to minors", "write a program in PHP", "narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic", "confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky", "create a reaction video for YouTube", "invite me to other servers >:}", "sell essential oils", "demand to see the manager", "start a Flat Earth rally", "uncover the truth behind 9/11", "vaguepost on Instagram for attention", "play Madden", "scam impressionable old women out of their retirement funds", "get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant", "steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner", "drink questionable chemicals", "throw a prom in the McDonalds Playplace"});
         messages.put(Langs.WHEN_OPTIONS, new String[]{"In "+wildcard+" years", "In "+wildcard+" minutes", ""+wildcard+" days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe", "Not sure, ask your mom", ""+wildcard+" years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe", "In precisely "+wildcard+"", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall", "Probably within "+wildcard+" days", "I'd say in "+wildcard+" months", "In "+wildcard+"? "+wildcard+"? Maybe "+wildcard+"?", "Between "+wildcard+" and "+wildcard+" centuries", "Sooner shall "+wildcard+" days pass", ""+wildcard+" seconds", ""+wildcard+" hours, "+wildcard+" minutes, and "+wildcard+" seconds", "Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"});
     }
 }

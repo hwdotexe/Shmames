@@ -22,22 +22,12 @@ public class FirstJoinListener extends ListenerAdapter {
 		if(!b.didSendWelcome()){
 			// Try to set default values for this specific guild.
 			try{
-				List<TextChannel> general = e.getGuild().getTextChannelsByName("general", true);
+				TextChannel defaultChannel = e.getGuild().getDefaultChannel();
 
-				if(general.size() > 0){
+				if(defaultChannel != null){
 					BotSetting pin = b.getSettingFor(BotSettingName.PIN_CHANNEL);
-					BotSetting rem = b.getSettingFor(BotSettingName.REMOVAL_EMOTE);
-					BotSetting app = b.getSettingFor(BotSettingName.APPROVAL_EMOTE);
 
-					pin.setValue(general.get(0).getName(), b);
-
-					List<Emote> em = e.getGuild().getEmotes();
-
-					if(em.size() > 0)
-						rem.setValue(em.get(0).getName(), b);
-
-					if(em.size() > 1)
-						app.setValue(em.get(1).getName(), b);
+					pin.setValue(defaultChannel.getName(), b);
 				}
 			}catch (Exception ex){
 				ShmamesLogger.log(LogType.ERROR, "Shmames could not set default bot settings.");
@@ -66,6 +56,17 @@ public class FirstJoinListener extends ListenerAdapter {
 				"the world. Thank you for installing me!\n" +
 				"\n" +
 				"For first-time setup, please take a look at the bot's\n" +
-				"settings, and tweak the values you want to change:```Use \"`"+name+" modify`\" to get started, and \"`"+name+" help`\" for a list of commands.").queue();
+				"settings, and tweak the values you want to change.\n" +
+				"• Choose the roles allowed to play music and create polls.\n" +
+				"• Decide which emoji should be used to \"approve\" or \"remove\" a message.\n" +
+				"• Add a custom alias to summon the bot.\n" +
+				"\n" +
+				"Some interesting commands to get you started:\n" +
+				"• "+name+" help\n" +
+				"• "+name+" modify\n" +
+				"• "+name+" music\n" +
+				"\n" +
+				"Hint: you can use my name to run a command in chat, or you can use a Slash Command (/)." +
+				"```").queue();
 	}
 }

@@ -98,7 +98,7 @@ public class Help implements ICommand {
 				messagingChannel.sendMessage(eBuilder);
 			} else {
 				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
-					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue());
+					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue(), (error) -> messagingChannel.sendMessage(eBuilder));
 
 					return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
 				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {
