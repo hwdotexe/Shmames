@@ -186,9 +186,12 @@ public class Roll implements ICommand {
 					}
 
 					diceSB.append("]");
-					diceSB.append("{");
-					diceSB.append(subTotal);
-					diceSB.append("}");
+
+					if(diceToRoll > 1) {
+						diceSB.append("{");
+						diceSB.append(subTotal);
+						diceSB.append("}");
+					}
 				} else {
 					// Flat modifier.
 					subTotal += diceSizeOrFlat;

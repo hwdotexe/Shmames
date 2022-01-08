@@ -33,23 +33,23 @@ public class ForumWeapon implements ICommand {
 				.addSubCommands(
 						CommandBuilder.Create("create", "Create a new Forum Weapon.")
 								.addParameters(
-										new CommandParameter("createWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
+										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
-										new CommandParameter("createWeaponLink", "The URL this weapon directs to.", ParameterType.STRING)
+										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
 								)
 								.build(),
 						CommandBuilder.Create("update", "Change the URL of an existing Forum Weapon.")
 								.addParameters(
-										new CommandParameter("updateWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
+										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
-										new CommandParameter("updateWeaponLink", "The URL this weapon directs to.", ParameterType.STRING)
+										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
 								)
 								.build(),
 						CommandBuilder.Create("remove", "Delete a Forum Weapon.")
 								.addParameters(
-										new CommandParameter("removeWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
+										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
 								.build(),
@@ -66,7 +66,7 @@ public class ForumWeapon implements ICommand {
 								.build(),
 						CommandBuilder.Create("alias", "Add an alternative name for a Forum Weapon.")
 								.addParameters(
-										new CommandParameter("aliasWeaponName", "The name of the Forum Weapon.", ParameterType.STRING)
+										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
 										new CommandParameter("newAlias", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern("\\w{3,}")

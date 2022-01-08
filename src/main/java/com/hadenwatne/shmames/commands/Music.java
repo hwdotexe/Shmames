@@ -58,10 +58,9 @@ public class Music implements ICommand {
 								.build(),
 						CommandBuilder.Create("stop", "Stop playing music.")
 								.build(),
-						CommandBuilder.Create("loop", "Loop the track or queue.")
-								.addParameters(
-										new CommandParameter("loopQueue", "Whether to loop the queue.", ParameterType.BOOLEAN)
-								)
+						CommandBuilder.Create("loop", "Toggle track looping.")
+								.build(),
+						CommandBuilder.Create("loopqueue", "Toggle queue looping.")
 								.build(),
 						CommandBuilder.Create("playing", "See what's playing.")
 								.addAlias("np")
@@ -201,7 +200,7 @@ public class Music implements ICommand {
 					return lang.getError(Errors.TRACK_NOT_PLAYING, false);
 				}
 			case "stop":
-				if (ocarina.getNowPlaying() != null) {
+				if (ocarina.isInVoiceChannel()) {
 					if (canUse(server, brain, author)) {
 						ocarina.stop();
 						return "";
@@ -213,8 +212,13 @@ public class Music implements ICommand {
 				}
 			case "loop":
 				if (canUse(server, brain, author)) {
-					cmdLoop(lang, ocarina, subCommand.getArguments());
-					return "";
+					return cmdLoop(lang, ocarina);
+				} else {
+					return lang.getError(Errors.NO_PERMISSION_USER, true);
+				}
+			case "loopqueue":
+				if (canUse(server, brain, author)) {
+					return cmdLoopQueue(lang, ocarina);
 				} else {
 					return lang.getError(Errors.NO_PERMISSION_USER, true);
 				}
@@ -305,16 +309,14 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdLoop(Lang lang, GuildOcarina ocarina, ShmamesCommandArguments args) {
-		boolean loopQueue = args.getAsBoolean("loopQueue");
+	private String cmdLoop(Lang lang, GuildOcarina ocarina) {
+		boolean isLoop = ocarina.toggleLoop();
+		return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"});
+	}
 
-		if (loopQueue) {
-			boolean isLoopQueue = ocarina.toggleLoopQueue();
-			return lang.getMsg(Langs.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{isLoopQueue ? "ON" : "OFF"});
-		} else {
-			boolean isLoop = ocarina.toggleLoop();
-			return lang.getMsg(Langs.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"});
-		}
+	private String cmdLoopQueue(Lang lang, GuildOcarina ocarina) {
+		boolean isLoopQueue = ocarina.toggleLoopQueue();
+		return lang.getMsg(Langs.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{isLoopQueue ? "ON" : "OFF"});
 	}
 
 	private String cmdQueue(Brain brain, Lang lang, GuildOcarina ocarina, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData commandData) {

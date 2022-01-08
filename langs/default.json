@@ -67,7 +67,7 @@
       "That's a negative."
     ],
     "EMOTE_STATS_TITLE": [
-      "The Emoji Abacus doth say:"
+      "Here are your emoji tallies:"
     ],
     "ENHANCE_OPTIONS": [
       "Done - %WC% is now solid gold.",
@@ -209,10 +209,10 @@
       "== POLL (Results) =="
     ],
     "RESET_EMOTE_STATS": [
-      "We didn't need those anyway ;} #StatsCleared!"
+      "Emoji usage stats have been reset!"
     ],
     "SENT_PRIVATE_MESSAGE": [
-      "PM'd you the deets :punch:"
+      "I sent some details over in your DMs."
     ],
     "SERVER_FAMILY_LIST": [
       "This server has joined the following Families:"
@@ -296,7 +296,6 @@
       "sell out to EA",
       "text while driving",
       "watch YouTube Trending",
-      "write a furry comic",
       "protest public health guidelines",
       "talk to the hand",
       "make smalltalk with the sign-spinner",
@@ -335,10 +334,10 @@
   },
   "errors": {
     "ALREADY_EXISTS": [
-      "I think you've already done that!"
+      "That item already exists!"
     ],
     "BOT_ERROR": [
-      "I sense a plot to destroy me."
+      "There was an internal error, and your request did not complete."
     ],
     "CANNOT_DELETE": [
       "Sorry, I can't let you delete that. It's very precious to me."
@@ -392,7 +391,7 @@
       "I'm gonna need a few more details."
     ],
     "INCORRECT_ITEM_COUNT": [
-      "You've supplied an incorrect number of thingz!"
+      "Incorrect number of arguments provided!"
     ],
     "ITEMS_NOT_FOUND": [
       "There weren't any results."
@@ -434,16 +433,16 @@
       "Please enter a media URL or playlist name!"
     ],
     "NO_PERMISSION_BOT": [
-      "I ran into some trouble with the law..."
+      "I don't have permission to do that on this server."
     ],
     "NO_PERMISSION_USER": [
       "I'm afraid I can't let you do that."
     ],
     "NOT_FOUND": [
-      "That thing you said... I'm not sure what it is."
+      "There were no results."
     ],
     "RESERVED_WORD": [
-      "Sorry, you can't use that totally awesome name!"
+      "It looks like you tried to use a reserved word. Try a different one!"
     ],
     "SERVER_FAMILY_LIST_EMPTY": [
       "This server does not belong to a Family."

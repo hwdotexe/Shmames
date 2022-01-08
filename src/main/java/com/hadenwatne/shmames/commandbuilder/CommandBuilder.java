@@ -185,6 +185,10 @@ public class CommandBuilder {
             if(subCommand.getParameters().size() > 0) {
                 boolean anySubCommandParameterRequired = subCommand.getParameters().stream().anyMatch(CommandParameter::isRequired);
 
+                if(!anySubCommandParameterRequired) {
+                    scb.append("\\b");
+                }
+
                 scb.append("\\s");
 
                 if(!anySubCommandParameterRequired) {
