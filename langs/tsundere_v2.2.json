@@ -178,7 +178,7 @@
       "Check your DMs, _not like I want to help or anything, but..._"
     ],
     "SERVER_FAMILY_LIST": [
-      "You have these friends:"
+      "You have no friends. I suppose these people will have to do:"
     ],
     "SETTING_LIST_TITLE": [
       "Things you can break:"
@@ -193,7 +193,7 @@
       "I've counted these up since you can't:"
     ],
     "TALLY_REMOVED": [
-      "`%WC%` has bit the dust."
+      "What?! You made me keep track of that for _nothing?_"
     ],
 	"THOUGHTS_OPTIONS": [
       "That is insulting! Why would you even ask me that?",
@@ -201,7 +201,9 @@
 	  "Eww, no way, yuck!",
 	  "It's not so bad after you get used to it.",
 	  "It cries itself to sleep every night!",
-	  "I don't see why I should hate it. Yet."
+	  "I don't see why I should hate it. Yet.",
+	  "Why, do _you_ like it? I think it sucks.",
+	  "It's great! Not that _you_ would understand..."
     ],
     "TIMER_STARTED": [
       "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
@@ -213,7 +215,8 @@
       "Well, if you ask me, you should",
       "Why should I care if you",
       "You seem like the kind of person who would",
-      "Why do I have to decide? For all I care, you should"
+      "Why do I have to decide? For all I care, you should",
+      "Instead of bothering me, you should"
     ],
 	"WHATSHOULDIDO_OPTIONS": [
       "bury that robot in the bottom of the ocean",
@@ -224,7 +227,9 @@
       "stop being such a pervert",
       "let me win Monopoly next time",
       "tell me I'm your princess",
-      "roll for initiative"
+      "roll for initiative",
+      "draw me like one of your French girls...wait, ew, no",
+      "move to Antarctica for all I care"
     ],
 	"WHEN_OPTIONS": [
       "Like that'll ever happen",
@@ -252,34 +257,34 @@
       "Stop making up new commands, _baka!_"
     ],
     "FAMILY_ALREADY_EXISTS": [
-      "You already own a family with that name! Please choose a different name."
+      "You already own a family with that name! You're forgetting them _already?_"
     ],
     "FAMILY_ALREADY_JOINED": [
-      "This server already belongs to that family!"
+      "This server already belongs to that family! I know you're lonely, but geez!"
     ],
     "FAMILY_INVALID_DETAIL": [
-      "Invalid Family name or Join Code!"
+      "Invalid Family name or Join Code! Learn to spell!"
     ],
     "FAMILY_NOT_JOINED": [
       "That server has not joined that Family!"
     ],
     "FAMILY_MEMBER_MAXIMUM_REACHED": [
-      "That family has reached the maximum number of servers!"
+      "It's...too crowded! I can't fit any more servers in that family!"
     ],
     "FAMILY_MAXIMUM_REACHED": [
-      "You can only join up to 3 families!"
+      "You can barely juggle the relationships you _have_, why do you want more?! 3 is enough!"
     ],
     "FAMILY_SERVER_LIST_EMPTY": [
-      "This Family does not contain any servers."
+      "This family is empty. How sad."
     ],
     "FORUM_WEAPON_MAXIMUM_REACHED": [
       "Stop! I can't take it anymore! 100 is way too many!"
     ],
     "FORUM_WEAPON_OWNED_OTHER": [
-      "That's somebody else's weapon!"
+      "That's somebody else's weapon! Keep your hands to yourself!"
     ],
     "GUILD_REQUIRED": [
-      "That command must be run on a server."
+      "Look, I appreciate that you're taking one-on-one time with me and all, but I need a server for that one."
     ],
     "HANGMAN_ALREADY_GUESSED": [
       "You've already guessed that letter!"
@@ -324,16 +329,16 @@
       "There are no tracks in that Playlist on this page."
     ],
     "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED": [
-      "Playlists currently support a max of 50 tracks."
+      "Stop! You'll be listening to these for _hours!_ 50's the limit!"
     ],
     "MUSIC_QUEUE_EMPTY": [
-      "There are no tracks in the Queue."
+      "Nothing's queued up. Honestly, I've met better DJs in kindergarten."
     ],
     "MUSIC_QUEUE_PAGE_EMPTY": [
-      "There are no tracks in the Queue on this page."
+      "Nothing's on that page, baka."
     ],
     "MUSIC_WRONG_INPUT": [
-      "Please enter a media URL or playlist name!"
+      "What even is that? Give me a URL, a playlist name, or leave me be!"
     ],
     "NO_PERMISSION_BOT": [
       "Look, after all I've done for you, you owe me one!"
@@ -345,19 +350,19 @@
       "You made me search EVERYWHERE, and I couldn't find a single thing!"
     ],
     "RESERVED_WORD": [
-      "Sorry, you can't use that totally awesome name!"
+      "Sorry, you can't use that _totally awesome_ name!"
     ],
     "SERVER_FAMILY_LIST_EMPTY": [
-      "This server does not belong to a Family."
+      "You don't have any families. What, are you lonely? I'm standing right here!"
     ],
     "SETTING_NOT_FOUND": [
-      "I couldn't find that setting."
+      "I didn't find that setting. Maybe _you_ should go look for it instead!"
     ],
     "TIME_VALUE_INCORRECT": [
       "You DID go to Kindergarten to learn how to tell time, _right_?"
     ],
     "TRACK_NOT_PLAYING": [
-      "There isn't a track playing right now."
+      "What, are you hearing things now? There's nothing playing."
     ],
     "WRONG_USAGE": [
       "Out of all the people in the world, I'm stuck with you! Baka! You don't even know how to use that command properly! Must I do everything myself?!"
