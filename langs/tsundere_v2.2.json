@@ -178,7 +178,7 @@
       "Check your DMs, _not like I want to help or anything, but..._"
     ],
     "SERVER_FAMILY_LIST": [
-      "You have these friends:"
+      "You have no friends. I suppose these people will have to do:"
     ],
     "SETTING_LIST_TITLE": [
       "Things you can break:"
@@ -193,7 +193,7 @@
       "I've counted these up since you can't:"
     ],
     "TALLY_REMOVED": [
-      "`%WC%` has bit the dust."
+      "What?! You made me keep track of that for _nothing?_"
     ],
 	"THOUGHTS_OPTIONS": [
       "That is insulting! Why would you even ask me that?",
@@ -201,7 +201,9 @@
 	  "Eww, no way, yuck!",
 	  "It's not so bad after you get used to it.",
 	  "It cries itself to sleep every night!",
-	  "I don't see why I should hate it. Yet."
+	  "I don't see why I should hate it. Yet.",
+	  "Why, do _you_ like it? I think it sucks.",
+	  "It's great! Not that _you_ would understand..."
     ],
     "TIMER_STARTED": [
       "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
@@ -213,7 +215,8 @@
       "Well, if you ask me, you should",
       "Why should I care if you",
       "You seem like the kind of person who would",
-      "Why do I have to decide? For all I care, you should"
+      "Why do I have to decide? For all I care, you should",
+      "Instead of bothering me, you should"
     ],
 	"WHATSHOULDIDO_OPTIONS": [
       "bury that robot in the bottom of the ocean",
@@ -224,7 +227,9 @@
       "stop being such a pervert",
       "let me win Monopoly next time",
       "tell me I'm your princess",
-      "roll for initiative"
+      "roll for initiative",
+      "draw me like one of your French girls...wait, ew, no",
+      "move to Antarctica for all I care"
     ],
 	"WHEN_OPTIONS": [
       "Like that'll ever happen",
@@ -252,13 +257,13 @@
       "Stop making up new commands, _baka!_"
     ],
     "FAMILY_ALREADY_EXISTS": [
-      "You already own a family with that name! Please choose a different name."
+      "You already own a family with that name! You're forgetting them _already?_"
     ],
     "FAMILY_ALREADY_JOINED": [
-      "This server already belongs to that family!"
+      "This server already belongs to that family! I know you're lonely, but geez!"
     ],
     "FAMILY_INVALID_DETAIL": [
-      "Invalid Family name or Join Code!"
+      "Invalid Family name or Join Code! Learn to spell!"
     ],
     "FAMILY_NOT_JOINED": [
       "That server has not joined that Family!"
@@ -345,7 +350,7 @@
       "You made me search EVERYWHERE, and I couldn't find a single thing!"
     ],
     "RESERVED_WORD": [
-      "Sorry, you can't use that totally awesome name!"
+      "Sorry, you can't use that _totally awesome_ name!"
     ],
     "SERVER_FAMILY_LIST_EMPTY": [
       "This server does not belong to a Family."
