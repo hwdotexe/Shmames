@@ -55,7 +55,7 @@ public class SimonSays implements ICommand {
 
 		// If the command is being run on a server, check for emotes.
 		if(brain != null && data.getServer() != null) {
-			Matcher m = Pattern.compile("(?!<)(:[\\w\\d_]+:)(?!\\d+>)", Pattern.CASE_INSENSITIVE).matcher(message);
+			Matcher m = Pattern.compile("(?!<):([\\w\\d_]+):(?!\\d+>)", Pattern.CASE_INSENSITIVE).matcher(message);
 
 			while (m.find()) {
 				String eName = m.group(1);

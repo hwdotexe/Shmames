@@ -49,12 +49,12 @@ public class Choose implements ICommand {
 		// Using another Matcher to separate out the 2 options inside the command arguments.
 		// At this point during runtime, the command has already been validated.
 		if (m.find()) {
-			int mutator = Utils.getRandom(50);
+			int mutator = Utils.getRandom(75);
 			String response;
 
-			if (mutator < 5) { // 10%
+			if (mutator < 5) {
 				response = "Neither";
-			} else if (mutator < 10) { // 20%
+			} else if (mutator < 10) {
 				response = "Both";
 			} else {
 				// Starting at group 2 base because the pattern is wrapped inside a named group.
