@@ -149,8 +149,8 @@ public class ForumWeapon implements ICommand {
 	}
 
 	private String cmdCreate(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
-		String weaponName = args.getAsString("createWeaponName").toLowerCase();
-		String weaponURL = args.getAsString("createWeaponLink");
+		String weaponName = args.getAsString("weaponName").toLowerCase();
+		String weaponURL = args.getAsString("weaponURL");
 
 		if (getFWCount(brain) < 100) {
 				if (weaponName.equals("create") || weaponName.equals("update") || weaponName.equals("remove")
@@ -177,8 +177,8 @@ public class ForumWeapon implements ICommand {
 	}
 
 	private String cmdUpdate(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
-		String weaponName = args.getAsString("updateWeaponName").toLowerCase();
-		String weaponURL = args.getAsString("updateWeaponLink");
+		String weaponName = args.getAsString("weaponName").toLowerCase();
+		String weaponURL = args.getAsString("weaponURL");
 		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);
 
 		if (forumWeapon != null) {
@@ -195,7 +195,7 @@ public class ForumWeapon implements ICommand {
 	}
 
 	private String cmdRemove(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
-		String weaponName = args.getAsString("removeWeaponName").toLowerCase();
+		String weaponName = args.getAsString("weaponName").toLowerCase();
 		ForumWeaponObj fwr = findFW(weaponName, brain, server);
 
 		if (fwr != null) {
@@ -251,7 +251,7 @@ public class ForumWeapon implements ICommand {
 	}
 
 	private String cmdAlias(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
-		String weaponName = args.getAsString("aliasWeaponName").toLowerCase();
+		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String aliasName = args.getAsString("newAlias");
 		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);
 
