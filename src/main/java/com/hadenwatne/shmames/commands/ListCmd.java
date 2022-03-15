@@ -16,6 +16,7 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -292,7 +293,13 @@ public class ListCmd implements ICommand {
 		eBuilder.setColor(new Color(219, 217, 157));
 		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 
-		eBuilder.addField(listName,listString,false);
+		List<String> userList = Utils.splitString(listString, MessageEmbed.VALUE_MAX_LENGTH);
+		String embedFieldTitle = listName;
+
+		for(String listSegment : userList) {
+			eBuilder.addField(embedFieldTitle,listSegment,false);
+			embedFieldTitle = "";
+		}
 
 		return eBuilder;
 	}
