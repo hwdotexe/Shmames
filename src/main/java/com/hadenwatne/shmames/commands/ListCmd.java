@@ -115,7 +115,7 @@ public class ListCmd implements ICommand {
 			case "toggle":
 				return cmdToggle(brain, lang, data.getAuthor().getId(), subCmdArgs);
 			case "random":
-				return cmdRandom(brain, lang, data.getAuthor().getId(), subCmdArgs);
+				return cmdRandom(brain, lang, data.getAuthor().getId(), subCmdArgs, data.getMessagingChannel());
 			case "list":
 				EmbedBuilder eBuilder = cmdList(brain, data.getAuthor().getId());
 
@@ -220,13 +220,21 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdRandom(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdRandom(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
-		if(existingList != null) {
-			return Utils.getRandomStringFromList(existingList.getValues());
-		}else{
+		if (existingList != null) {
+			String randomItem = Utils.getRandomStringFromList(existingList.getValues());
+			int randomItemIndex = existingList.getValues().indexOf(randomItem) + 1;
+
+
+			EmbedBuilder eBuilder = buildViewEmbed(existingList.getName(), "#" + randomItemIndex + ": " + randomItem);
+
+			messagingChannel.sendMessage(eBuilder);
+
+			return "";
+		} else {
 			return lang.getError(Errors.NOT_FOUND, true);
 		}
 	}
