@@ -1,13 +1,12 @@
 package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.ShmamesLogger;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.services.RandomService;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Lang {
@@ -34,7 +33,7 @@ public class Lang {
             String[] messageArray = messages.get(key);
 
             if (messageArray.length > 1) {
-                return processBreaks(messageArray[Utils.getRandom(messageArray.length)]);
+                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]);
             }
 
             return processBreaks(messageArray[0]);
@@ -67,7 +66,7 @@ public class Lang {
             String[] messageArray = errors.get(key);
 
             if (messageArray.length > 1) {
-                return processBreaks(messageArray[Utils.getRandom(messageArray.length)]) + s;
+                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]) + s;
             }
 
             return processBreaks(errors.get(key)[0]) + s;
@@ -75,7 +74,7 @@ public class Lang {
             if (!langName.equalsIgnoreCase("default")) {
                 return Shmames.getDefaultLang().getError(key, showError) + s;
             } else {
-                ShmamesLogger.log(LogType.ERROR, "An unknown Lang key was used: " + key);
+                LoggingService.Log(LogType.ERROR, "An unknown Lang key was used: " + key);
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
             }
         }
@@ -138,6 +137,7 @@ public class Lang {
         errors.put(Errors.NO_PERMISSION_BOT, new String[]{"I don't have permission to do that on this server."});
         errors.put(Errors.NO_PERMISSION_USER, new String[]{"I'm afraid I can't let you do that."});
         errors.put(Errors.NOT_FOUND, new String[]{"There were no results."});
+        errors.put(Errors.PAGE_NOT_FOUND, new String[]{"The page you requested is empty or does not exist."});
         errors.put(Errors.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"});
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."});
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});

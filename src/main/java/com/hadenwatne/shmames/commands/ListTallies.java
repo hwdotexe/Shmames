@@ -8,7 +8,8 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.PaginationService;
 
 public class ListTallies implements ICommand {
 	private final CommandStructure commandStructure;
@@ -31,9 +32,9 @@ public class ListTallies implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		LinkedHashMap<String, Integer> tSorted = Utils.sortHashMap(brain.getTallies());
+		LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
 		
-		String tallies = Utils.generateList(tSorted, -1, true);
+		String tallies = PaginationService.GenerateList(tSorted, -1, true);
 
 		return lang.getMsg(Langs.TALLY_LIST)+"\n"+tallies;
 	}

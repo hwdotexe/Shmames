@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.models.data.*;
+import com.hadenwatne.shmames.services.FileService;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 
@@ -32,7 +33,7 @@ public class BrainController {
 
 	public BrainController() {
 		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-		brains = new ArrayList<Brain>();
+		brains = new ArrayList<>();
 
 		loadStories();
 		loadHangmanDictionaries();
@@ -48,7 +49,7 @@ public class BrainController {
 			}catch (Exception ignored) {}
 		}
 
-		String storiesData = Utils.loadFileAsString(storiesFile);
+		String storiesData = FileService.LoadFileAsString(storiesFile);
 
 		if (storiesData.length() > 0) {
 			stories = gson.fromJson(storiesData, StorytimeStories.class);
@@ -69,7 +70,7 @@ public class BrainController {
 			}catch (Exception ignored) {}
 		}
 
-		String dictionariesData = Utils.loadFileAsString(dictionariesFile);
+		String dictionariesData = FileService.LoadFileAsString(dictionariesFile);
 
 		if (dictionariesData.length() > 0) {
 			dictionaries = gson.fromJson(dictionariesData, HangmanDictionaries.class);
@@ -83,7 +84,7 @@ public class BrainController {
 
 	public void loadMotherBrain() {
 		File motherBrainFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + MOTHER_BRAIN_FILE);
-		String motherBrainData = Utils.loadFileAsString(motherBrainFile);
+		String motherBrainData = FileService.LoadFileAsString(motherBrainFile);
 
 		if (motherBrainData.length() > 0) {
 			motherBrain = gson.fromJson(motherBrainData, MotherBrain.class);
@@ -97,10 +98,10 @@ public class BrainController {
 
 	public void loadServerBrains(){
 		// Load server settings files.
-		File[] brainFiles = Utils.listFilesInDirectory(BRAIN_SERVER_DIRECTORY, new JSONFileFilter());
+		File[] brainFiles = FileService.ListFilesInDirectory(BRAIN_SERVER_DIRECTORY, new JSONFileFilter());
 
 		for(File b : brainFiles) {
-			Brain brain = gson.fromJson(Utils.loadFileAsString(b), Brain.class);
+			Brain brain = gson.fromJson(FileService.LoadFileAsString(b), Brain.class);
 
 			// If this brain belongs to a deleted server, remove it and continue.
 			if(Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
@@ -143,7 +144,7 @@ public class BrainController {
 			}
 
 			// Remove any settings that are no longer supported.
-			for(BotSetting bs : new ArrayList<BotSetting>(brain.getSettings())) {
+			for(BotSetting bs : new ArrayList<>(brain.getSettings())) {
 				boolean contains = false;
 
 				for(BotSettingName s : BotSettingName.values()) {
@@ -221,27 +222,27 @@ public class BrainController {
 	 * @param brain The Brain to save.
 	 */
 	public void saveBrain(Brain brain) {
-		Utils.saveBytesToFile(BRAIN_SERVER_DIRECTORY, brain.getGuildID()+ ".json", gson.toJson(brain).getBytes());
+		FileService.SaveBytesToFile(BRAIN_SERVER_DIRECTORY, brain.getGuildID()+ ".json", gson.toJson(brain).getBytes());
 	}
 	
 	/**
 	 * Saves the global settings object to file.
 	 */
 	public void saveMotherBrain() {
-		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, MOTHER_BRAIN_FILE , gson.toJson(motherBrain).getBytes());
+		FileService.SaveBytesToFile(BRAIN_PARENT_DIRECTORY, MOTHER_BRAIN_FILE , gson.toJson(motherBrain).getBytes());
 	}
 
 	/**
 	 * Saves the file that contains stories.
 	 */
 	public void saveStories() {
-		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, STORIES_FILE , gson.toJson(stories).getBytes());
+		FileService.SaveBytesToFile(BRAIN_PARENT_DIRECTORY, STORIES_FILE , gson.toJson(stories).getBytes());
 	}
 
 	/**
 	 * Saves the file that contains hangman dictionaries.
 	 */
 	public void saveDictionaries() {
-		Utils.saveBytesToFile(BRAIN_PARENT_DIRECTORY, HANGMAN_FILE , gson.toJson(dictionaries).getBytes());
+		FileService.SaveBytesToFile(BRAIN_PARENT_DIRECTORY, HANGMAN_FILE , gson.toJson(dictionaries).getBytes());
 	}
 }

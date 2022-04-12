@@ -11,11 +11,12 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.ShmamesService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -319,7 +320,7 @@ public class FamilyCmd implements ICommand {
 				}
 
 				if (contains) {
-					sb.append(Utils.generateList(memberGuilds, -1, true, true));
+					sb.append(PaginationService.GenerateList(memberGuilds, -1, true, true));
 				} else {
 					sb.append("_");
 					sb.append(lang.getError(Errors.FAMILY_SERVER_LIST_EMPTY, false));
@@ -340,7 +341,7 @@ public class FamilyCmd implements ICommand {
 		// This server first.
 		addEmoteListField(embed, server, messagingChannel);
 
-		for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+		for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 			addEmoteListField(embed, family, messagingChannel);
 		}
 
@@ -372,7 +373,7 @@ public class FamilyCmd implements ICommand {
 			}
 
 			if(contains) {
-				sb.append(Utils.generateList(families, 3, false, false));
+				sb.append(PaginationService.GenerateList(families, 3, false, false));
 			}else{
 				sb.append("_");
 				sb.append(lang.getError(Errors.SERVER_FAMILY_LIST_EMPTY, false));
@@ -403,7 +404,7 @@ public class FamilyCmd implements ICommand {
 			}
 		}
 
-		List<String> emoteLists = Utils.splitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+		List<String> emoteLists = PaginationService.SplitString(guildEmotes.toString(), MessageEmbed.VALUE_MAX_LENGTH);
 
 		if((embed.length() + emoteLists.get(0).length()) > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
 			channel.sendMessage(embed);

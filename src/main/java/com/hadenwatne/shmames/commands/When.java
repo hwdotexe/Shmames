@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -9,8 +8,8 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.RandomService;
 
-import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ public class When implements ICommand {
 		Matcher m = Pattern.compile(lang.wildcard).matcher(msg);
 
 		while (m.find()) {
-			msg = msg.replaceFirst(m.group(), Integer.toString(Utils.getRandom(150) + 1));
+			msg = msg.replaceFirst(m.group(), Integer.toString(RandomService.GetRandom(150) + 1));
 		}
 
 		if (data.getMessagingChannel().hasHook()) {

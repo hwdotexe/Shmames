@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -15,10 +15,10 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.models.data.MotherBrain;
+import com.hadenwatne.shmames.services.DataService;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
 
 /**
  * This command is not exposed to users by default, and is here only for the benefit of the bot developer.
@@ -142,7 +142,7 @@ public class Dev implements ICommand {
 		StringBuilder answer = new StringBuilder("**Command Usage Statistics**");
 
 		// Sort
-		LinkedHashMap<String, Integer> cmdStats = Utils.sortHashMap(Shmames.getBrains().getMotherBrain().getCommandStats());
+		LinkedHashMap<String, Integer> cmdStats = DataService.SortHashMap(Shmames.getBrains().getMotherBrain().getCommandStats());
 
 		for (String c : cmdStats.keySet()) {
 			answer.append("\n");
@@ -199,7 +199,7 @@ public class Dev implements ICommand {
 			fo.flush();
 			fo.close();
 		} catch (Exception e) {
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 
 		// Send to me.
@@ -223,6 +223,6 @@ public class Dev implements ICommand {
 
 		Shmames.getBrains().saveMotherBrain();
 
-		ShmamesLogger.write();
+		LoggingService.Write();
 	}
 }

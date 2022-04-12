@@ -6,7 +6,7 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.PaginationService;
 
 public class ListTriggers implements ICommand {
 	private final CommandStructure commandStructure;
@@ -29,7 +29,7 @@ public class ListTriggers implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		String list = Utils.generateList(brain.getTriggers(), -1, true);
+		String list = PaginationService.GenerateList(brain.getTriggers(), -1, true);
 
 		return lang.getMsg(Langs.TRIGGER_LIST)+"\n"+list;
 	}

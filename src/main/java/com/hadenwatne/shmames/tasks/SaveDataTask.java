@@ -1,19 +1,17 @@
 package com.hadenwatne.shmames.tasks;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.MotherBrain;
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.HTTPService;
+import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
 
 /**
  * Saves data objects to disk at a regular interval, and changes the bot's status for fun.
@@ -32,7 +30,7 @@ public class SaveDataTask extends TimerTask{
 	
 	public void run() {
 		MotherBrain mb = Shmames.getBrains().getMotherBrain();
-		String action = Utils.getRandomHashMap(mb.getStatuses().keySet());
+		String action = RandomService.GetRandomHashMap(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
 
 		updateRandomSeed();
@@ -45,12 +43,12 @@ public class SaveDataTask extends TimerTask{
 
 		Shmames.getBrains().saveMotherBrain();
 
-		ShmamesLogger.log(LogType.SYSTEM, "Autosave Task Ran");
-		ShmamesLogger.write();
+		LoggingService.Log(LogType.SYSTEM, "Autosave Task Ran");
+		LoggingService.Write();
 	}
 
 	private void updateRandomSeed() {
-		String resp = Utils.sendHTTPReq(HTTPVerb.GET, "https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new", null);
+		String resp = HTTPService.SendHTTPReq(HTTPVerb.GET, "https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new", null);
 
 		if(resp != null) {
 			resp = resp.trim();
@@ -61,10 +59,10 @@ public class SaveDataTask extends TimerTask{
 				seed = Long.parseLong(resp);
 			} catch (Exception e) {
 				seed = System.currentTimeMillis();
-				ShmamesLogger.logException(e);
+				LoggingService.LogException(e);
 			}
 
-			Utils.getRandomObj().setSeed(seed);
+			RandomService.GetRandomObj().setSeed(seed);
 		}
 	}
 }

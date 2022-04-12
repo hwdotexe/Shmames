@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.ShmamesLogger;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -14,6 +14,8 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.tasks.PollTask;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -64,7 +66,7 @@ public class Poll implements ICommand {
 
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		if (Utils.checkUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.ALLOW_POLLS), data.getAuthor())) {
+		if (ShmamesService.CheckUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.ALLOW_POLLS), data.getAuthor())) {
 			String subCmd = data.getSubCommandData().getCommandName();
 			ShmamesCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
 
@@ -109,7 +111,7 @@ public class Poll implements ICommand {
 		String time = args.getAsString("time");
 		String question = args.getAsString("question");
 		String options = args.getAsString("options");
-		int seconds = Utils.convertTimeStringToSeconds(time);
+		int seconds = DataService.ConvertTimeStringToSeconds(time);
 
 		if (seconds > 0) {
 			// Use friendly channel names when possible.
@@ -137,10 +139,10 @@ public class Poll implements ICommand {
 				} catch (InsufficientPermissionException e) {
 					// Do nothing; we don't have permission
 				} catch (Exception e) {
-					ShmamesLogger.logException(e);
+					LoggingService.LogException(e);
 				}
 
-				PollModel poll = new PollModel(messagingChannel.getChannel().getId(), question, optionsList, seconds, Utils.createID());
+				PollModel poll = new PollModel(messagingChannel.getChannel().getId(), question, optionsList, seconds, RandomService.CreateID());
 				brain.getActivePolls().add(poll);
 
 				return "";

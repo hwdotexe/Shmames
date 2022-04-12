@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +9,14 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.models.Response;
+import com.hadenwatne.shmames.services.PaginationService;
 
 public class ListResponses implements ICommand {
 	private final CommandStructure commandStructure;
@@ -29,7 +31,8 @@ public class ListResponses implements ICommand {
 		this.commandStructure = CommandBuilder.Create("listresponses", "Displays the list of random responses for the specified trigger type.")
 				.addAlias("list responses")
 				.addParameters(
-						responseType
+						responseType,
+						new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
 				)
 				.build();
 	}
@@ -47,29 +50,26 @@ public class ListResponses implements ICommand {
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		String rType = data.getArguments().getAsString("responseType");
+		int page = data.getArguments().getAsInteger("page");
 
 		if(TriggerType.byName(rType) != null) {
-			StringBuilder sb = new StringBuilder();
+			List<Response> responses = brain.getResponsesFor(TriggerType.byName(rType));
 
-			sb.append("**");
-			sb.append(rType.toUpperCase());
-			sb.append(" Responses:**\n");
-
-			List<Response> rs = brain.getResponsesFor(TriggerType.byName(rType));
-			List<String> rsText = new ArrayList<String>();
-
-			for(Response r : rs){
-				rsText.add(r.getResponse());
+			if(responses.size() == 0) {
+				return lang.getError(Errors.ITEMS_NOT_FOUND, true);
 			}
 
-			String list = Utils.generateList(rsText, -1, true, true);
+			List<String> responseTexts = new ArrayList<>();
 
-			if(list.length() == 0)
-				sb.append(lang.getError(Errors.ITEMS_NOT_FOUND, true));
-			else
-				sb.append(list);
+			for(Response response : responses) {
+				responseTexts.add(response.getResponse());
+			}
 
-			return sb.toString();
+			PaginatedList paginatedList = PaginationService.GetPaginatedList(responseTexts, 10, 75, true);
+
+			data.getMessagingChannel().sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), rType.toUpperCase() + " Responses", Color.ORANGE, lang));
+
+			return "";
 		} else {
 			StringBuilder types = new StringBuilder();
 

@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -9,12 +8,15 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.UserListType;
+import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.UserCustomList;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.PaginationService;
+import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -74,7 +76,8 @@ public class ListCmd implements ICommand {
 						CommandBuilder.Create("view", "View the items in a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to view.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+")
+												.setPattern("[\\w\\d-_]+"),
+										new CommandParameter("page", "The name of the list to view.", ParameterType.INTEGER, false)
 										)
 								.build()
 				)
@@ -225,7 +228,7 @@ public class ListCmd implements ICommand {
 		UserCustomList existingList = getList(userID, listName, brain);
 
 		if (existingList != null) {
-			String randomItem = Utils.getRandomStringFromList(existingList.getValues());
+			String randomItem = RandomService.GetRandomStringFromList(existingList.getValues());
 			int randomItemIndex = existingList.getValues().indexOf(randomItem) + 1;
 
 
@@ -254,11 +257,11 @@ public class ListCmd implements ICommand {
 		}
 
 		String userListsFormatted = userLists.size() > 0
-				?  Utils.generateList(userLists, 1, false)
+				?  PaginationService.GenerateList(userLists, 1, false)
 				: "No lists found";
 
 		String publicListsFormatted = publicLists.size() > 0
-				? Utils.generateList(publicLists, -1, false, false)
+				? PaginationService.GenerateList(publicLists, -1, false, false)
 				: "No lists found";
 
 		return buildListEmbed(userListsFormatted, publicListsFormatted);
@@ -266,16 +269,19 @@ public class ListCmd implements ICommand {
 
 	private String cmdView(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
+		int page = subCmdArgs.getAsInteger("page");
 		UserCustomList list = getList(userID, listName, brain);
 
 		if(list != null) {
-			String listValues = list.getValues().size() > 0
-					? Utils.generateList(list.getValues(), 1, true, false)
-					: "No items found";
+			List<String> listItems = list.getValues();
 
-			EmbedBuilder eBuilder = buildViewEmbed(list.getName(), listValues);
+			if(listItems.size() == 0) {
+				return lang.getError(Errors.ITEMS_NOT_FOUND, true);
+			}
 
-			messagingChannel.sendMessage(eBuilder);
+			PaginatedList paginatedList = PaginationService.GetPaginatedList(listItems, 10, -1, true);
+
+			messagingChannel.sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), listName, Color.YELLOW, lang));
 
 			return "";
 		}else{
@@ -301,7 +307,7 @@ public class ListCmd implements ICommand {
 		eBuilder.setColor(new Color(219, 217, 157));
 		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
 
-		List<String> userList = Utils.splitString(listString, MessageEmbed.VALUE_MAX_LENGTH);
+		List<String> userList = PaginationService.SplitString(listString, MessageEmbed.VALUE_MAX_LENGTH);
 		String embedFieldTitle = listName;
 
 		for(String listSegment : userList) {

@@ -3,6 +3,7 @@ package com.hadenwatne.shmames;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.FileService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,17 +21,17 @@ public class LangLoader {
 
 		// Always save a new copy of the default language file.
 		Lang def = new Lang("default");
-		Utils.saveBytesToFile(LANG_DIRECTORY, def.getLangName() + ".json", gson.toJson(def).getBytes());
+		FileService.SaveBytesToFile(LANG_DIRECTORY, def.getLangName() + ".json", gson.toJson(def).getBytes());
 
 		// Load language files.
 		loadLangs();
 	}
 
 	private void loadLangs() {
-		File[] langFiles = Utils.listFilesInDirectory(LANG_DIRECTORY, new JSONFileFilter());
+		File[] langFiles = FileService.ListFilesInDirectory(LANG_DIRECTORY, new JSONFileFilter());
 
 		for(File l : langFiles) {
-			Lang lang = gson.fromJson(Utils.loadFileAsString(l), Lang.class);
+			Lang lang = gson.fromJson(FileService.LoadFileAsString(l), Lang.class);
 
 			langs.add(lang);
 		}

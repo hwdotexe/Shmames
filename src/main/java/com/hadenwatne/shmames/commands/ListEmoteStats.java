@@ -9,9 +9,9 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.DataService;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
-import com.hadenwatne.shmames.Utils;
 
 public class ListEmoteStats implements ICommand {
 	private final CommandStructure commandStructure;
@@ -48,7 +48,7 @@ public class ListEmoteStats implements ICommand {
 		}
 
 		// Sort
-		LinkedHashMap<String, Integer> emotes = Utils.sortHashMap(emStats);
+		LinkedHashMap<String, Integer> emotes = DataService.SortHashMap(emStats);
 
 		// Send to the server
 		if (emotes.keySet().size() > 0) {

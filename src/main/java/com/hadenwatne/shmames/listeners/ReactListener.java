@@ -9,13 +9,12 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.data.Brain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class ReactListener extends ListenerAdapter {
 						String removalEmoteID = b.getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
 						String approvalEmoteID = b.getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
 
-						Utils.incrementEmoteTally(b, emo.getId());
+						ShmamesService.IncrementEmoteTally(b, emo.getId());
 
 						if (emo.getId().equals(removalEmoteID)) {
 							tallyMessage(removalEmoteID, message, b, BotSettingName.REMOVAL_THRESHOLD);

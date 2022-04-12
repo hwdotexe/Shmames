@@ -6,7 +6,6 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Utils;
 
 public class WhatShouldIDo implements ICommand {
 	private final CommandStructure commandStructure;

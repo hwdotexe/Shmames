@@ -7,17 +7,12 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Utils;
-
-import javax.annotation.Nullable;
 
 public class Choose implements ICommand {
 	private final CommandStructure commandStructure;
@@ -49,7 +44,7 @@ public class Choose implements ICommand {
 		// Using another Matcher to separate out the 2 options inside the command arguments.
 		// At this point during runtime, the command has already been validated.
 		if (m.find()) {
-			int mutator = Utils.getRandom(75);
+			int mutator = RandomService.GetRandom(75);
 			String response;
 
 			if (mutator < 5) {
@@ -58,7 +53,7 @@ public class Choose implements ICommand {
 				response = "Both";
 			} else {
 				// Starting at group 2 base because the pattern is wrapped inside a named group.
-				response = m.group(2 + Utils.getRandom(2));
+				response = m.group(2 + RandomService.GetRandom(2));
 			}
 
 			String choice = lang.getMsg(Langs.CHOOSE, new String[]{response});

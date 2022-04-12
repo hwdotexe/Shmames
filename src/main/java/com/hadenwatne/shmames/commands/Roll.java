@@ -14,7 +14,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.RandomService;
 
 public class Roll implements ICommand {
 	private final CommandStructure commandStructure;
@@ -107,7 +107,7 @@ public class Roll implements ICommand {
 					diceSB.append(" [");
 
 					for (int i = 0; i < diceToRoll; i++) {
-						int roll = Utils.getRandom(diceSizeOrFlat) + 1;
+						int roll = RandomService.GetRandom(diceSizeOrFlat) + 1;
 
 						rolls.put(i, roll);
 					}

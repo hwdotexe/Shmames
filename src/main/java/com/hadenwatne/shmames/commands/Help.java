@@ -14,11 +14,11 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
 
 public class Help implements ICommand {
 	private final CommandStructure commandStructure;
@@ -56,7 +56,7 @@ public class Help implements ICommand {
 			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getCommandStructure().getName().equalsIgnoreCase(commandHelp)) {
 					// Create list of aliases
-					String list = Utils.generateList(c.getCommandStructure().getAliases(), -1, false, false);
+					String list = PaginationService.GenerateList(c.getCommandStructure().getAliases(), -1, false, false);
 
 					EmbedBuilder eBuilder = new EmbedBuilder();
 
@@ -85,7 +85,7 @@ public class Help implements ICommand {
 				}
 			}
 
-			String list = Utils.generateList(cmds, -1, false, false);
+			String list = PaginationService.GenerateList(cmds, -1, false, false);
 
 			EmbedBuilder eBuilder = new EmbedBuilder();
 

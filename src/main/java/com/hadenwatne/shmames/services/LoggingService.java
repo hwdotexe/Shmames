@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames;
+package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.enums.LogType;
 
@@ -8,11 +8,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ShmamesLogger {
+public class LoggingService {
     private static List<String> tempLog;
     private static Calendar cal;
 
-    public static void init() {
+    public static void Init() {
         tempLog = new ArrayList<>();
         cal = Calendar.getInstance();
 
@@ -23,14 +23,14 @@ public class ShmamesLogger {
         }
     }
 
-    public static void log(LogType type, String log) {
+    public static void Log(LogType type, String log) {
         log = "["+getDateTime()+"]["+type.name()+"] "+log;
 
         System.out.println(log);
         tempLog.add(log);
     }
 
-    public static void logException(Throwable e) {
+    public static void LogException(Throwable e) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("[");
@@ -54,7 +54,7 @@ public class ShmamesLogger {
         tempLog.add(log);
     }
 
-    public static void write() {
+    public static void Write() {
         try {
             File logFile = new File("logs/"+getDate()+".log");
             FileWriter fw;

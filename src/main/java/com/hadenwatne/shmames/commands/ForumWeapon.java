@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -18,10 +18,12 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.entities.Guild;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.ShmamesService;
 
 
 public class ForumWeapon implements ICommand {
@@ -122,7 +124,7 @@ public class ForumWeapon implements ICommand {
 			case "alias":
 				return cmdAlias(lang, brain, data.getServer(), subCommand.getArguments());
 			case "prune":
-				if (Utils.checkUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.PRUNE_FW), data.getAuthor())) {
+				if (ShmamesService.CheckUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.PRUNE_FW), data.getAuthor())) {
 					return cmdPrune(lang, brain, data.getServer(), data.getMessagingChannel());
 				} else {
 					return lang.getError(Errors.NO_PERMISSION_USER, true);
@@ -220,7 +222,7 @@ public class ForumWeapon implements ICommand {
 
 			sb.append(buildServerFWList(server));
 
-			for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+			for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 				sb.append(System.lineSeparator());
 				sb.append(System.lineSeparator());
 				sb.append(buildServerFWList(family));
@@ -241,7 +243,7 @@ public class ForumWeapon implements ICommand {
 		sb.append(searchServerFWList(brain, server.getName(), searchTerm));
 
 		// Search the Family.
-		for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+		for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
 			sb.append(System.lineSeparator());
 			sb.append(searchServerFWList(familyBrain, family.getName(), searchTerm));
@@ -307,7 +309,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		// Check other Family servers.
-		for (Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+		for (Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 			Brain b = Shmames.getBrains().getBrain(family.getId());
 
 			for (ForumWeaponObj fw : b.getForumWeapons()) {
@@ -329,7 +331,7 @@ public class ForumWeapon implements ICommand {
 		}
 
 		// Check other Family servers.
-		for (Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+		for (Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 			Brain b = Shmames.getBrains().getBrain(family.getId());
 
 			for (ForumWeaponObj fw : b.getForumWeapons()) {
@@ -354,8 +356,8 @@ public class ForumWeapon implements ICommand {
 			fwList.put(fws.getItemName(), fws.getUses());
 		}
 
-		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.generateList(fwSorted, -1, true);
+		LinkedHashMap<String, Integer> fwSorted = DataService.SortHashMap(fwList);
+		String list = PaginationService.GenerateList(fwSorted, -1, true);
 
 		return "**"+g.getName()+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> None Found");
 	}
@@ -368,8 +370,8 @@ public class ForumWeapon implements ICommand {
 				fwList.put(fws.getItemName(), fws.getUses());
 		}
 
-		LinkedHashMap<String, Integer> fwSorted = Utils.sortHashMap(fwList);
-		String list = Utils.generateList(fwSorted, -1, true);
+		LinkedHashMap<String, Integer> fwSorted = DataService.SortHashMap(fwList);
+		String list = PaginationService.GenerateList(fwSorted, -1, true);
 
 		return "**"+serverName+"**" + System.lineSeparator() + (list.length()>2 ? list.substring(2) : "> No Results");
 	}
@@ -402,14 +404,14 @@ public class ForumWeapon implements ICommand {
 			fo.flush();
 			fo.close();
 		} catch (Exception e) {
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 
 		// Send the file.
 		try {
 			messagingChannel.sendFile(f, (success -> {f.delete();}), (failure -> {}));
 		} catch(Exception e) {
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 	}
 }

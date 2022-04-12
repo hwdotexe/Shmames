@@ -15,12 +15,13 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.ShmamesService;
 
 public class Modify implements ICommand {
 	private final CommandStructure commandStructure;
@@ -58,7 +59,7 @@ public class Modify implements ICommand {
 		User author = data.getAuthor();
 		Guild server = data.getServer();
 
-		if(Utils.checkUserPermission(server, canModify, author)) {
+		if(ShmamesService.CheckUserPermission(server, canModify, author)) {
 			String settingName = data.getArguments().getAsString("setting");
 			String settingValue = data.getArguments().getAsString("value");
 			ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
@@ -120,7 +121,7 @@ public class Modify implements ICommand {
 							langNames.add(l.getLangName());
 						}
 
-						String langList = Utils.generateList(langNames, 0, false, false);
+						String langList = PaginationService.GenerateList(langNames, 0, false, false);
 
 						return lang.getError(Errors.NOT_FOUND, true) + System.lineSeparator() + "Options: " + langList;
 					}
@@ -215,7 +216,7 @@ public class Modify implements ICommand {
 					langs.add(l.getLangName());
 				}
 
-				sb.append(Utils.generateList(langs, -1, false, false));
+				sb.append(PaginationService.GenerateList(langs, -1, false, false));
 
 				eBuilder.addField("Possible Values", sb.toString(), false);
 				break;
@@ -257,7 +258,7 @@ public class Modify implements ICommand {
 				mention = setting.getValue();
 		}
 
-		String value = "**Type:** " + setting.getType() + "\n**Value:** " + mention;
+		String value = "**Current Value:** " + mention;
 
 		eBuilder.addField("**__"+setting.getName()+"__**", value, true);
 	}

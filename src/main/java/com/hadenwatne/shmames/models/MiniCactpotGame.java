@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.models;
 
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.List;
 public class MiniCactpotGame {
 	public static String BuildNewGame() {
 		// 1/20 = 0.05 = 5% chance of winning
-		boolean isWinnerFirstPrize = Utils.getRandom(20) == 0;
-		boolean isWinnerSecondPrize = !isWinnerFirstPrize && Utils.getRandom(20) == 0;
+		boolean isWinnerFirstPrize = RandomService.GetRandom(20) == 0;
+		boolean isWinnerSecondPrize = !isWinnerFirstPrize && RandomService.GetRandom(20) == 0;
 		List<Integer> numberPool = new ArrayList<>();
 
 		// Populate the number pool.
@@ -27,8 +27,8 @@ public class MiniCactpotGame {
 			}
 
 			// Scramble the first 3
-			int idxA = Utils.getRandom(3);
-			int idxB = Utils.getRandom(3);
+			int idxA = RandomService.GetRandom(3);
+			int idxB = RandomService.GetRandom(3);
 
 			int idxA_real = numberPool.get(idxA);
 			int idxB_real = numberPool.get(idxB);
@@ -66,7 +66,7 @@ public class MiniCactpotGame {
 		}
 
 		// Determine the number that gets revealed for free.
-		int revealedIdx = Utils.getRandom(9);
+		int revealedIdx = RandomService.GetRandom(9);
 		
 		// Convert it to a string and send it back.
 		StringBuilder cp = new StringBuilder();
@@ -100,10 +100,10 @@ public class MiniCactpotGame {
 	private static int[] generateWinningPattern() {
 		int initialOffset = 0;
 
-		switch(Utils.getRandom(3)){
+		switch(RandomService.GetRandom(3)){
 			case 0: // 0 spaces apart (idx 0,1,2)
 				// figure out if initial offset is 0, 3, or 6 indexes
-				switch(Utils.getRandom(3)){
+				switch(RandomService.GetRandom(3)){
 					case 0: // 0
 						break;
 					case 1: // 4
@@ -117,12 +117,12 @@ public class MiniCactpotGame {
 				return new int[] { initialOffset, initialOffset+1, initialOffset+2 };
 			case 1: // 3 spaces apart (idx 0,3,6)
 				// figure out if initial offset is 0, 1, or 2
-				initialOffset = Utils.getRandom(3);
+				initialOffset = RandomService.GetRandom(3);
 
 				return new int[] { initialOffset, initialOffset+3, initialOffset+6 };
 			case 2: // 4 spaces apart (idx 0,4,8 or idx 2,4,6)
 				// figure out if initial offset is 0 & 4 or 2 & 2
-				switch(Utils.getRandom(2)){
+				switch(RandomService.GetRandom(2)){
 					case 0: // 0 & 4
 						return new int[] { 0,4,8 };
 					case 1: // 2 & 2

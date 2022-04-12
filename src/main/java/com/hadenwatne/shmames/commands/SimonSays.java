@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,10 +12,8 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.Emote;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.exceptions.PermissionException;
-
-import javax.annotation.Nullable;
 
 public class SimonSays implements ICommand {
 	private final CommandStructure commandStructure;
@@ -59,7 +56,7 @@ public class SimonSays implements ICommand {
 
 			while (m.find()) {
 				String eName = m.group(1);
-				Emote emote = Utils.GetFamilyEmote(eName, brain, data.getServer());
+				Emote emote = ShmamesService.GetFamilyEmote(eName, brain, data.getServer());
 
 				if(emote != null) {
 					// Replace the emote name with the emote mention.
@@ -69,7 +66,7 @@ public class SimonSays implements ICommand {
 					Brain emoteBrain = Shmames.getBrains().getBrain(emote.getGuild().getId());
 					String eID = Long.toString(emote.getIdLong());
 
-					Utils.incrementEmoteTally(emoteBrain, eID);
+					ShmamesService.IncrementEmoteTally(emoteBrain, eID);
 				}
 			}
 		}

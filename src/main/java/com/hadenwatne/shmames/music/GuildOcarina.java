@@ -9,14 +9,13 @@ import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -230,7 +229,7 @@ public class GuildOcarina extends AudioEventAdapter {
 	
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-		ShmamesLogger.log(LogType.ERROR, "A music track is stuck: "+track.getInfo().title);
+		LoggingService.Log(LogType.ERROR, "A music track is stuck: "+track.getInfo().title);
 		this.skip();
 	}
 }

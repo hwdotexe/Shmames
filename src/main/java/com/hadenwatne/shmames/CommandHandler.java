@@ -20,6 +20,8 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.command.*;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.tasks.TypingTask;
@@ -107,10 +109,10 @@ public class CommandHandler {
 
 		// Log the command.
 		if(server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ commandText);
+			LoggingService.Log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ commandText);
 			lang = Shmames.getLangFor(server);
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ commandText);
+			LoggingService.Log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ commandText);
 		}
 
 		// Parse the command.
@@ -225,11 +227,11 @@ public class CommandHandler {
 
 		// Log the command statistic.
 		if (server != null) {
-			ShmamesLogger.log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
+			LoggingService.Log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 			lang = Shmames.getLangFor(server);
 			brain = Shmames.getBrains().getBrain(server.getId());
 		} else {
-			ShmamesLogger.log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
+			LoggingService.Log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 
 			if (command.requiresGuild()) {
 				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()), lang);
@@ -319,7 +321,7 @@ public class CommandHandler {
 						}
 
 						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
-						ShmamesLogger.logException(exception);
+						LoggingService.LogException(exception);
 						return null;
 					});
 		}catch (Exception e){
@@ -327,7 +329,7 @@ public class CommandHandler {
 				data.getMessagingChannel().getHook().setEphemeral(true);
 			}
 
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
 		}
 	}
@@ -352,7 +354,7 @@ public class CommandHandler {
 	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg, Lang lang) {
 		if (msg.hasHook()) {
 			if (r.length() > 0) {
-				for (String m : Utils.splitString(r, 2000)) {
+				for (String m : PaginationService.SplitString(r, 2000)) {
 					msg.sendMessage(m);
 				}
 			} else {
@@ -420,7 +422,7 @@ public class CommandHandler {
 
 			cUpdate.queue();
 		}catch (Exception e) {
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 	}
 

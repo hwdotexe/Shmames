@@ -3,7 +3,6 @@ package com.hadenwatne.shmames.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -11,6 +10,8 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.entities.Message;
 import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -45,7 +46,7 @@ public class React implements ICommand {
 		String word = data.getArguments().getAsString("word");
 
 		try {
-			Message toReact = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toReact = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
 
 			reactToMessageWithEmoji(toReact, word.toLowerCase());
 
@@ -75,7 +76,7 @@ public class React implements ICommand {
 
 		for (char letter : word.toCharArray()) {
 			if (chars.contains(letter)) {
-				String l = Utils.duplicateLetterToEmoji(letter);
+				String l = TextFormatService.DuplicateLetterToEmoji(letter);
 
 				if (l != null)
 					toReact.addReaction(l).queue();
@@ -83,7 +84,7 @@ public class React implements ICommand {
 				continue;
 			}
 
-			toReact.addReaction(Utils.letterToEmoji(letter)).queue();
+			toReact.addReaction(TextFormatService.LetterToEmoji(letter)).queue();
 			chars.add(letter);
 		}
 	}

@@ -14,6 +14,8 @@ import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.music.MusicManager;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
@@ -39,8 +41,8 @@ public final class Shmames {
 	 * @param args Program launch arguments.
 	 */
 	public static void main(String[] args) {
-		ShmamesLogger.init();
-		Utils.Init();
+		LoggingService.Init();
+		RandomService.Init();
 
 		langs = new LangLoader();
 		brains = new BrainController();
@@ -87,10 +89,10 @@ public final class Shmames {
 				brains.getMotherBrain().getWolframAPIKey();
 				brains.saveMotherBrain();
 
-				ShmamesLogger.log(LogType.ERROR, "Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
+				LoggingService.Log(LogType.ERROR, "Could not read bot API key. Please ensure the value \"botAPIKey\" in \"/brains/motherBrain.json\" has a correct bot token from Discord.");
 			}
 		} catch (Exception e) {
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 	}
 	

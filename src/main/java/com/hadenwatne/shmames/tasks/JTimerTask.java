@@ -3,7 +3,7 @@ package com.hadenwatne.shmames.tasks;
 import java.util.*;
 
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.shmames.Shmames;
@@ -89,7 +89,7 @@ public class JTimerTask {
 				b.getTimers().remove(this);
 			}
 		}catch (Exception e){
-			ShmamesLogger.logException(e);
+			LoggingService.LogException(e);
 		}
 	}
 }

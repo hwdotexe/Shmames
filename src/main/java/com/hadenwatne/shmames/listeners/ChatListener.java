@@ -1,21 +1,21 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.services.ShmamesService;
+import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.models.Response;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.HTTPService;
+import com.hadenwatne.shmames.services.RandomService;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.hadenwatne.shmames.*;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.command.ParsedCommandResult;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.models.Response;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ChatListener extends ListenerAdapter {
 	private final Lang defaultLang = Shmames.getDefaultLang();
@@ -54,7 +54,7 @@ public class ChatListener extends ListenerAdapter {
 
 				// Send a random message. Randomly.
 				if(!didTrigger) {
-					if (Utils.getRandom(175) == 0) {
+					if (RandomService.GetRandom(175) == 0) {
 						sendRandom(e.getTextChannel(), TriggerType.RANDOM, e.getMessage());
 					}
 				}
@@ -78,7 +78,7 @@ public class ChatListener extends ListenerAdapter {
 			if (server.getEmotes().contains(emo)) {
 				String id = Long.toString(emo.getIdLong());
 
-				Utils.incrementEmoteTally(brain, id);
+				ShmamesService.IncrementEmoteTally(brain, id);
 			}
 		}
 	}
@@ -95,13 +95,13 @@ public class ChatListener extends ListenerAdapter {
 						if (type != TriggerType.REACT) {
 							sendRandom(channel, type, message);
 						} else {
-							List<Emote> em = new ArrayList<Emote>(server.getEmotes());
+							List<Emote> em = new ArrayList<>(server.getEmotes());
 
-							for(Guild fg : Utils.GetConnectedFamilyGuilds(brain, server)) {
+							for(Guild fg : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 								em.addAll(fg.getEmotes());
 							}
 
-							message.addReaction(em.get(Utils.getRandom(em.size()))).queue();
+							message.addReaction(em.get(RandomService.GetRandom(em.size()))).queue();
 						}
 
 						return true;
@@ -126,10 +126,10 @@ public class ChatListener extends ListenerAdapter {
 		String name = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 
 		if(r.size() > 0) {
-			String response = r.get(Utils.getRandom(r.size())).getResponse().replaceAll("%NAME%", name);
+			String response = r.get(RandomService.GetRandom(r.size())).getResponse().replaceAll("%NAME%", name);
 
 			if (response.startsWith("[gif]"))
-				response = Utils.getGIF(response.split("\\[gif\\]", 2)[1], c.isNSFW() ? "low" : "high");
+				response = HTTPService.GetGIF(response.split("\\[gif\\]", 2)[1], c.isNSFW() ? "low" : "high");
 
 			if(t == TriggerType.LOVE || t == TriggerType.HATE) {
 				message.reply(response).queue();

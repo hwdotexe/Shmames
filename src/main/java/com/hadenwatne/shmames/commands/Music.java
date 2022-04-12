@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.models.PaginatedList;
+import com.hadenwatne.shmames.services.PaginationService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.RegexPatterns;
-import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.Playlist;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
@@ -27,8 +28,6 @@ import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.music.GuildOcarina;
 import com.hadenwatne.shmames.Shmames;
-
-import javax.annotation.Nullable;
 
 public class Music implements ICommand {
 	private final CommandStructure commandStructure;
@@ -489,7 +488,7 @@ public class Music implements ICommand {
 				eBuilder.addField(server.getName(), playlistNames, false);
 
 				// Then add each server in our family's playlists
-				for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+				for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 					Brain otherBrain = Shmames.getBrains().getBrain(family.getId());
 					String playlistNamesOther = createPlaylistNameList(lang, otherBrain.getPlaylists());
 
@@ -548,95 +547,36 @@ public class Music implements ICommand {
 	}
 
 	private void showQueue(Lang lang, List<AudioTrack> queue, ShmamesCommandMessagingChannel messagingChannel, int page) {
-		// Build the page.
-		StringBuilder sb = new StringBuilder();
-		page = Math.max(page, 1)-1;
-		int totalPages = (int)Math.ceil(queue.size()/10d);
+		List<String> trackTitles = new ArrayList<>();
 
-		for(int i=(page*10); i<(page*10)+10; i++) {
-			if(queue.size() > i) {
-				if(sb.length() > 0) {
-					sb.append("\n");
-				}
-
-				sb.append(i + 1);
-				sb.append(": ");
-				sb.append("`");
-				sb.append(queue.get(i).getInfo().title);
-				sb.append("`");
-			}
+		for(AudioTrack track : queue) {
+			trackTitles.add(track.getInfo().title);
 		}
 
-		EmbedBuilder eBuilder = buildBasicEmbed();
+		PaginatedList paginatedList = PaginationService.GetPaginatedList(trackTitles, 10, -1, true);
 
-		if(sb.length() == 0) {
-			if(page == 0) {
-				sb.append(lang.getError(Errors.MUSIC_QUEUE_EMPTY, false));
-			} else {
-				sb.append(lang.getError(Errors.MUSIC_QUEUE_PAGE_EMPTY, false));
-			}
-		}
-
-		if ((page+1) > totalPages) {
-			eBuilder.setTitle("Music Queue");
-		} else {
-			eBuilder.setTitle("Music Queue (page "+(page+1)+" of "+totalPages+")");
-		}
-
-		eBuilder.addField("Up Next", sb.toString(), false);
-
-		messagingChannel.sendMessage(eBuilder);
+		messagingChannel.sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), "Music Queue", new Color(43, 164, 188), lang));
 	}
 
 	private void showList(Lang lang, Playlist playlist, ShmamesCommandMessagingChannel messagingChannel, int page) {
-		// Build the page.
-		StringBuilder sb = new StringBuilder();
-		page = Math.max(page, 1)-1;
-		int perPage = 7;
-		int totalPages = (int)Math.ceil(playlist.getTracks().size()/(double)perPage);
+		List<String> playlistTracks = new ArrayList<>();
 
-		for(int i=(page*perPage); i<(page*perPage)+perPage; i++) {
-			if(playlist.getTracks().size() > i) {
-				if(sb.length() > 0) {
-					sb.append("\n");
-				}
+		for(String trackURL : playlist.getTracks()) {
+			String memo = playlist.getMemo(trackURL);
+			String trackText = "";
 
-				sb.append(i + 1);
-				sb.append(": ");
-
-				String url = playlist.getTracks().get(i);
-				String memo = playlist.getMemo(url);
-
-				if (memo != null && memo.length() > 0) {
-					sb.append(memo);
-					sb.append(" - ");
-				}
-
-				sb.append("`");
-				sb.append(url);
-				sb.append("`");
+			if (memo != null && memo.length() > 0) {
+				trackText = memo + " - ";
 			}
+
+			trackText = trackText + "`" + trackURL + "`";
+
+			playlistTracks.add(trackText);
 		}
 
-		EmbedBuilder eBuilder = buildBasicEmbed();
+		PaginatedList paginatedList = PaginationService.GetPaginatedList(playlistTracks, 10, -1, true);
 
-		if(sb.length() == 0) {
-			if(page == 0) {
-				sb.append(lang.getError(Errors.MUSIC_PLAYLIST_EMPTY, false));
-			} else {
-				sb.append(lang.getError(Errors.MUSIC_PLAYLIST_PAGE_EMPTY, false));
-			}
-		}
-
-		if ((page+1) > totalPages) {
-			eBuilder.setTitle("Playlist \""+playlist.getName()+"\"");
-		} else {
-			eBuilder.setTitle("Playlist \""+playlist.getName()+"\" (page "+(page+1)+" of "+totalPages+")");
-		}
-
-		eBuilder.addField("Tracks", sb.toString(), false);
-
-		messagingChannel.sendMessage(eBuilder);
+		messagingChannel.sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), "Playlist \""+playlist.getName()+"\"", new Color(43, 164, 188), lang));
 	}
 
 	private EmbedBuilder buildBasicEmbed() {
@@ -644,7 +584,6 @@ public class Music implements ICommand {
 
 		eBuilder.setColor(new Color(43, 164, 188));
 		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
-//		eBuilder.setFooter("Music is in Beta. Some features may not work as intended.");
 
 		return eBuilder;
 	}
@@ -667,7 +606,7 @@ public class Music implements ICommand {
 	}
 
 	private boolean canUse(Guild server, Brain brain, User user) {
-		return Utils.checkUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_MUSIC), user);
+		return ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_MUSIC), user);
 	}
 
 	private Playlist findPlaylistServer(String name, Brain b) {
@@ -690,7 +629,7 @@ public class Music implements ICommand {
 		}
 
 		// Check other Family servers.
-		for(Guild family : Utils.GetConnectedFamilyGuilds(brain, server)) {
+		for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
 			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
 			Playlist otherServerPlaylist = findPlaylistServer(name, familyBrain);
 

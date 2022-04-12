@@ -13,9 +13,10 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Message;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Utils;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 public class CringeThat implements ICommand {
@@ -60,7 +61,7 @@ public class CringeThat implements ICommand {
 		int iterations = times > 0 ? times : 1;
 
 		try {
-			Message toCringe = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toCringe = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
 			String cringe = toCringe.getContentDisplay();
 
 			return runCringeProcess(cringe, iterations);
@@ -84,7 +85,7 @@ public class CringeThat implements ICommand {
 			}
 
 			// Insert random text face expressions (25% chance)
-			if (Utils.getRandom(4) == 1) {
+			if (RandomService.GetRandom(4) == 1) {
 				Pattern wordEndsInO = Pattern.compile("\\b(.+o)\\b");
 
 				String[] cringeWords = cringe.split(" ");
@@ -123,7 +124,7 @@ public class CringeThat implements ICommand {
 					.replace("th ", "f ");
 
 			// Chooses a random word to stutter.
-			for (int s = 0; s < Utils.getRandom(4) + 1; s++) {
+			for (int s = 0; s < RandomService.GetRandom(4) + 1; s++) {
 				int pos = getRandomWordStartPosition(cringe);
 
 				if (pos > 0)
@@ -131,8 +132,8 @@ public class CringeThat implements ICommand {
 			}
 
 			// Insert a random amount of creepy asterisks.
-			for (int c = 0; c < Utils.getRandom(3); c++) {
-				String rItem = creepyAsterisks[Utils.getRandom(creepyAsterisks.length)];
+			for (int c = 0; c < RandomService.GetRandom(3); c++) {
+				String rItem = creepyAsterisks[RandomService.GetRandom(creepyAsterisks.length)];
 				int pos = getRandomWordStartPosition(cringe);
 
 				if (pos > 0)
@@ -140,8 +141,8 @@ public class CringeThat implements ICommand {
 			}
 
 			// Insert a random amount of creepy OwOs
-			for (int o = 0; o < Utils.getRandom(3); o++) {
-				String rItem = creepyOwos[Utils.getRandom(creepyOwos.length)];
+			for (int o = 0; o < RandomService.GetRandom(3); o++) {
+				String rItem = creepyOwos[RandomService.GetRandom(creepyOwos.length)];
 				int pos = getRandomWordStartPosition(cringe);
 
 				if (pos > 0)
@@ -166,7 +167,7 @@ public class CringeThat implements ICommand {
 		}
 
 		if (safeWords.size() > 0) {
-			String rWord = safeWords.get(Utils.getRandom(safeWords.size()));
+			String rWord = safeWords.get(RandomService.GetRandom(safeWords.size()));
 
 			return src.indexOf(rWord);
 		} else {

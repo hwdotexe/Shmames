@@ -1,17 +1,14 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.shmames.ShmamesLogger;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.shmames.Shmames;
-
-import java.util.List;
 
 public class FirstJoinListener extends ListenerAdapter {
 	@Override
@@ -30,7 +27,7 @@ public class FirstJoinListener extends ListenerAdapter {
 					pin.setValue(defaultChannel.getName(), b);
 				}
 			}catch (Exception ex){
-				ShmamesLogger.log(LogType.ERROR, "Shmames could not set default bot settings.");
+				LoggingService.Log(LogType.ERROR, "Shmames could not set default bot settings.");
 			}
 
 			// Try to send a welcome message.
@@ -38,7 +35,7 @@ public class FirstJoinListener extends ListenerAdapter {
 				sendMessage(e.getGuild().getDefaultChannel());
 				b.setSentWelcome();
 			}catch (Exception ex){
-				ShmamesLogger.log(LogType.ERROR, "Shmames could not send a welcome message.");
+				LoggingService.Log(LogType.ERROR, "Shmames could not send a welcome message.");
 			}
 		}
 	}

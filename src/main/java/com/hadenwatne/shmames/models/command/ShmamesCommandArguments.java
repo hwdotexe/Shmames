@@ -1,10 +1,9 @@
 package com.hadenwatne.shmames.models.command;
 
-import com.hadenwatne.shmames.ShmamesLogger;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.DataService;
 import net.dv8tion.jda.api.entities.*;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +37,7 @@ public class ShmamesCommandArguments {
         try {
             return (String) this.arguments.get(key);
         } catch (Exception e) {
-            ShmamesLogger.logException(e);
+            LoggingService.LogException(e);
         }
 
         return null;
@@ -49,7 +48,7 @@ public class ShmamesCommandArguments {
             try {
                 return (boolean) this.arguments.get(key);
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 
@@ -61,7 +60,7 @@ public class ShmamesCommandArguments {
             try {
                 return (Integer) this.arguments.get(key);
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 
@@ -73,13 +72,13 @@ public class ShmamesCommandArguments {
             try {
                 String id = stripID(getAsString(key));
 
-                if (Utils.isLong(id)) {
+                if (DataService.IsLong(id)) {
                     return server.getRoleById(id);
                 } else {
                     return server.getRolesByName(id, true).get(0);
                 }
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 
@@ -91,13 +90,13 @@ public class ShmamesCommandArguments {
             try {
                 String id = stripID(getAsString(key));
 
-                if (Utils.isLong(id)) {
+                if (DataService.IsLong(id)) {
                     return server.getMemberById(id).getUser();
                 } else {
                     return server.getMembersByName(id, true).get(0).getUser();
                 }
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 
@@ -109,13 +108,13 @@ public class ShmamesCommandArguments {
             try {
                 String id = stripID(getAsString(key));
 
-                if (Utils.isLong(id)) {
+                if (DataService.IsLong(id)) {
                     return server.getEmoteById(id);
                 } else {
                     return server.getEmotesByName(id, true).get(0);
                 }
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 
@@ -127,13 +126,13 @@ public class ShmamesCommandArguments {
             try {
                 String id = stripID(getAsString(key));
 
-                if (Utils.isLong(id)) {
+                if (DataService.IsLong(id)) {
                     return server.getTextChannelById(id);
                 } else {
                     return server.getTextChannelsByName(id, true).get(0);
                 }
             } catch (Exception e) {
-                ShmamesLogger.logException(e);
+                LoggingService.LogException(e);
             }
         }
 

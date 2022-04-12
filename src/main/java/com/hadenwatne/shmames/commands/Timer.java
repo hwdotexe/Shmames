@@ -2,7 +2,6 @@ package com.hadenwatne.shmames.commands;
 
 import java.util.concurrent.TimeUnit;
 
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -12,8 +11,8 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.DataService;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 
 public class Timer implements ICommand {
@@ -45,7 +44,7 @@ public class Timer implements ICommand {
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		String duration = data.getArguments().getAsString("duration");
 		String msg = data.getArguments().getAsString("message");
-		int seconds = Utils.convertTimeStringToSeconds(duration);
+		int seconds = DataService.ConvertTimeStringToSeconds(duration);
 		User author = data.getAuthor();
 		ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
 

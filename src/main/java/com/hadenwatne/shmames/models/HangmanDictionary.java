@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.models;
 
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.HashMap;
 
@@ -26,6 +26,6 @@ public class HangmanDictionary {
     }
 
     public String randomWord(){
-        return words.keySet().toArray()[Utils.getRandom(words.keySet().size())].toString();
+        return words.keySet().toArray()[RandomService.GetRandom(words.keySet().size())].toString();
     }
 }

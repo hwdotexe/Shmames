@@ -7,7 +7,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.HTTPService;
 
 public class Wiki implements ICommand {
 	private final CommandStructure commandStructure;
@@ -35,7 +35,7 @@ public class Wiki implements ICommand {
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		String query = data.getArguments().getAsString("query");
 
-		return Utils.getWolfram(query);
+		return HTTPService.GetWolfram(query);
 	}
 	
 	@Override

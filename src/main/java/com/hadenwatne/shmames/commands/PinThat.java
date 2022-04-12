@@ -1,9 +1,7 @@
 package com.hadenwatne.shmames.commands;
 
 import java.awt.Color;
-import java.util.List;
 
-import com.hadenwatne.shmames.Utils;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -11,6 +9,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
@@ -46,7 +45,7 @@ public class PinThat implements ICommand {
 		int messages = data.getArguments().getAsString("position").length();
 
 		try {
-			Message toPin = Utils.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toPin = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
 
 			boolean channelFound = false;
 			for (TextChannel ch : data.getServer().getTextChannels()) {

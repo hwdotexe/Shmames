@@ -7,8 +7,10 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.Utils;
+import com.hadenwatne.shmames.services.HTTPService;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 public class GIF implements ICommand {
 	private final CommandStructure commandStructure;
@@ -41,11 +43,11 @@ public class GIF implements ICommand {
 		// Obey the channel content settings, if applicable.
 		if(channel.getType() == ChannelType.TEXT){
 			if(((TextChannel)channel).isNSFW()){
-				return Utils.getGIF(search, "low");
+				return HTTPService.GetGIF(search, "low");
 			}
 		}
 
-		String gif = Utils.getGIF(search, "high");
+		String gif = HTTPService.GetGIF(search, "high");
 
 		if (data.getMessagingChannel().hasHook()) {
 			return "> _" + search + "_\n" + gif;

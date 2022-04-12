@@ -441,6 +441,9 @@
     "NOT_FOUND": [
       "There were no results."
     ],
+    "PAGE_NOT_FOUND": [
+      "The page you requested does not exist."
+    ],
     "RESERVED_WORD": [
       "It looks like you tried to use a reserved word. Try a different one!"
     ],

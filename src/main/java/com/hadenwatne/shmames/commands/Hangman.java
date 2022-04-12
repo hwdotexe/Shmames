@@ -13,10 +13,10 @@ import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Utils;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -148,9 +148,9 @@ public class Hangman implements ICommand {
 			if(availableDictionaries.size() == 0)
 				return lang.getError(Errors.NOT_FOUND, true);
 
-			dictionary = availableDictionaries.get(Utils.getRandom(availableDictionaries.size()));
+			dictionary = availableDictionaries.get(RandomService.GetRandom(availableDictionaries.size()));
 		} else {
-			dictionary = dictionaries.get(Utils.getRandom(dictionaries.size()));
+			dictionary = dictionaries.get(RandomService.GetRandom(dictionaries.size()));
 		}
 
 		String word = dictionary.randomWord();
