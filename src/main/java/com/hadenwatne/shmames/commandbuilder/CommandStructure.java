@@ -56,9 +56,11 @@ public class CommandStructure {
 
     public CommandStructure addParameters(CommandParameter... parameters) {
         for(CommandParameter parameter : parameters) {
-            parameter.setRegexName(parameter.getName()+this.name);
+            CommandParameter clone = parameter.clone();
 
-            this.parameters.add(parameter);
+            clone.setRegexName(parameter.getName()+this.name);
+
+            this.parameters.add(clone);
         }
 
         return this;

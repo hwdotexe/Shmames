@@ -1,11 +1,13 @@
 package com.hadenwatne.shmames.commandbuilder;
 
+import com.hadenwatne.shmames.services.LoggingService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class CommandParameter {
+public class CommandParameter implements Cloneable {
     private final String name;
     private String regexName;
     private final String description;
@@ -129,6 +131,15 @@ public class CommandParameter {
                 break;
             default:
                 this.matchPattern = Pattern.compile("(?<" + this.regexName + ">.+)");
+        }
+    }
+
+    public CommandParameter clone(){
+        try {
+            return (CommandParameter) super.clone();
+        }catch (CloneNotSupportedException e) {
+            LoggingService.LogException(e);
+            return null;
         }
     }
 }

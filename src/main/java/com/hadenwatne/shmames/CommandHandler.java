@@ -39,15 +39,11 @@ public class CommandHandler {
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
 
-		commands.add(new AddResponse());
-		commands.add(new AddTrigger());
 		commands.add(new Blame());
 		commands.add(new Cactpot());
 		commands.add(new Choose());
 		commands.add(new CringeThat());
 		commands.add(new Dev());
-		commands.add(new DropResponse());
-		commands.add(new DropTrigger());
 		commands.add(new EightBall());
 		commands.add(new Enhance());
 		commands.add(new FamilyCmd());
@@ -59,8 +55,6 @@ public class CommandHandler {
 		commands.add(new Jinping());
 		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
-		commands.add(new ListResponses());
-		commands.add(new ListTriggers());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
 		commands.add(new Music());
@@ -69,12 +63,14 @@ public class CommandHandler {
 		commands.add(new React());
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
+		commands.add(new Response());
 		commands.add(new Roll());
 		commands.add(new SimonSays());
 		commands.add(new Storytime());
 		commands.add(new Tally());
 		commands.add(new Thoughts());
 		commands.add(new Timer());
+		commands.add(new Trigger());
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
 		commands.add(new When());
