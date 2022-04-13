@@ -65,7 +65,7 @@ public class ListResponses implements ICommand {
 				responseTexts.add(response.getResponse());
 			}
 
-			PaginatedList paginatedList = PaginationService.GetPaginatedList(responseTexts, 10, 75, true);
+			PaginatedList paginatedList = PaginationService.GetPaginatedList(responseTexts, 10, 100, true);
 
 			data.getMessagingChannel().sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), rType.toUpperCase() + " Responses", Color.ORANGE, lang));
 

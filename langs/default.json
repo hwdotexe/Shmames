@@ -211,6 +211,9 @@
     "RESET_EMOTE_STATS": [
       "Emoji usage stats have been reset!"
     ],
+    "SEARCH_RESULTS": [
+      "Search results:"
+    ],
     "SENT_PRIVATE_MESSAGE": [
       "I sent some details over in your DMs."
     ],
@@ -442,7 +445,7 @@
       "There were no results."
     ],
     "PAGE_NOT_FOUND": [
-      "The page you requested does not exist."
+      "The page you requested is empty or does not exist."
     ],
     "RESERVED_WORD": [
       "It looks like you tried to use a reserved word. Try a different one!"

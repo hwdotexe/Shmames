@@ -16,6 +16,8 @@ public class DataService {
         List<Integer> mapValues = new ArrayList<Integer>(passedMap.values());
         Collections.sort(mapValues);
         Collections.sort(mapKeys);
+        Collections.reverse(mapValues);
+        Collections.reverse(mapKeys);
 
         LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
 
@@ -33,6 +35,7 @@ public class DataService {
                 }
             }
         }
+
         return sortedMap;
     }
 

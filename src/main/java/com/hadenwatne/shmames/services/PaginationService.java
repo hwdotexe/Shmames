@@ -185,6 +185,25 @@ public class PaginationService {
     }
 
     /**
+     * Takes a String List and compiles the values into a single string, with each value separated on a new line.
+     * @param stringList The List to compile.
+     * @return The compiled String.
+     */
+    public static String CompileListToString(List<String> stringList) {
+        StringBuilder sb = new StringBuilder();
+
+        for(String s : stringList) {
+            if(sb.length() > 0) {
+                sb.append(System.lineSeparator());
+            }
+
+            sb.append(s);
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * Splits a string into multiple strings on the given length, taking care to split on whitespaces.
      * @param s The string to split.
      * @param interval The number of characters to split on.

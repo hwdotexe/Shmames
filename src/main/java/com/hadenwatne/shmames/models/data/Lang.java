@@ -193,6 +193,7 @@ public class Lang {
         messages.put(Langs.POLL_TITLE, new String[]{"== POLL =="});
         messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"== POLL (Results) =="});
         messages.put(Langs.RESET_EMOTE_STATS, new String[]{"Emoji usage stats have been reset!"});
+        messages.put(Langs.SEARCH_RESULTS, new String[]{"Search results:"});
         messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."});
         messages.put(Langs.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"});
         messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings:"});
