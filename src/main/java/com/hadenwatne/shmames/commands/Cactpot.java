@@ -15,17 +15,13 @@ public class Cactpot implements ICommand {
 
 	public Cactpot() {
 		this.commandStructure = CommandBuilder.Create("cactpot", "Play a game of Mini Cactpot from Final Fantasy XIV.")
+				.setExample("cactpot")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`cactpot`";
 	}
 
 	@Override

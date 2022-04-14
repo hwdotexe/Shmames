@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -30,18 +31,13 @@ public class Help implements ICommand {
 				.addParameters(
 						new CommandParameter("command", "The command you need help with", ParameterType.STRING, false)
 				)
+				.setExample("help gif")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`help`\n" +
-				"`help gif`";
 	}
 
 	@Override
@@ -53,20 +49,21 @@ public class Help implements ICommand {
 			String commandHelp = args.getAsString("command");
 
 			// Wants help on specific command.
-			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
+			for(ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getCommandStructure().getName().equalsIgnoreCase(commandHelp)) {
 					// Create list of aliases
 					String list = PaginationService.GenerateList(c.getCommandStructure().getAliases(), -1, false, false);
+					list = list.length() == 0 ? "None" : list;
 
 					EmbedBuilder eBuilder = new EmbedBuilder();
 
 					eBuilder.setAuthor("Help » "+c.getCommandStructure().getName());
 					eBuilder.setColor(Color.MAGENTA);
-					eBuilder.addField("Description", c.getCommandStructure().getDescription(), false);
 					eBuilder.addField("Aliases", list, true);
 					eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
-					eBuilder.addField("Usage", c.getCommandStructure().getUsage(), false);
-					eBuilder.addField("Examples", c.getExamples(), false);
+					eBuilder.addField("Description", c.getCommandStructure().getDescription(), false);
+					eBuilder.addField("Usage", c.getCommandStructure().getUsage(), true);
+					eBuilder.addField("Examples", c.getCommandStructure().getExample(), true);
 
 					messagingChannel.sendMessage(eBuilder);
 
@@ -79,7 +76,7 @@ public class Help implements ICommand {
 			// Wants a list of all commands.
 			List<String> cmds = new ArrayList<>();
 
-			for(ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
+			for(ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getCommandStructure().getDescription().length() > 0) {
 					cmds.add(c.getCommandStructure().getName());
 				}
@@ -90,9 +87,9 @@ public class Help implements ICommand {
 			EmbedBuilder eBuilder = new EmbedBuilder();
 
 			eBuilder.setColor(Color.MAGENTA);
-			eBuilder.setTitle("Command Help for "+Shmames.getBotName());
+			eBuilder.setTitle("Command Help for "+App.Shmames.getBotName());
 			eBuilder.addField("All Commands", list, false);
-			eBuilder.addField("Information", "View additional information for each command by using `"+Shmames.getBotName()+" help <command>`!", false);
+			eBuilder.addField("Information", "View additional information for each command by using `"+App.Shmames.getBotName()+" help <command>`!", false);
 
 			if(messagingChannel.hasHook()) {
 				messagingChannel.sendMessage(eBuilder);

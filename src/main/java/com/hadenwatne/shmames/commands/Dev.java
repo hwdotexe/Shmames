@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -42,17 +43,13 @@ public class Dev implements ICommand {
 								.addSelectionOptions("savebrains"),
 						new CommandParameter("data", "The optional data to send to the subcommand", ParameterType.STRING, false)
 				)
+				.setExample("")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "";
 	}
 
 	@Override
@@ -102,13 +99,13 @@ public class Dev implements ICommand {
 
 		if (m.find()) {
 			try {
-				MotherBrain b = Shmames.getBrains().getMotherBrain();
+				MotherBrain b = App.Shmames.getStorageService().getMotherBrain();
 				ActivityType type = ActivityType.valueOf(m.group(1).toUpperCase());
 				String msg = m.group(2);
 
 				b.getStatuses().put(msg, type);
-				Shmames.getJDA().getPresence().setActivity(Activity.of(type, msg));
-				Shmames.getBrains().saveMotherBrain();
+				App.Shmames.getJDA().getPresence().setActivity(Activity.of(type, msg));
+				App.Shmames.getStorageService().getBrainController().saveMotherBrain();
 
 				return true;
 			} catch (Exception e) {
@@ -122,7 +119,7 @@ public class Dev implements ICommand {
 	private String getGuilds() {
 		StringBuilder sb = new StringBuilder();
 
-		for (Guild g : Shmames.getJDA().getGuilds()) {
+		for (Guild g : App.Shmames.getJDA().getGuilds()) {
 			if (sb.length() > 0)
 				sb.append("\n");
 
@@ -142,7 +139,7 @@ public class Dev implements ICommand {
 		StringBuilder answer = new StringBuilder("**Command Usage Statistics**");
 
 		// Sort
-		LinkedHashMap<String, Integer> cmdStats = DataService.SortHashMap(Shmames.getBrains().getMotherBrain().getCommandStats());
+		LinkedHashMap<String, Integer> cmdStats = DataService.SortHashMap(App.Shmames.getStorageService().getMotherBrain().getCommandStats());
 
 		for (String c : cmdStats.keySet()) {
 			answer.append("\n");
@@ -153,11 +150,11 @@ public class Dev implements ICommand {
 	}
 
 	private void clearCommandStats() {
-		Shmames.getBrains().getMotherBrain().getCommandStats().clear();
+		App.Shmames.getStorageService().getMotherBrain().getCommandStats().clear();
 	}
 
 	private boolean leave(String gid) {
-		for (Guild g : Shmames.getJDA().getGuilds()) {
+		for (Guild g : App.Shmames.getJDA().getGuilds()) {
 			if (g.getId().equals(gid)) {
 				g.leave().queue();
 
@@ -172,8 +169,8 @@ public class Dev implements ICommand {
 		StringBuilder reports = new StringBuilder("== User Reports ==");
 
 		// Build list of reports.
-		for (Guild g : Shmames.getJDA().getGuilds()) {
-			Brain b = Shmames.getBrains().getBrain(g.getId());
+		for (Guild g : App.Shmames.getJDA().getGuilds()) {
+			Brain b = App.Shmames.getStorageService().getBrain(g.getId());
 
 			if (b.getFeedback().size() > 0) {
 				reports.append("\n");
@@ -209,19 +206,19 @@ public class Dev implements ICommand {
 		f.delete();
 
 		// Clear out guild feedback.
-		for (Guild g : Shmames.getJDA().getGuilds()) {
-			Brain b = Shmames.getBrains().getBrain(g.getId());
+		for (Guild g : App.Shmames.getJDA().getGuilds()) {
+			Brain b = App.Shmames.getStorageService().getBrain(g.getId());
 
 			b.getFeedback().clear();
 		}
 	}
 
 	private void saveBrains() {
-		for (Brain b : Shmames.getBrains().getBrains()) {
-			Shmames.getBrains().saveBrain(b);
+		for (Brain b : App.Shmames.getStorageService().getBrainController().getBrains()) {
+			App.Shmames.getStorageService().getBrainController().saveBrain(b);
 		}
 
-		Shmames.getBrains().saveMotherBrain();
+		App.Shmames.getStorageService().getBrainController().saveMotherBrain();
 
 		LoggingService.Write();
 	}

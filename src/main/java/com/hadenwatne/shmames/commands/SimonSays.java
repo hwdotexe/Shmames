@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.commands;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -25,18 +26,13 @@ public class SimonSays implements ICommand {
 				.addParameters(
 						new CommandParameter("message", "The message you want me to repeat.", ParameterType.STRING)
 				)
+				.setExample("simonsays Who thinks I'm kawaii?")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`simonsays Hey look at me, I'm a talkin' Shmames!`\n" +
-				"`simonsays :emoteFromAnotherServer:`";
 	}
 
 	@Override
@@ -63,7 +59,7 @@ public class SimonSays implements ICommand {
 					message = message.replaceFirst(m.group(), emote.getAsMention());
 
 					// Tally the emote
-					Brain emoteBrain = Shmames.getBrains().getBrain(emote.getGuild().getId());
+					Brain emoteBrain = App.Shmames.getStorageService().getBrain(emote.getGuild().getId());
 					String eID = Long.toString(emote.getIdLong());
 
 					ShmamesService.IncrementEmoteTally(emoteBrain, eID);

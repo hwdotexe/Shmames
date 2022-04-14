@@ -14,12 +14,6 @@ public interface ICommand {
 	 * @return A CommandStructure object.
 	 */
 	CommandStructure getCommandStructure();
-
-	/**
-	 * Returns command examples.
-	 * @return Command examples.
-	 */
-	String getExamples();
 	
 	/**
 	 * Runs the command code.

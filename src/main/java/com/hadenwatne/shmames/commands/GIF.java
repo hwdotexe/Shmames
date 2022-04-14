@@ -22,17 +22,13 @@ public class GIF implements ICommand {
 				.addParameters(
 						new CommandParameter("search", "What to find a GIF for.", ParameterType.STRING)
 				)
+				.setExample("gif bob ross")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`gif bill nye`";
 	}
 
 	@Override

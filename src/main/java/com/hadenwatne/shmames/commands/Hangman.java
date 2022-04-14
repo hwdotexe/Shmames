@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -28,7 +28,7 @@ public class Hangman implements ICommand {
 	private final CommandStructure commandStructure;
 
 	public Hangman() {
-		dictionaries = Shmames.getBrains().getDictionaries().getDictionaries();
+		dictionaries = App.Shmames.getStorageService().getBrainController().getHangmanDictionaries().getDictionaries();
 
 		this.commandStructure = CommandBuilder.Create("hangman", "Play a game of Hangman!")
 				.addSubCommands(
@@ -38,31 +38,25 @@ public class Hangman implements ICommand {
 												.setPattern("[a-z0-9,]+"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 								)
+								.setExample("hangman start mainDictionary true")
 								.build(),
 						CommandBuilder.Create("guess", "Submit a guess for a letter or solution.")
 								.addParameters(
 										new CommandParameter("guess", "A letter, word, or phrase.", ParameterType.STRING)
 								)
+								.setExample("hangman guess e")
 								.build(),
 						CommandBuilder.Create("list", "List available dictionaries.")
+								.setExample("hangman list")
 								.build()
 				)
+				.setExample("hangman")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`hangman start`\n" +
-				"`hangman start media,anime`\n" +
-				"`hangman start dnd true`\n" +
-				"`hangman guess A`\n" +
-				"`hangman guess The Answer`" +
-				"`hangman list`";
 	}
 
 	@Override

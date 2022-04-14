@@ -37,26 +37,29 @@ public class Response implements ICommand {
 		this.commandStructure = CommandBuilder.Create("response", "Manage bot responses.")
 			.addSubCommands(
 				CommandBuilder.Create("add", "Add a new response to the random pool.")
-					.addAlias("a")
-					.addParameters(
-							triggerType,
-							new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
-					)
-					.build(),
+						.addAlias("a")
+						.addParameters(
+								triggerType,
+								new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
+						)
+						.setExample("response add random hello!")
+						.build(),
 				CommandBuilder.Create("drop", "Remove a response from the random pool.")
-					.addAlias("d")
-					.addParameters(
-							triggerType,
-							new CommandParameter("responseIndex", "The response's number in the list.", ParameterType.INTEGER)
-					)
-					.build(),
+						.addAlias("d")
+						.addParameters(
+								triggerType,
+								new CommandParameter("responseIndex", "The response's number in the list.", ParameterType.INTEGER)
+						)
+						.setExample("response drop random 3")
+						.build(),
 				CommandBuilder.Create("list", "Display all of the current responses.")
-					.addAlias("l")
-					.addParameters(
-							triggerType,
-							new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
-					)
-					.build()
+						.addAlias("l")
+						.addParameters(
+								triggerType,
+								new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+						)
+						.setExample("response list random 2")
+						.build()
 			)
 			.build();
 	}
@@ -64,13 +67,6 @@ public class Response implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`response add RANDOM Hello, world!`\n" +
-				"`response drop RANDOM 9`\n" +
-				"`response list 1`";
 	}
 
 	@Override

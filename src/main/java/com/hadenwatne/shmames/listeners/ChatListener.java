@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.enums.TriggerType;
@@ -18,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatListener extends ListenerAdapter {
-	private final Lang defaultLang = Shmames.getDefaultLang();
+	private final Lang defaultLang = App.Shmames.getLanguageService().getDefaultLang();
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
@@ -27,7 +28,7 @@ public class ChatListener extends ListenerAdapter {
 			String messageText = message.getContentRaw();
 
 			if(e.isFromGuild()) {
-				Brain brain = Shmames.getBrains().getBrain(e.getGuild().getId());
+				Brain brain = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
 				Guild server = e.getGuild();
 
 				// React to every message, even commands, with a PingPong emoji if Jinping Mode is on.
@@ -40,7 +41,7 @@ public class ChatListener extends ListenerAdapter {
 						String command = messageText.substring(trigger.length()).trim();
 
 						// Send to the command handler for further processing.
-						Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), server, brain);
+						App.Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), server, brain);
 
 						return;
 					}
@@ -60,13 +61,13 @@ public class ChatListener extends ListenerAdapter {
 				}
 			} else {
 				if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
-					final String botNameLower = Shmames.getBotName().toLowerCase();
+					final String botNameLower = App.Shmames.getBotName().toLowerCase();
 
 					if (messageText.toLowerCase().startsWith(botNameLower)) {
 						String command = messageText.substring(botNameLower.length()).trim();
 
 						// Send to the command handler for further processing.
-						Shmames.getCommandHandler().PerformCommand(command, message,null, null);
+						App.Shmames.getCommandHandler().PerformCommand(command, message,null, null);
 					}
 				}
 			}
@@ -122,7 +123,7 @@ public class ChatListener extends ListenerAdapter {
 	private void sendRandom(TextChannel c, TriggerType t, Message message) {
 		Guild g = message.getGuild();
 		Member author = message.getMember();
-		List<Response> r = Shmames.getBrains().getBrain(g.getId()).getResponsesFor(t);
+		List<Response> r = App.Shmames.getStorageService().getBrain(g.getId()).getResponsesFor(t);
 		String name = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 
 		if(r.size() > 0) {

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -19,6 +20,7 @@ public class Storytime implements ICommand {
 
 	public Storytime() {
 		this.commandStructure = CommandBuilder.Create("storytime", "I tell you a high-quality story.")
+				.setExample("storytime")
 				.build();
 	}
 
@@ -28,13 +30,8 @@ public class Storytime implements ICommand {
 	}
 
 	@Override
-	public String getExamples() {
-		return "`storytime`";
-	}
-
-	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		List<String> stories = Shmames.getBrains().getStories().getStories();
+		List<String> stories = App.Shmames.getStorageService().getBrainController().getStories().getStories();
 		String randomStory = stories.get(RandomService.GetRandom(stories.size()));
 		List<String> story = PaginationService.SplitString(randomStory, MessageEmbed.VALUE_MAX_LENGTH);
 		EmbedBuilder embed = new EmbedBuilder();

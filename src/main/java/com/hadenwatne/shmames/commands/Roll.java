@@ -26,21 +26,13 @@ public class Roll implements ICommand {
 						new CommandParameter("dice", "The dice to roll.", ParameterType.STRING)
 								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
 				)
+				.setExample("roll 2d20^kh+1d4")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`roll 1d20`\n" +
-				"`roll 2d20^kh`\n" +
-				"`roll 4d6^kh3`\n" +
-				"`roll 2d20^kl`\n" +
-				"`roll 2d20^kh+5-1d4`";
 	}
 
 	@Override

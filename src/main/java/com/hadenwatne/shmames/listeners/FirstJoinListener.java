@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.LogType;
@@ -13,7 +14,7 @@ import com.hadenwatne.shmames.Shmames;
 public class FirstJoinListener extends ListenerAdapter {
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
-		Brain b = Shmames.getBrains().getBrain(e.getGuild().getId());
+		Brain b = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
 		if(!b.didSendWelcome()){
@@ -41,7 +42,7 @@ public class FirstJoinListener extends ListenerAdapter {
 	}
 
 	private void sendMessage(TextChannel tc){
-		String name = Shmames.getBotName();
+		String name = App.Shmames.getBotName();
 
 		tc.sendMessage("``` __ _                                         \n" +
 				"/ _\\ |__  _ __ ___   __ _ _ __ ___   ___  ___ \n" +

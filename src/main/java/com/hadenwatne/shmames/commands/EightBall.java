@@ -17,17 +17,13 @@ public class EightBall implements ICommand {
 				.addParameters(
 						new CommandParameter("question", "The question to ask the magic 8 ball.", ParameterType.STRING)
 				)
+				.setExample("8ball Will I ever find true love?")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`8ball Am I a pretty girl?`";
 	}
 
 	@Override

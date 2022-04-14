@@ -42,26 +42,23 @@ public class Poll implements ICommand {
 										new CommandParameter("options", "The poll's options, separated by ';'", ParameterType.STRING)
 												.setPattern("(.+;)+(.+);?")
 								)
+								.setExample("poll start 24h Thoughts? Yes; No")
 								.build(),
 						CommandBuilder.Create("close", "Close an existing poll.")
 								.addParameters(
 										new CommandParameter("pollID", "The ID of the poll to close.", ParameterType.STRING)
 												.setPattern("#?[a-z0-9]{5}")
 								)
+								.setExample("poll close #12345")
 								.build()
 				)
+				.setExample("poll")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`poll start 12h30m Pizza or Burgers? Pizza; Burgers;`\n" +
-				"`poll close #12345`";
 	}
 
 	@Override

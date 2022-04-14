@@ -19,9 +19,10 @@ import com.hadenwatne.shmames.tasks.PollTask;
  * Responsible for serialization of server-specific data files ("brains").
  */
 public class BrainController {
+	private final Gson gson;
+	private final List<Brain> brains;
+
 	private MotherBrain motherBrain;
-	private Gson gson;
-	private List<Brain> brains;
 	private StorytimeStories stories;
 	private HangmanDictionaries dictionaries;
 
@@ -40,48 +41,9 @@ public class BrainController {
 		loadMotherBrain();
 	}
 
-	public void loadStories() {
-		File storiesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + STORIES_FILE);
-
-		if(!storiesFile.exists()) {
-			try {
-				storiesFile.createNewFile();
-			}catch (Exception ignored) {}
-		}
-
-		String storiesData = FileService.LoadFileAsString(storiesFile);
-
-		if (storiesData.length() > 0) {
-			stories = gson.fromJson(storiesData, StorytimeStories.class);
-		} else {
-			stories = new StorytimeStories();
-
-			stories.loadDefaults();
-			saveStories();
-		}
-	}
-
-	public void loadHangmanDictionaries() {
-		File dictionariesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + HANGMAN_FILE);
-
-		if(!dictionariesFile.exists()) {
-			try {
-				dictionariesFile.createNewFile();
-			}catch (Exception ignored) {}
-		}
-
-		String dictionariesData = FileService.LoadFileAsString(dictionariesFile);
-
-		if (dictionariesData.length() > 0) {
-			dictionaries = gson.fromJson(dictionariesData, HangmanDictionaries.class);
-		} else {
-			dictionaries = new HangmanDictionaries();
-
-			dictionaries.loadDefaults();
-			saveDictionaries();
-		}
-	}
-
+	/**
+	 * Loads the primary bot settings file into memory.
+	 */
 	public void loadMotherBrain() {
 		File motherBrainFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + MOTHER_BRAIN_FILE);
 		String motherBrainData = FileService.LoadFileAsString(motherBrainFile);
@@ -96,6 +58,9 @@ public class BrainController {
 		}
 	}
 
+	/**
+	 * Retroactively loads server settings files from disk.
+	 */
 	public void loadServerBrains(){
 		// Load server settings files.
 		File[] brainFiles = FileService.ListFilesInDirectory(BRAIN_SERVER_DIRECTORY, new JSONFileFilter());
@@ -104,7 +69,7 @@ public class BrainController {
 			Brain brain = gson.fromJson(FileService.LoadFileAsString(b), Brain.class);
 
 			// If this brain belongs to a deleted server, remove it and continue.
-			if(Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
+			if(App.Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
 				brains.add(brain);
 			} else {
 				b.delete();
@@ -128,7 +93,7 @@ public class BrainController {
 			}
 
 			// Ensure new settings are made available for the user to change.
-			for(BotSetting s : Shmames.defaultBotSettings) {
+			for(BotSetting s : App.Shmames.getStorageService().getDefaultSettings()) {
 				boolean exists = false;
 
 				for(BotSetting bs : brain.getSettings()) {
@@ -168,6 +133,70 @@ public class BrainController {
 	}
 
 	/**
+	 * Loads the stories file from disk into memory.
+	 */
+	public void loadStories() {
+		File storiesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + STORIES_FILE);
+
+		if(!storiesFile.exists()) {
+			try {
+				storiesFile.createNewFile();
+			}catch (Exception ignored) {}
+		}
+
+		String storiesData = FileService.LoadFileAsString(storiesFile);
+
+		if (storiesData.length() > 0) {
+			stories = gson.fromJson(storiesData, StorytimeStories.class);
+		} else {
+			stories = new StorytimeStories();
+
+			stories.loadDefaults();
+			saveStories();
+		}
+	}
+
+	/**
+	 * Loads the hangman dictionary file from disk into memory.
+	 */
+	public void loadHangmanDictionaries() {
+		File dictionariesFile = new File(BRAIN_PARENT_DIRECTORY + File.separator + HANGMAN_FILE);
+
+		if(!dictionariesFile.exists()) {
+			try {
+				dictionariesFile.createNewFile();
+			}catch (Exception ignored) {}
+		}
+
+		String dictionariesData = FileService.LoadFileAsString(dictionariesFile);
+
+		if (dictionariesData.length() > 0) {
+			dictionaries = gson.fromJson(dictionariesData, HangmanDictionaries.class);
+		} else {
+			dictionaries = new HangmanDictionaries();
+
+			dictionaries.loadDefaults();
+			saveDictionaries();
+		}
+	}
+
+	/**
+	 * Retrieves the global settings file for the bot.
+	 * @return The global settings file.
+	 */
+	public MotherBrain getMotherBrain() {
+		return motherBrain;
+	}
+
+	/**
+	 * Retrieves a list of server settings files currently loaded.
+	 * @return A list of loaded settings files.
+	 */
+	public List<Brain> getBrains() {
+		return brains;
+	}
+
+	/**
 	 * Retrieves the settings file for a particular server.
 	 * @param guildID The server to pull up.
 	 * @return The server's settings file.
@@ -181,7 +210,7 @@ public class BrainController {
 
 		Brain b = new Brain(guildID);
 		brains.add(b);
-		
+
 		return b;
 	}
 
@@ -197,24 +226,15 @@ public class BrainController {
 	 * Retrieves the hangman dictionaries file.
 	 * @return The dictionaries file.
 	 */
-	public HangmanDictionaries getDictionaries() {
+	public HangmanDictionaries getHangmanDictionaries() {
 		return dictionaries;
 	}
 
 	/**
-	 * Retrieves the global settings file for the bot.
-	 * @return The global settings file.
+	 * Saves the global settings object to file.
 	 */
-	public MotherBrain getMotherBrain() {
-		return motherBrain;
-	}
-	
-	/**
-	 * Retrieves a list of server settings files currently loaded.
-	 * @return A list of loaded settings files.
-	 */
-	public List<Brain> getBrains() {
-		return brains;
+	public void saveMotherBrain() {
+		FileService.SaveBytesToFile(BRAIN_PARENT_DIRECTORY, MOTHER_BRAIN_FILE , gson.toJson(motherBrain).getBytes());
 	}
 
 	/**
@@ -223,13 +243,6 @@ public class BrainController {
 	 */
 	public void saveBrain(Brain brain) {
 		FileService.SaveBytesToFile(BRAIN_SERVER_DIRECTORY, brain.getGuildID()+ ".json", gson.toJson(brain).getBytes());
-	}
-	
-	/**
-	 * Saves the global settings object to file.
-	 */
-	public void saveMotherBrain() {
-		FileService.SaveBytesToFile(BRAIN_PARENT_DIRECTORY, MOTHER_BRAIN_FILE , gson.toJson(motherBrain).getBytes());
 	}
 
 	/**

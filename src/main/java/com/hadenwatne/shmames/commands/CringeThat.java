@@ -33,6 +33,7 @@ public class CringeThat implements ICommand {
 								.setPattern("([\\^]{1,15})"),
 						new CommandParameter("times", "Number of cringe iterations", ParameterType.INTEGER, false)
 				)
+				.setExample("cringethat ^^^ 2")
 				.build();
 
 		cringeDict.put("food", "numsies");
@@ -46,12 +47,6 @@ public class CringeThat implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`cringethat ^^^`\n" +
-				"`cringethat ^ 5`";
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.models.data;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.models.data.Brain;
@@ -56,7 +57,7 @@ public class BotSetting {
 				value = v.toLowerCase();
 				return true;
 			}else {
-				for(Role r : Shmames.getJDA().getGuildById(b.getGuildID()).getRoles()) {
+				for(Role r : App.Shmames.getJDA().getGuildById(b.getGuildID()).getRoles()) {
 					if(r.getName().equalsIgnoreCase(v)) {
 						value = r.getName();
 						return true;
@@ -69,7 +70,7 @@ public class BotSetting {
 			if(v.startsWith("#"))
 				v = v.replace("#", ""); // Replace all occurrences
 
-			List<TextChannel> tc = Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelsByName(v, true);
+			List<TextChannel> tc = App.Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelsByName(v, true);
 			
 			if(tc.size() == 1) {
 				value = tc.get(0).getId();
@@ -81,7 +82,7 @@ public class BotSetting {
 			if(v.startsWith(":"))
 				v = v.replace(":", ""); // Replace all occurrences
 
-			List<Emote> em = Shmames.getJDA().getGuildById(b.getGuildID()).getEmotesByName(v, true);
+			List<Emote> em = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmotesByName(v, true);
 
 			if(em.size() == 1) {
 				value = em.get(0).getId();

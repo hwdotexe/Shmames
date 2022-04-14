@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
@@ -44,31 +45,40 @@ public class Music implements ICommand {
 										new CommandParameter("URL", "The URL of the song to play.", ParameterType.STRING, false)
 												.setPattern(RegexPatterns.URL.getPattern())
 								)
+								.setExample("music play https://link")
 								.build(),
 						CommandBuilder.Create("pause", "Pause any playing music.")
+								.setExample("music pause")
 								.build(),
 						CommandBuilder.Create("resume", "Resume after pausing.")
 								.addAlias("r")
+								.setExample("music resume")
 								.build(),
 						CommandBuilder.Create("skip", "Skip the current track.")
 								.addParameters(
 										new CommandParameter("number", "How many tracks to skip.", ParameterType.INTEGER, false)
 								)
+								.setExample("music skip 3")
 								.build(),
 						CommandBuilder.Create("stop", "Stop playing music.")
+								.setExample("music stop")
 								.build(),
 						CommandBuilder.Create("loop", "Toggle track looping.")
+								.setExample("music loop")
 								.build(),
 						CommandBuilder.Create("loopqueue", "Toggle queue looping.")
+								.setExample("music loopqueue")
 								.build(),
 						CommandBuilder.Create("playing", "See what's playing.")
 								.addAlias("np")
+								.setExample("music playing")
 								.build(),
 						CommandBuilder.Create("convert", "Convert the queue to a playlist.")
 								.addParameters(
 										new CommandParameter("playlistName", "The name to use for the new playlist.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 								)
+								.setExample("music convert newPlaylist")
 								.build()
 				)
 				.addSubCommandGroups(
@@ -81,6 +91,7 @@ public class Music implements ICommand {
 														new CommandParameter("playlistName", "The name of the new playlist.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
+												.setExample("music playlist create newPlaylist")
 												.build(),
 										CommandBuilder.Create("add", "Add a track to a playlist.")
 												.addAlias("a")
@@ -91,6 +102,7 @@ public class Music implements ICommand {
 																.setPattern(RegexPatterns.URL.getPattern()),
 														new CommandParameter("memo", "A memo about the track being added.", ParameterType.STRING, false)
 												)
+												.setExample("music playlist add newPlaylist https://link great song")
 												.build(),
 										CommandBuilder.Create("list", "Show available playlists.")
 												.addAlias("l")
@@ -99,6 +111,7 @@ public class Music implements ICommand {
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 														new CommandParameter("page", "The page to view.", ParameterType.INTEGER, false)
 												)
+												.setExample("music playlist list newPlaylist 2")
 												.build(),
 										CommandBuilder.Create("remove", "Remove a track from a playlist.")
 												.addAlias("r")
@@ -107,6 +120,7 @@ public class Music implements ICommand {
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 														new CommandParameter("position", "The position of the item to remove.", ParameterType.INTEGER)
 												)
+												.setExample("music playlist remove newPlaylist 3")
 												.build(),
 										CommandBuilder.Create("delete", "Delete a playlist.")
 												.addAlias("d")
@@ -114,6 +128,7 @@ public class Music implements ICommand {
 														new CommandParameter("playlistName", "The name of the playlist to delete.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
+												.setExample("music playlist delete newPlaylist")
 												.build()
 								),
 						new SubCommandGroup("queue", "Manage the queue.")
@@ -121,12 +136,15 @@ public class Music implements ICommand {
 								.addSubCommands(
 										CommandBuilder.Create("clear", "Clear the list of upcoming tracks.")
 												.addAlias("c")
+												.setExample("music queue clear")
 												.build(),
 										CommandBuilder.Create("reverse", "Reverse the order of the queue.")
 												.addAlias("r")
+												.setExample("music queue reverse")
 												.build(),
 										CommandBuilder.Create("shuffle", "Shuffle the upcoming tracks.")
 												.addAlias("s")
+												.setExample("music queue shuffle")
 												.build(),
 										CommandBuilder.Create("append", "Add more tracks or playlists to the queue.")
 												.addAlias("a")
@@ -136,29 +154,24 @@ public class Music implements ICommand {
 														new CommandParameter("URL", "The URL of the song to append.", ParameterType.STRING, false)
 																.setPattern(RegexPatterns.URL.getPattern())
 												)
+												.setExample("music queue append https://link")
 												.build(),
 										CommandBuilder.Create("view", "View the queue.")
 												.addAlias("v")
 												.addParameters(
 														new CommandParameter("page", "The page of the queue to view.", ParameterType.INTEGER, false)
 												)
+												.setExample("music queue view 4")
 												.build()
 								)
 				)
+				.setExample("music")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`music play http://link.to.a.good.song`\n" +
-				"`music pause`\n" +
-				"`music queue myDopePlaylist`\n" +
-				"`music playlist list`";
 	}
 
 	@Override
@@ -169,7 +182,7 @@ public class Music implements ICommand {
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
 		ShmamesSubCommandData subCommand = data.getSubCommandData();
-		GuildOcarina ocarina = Shmames.getMusicManager().getOcarina(data.getServer().getId());
+		GuildOcarina ocarina = App.Shmames.getMusicManager().getOcarina(data.getServer().getId());
 		User author = data.getAuthor();
 		Guild server = data.getServer();
 		String nameOrGroup = subCommand.getNameOrGroup();
@@ -489,7 +502,7 @@ public class Music implements ICommand {
 
 				// Then add each server in our family's playlists
 				for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-					Brain otherBrain = Shmames.getBrains().getBrain(family.getId());
+					Brain otherBrain = App.Shmames.getStorageService().getBrain(family.getId());
 					String playlistNamesOther = createPlaylistNameList(lang, otherBrain.getPlaylists());
 
 					eBuilder.addField(family.getName(), playlistNamesOther, false);
@@ -540,7 +553,7 @@ public class Music implements ICommand {
 		}else{
 			eBuilder.setThumbnail("https://www.screensaversplanet.com/img/screenshots/screensavers/large/the-matrix-1.png");
 			eBuilder.setTitle("Livestream");
-			eBuilder.addField("Info", Shmames.getBotName()+" is currently playing from an audio livestream.", false);
+			eBuilder.addField("Info", App.Shmames.getBotName()+" is currently playing from an audio livestream.", false);
 		}
 
 		messagingChannel.sendMessage(eBuilder);
@@ -583,7 +596,7 @@ public class Music implements ICommand {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(new Color(43, 164, 188));
-		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
 
 		return eBuilder;
 	}
@@ -630,7 +643,7 @@ public class Music implements ICommand {
 
 		// Check other Family servers.
 		for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
+			Brain familyBrain = App.Shmames.getStorageService().getBrain(family.getId());
 			Playlist otherServerPlaylist = findPlaylistServer(name, familyBrain);
 
 			if (otherServerPlaylist != null) {

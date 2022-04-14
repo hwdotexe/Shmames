@@ -23,17 +23,13 @@ public class Choose implements ICommand {
 						new CommandParameter("thisOrThat", "Two options, separated by 'or'.", ParameterType.STRING)
 						.setPattern("(.{1,}) or (.{1,})")
 				)
+				.setExample("choose Go outside or One more level")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`choose Go outside or One more level`";
 	}
 
 	@Override

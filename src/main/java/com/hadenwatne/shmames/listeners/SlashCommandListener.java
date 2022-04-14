@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -19,7 +20,7 @@ public class SlashCommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        ParsedCommandResult parsedCommand = Shmames.getCommandHandler().parseCommandString(event.getName());
+        ParsedCommandResult parsedCommand = App.Shmames.getCommandHandler().parseCommandString(event.getName());
 
         if (parsedCommand != null) {
             ICommand command = parsedCommand.getCommand();
@@ -51,7 +52,7 @@ public class SlashCommandListener extends ListenerAdapter {
                 }
             }
 
-            Shmames.getCommandHandler().PerformCommand(command, subCommandData, commandArguments, event, event.getGuild());
+            App.Shmames.getCommandHandler().PerformCommand(command, subCommandData, commandArguments, event, event.getGuild());
         }
     }
 

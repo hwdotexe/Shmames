@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.models.data;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 
 import java.util.ArrayList;
@@ -18,6 +19,6 @@ public class StorytimeStories {
 
     public void loadDefaults() {
         stories.add("The bot admin should add some stories here!");
-        stories.add("When " + Shmames.getBotName() + " tells a story, everyone listens.");
+        stories.add("When " + App.Shmames.getBotName() + " tells a story, everyone listens.");
     }
 }

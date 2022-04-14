@@ -296,6 +296,36 @@ public class CommandBuilder {
         return sb.toString();
     }
 
+    public static String BuildExample(CommandStructure command) {
+        List<CommandStructure> subCommands = command.getSubCommands();
+        List<SubCommandGroup> subCommandGroups = command.getSubcommandGroups();
+
+        if(subCommands.size() > 0 || subCommandGroups.size() > 0) {
+            StringBuilder example = new StringBuilder();
+
+            example.append(command.getExample() + "...");
+
+            for(CommandStructure subCommand : subCommands) {
+                example.append(System.lineSeparator());
+                example.append(subCommand.getExample());
+            }
+
+            for(SubCommandGroup subCommandGroup: subCommandGroups) {
+                for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+                    if(example.length() > 0) {
+                        example.append(System.lineSeparator());
+                    }
+
+                    example.append(subCommand.getExample());
+                }
+            }
+
+            return example.toString();
+        } else {
+            return command.getExample();
+        }
+    }
+
     private static String buildSubCommandUsageLabel(List<CommandStructure> subCommands) {
         StringBuilder subCommandData = new StringBuilder();
 

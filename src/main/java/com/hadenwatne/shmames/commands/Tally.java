@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -34,56 +35,53 @@ public class Tally implements ICommand {
 	public Tally() {
 		this.commandStructure = CommandBuilder.Create("tally", "Manage server tallies.")
 			.addSubCommands(
-				CommandBuilder.Create("add", "Increment a tally or create a new one.")
-					.addAlias("a")
-					.addParameters(
-							new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-									.setPattern("[\\w\\d\\s]{3,}")
-					)
-					.build(),
-				CommandBuilder.Create("drop", "Decrement a tally or delete it if 0.")
-					.addAlias("d")
-					.addParameters(
-							new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-									.setPattern("[\\w\\d\\s]{3,}")
-					)
-					.build(),
-				CommandBuilder.Create("set", "Overwrite the value of a tally.")
-					.addAlias("s")
-					.addParameters(
-							new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-									.setPattern("[\\w\\d\\s]{3,}"),
-							new CommandParameter("count", "The new count for this tally.", ParameterType.INTEGER)
-					)
-					.build(),
-				CommandBuilder.Create("list", "Display all of the current tallies.")
-					.addAlias("l")
-					.addParameters(
-							new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
-					)
-					.build(),
-				CommandBuilder.Create("search", "Find a tally based on a partial match.")
-					.addParameters(
-							new CommandParameter("tallyName", "The tally to search for.", ParameterType.STRING)
-									.setPattern("[\\w\\d\\s]{3,}")
-					)
-					.build()
-			)
-			.build();
+					CommandBuilder.Create("add", "Increment a tally or create a new one.")
+							.addAlias("a")
+							.addParameters(
+									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
+											.setPattern("[\\w\\d\\s]{3,}")
+							)
+							.setExample("tally add myTally")
+							.build(),
+					CommandBuilder.Create("drop", "Decrement a tally or delete it if 0.")
+							.addAlias("d")
+							.addParameters(
+									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
+											.setPattern("[\\w\\d\\s]{3,}")
+							)
+							.setExample("tally drop myTally")
+							.build(),
+					CommandBuilder.Create("set", "Overwrite the value of a tally.")
+							.addAlias("s")
+							.addParameters(
+									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
+											.setPattern("[\\w\\d\\s]{3,}"),
+									new CommandParameter("count", "The new count for this tally.", ParameterType.INTEGER)
+							)
+							.setExample("tally set myTally 3")
+							.build(),
+					CommandBuilder.Create("list", "Display all of the current tallies.")
+							.addAlias("l")
+							.addParameters(
+									new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+							)
+							.setExample("tally list 2")
+							.build(),
+					CommandBuilder.Create("search", "Find a tally based on a partial match.")
+							.addParameters(
+									new CommandParameter("tallyName", "The tally to search for.", ParameterType.STRING)
+											.setPattern("[\\w\\d\\s]{3,}")
+							)
+							.setExample("tally search tally")
+							.build()
+				)
+				.setExample("tally")
+				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`tally add professor_trips_on_hdmi_cord`\n" +
-				"`tally set new_record 33`\n" +
-				"`tally list 1`\n" +
-				"`tally search prof`\n" +
-				"`tally drop old_tally`";
 	}
 
 	@Override
@@ -192,7 +190,7 @@ public class Tally implements ICommand {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(Color.ORANGE);
-		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
 
 		eBuilder.addField(lang.getMsg(Langs.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
 

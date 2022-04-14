@@ -17,17 +17,13 @@ public class Minesweeper implements ICommand {
 				.addParameters(
 						new CommandParameter("size", "The size of the minefield, 6-11", ParameterType.INTEGER)
 				)
+				.setExample("minesweeper 7")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`minesweeper 10`";
 	}
 
 	@Override

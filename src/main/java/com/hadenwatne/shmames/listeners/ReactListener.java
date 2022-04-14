@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
@@ -27,7 +28,7 @@ public class ReactListener extends ListenerAdapter {
 
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
-		if (e.getUser() != Shmames.getJDA().getSelfUser()) {
+		if (e.getUser() != App.Shmames.getJDA().getSelfUser()) {
 			if(e.isFromGuild()) {
 				ReactionEmote emo = e.getReaction().getReactionEmote();
 
@@ -36,7 +37,7 @@ public class ReactListener extends ListenerAdapter {
 					Guild server = e.getGuild();
 
 					if (server.getEmotes().contains(emo.getEmote())) {
-						Brain b = Shmames.getBrains().getBrain(server.getId());
+						Brain b = App.Shmames.getStorageService().getBrain(server.getId());
 						Message message = e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete();
 						String removalEmoteID = b.getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
 						String approvalEmoteID = b.getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
@@ -82,7 +83,7 @@ public class ReactListener extends ListenerAdapter {
 				String tallyPrefix = setting == BotSettingName.APPROVAL_THRESHOLD ? "good" : "bad";
 				String toTally;
 
-				if(author.getId().equals(Shmames.getJDA().getSelfUser().getId())) {
+				if(author.getId().equals(App.Shmames.getJDA().getSelfUser().getId())) {
 					toTally = tallyPrefix+"bot";
 				} else {
 					String authorName = author.getName().replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
@@ -96,7 +97,7 @@ public class ReactListener extends ListenerAdapter {
 					try {
 						channel.deleteMessageById(message.getIdLong()).queue();
 					} catch (Exception ex) {
-						channel.sendMessage(Shmames.getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
+						channel.sendMessage(App.Shmames.getLanguageService().getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
 					}
 				}
 			}
@@ -106,7 +107,7 @@ public class ReactListener extends ListenerAdapter {
 	private void runAddTallyCommand(String tallyValue, Brain brain, Message message) {
 		MessageChannel channel = message.getTextChannel();
 
-		for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
+		for (ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
 			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
 				LinkedHashMap<String, Object> tallyArgs = new LinkedHashMap<>();
 
@@ -116,11 +117,11 @@ public class ReactListener extends ListenerAdapter {
 						c,
 						new ShmamesCommandArguments(tallyArgs),
 						new ShmamesCommandMessagingChannel(message, channel),
-						Shmames.getJDA().getSelfUser(),
+						App.Shmames.getJDA().getSelfUser(),
 						message.getGuild()
 				);
 
-				String response = c.run(Shmames.getLangFor(brain), brain, data);
+				String response = c.run(App.Shmames.getLanguageService().getLangFor(brain), brain, data);
 				channel.sendMessage(response).queue();
 				return;
 			}

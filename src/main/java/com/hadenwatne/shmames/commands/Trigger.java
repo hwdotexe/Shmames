@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -34,39 +35,36 @@ public class Trigger implements ICommand {
 
 		this.commandStructure = CommandBuilder.Create("trigger", "Manage response triggers.")
 			.addSubCommands(
-				CommandBuilder.Create("add", "Add a new trigger to the bot.")
-					.addAlias("a")
-					.addParameters(
-							triggerType,
-							new CommandParameter("triggerWord", "The trigger word to add.", ParameterType.STRING)
-					)
-					.build(),
-				CommandBuilder.Create("drop", "Remove a trigger from the bot.")
-					.addAlias("d")
-					.addParameters(
-							new CommandParameter("triggerWord", "The trigger word to remove.", ParameterType.STRING)
-					)
-					.build(),
-				CommandBuilder.Create("list", "Display all of the current triggers.")
-					.addAlias("l")
-					.addParameters(
-							new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
-					)
-					.build()
-			)
-			.build();
+					CommandBuilder.Create("add", "Add a new trigger to the bot.")
+							.addAlias("a")
+							.addParameters(
+									triggerType,
+									new CommandParameter("triggerWord", "The trigger word to add.", ParameterType.STRING)
+							)
+							.setExample("trigger add random pizza")
+							.build(),
+					CommandBuilder.Create("drop", "Remove a trigger from the bot.")
+							.addAlias("d")
+							.addParameters(
+									new CommandParameter("triggerWord", "The trigger word to remove.", ParameterType.STRING)
+							)
+							.setExample("trigger drop pizza")
+							.build(),
+					CommandBuilder.Create("list", "Display all of the current triggers.")
+							.addAlias("l")
+							.addParameters(
+									new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+							)
+							.setExample("trigger list 2")
+							.build()
+				)
+				.setExample("trigger")
+				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`trigger add RANDOM Potato`\n" +
-				"`trigger drop RANDOM Potato`\n" +
-				"`trigger list 1`";
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class Trigger implements ICommand {
 	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
 		String triggerWord = args.getAsString("triggerWord");
 
-		if(triggerWord.equalsIgnoreCase(Shmames.getBotName())) {
+		if(triggerWord.equalsIgnoreCase(App.Shmames.getBotName())) {
 			messagingChannel.sendMessage(lang.getError(Errors.CANNOT_DELETE, true));
 			return;
 		}

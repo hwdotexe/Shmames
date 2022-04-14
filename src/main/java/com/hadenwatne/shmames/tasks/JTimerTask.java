@@ -2,6 +2,7 @@ package com.hadenwatne.shmames.tasks;
 
 import java.util.*;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.entities.Message;
@@ -64,7 +65,7 @@ public class JTimerTask {
 			if (message.length() > 0)
 				m = m + "\n> " + message;
 
-			TextChannel tc = Shmames.getJDA().getTextChannelById(channelID);
+			TextChannel tc = App.Shmames.getJDA().getTextChannelById(channelID);
 
 			if (tc != null) {
 				Message originMessage = null;
@@ -84,7 +85,7 @@ public class JTimerTask {
 				}
 
 				String id = tc.getGuild().getId();
-				Brain b = Shmames.getBrains().getBrain(id);
+				Brain b = App.Shmames.getStorageService().getBrain(id);
 
 				b.getTimers().remove(this);
 			}

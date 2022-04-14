@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.models.data;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.Errors;
@@ -39,7 +40,7 @@ public class Lang {
             return processBreaks(messageArray[0]);
         } else {
             if (!langName.equalsIgnoreCase("default")) {
-                return Shmames.getDefaultLang().getMsg(key);
+                return App.Shmames.getLanguageService().getDefaultLang().getMsg(key);
             } else {
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
             }
@@ -72,7 +73,7 @@ public class Lang {
             return processBreaks(errors.get(key)[0]) + s;
         } else {
             if (!langName.equalsIgnoreCase("default")) {
-                return Shmames.getDefaultLang().getError(key, showError) + s;
+                return App.Shmames.getLanguageService().getDefaultLang().getError(key, showError) + s;
             } else {
                 LoggingService.Log(LogType.ERROR, "An unknown Lang key was used: " + key);
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";

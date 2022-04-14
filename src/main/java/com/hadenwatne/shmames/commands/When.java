@@ -21,17 +21,13 @@ public class When implements ICommand {
 				.addParameters(
 						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING)
 				)
+				.setExample("when will I get rich?")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`when will I get fired?`";
 	}
 
 	@Override

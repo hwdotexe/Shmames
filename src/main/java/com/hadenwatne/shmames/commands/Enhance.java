@@ -18,17 +18,13 @@ public class Enhance implements ICommand {
 				.addParameters(
 						new CommandParameter("thing", "The item you want to enhance.", ParameterType.STRING)
 				)
+				.setExample("enhance the national debt")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`enhance Polka music`";
 	}
 
 	@Override

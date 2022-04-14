@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.models.Family;
@@ -37,7 +38,7 @@ public class ShmamesService {
 			if (setting.getType() == BotSettingType.ROLE) {
 				String sv = setting.getValue();
 
-				if (Shmames.isDebug)
+				if (App.IsDebug)
 					return true;
 
 				if (sv.equals("everyone"))
@@ -70,11 +71,11 @@ public class ShmamesService {
 		List<Guild> guilds = new ArrayList<>();
 
 		for(String fid : serverBrain.getFamilies()){
-			Family f = Shmames.getBrains().getMotherBrain().getFamilyByID(fid);
+			Family f = App.Shmames.getStorageService().getMotherBrain().getFamilyByID(fid);
 
 			for(long mg : f.getMemberGuilds()) {
 				if(mg != server.getIdLong()) {
-					Guild familyGuild = Shmames.getJDA().getGuildById(mg);
+					Guild familyGuild = App.Shmames.getJDA().getGuildById(mg);
 
 					if(familyGuild != null) {
 						guilds.add(familyGuild);

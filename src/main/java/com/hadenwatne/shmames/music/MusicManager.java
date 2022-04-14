@@ -1,19 +1,23 @@
 package com.hadenwatne.shmames.music;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.HashMap;
 
 public class MusicManager {
-    private HashMap<String, GuildOcarina> ocarinas;
-    private AudioPlayerManager audioPlayerManager;
+    private final HashMap<String, GuildOcarina> ocarinas;
+    private final AudioPlayerManager audioPlayerManager;
 
     public MusicManager() {
         ocarinas = new HashMap<String, GuildOcarina>();
         audioPlayerManager = new DefaultAudioPlayerManager();
+
+        AudioSourceManagers.registerRemoteSources(getAudioPlayerManager());
     }
 
     public AudioPlayerManager getAudioPlayerManager() {
@@ -26,7 +30,7 @@ public class MusicManager {
         }
 
         // None found, so let's make one.
-        Guild guild = Shmames.getJDA().getGuildById(guildID);
+        Guild guild = App.Shmames.getJDA().getGuildById(guildID);
 
         if(guild != null) {
             GuildOcarina ocarina = new GuildOcarina(this, guild.getAudioManager());

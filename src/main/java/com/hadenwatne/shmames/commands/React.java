@@ -27,17 +27,13 @@ public class React implements ICommand {
 						new CommandParameter("word", "the word to react with", ParameterType.STRING)
 								.setPattern("\\w+")
 				)
+				.setExample("react ^^^ dope")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`react dope ^^^`";
 	}
 
 	@Override

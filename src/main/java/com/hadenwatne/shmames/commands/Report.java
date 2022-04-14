@@ -24,18 +24,13 @@ public class Report implements ICommand {
 								.addSelectionOptions("Bug", "Feature", "Suggestion", "Enhancement"),
 						new CommandParameter("reportText", "The detailed report to send.", ParameterType.STRING)
 				)
+				.setExample("report bug james smells weird")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`report bug Shmames isn't funny`\n" +
-				"`report feature Shmames rolls some dice`";
 	}
 
 	@Override

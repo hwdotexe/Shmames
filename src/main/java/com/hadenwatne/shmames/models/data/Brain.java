@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.TriggerType;
@@ -11,19 +12,19 @@ import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.tasks.JTimerTask;
 
 public class Brain {
-	private String guildID;
-	private HashMap<String, Integer> tallies;
-	private HashMap<String, Integer> emoteStats;
-	private HashMap<String, TriggerType> triggers;
+	private final String guildID;
+	private final HashMap<String, Integer> tallies;
+	private final HashMap<String, Integer> emoteStats;
+	private final HashMap<String, TriggerType> triggers;
 	private List<UserCustomList> userListsv2;
-	private List<Response> triggerResponses;
-	private List<BotSetting> settings;
-	private List<String> feedback;
-	private List<PollModel> activePolls;
-	private List<String> families;
-	private List<ForumWeaponObj> forumWeapons;
-	private List<JTimerTask> timers;
-	private List<Playlist> playlists;
+	private final List<Response> triggerResponses;
+	private final List<BotSetting> settings;
+	private final List<String> feedback;
+	private final List<PollModel> activePolls;
+	private final List<String> families;
+	private final List<ForumWeaponObj> forumWeapons;
+	private final List<JTimerTask> timers;
+	private final List<Playlist> playlists;
 	private boolean isReportCooldown;
 	private boolean isJinping;
 	private boolean sentWelcome;
@@ -31,18 +32,18 @@ public class Brain {
 	
 	public Brain(String gid) {
 		guildID = gid;
-		tallies = new HashMap<String, Integer>();
-		emoteStats = new HashMap<String, Integer>();
-		triggers = new HashMap<String, TriggerType>();
+		tallies = new HashMap<>();
+		emoteStats = new HashMap<>();
+		triggers = new HashMap<>();
 		userListsv2 = new ArrayList<>();
-		triggerResponses = new ArrayList<Response>();
-		settings = new ArrayList<BotSetting>();
-		feedback = new ArrayList<String>();
-		activePolls = new ArrayList<PollModel>();
-		families = new ArrayList<String>();
-		forumWeapons = new ArrayList<ForumWeaponObj>();
-		timers = new ArrayList<JTimerTask>();
-		playlists = new ArrayList<Playlist>();
+		triggerResponses = new ArrayList<>();
+		settings = new ArrayList<>();
+		feedback = new ArrayList<>();
+		activePolls = new ArrayList<>();
+		families = new ArrayList<>();
+		forumWeapons = new ArrayList<>();
+		timers = new ArrayList<>();
+		playlists = new ArrayList<>();
 		isReportCooldown = false;
 		isJinping = false;
 		sentWelcome = false;
@@ -189,7 +190,7 @@ public class Brain {
 	 * run when this object is first created.
 	 */
 	public void loadFirstRunDefaults() {
-		triggers.put(Shmames.getBotName(), TriggerType.COMMAND);
-		settings.addAll(Shmames.defaultBotSettings);
+		triggers.put(App.Shmames.getBotName(), TriggerType.COMMAND);
+		settings.addAll(App.Shmames.getStorageService().getDefaultSettings());
 	}
 }

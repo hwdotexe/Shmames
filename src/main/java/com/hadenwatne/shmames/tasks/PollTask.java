@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.tasks;
 import java.awt.Color;
 import java.util.*;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
@@ -23,10 +24,10 @@ public class PollTask extends TimerTask{
 	public PollTask(PollModel pollModel) {
 		this.pollModel = pollModel;
 
-		TextChannel textChannel = Shmames.getJDA().getTextChannelById(pollModel.getChannelID());
+		TextChannel textChannel = App.Shmames.getJDA().getTextChannelById(pollModel.getChannelID());
 
 		if(textChannel != null) {
-			this.lang = Shmames.getLangFor(textChannel.getGuild());
+			this.lang = App.Shmames.getLanguageService().getLangFor(textChannel.getGuild());
 
 			if(pollModel.getMessageID() == null) {
 				this.message = this.sendMessageEmbed(textChannel, pollModel.getExpiration());
@@ -69,9 +70,9 @@ public class PollTask extends TimerTask{
 			
 			message.delete().queue();
 			
-			Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+			Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 			b.getActivePolls().remove(pollModel);
-			Shmames.getBrains().saveBrain(b);
+			App.Shmames.getStorageService().getBrainController().saveBrain(b);
 		}
 		
 		this.cancel();
@@ -107,7 +108,7 @@ public class PollTask extends TimerTask{
 	}
 
 	private void tryPinPollMessage(Message message) {
-		Brain b = Shmames.getBrains().getBrain(message.getGuild().getId());
+		Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 
 		if(b.getSettingFor(BotSettingName.PIN_POLLS).getValue().equalsIgnoreCase("true")) {
 			try {

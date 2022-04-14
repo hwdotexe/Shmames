@@ -19,17 +19,13 @@ public class Thoughts implements ICommand {
 				.addParameters(
 						new CommandParameter("item", "The item to get my thoughts about", ParameterType.STRING)
 				)
+				.setExample("thoughts my fit?")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`thoughts The State of Ohio`";
 	}
 
 	@Override

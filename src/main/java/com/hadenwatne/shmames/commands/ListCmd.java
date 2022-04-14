@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -38,6 +39,7 @@ public class ListCmd implements ICommand {
 										new CommandParameter("privacy", "Whether others can view and add to the list.", ParameterType.SELECTION, false)
 												.addSelectionOptions("public", "private")
 								)
+								.setExample("list create myList public")
 								.build(),
 						CommandBuilder.Create("add", "Add an item to a list.")
 								.addParameters(
@@ -45,6 +47,7 @@ public class ListCmd implements ICommand {
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("item", "The item to add to the list.", ParameterType.STRING)
 								)
+								.setExample("list add myList newItem")
 								.build(),
 						CommandBuilder.Create("remove", "Remove an item from a list.")
 								.addParameters(
@@ -52,33 +55,39 @@ public class ListCmd implements ICommand {
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("index", "The item position to remove.", ParameterType.INTEGER)
 								)
+								.setExample("list remove myList 3")
 								.build(),
 						CommandBuilder.Create("delete", "Delete a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to delete.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
-										)
+								)
+								.setExample("list delete myList")
 								.build(),
 						CommandBuilder.Create("toggle", "Toggle a List between Public and Private.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to toggle.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
 								)
+								.setExample("list toggle myList")
 								.build(),
 						CommandBuilder.Create("random", "Get a random item from a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to get a random item from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
-										)
+								)
+								.setExample("list random myList")
 								.build(),
 						CommandBuilder.Create("list", "Show all available lists.")
+								.setExample("list list")
 								.build(),
 						CommandBuilder.Create("view", "View the items in a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to view.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+"),
 										new CommandParameter("page", "The name of the list to view.", ParameterType.INTEGER, false)
-										)
+								)
+								.setExample("list view myList 2")
 								.build()
 				)
 				.build();
@@ -87,18 +96,6 @@ public class ListCmd implements ICommand {
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`list create myList public`\n" +
-				"`list add myList Eggs`\n" +
-				"`list remove myList 1`\n" +
-				"`list delete myList`\n" +
-				"`list toggle myList`\n" +
-				"`list random myList`\n" +
-				"`list list`\n" +
-				"`list view myList`";
 	}
 
 	@Override
@@ -293,7 +290,7 @@ public class ListCmd implements ICommand {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(new Color(219, 217, 157));
-		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
 
 		eBuilder.addField("Your Lists",userLists,false);
 		eBuilder.addField("Public Lists",publicLists,false);
@@ -305,7 +302,7 @@ public class ListCmd implements ICommand {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(new Color(219, 217, 157));
-		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
 
 		List<String> userList = PaginationService.SplitString(listString, MessageEmbed.VALUE_MAX_LENGTH);
 		String embedFieldTitle = listName;

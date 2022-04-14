@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandStructure {
-    private String name;
-    private String description;
-    private List<String> aliases;
-    private List<CommandParameter> parameters;
+    private final String name;
+    private final String description;
+    private final List<String> aliases;
+    private final List<CommandParameter> parameters;
+    private final List<CommandStructure> subCommands;
+    private final List<SubCommandGroup> subCommandGroups;
+
     private Pattern pattern;
     private String usage;
-    private List<CommandStructure> subCommands;
-    private List<SubCommandGroup> subCommandGroups;
+    private String example;
 
     public CommandStructure(String name, String description) {
         this.name = name;
@@ -40,12 +42,22 @@ public class CommandStructure {
         return this.description;
     }
 
+    public String getExample() {
+        return this.example;
+    }
+
     public List<String> getAliases() {
         return this.aliases;
     }
 
     public CommandStructure addAlias(String alias) {
         this.aliases.add(alias);
+
+        return this;
+    }
+
+    public CommandStructure setExample(String example) {
+        this.example = example;
 
         return this;
     }
@@ -93,6 +105,7 @@ public class CommandStructure {
 
         this.pattern = CommandBuilder.BuildPattern(this);
         this.usage = CommandBuilder.BuildUsage(this, false);
+        this.example = CommandBuilder.BuildExample(this);
 
         return this;
     }

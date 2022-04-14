@@ -26,18 +26,13 @@ public class Timer implements ICommand {
 						new CommandParameter("duration", "The amount of time before the timer runs", ParameterType.TIMECODE),
 						new CommandParameter("message", "The description of the timer", ParameterType.STRING, false)
 				)
+				.setExample("timer 1d12h Pizza time")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`timer 24h Pizza Time`\n" +
-				"`timer 15m30s Downvote Horny Bard`";
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.models.PaginatedList;
@@ -74,7 +75,7 @@ public class PaginationService {
         int pageIndex = pageToDisplay - 1;
 
         eBuilder.setColor(color);
-        eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+        eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
         eBuilder.setFooter(paginatedList.getItemCount() + " items");
 
         if(pageToDisplay > listData.size() || pageToDisplay == 0) {

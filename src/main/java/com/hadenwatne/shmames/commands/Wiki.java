@@ -18,17 +18,13 @@ public class Wiki implements ICommand {
 						new CommandParameter("query", "A short search query", ParameterType.STRING)
 						.setPattern(".{3,150}")
 				)
+				.setExample("wiki mass of Uranus")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`wiki distance between Earth and Jupiter`";
 	}
 
 	@Override

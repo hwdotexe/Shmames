@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -21,6 +22,7 @@ public class WhatAreTheOdds implements ICommand {
 				.addParameters(
 						new CommandParameter("query", "The event to determine the odds of.", ParameterType.STRING)
 				)
+				.setExample("whataretheodds I strike gold?")
 				.build();
 	}
 
@@ -30,15 +32,10 @@ public class WhatAreTheOdds implements ICommand {
 	}
 
 	@Override
-	public String getExamples() {
-		return "`whataretheodds I pass my practical exam`";
-	}
-
-	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		String query = data.getArguments().getAsString("query");
 
-		for (ICommand c : Shmames.getCommandHandler().getLoadedCommands()) {
+		for (ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
 			if (c.getCommandStructure().getName().equalsIgnoreCase("roll")) {
 				String prefix = "\"What are the odds " + query + "\"\n";
 				LinkedHashMap<String, Object> rollArgs = new LinkedHashMap<>();
@@ -49,7 +46,7 @@ public class WhatAreTheOdds implements ICommand {
 						c,
 						new ShmamesCommandArguments(rollArgs),
 						data.getMessagingChannel(),
-						Shmames.getJDA().getSelfUser(),
+						App.Shmames.getJDA().getSelfUser(),
 						data.getServer()
 				);
 

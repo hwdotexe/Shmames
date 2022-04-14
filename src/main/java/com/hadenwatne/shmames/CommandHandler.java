@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
 	private static List<ICommand> commands;
-	private final Lang defaultLang = Shmames.getDefaultLang();
+	private final Lang defaultLang = App.Shmames.getLanguageService().getDefaultLang();
 
 	public CommandHandler() {
 		commands = new ArrayList<ICommand>();
@@ -96,14 +96,14 @@ public class CommandHandler {
 	 * @param brain The brain of the server, if applicable.
 	 */
 	public void PerformCommand(String commandText, Message message, @Nullable Guild server, @Nullable Brain brain) {
-		Lang lang = Shmames.getDefaultLang();
+		Lang lang = defaultLang;
 		User author = message.getAuthor();
 		MessageChannel channel = message.getChannel();
 
 		// Log the command.
 		if(server != null) {
 			LoggingService.Log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ commandText);
-			lang = Shmames.getLangFor(server);
+			lang = App.Shmames.getLanguageService().getLangFor(server);
 		} else {
 			LoggingService.Log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ commandText);
 		}
@@ -213,7 +213,7 @@ public class CommandHandler {
 		event.deferReply().queue();
 
 		Brain brain = null;
-		Lang lang = Shmames.getDefaultLang();
+		Lang lang = defaultLang;
 		User author = event.getUser();
 		InteractionHook hook = event.getHook();
 		String cmdString = (subCommand == null ? arguments.getAsString() : subCommand.getAsString()).trim();
@@ -221,8 +221,8 @@ public class CommandHandler {
 		// Log the command statistic.
 		if (server != null) {
 			LoggingService.Log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
-			lang = Shmames.getLangFor(server);
-			brain = Shmames.getBrains().getBrain(server.getId());
+			lang = App.Shmames.getLanguageService().getLangFor(server);
+			brain = App.Shmames.getStorageService().getBrain(server.getId());
 		} else {
 			LoggingService.Log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
 
@@ -331,7 +331,7 @@ public class CommandHandler {
 		EmbedBuilder eBuilder = new EmbedBuilder();
 
 		eBuilder.setColor(new Color(166, 36, 36));
-		eBuilder.setAuthor(Shmames.getBotName(), null, Shmames.getJDA().getSelfUser().getAvatarUrl());
+		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
 
 		eBuilder.setTitle("Error: "+Errors.WRONG_USAGE.name());
 		eBuilder.setDescription(lang.getError(Errors.WRONG_USAGE, false));
@@ -378,7 +378,7 @@ public class CommandHandler {
 
 	private void logCountCommandUsage(ICommand command) {
 		String primaryCommandName = command.getCommandStructure().getName().toLowerCase();
-		HashMap<String, Integer> stats = Shmames.getBrains().getMotherBrain().getCommandStats();
+		HashMap<String, Integer> stats = App.Shmames.getStorageService().getMotherBrain().getCommandStats();
 		int count = stats.getOrDefault(primaryCommandName, 1) + 1;
 
 		stats.put(primaryCommandName, count);
@@ -386,9 +386,9 @@ public class CommandHandler {
 
 	private void updateSlashCommands(List<ICommand> commands) {
 		// Update command syntax on individual test servers.
-		if(Shmames.isDebug) {
-			for(Guild g : Shmames.getJDA().getGuilds()) {
-				CommandListUpdateAction cUpdate = Shmames.getJDA().getGuildById(g.getId()).updateCommands();
+		if(App.IsDebug) {
+			for(Guild g : App.Shmames.getJDA().getGuilds()) {
+				CommandListUpdateAction cUpdate = App.Shmames.getJDA().getGuildById(g.getId()).updateCommands();
 
 				issueSlashCommandUpdate(cUpdate);
 			}
@@ -397,11 +397,11 @@ public class CommandHandler {
 		}
 
 		// Update command syntax on Discord if configured to do so.
-		if(Shmames.getBrains().getMotherBrain().doUpdateDiscordSlashCommands()) {
-			CommandListUpdateAction cUpdate = Shmames.getJDA().updateCommands();
+		if(App.Shmames.getStorageService().getMotherBrain().doUpdateDiscordSlashCommands()) {
+			CommandListUpdateAction cUpdate = App.Shmames.getJDA().updateCommands();
 
 			issueSlashCommandUpdate(cUpdate);
-			Shmames.getBrains().getMotherBrain().setUpdateDiscordSlashCommands(false);
+			App.Shmames.getStorageService().getMotherBrain().setUpdateDiscordSlashCommands(false);
 		}
 	}
 

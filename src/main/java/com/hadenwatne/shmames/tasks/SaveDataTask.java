@@ -2,6 +2,7 @@ package com.hadenwatne.shmames.tasks;
 
 import java.util.*;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.enums.LogType;
@@ -29,19 +30,19 @@ public class SaveDataTask extends TimerTask{
 	}
 	
 	public void run() {
-		MotherBrain mb = Shmames.getBrains().getMotherBrain();
+		MotherBrain mb = App.Shmames.getStorageService().getMotherBrain();
 		String action = RandomService.GetRandomHashMap(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
 
 		updateRandomSeed();
-		Shmames.getJDA().getPresence().setActivity(Activity.of(t, action));
+		App.Shmames.getJDA().getPresence().setActivity(Activity.of(t, action));
 		
 		// Save all brains
-		for(Brain b : Shmames.getBrains().getBrains()) {
-			Shmames.getBrains().saveBrain(b);
+		for(Brain b : App.Shmames.getStorageService().getBrainController().getBrains()) {
+			App.Shmames.getStorageService().getBrainController().saveBrain(b);
 		}
 
-		Shmames.getBrains().saveMotherBrain();
+		App.Shmames.getStorageService().getBrainController().saveMotherBrain();
 
 		LoggingService.Log(LogType.SYSTEM, "Autosave Task Ran");
 		LoggingService.Write();

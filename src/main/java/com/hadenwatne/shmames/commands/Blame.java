@@ -18,17 +18,13 @@ public class Blame implements ICommand {
 				.addParameters(
 						new CommandParameter("item", "The item to blame", ParameterType.STRING)
 				)
+				.setExample("blame cropcircles")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`blame cropcircles`";
 	}
 
 	@Override

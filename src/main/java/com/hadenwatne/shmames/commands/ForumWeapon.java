@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
+import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -20,6 +22,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.dv8tion.jda.api.entities.Guild;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.Shmames;
@@ -38,33 +41,38 @@ public class ForumWeapon implements ICommand {
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
 										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
-												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
+												.setPattern(RegexPatterns.URL.getPattern())
 								)
+								.setExample("forumweapon create myWeapon https://link")
 								.build(),
 						CommandBuilder.Create("update", "Change the URL of an existing Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}"),
 										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
-												.setPattern("https?:\\/\\/[\\w\\d:/.\\-?&=%#@]+")
+												.setPattern(RegexPatterns.URL.getPattern())
 								)
+								.setExample("forumweapon update myWeapon https://link")
 								.build(),
 						CommandBuilder.Create("remove", "Delete a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
+								.setExample("forumweapon remove myWeapon")
 								.build(),
 						CommandBuilder.Create("list", "List all available Forum Weapons.")
 								.addParameters(
 										new CommandParameter("all", "Whether to search all connected guilds.", ParameterType.BOOLEAN, false)
 								)
+								.setExample("forumweapon list true")
 								.build(),
 						CommandBuilder.Create("search", "Search for a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("searchTerm", "The partial name of the Forum Weapon to search for.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
+								.setExample("forumweapon search explo")
 								.build(),
 						CommandBuilder.Create("alias", "Add an alternative name for a Forum Weapon.")
 								.addParameters(
@@ -73,6 +81,7 @@ public class ForumWeapon implements ICommand {
 										new CommandParameter("newAlias", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
+								.setExample("forumweapon alias myWeapon coolWeapon")
 								.build(),
 						CommandBuilder.Create("send", "Send a Forum Weapon.")
 								.addAlias("s")
@@ -80,29 +89,19 @@ public class ForumWeapon implements ICommand {
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
 								)
+								.setExample("forumweapon send myWeapon")
 								.build(),
 						CommandBuilder.Create("prune", "List and delete unused Forum Weapons.")
+								.setExample("forumweapon prune")
 								.build()
 				)
+				.setExample("forumweapon")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`fw dekuheadbang`\n" +
-				"`fw create dekuheadbang http://link.to.meme`\n" +
-				"`fw update dekuheadbang http://new.link.to.meme`\n" +
-				"`fw remove dekuheadbang`\n" +
-				"`fw list`\n" +
-				"`fw list all`\n" +
-				"`fw search deku`\n" +
-				"`fw alias dekuheadbang dekunod`\n" +
-				"`fw prune`";
 	}
 
 	@Override
@@ -244,7 +243,7 @@ public class ForumWeapon implements ICommand {
 
 		// Search the Family.
 		for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-			Brain familyBrain = Shmames.getBrains().getBrain(family.getId());
+			Brain familyBrain = App.Shmames.getStorageService().getBrain(family.getId());
 			sb.append(System.lineSeparator());
 			sb.append(searchServerFWList(familyBrain, family.getName(), searchTerm));
 		}
@@ -310,7 +309,7 @@ public class ForumWeapon implements ICommand {
 
 		// Check other Family servers.
 		for (Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-			Brain b = Shmames.getBrains().getBrain(family.getId());
+			Brain b = App.Shmames.getStorageService().getBrain(family.getId());
 
 			for (ForumWeaponObj fw : b.getForumWeapons()) {
 				if (fw.getItemName().equals(name) || fw.getAliases().contains(name)) {
@@ -332,7 +331,7 @@ public class ForumWeapon implements ICommand {
 
 		// Check other Family servers.
 		for (Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-			Brain b = Shmames.getBrains().getBrain(family.getId());
+			Brain b = App.Shmames.getStorageService().getBrain(family.getId());
 
 			for (ForumWeaponObj fw : b.getForumWeapons()) {
 				if (fw.getItemLink().equals(url)) {
@@ -352,7 +351,7 @@ public class ForumWeapon implements ICommand {
 		String id = g.getId();
 		HashMap<String, Integer> fwList = new HashMap<String, Integer>();
 
-		for(ForumWeaponObj fws : Shmames.getBrains().getBrain(id).getForumWeapons()) {
+		for(ForumWeaponObj fws : App.Shmames.getStorageService().getBrain(id).getForumWeapons()) {
 			fwList.put(fws.getItemName(), fws.getUses());
 		}
 

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
@@ -33,12 +34,14 @@ public class FamilyCmd implements ICommand {
 										new CommandParameter("familyName", "The amount of time the poll should last.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 								)
+								.setExample("family create coolFam")
 								.build(),
 						CommandBuilder.Create("leave", "Leave a Family.")
 								.addParameters(
 										new CommandParameter("familyName", "The Family to leave.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 								)
+								.setExample("family leave coolFam")
 								.build(),
 						CommandBuilder.Create("kick", "Kick another server from a Family.")
 								.addParameters(
@@ -46,6 +49,7 @@ public class FamilyCmd implements ICommand {
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 										new CommandParameter("serverNumber", "The server to kick.", ParameterType.INTEGER)
 								)
+								.setExample("family kick coolFam 3")
 								.build()
 				)
 				.addSubCommandGroups(
@@ -56,11 +60,13 @@ public class FamilyCmd implements ICommand {
 														new CommandParameter("familyName", "The Family to create a Join Code for.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
+												.setExample("family code generate coolFam")
 												.build(),
 										CommandBuilder.Create("redeem", "Redeem a Join Code to join a Family.")
 												.addParameters(
 														new CommandParameter("joinCode", "The Join Code to use.", ParameterType.STRING)
 												)
+												.setExample("family code redeem ABC123")
 												.build()
 								),
 						new SubCommandGroup("view", "View Family information.")
@@ -70,31 +76,23 @@ public class FamilyCmd implements ICommand {
 														new CommandParameter("familyName", "The Family to view.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
 												)
+												.setExample("family view servers coolFam")
 												.build(),
 										CommandBuilder.Create("emotes", "View a list of Family emotes the server has access to.")
+												.setExample("family view emotes")
 												.build(),
 										CommandBuilder.Create("families", "View a list of Families this server belongs to.")
+												.setExample("family view families")
 												.build()
 								)
 				)
+				.setExample("family")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`family create myAwesomeFamily`\n" +
-				"`family leave myAwesomeFamily`\n" +
-				"`family kick myAwesomeFamily 2`\n" +
-				"`family code generate`\n" +
-				"`family code redeem j01nc0d3`\n" +
-				"`family view servers myAwesomeFamily`\n" +
-				"`family view emotes`\n" +
-				"`family view families`";
 	}
 
 	@Override
@@ -128,8 +126,8 @@ public class FamilyCmd implements ICommand {
 	private String cmdCreate(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
-		if (author.hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-			for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
+			for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 				if (f.getFamilyOwner() == author.getIdLong()) {
 					if (f.getFamName().equals(familyName)) {
 						return lang.getError(Errors.FAMILY_ALREADY_EXISTS, true);
@@ -143,7 +141,7 @@ public class FamilyCmd implements ICommand {
 			newFam.addToFamily(server.getIdLong());
 
 			// Add the Family to the system.
-			Shmames.getBrains().getMotherBrain().getServerFamilies().add(newFam);
+			App.Shmames.getStorageService().getMotherBrain().getServerFamilies().add(newFam);
 			brain.getFamilies().add(newFam.getFamID());
 
 			return lang.getMsg(Langs.FAMILY_CREATED);
@@ -155,8 +153,8 @@ public class FamilyCmd implements ICommand {
 	private String cmdLeave(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
-		if (author.hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
-			for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
+			for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 				if (f.getFamName().equals(familyName)) {
 					// Remove this server from the Family.
 					brain.getFamilies().remove(f.getFamID());
@@ -164,7 +162,7 @@ public class FamilyCmd implements ICommand {
 
 					// Delete the Family if empty.
 					if (f.getMemberGuilds().size() == 0) {
-						Shmames.getBrains().getMotherBrain().getServerFamilies().remove(f);
+						App.Shmames.getStorageService().getMotherBrain().getServerFamilies().remove(f);
 					}
 
 					return lang.getMsg(Langs.FAMILY_REMOVED_SERVER, new String[]{server.getName(), f.getFamName()});
@@ -181,11 +179,11 @@ public class FamilyCmd implements ICommand {
 		String familyName = args.getAsString("familyName").toLowerCase();
 		int serverIndex = args.getAsInteger("serverNumber")-1;
 
-		for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+		for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 			if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equals(familyName)) {
 				if (f.getMemberGuilds().size() >= serverIndex) {
 					long guildID = f.getMemberGuilds().get(serverIndex);
-					Guild g = Shmames.getJDA().getGuildById(guildID);
+					Guild g = App.Shmames.getJDA().getGuildById(guildID);
 					String gName = "";
 
 					// If the Guild is empty but was found in the list, remove it from the Family Guild list.
@@ -200,7 +198,7 @@ public class FamilyCmd implements ICommand {
 
 					// Remove the family if empty.
 					if(f.getMemberGuilds().size() == 0){
-						Shmames.getBrains().getMotherBrain().getServerFamilies().remove(f);
+						App.Shmames.getStorageService().getMotherBrain().getServerFamilies().remove(f);
 					}
 
 					return lang.getMsg(Langs.FAMILY_REMOVED_SERVER, new String[]{ gName, f.getFamName() });
@@ -230,7 +228,7 @@ public class FamilyCmd implements ICommand {
 	private String cmdCodeCreate(Lang lang, User author, ShmamesCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
-		for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 			if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(familyName)) {
 				if (f.getMemberGuilds().size() < 7) {
 					author.openPrivateChannel().queue((c) -> c.sendMessage(lang.getMsg(Langs.FAMILY_JOIN_CODE, new String[]{f.getFamName(), f.getNewJoinCode()})).queue());
@@ -248,11 +246,11 @@ public class FamilyCmd implements ICommand {
 	private String cmdCodeRedeem(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
 		String joinCode = args.getAsString("joinCode").toLowerCase();
 
-		for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
+		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()){
 			if(f.validateCode(joinCode)){
 				f.clearCode();
 
-				if(author.hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
+				if(author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
 					if(brain.getFamilies().size() < 3) {
 						if (!brain.getFamilies().contains(f.getFamID())) {
 							f.addToFamily(server.getIdLong());
@@ -293,7 +291,7 @@ public class FamilyCmd implements ICommand {
 	private String cmdViewServers(Lang lang, Brain brain, Member author, ShmamesCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
-		for (Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()) {
+		for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 			// View the family if the user is the family owner, or if they are an Admin and this server is a member
 			if ((f.getFamilyOwner() == author.getIdLong() || (brain.getFamilies().contains(f.getFamID()) && author.hasPermission(Permission.ADMINISTRATOR))) && f.getFamName().equalsIgnoreCase(familyName)) {
 				StringBuilder sb = new StringBuilder();
@@ -307,7 +305,7 @@ public class FamilyCmd implements ICommand {
 				List<String> memberGuilds = new ArrayList<String>();
 
 				for (long g : new ArrayList<>(f.getMemberGuilds())) {
-					Guild guild = Shmames.getJDA().getGuildById(g);
+					Guild guild = App.Shmames.getJDA().getGuildById(g);
 
 					// Quick null check!
 					if (guild == null) {
@@ -351,7 +349,7 @@ public class FamilyCmd implements ICommand {
 	}
 
 	private String cmdViewFamilies(Lang lang, Brain brain, Member author) {
-		if(author.hasPermission(Permission.ADMINISTRATOR) || Shmames.isDebug) {
+		if(author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("**");
 			sb.append(lang.getMsg(Langs.SERVER_FAMILY_LIST));
@@ -362,7 +360,7 @@ public class FamilyCmd implements ICommand {
 			List<String> families = new ArrayList<String>();
 
 			for(String id : brain.getFamilies()){
-				for(Family f : Shmames.getBrains().getMotherBrain().getServerFamilies()){
+				for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()){
 					if(f.getFamID().equals(id)){
 						families.add(f.getFamName());
 						contains = true;

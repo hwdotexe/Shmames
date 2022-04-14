@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.services.LoggingService;
@@ -40,7 +41,7 @@ public class GuildOcarina extends AudioEventAdapter {
 
 	public GuildOcarina(MusicManager mm, AudioManager am) {
 		musicManager = mm;
-		player = Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
+		player = App.Shmames.getMusicManager().getAudioPlayerManager().createPlayer();
 		player.addListener(this);
 		manager = am;
 		queue = new ArrayList<AudioTrack>();
@@ -114,7 +115,7 @@ public class GuildOcarina extends AudioEventAdapter {
 
 	public void loadTrack(String url, boolean addToQueue) {
 		loader.prepareLoadingTrack(addToQueue);
-		Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, loader);
+		App.Shmames.getMusicManager().getAudioPlayerManager().loadItem(url, loader);
 		checkAddYouTubeTimecode(url);
 	}
 
@@ -124,7 +125,7 @@ public class GuildOcarina extends AudioEventAdapter {
 		loader.prepareLoadingPlaylist(addToQueue);
 
 		for(String url : urls) {
-			Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, loader);
+			App.Shmames.getMusicManager().getAudioPlayerManager().loadItemOrdered(order, url, loader);
 			checkAddYouTubeTimecode(url);
 		}
 	}

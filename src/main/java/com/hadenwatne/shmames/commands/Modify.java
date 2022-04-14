@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -38,19 +39,13 @@ public class Modify implements ICommand {
 						setting,
 						new CommandParameter("value", "The new value for this setting.", ParameterType.STRING, false)
 				)
+				.setExample("modify server_lang pirate")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`modify`\n" +
-				"`modify ALLOW_MODIFY ServerPolice`\n" +
-				"`modify SERVER_LANG`";
 	}
 
 	@Override
@@ -70,7 +65,7 @@ public class Modify implements ICommand {
 
 				eBuilder.setColor(Color.ORANGE);
 				eBuilder.setTitle(lang.getMsg(Langs.SETTING_LIST_TITLE));
-				eBuilder.setFooter("Use \""+Shmames.getBotName()+" modify <setting>\" for info.");
+				eBuilder.setFooter("Use \""+App.Shmames.getBotName()+" modify <setting>\" for info.");
 
 				for(BotSetting v : brain.getSettings()) {
 					appendValueEmbedField(eBuilder, v, server);
@@ -98,7 +93,7 @@ public class Modify implements ICommand {
 				if (botSettingName == BotSettingName.ALLOW_MODIFY) {
 					Member member = server.getMember(author);
 
-					if (!member.hasPermission(Permission.ADMINISTRATOR) && !Shmames.isDebug) {
+					if (!member.hasPermission(Permission.ADMINISTRATOR) && !App.IsDebug) {
 						return lang.getError(Errors.NO_PERMISSION_USER, true);
 					}
 				}
@@ -107,7 +102,7 @@ public class Modify implements ICommand {
 				if (botSettingName == BotSettingName.SERVER_LANG) {
 					boolean found = false;
 
-					for(Lang l : Shmames.getLangs().getAllLangs()) {
+					for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
 						if(l.getLangName().equalsIgnoreCase(settingValue)){
 							found=true;
 							break;
@@ -117,7 +112,7 @@ public class Modify implements ICommand {
 					if(!found) {
 						List<String> langNames = new ArrayList<>();
 
-						for(Lang l : Shmames.getLangs().getAllLangs()){
+						for(Lang l : App.Shmames.getLanguageService().getAllLangs()){
 							langNames.add(l.getLangName());
 						}
 
@@ -212,7 +207,7 @@ public class Modify implements ICommand {
 				StringBuilder sb = new StringBuilder();
 				List<String> langs = new ArrayList<>();
 
-				for(Lang l : Shmames.getLangs().getAllLangs()) {
+				for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
 					langs.add(l.getLangName());
 				}
 

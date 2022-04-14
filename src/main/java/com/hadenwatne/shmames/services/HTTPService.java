@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.HTTPVerb;
@@ -76,11 +77,11 @@ public class HTTPService {
      * @return The API's response.
      */
     public static String GetWolfram(String search) {
-        Lang lang = Shmames.getDefaultLang();
+        Lang lang = App.Shmames.getLanguageService().getDefaultLang();
 
         try {
             String searchFormatted = URLEncoder.encode(search, "UTF-8");
-            String result = SendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=" + Shmames.getBrains().getMotherBrain().getWolframAPIKey() + "&i=" + searchFormatted, null);
+            String result = SendHTTPReq(HTTPVerb.GET, "http://api.wolframalpha.com/v1/result?appid=" + App.Shmames.getStorageService().getMotherBrain().getWolframAPIKey() + "&i=" + searchFormatted, null);
 
             if (result != null) {
                 return result.trim();
@@ -99,7 +100,7 @@ public class HTTPService {
      */
     public static String GetGIF(String search, String filter) {
         search = search.trim().replaceAll(" ", "%20");
-        String result = SendHTTPReq(HTTPVerb.GET, "https://g.tenor.com/v1/search?q=" + search + "&key=" + Shmames.getBrains().getMotherBrain().getTenorAPIKey() + "&contentfilter=" + filter + "&limit=25", null);
+        String result = SendHTTPReq(HTTPVerb.GET, "https://g.tenor.com/v1/search?q=" + search + "&key=" + App.Shmames.getStorageService().getMotherBrain().getTenorAPIKey() + "&contentfilter=" + filter + "&limit=25", null);
 
         Random r = RandomService.GetRandomObj();
         JSONObject json = new JSONObject(result);

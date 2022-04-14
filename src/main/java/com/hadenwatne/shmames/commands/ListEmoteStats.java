@@ -21,17 +21,13 @@ public class ListEmoteStats implements ICommand {
 				.addAlias("list emote stats")
 				.addAlias("showemotestats")
 				.addAlias("show emote stats")
+				.setExample("listemotestats")
 				.build();
 	}
 
 	@Override
 	public CommandStructure getCommandStructure() {
 		return this.commandStructure;
-	}
-
-	@Override
-	public String getExamples() {
-		return "`listemotestats`";
 	}
 
 	@Override
