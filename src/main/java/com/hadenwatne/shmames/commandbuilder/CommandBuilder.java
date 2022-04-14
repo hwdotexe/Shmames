@@ -297,33 +297,54 @@ public class CommandBuilder {
     }
 
     public static String BuildExample(CommandStructure command) {
+        StringBuilder example = new StringBuilder();
         List<CommandStructure> subCommands = command.getSubCommands();
         List<SubCommandGroup> subCommandGroups = command.getSubcommandGroups();
 
-        if(subCommands.size() > 0 || subCommandGroups.size() > 0) {
-            StringBuilder example = new StringBuilder();
+        example.append(command.getName());
 
-            example.append(command.getExample() + "...");
+        if(subCommands.size() > 0 || subCommandGroups.size() > 0) {
+            example.append("...");
 
             for(CommandStructure subCommand : subCommands) {
                 example.append(System.lineSeparator());
-                example.append(subCommand.getExample());
+
+                example.append(command.getName());
+                example.append(" ");
+                example.append(subCommand.getName());
+
+                for(CommandParameter parameter : subCommand.getParameters()) {
+                    example.append(" ");
+                    example.append(parameter.getExample());
+                }
             }
 
             for(SubCommandGroup subCommandGroup: subCommandGroups) {
                 for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
-                    if(example.length() > 0) {
-                        example.append(System.lineSeparator());
-                    }
+                    example.append(System.lineSeparator());
 
-                    example.append(subCommand.getExample());
+                    example.append(command.getName());
+                    example.append(" ");
+                    example.append(subCommandGroup.getName());
+                    example.append(" ");
+                    example.append(subCommand.getName());
+
+                    for(CommandParameter parameter : subCommand.getParameters()) {
+                        if(parameter.getExample() != null && parameter.getExample().length() > 0) {
+                            example.append(" ");
+                            example.append(parameter.getExample());
+                        }
+                    }
                 }
             }
-
-            return example.toString();
         } else {
-            return command.getExample();
+            for(CommandParameter parameter : command.getParameters()) {
+                example.append(" ");
+                example.append(parameter.getExample());
+            }
         }
+
+        return example.toString();
     }
 
     private static String buildSubCommandUsageLabel(List<CommandStructure> subCommands) {

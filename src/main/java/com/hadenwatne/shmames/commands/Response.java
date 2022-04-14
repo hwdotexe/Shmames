@@ -39,26 +39,29 @@ public class Response implements ICommand {
 				CommandBuilder.Create("add", "Add a new response to the random pool.")
 						.addAlias("a")
 						.addParameters(
-								triggerType,
+								triggerType
+										.setExample("random"),
 								new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
+										.setExample("hello!")
 						)
-						.setExample("response add random hello!")
 						.build(),
 				CommandBuilder.Create("drop", "Remove a response from the random pool.")
 						.addAlias("d")
 						.addParameters(
-								triggerType,
+								triggerType
+										.setExample("random"),
 								new CommandParameter("responseIndex", "The response's number in the list.", ParameterType.INTEGER)
+										.setExample("3")
 						)
-						.setExample("response drop random 3")
 						.build(),
 				CommandBuilder.Create("list", "Display all of the current responses.")
 						.addAlias("l")
 						.addParameters(
-								triggerType,
+								triggerType
+										.setExample("random"),
 								new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+										.setExample("2")
 						)
-						.setExample("response list random 2")
 						.build()
 			)
 			.build();

@@ -21,10 +21,11 @@ public class Report implements ICommand {
 				.addAlias("feedback")
 				.addParameters(
 						new CommandParameter("reportType", "The type of report you are sending.", ParameterType.SELECTION)
-								.addSelectionOptions("Bug", "Feature", "Suggestion", "Enhancement"),
+								.addSelectionOptions("Bug", "Feature", "Suggestion", "Enhancement")
+								.setExample("bug"),
 						new CommandParameter("reportText", "The detailed report to send.", ParameterType.STRING)
+								.setExample("the bot smells weird")
 				)
-				.setExample("report bug james smells weird")
 				.build();
 	}
 

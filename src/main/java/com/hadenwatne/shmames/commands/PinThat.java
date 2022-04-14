@@ -26,8 +26,8 @@ public class PinThat implements ICommand {
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})")
+								.setExample("^^^")
 				)
-				.setExample("pinthat ^^^")
 				.build();
 	}
 

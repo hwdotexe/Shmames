@@ -25,8 +25,8 @@ public class Roll implements ICommand {
 				.addParameters(
 						new CommandParameter("dice", "The dice to roll.", ParameterType.STRING)
 								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
+								.setExample("2d20^kh+1d4")
 				)
-				.setExample("roll 2d20^kh+1d4")
 				.build();
 	}
 

@@ -21,8 +21,8 @@ public class GIF implements ICommand {
 				.addAlias("what is")
 				.addParameters(
 						new CommandParameter("search", "What to find a GIF for.", ParameterType.STRING)
+								.setExample("bob ross")
 				)
-				.setExample("gif bob ross")
 				.build();
 	}
 

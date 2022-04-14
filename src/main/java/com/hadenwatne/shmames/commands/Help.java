@@ -19,7 +19,6 @@ import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Shmames;
 
 public class Help implements ICommand {
 	private final CommandStructure commandStructure;
@@ -30,8 +29,8 @@ public class Help implements ICommand {
 				.addAlias("how do you use")
 				.addParameters(
 						new CommandParameter("command", "The command you need help with", ParameterType.STRING, false)
+								.setExample("gif")
 				)
-				.setExample("help gif")
 				.build();
 	}
 
@@ -63,7 +62,7 @@ public class Help implements ICommand {
 					eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
 					eBuilder.addField("Description", c.getCommandStructure().getDescription(), false);
 					eBuilder.addField("Usage", c.getCommandStructure().getUsage(), true);
-					eBuilder.addField("Examples", c.getCommandStructure().getExample(), true);
+					eBuilder.addField("Examples", c.getCommandStructure().getExamples(), true);
 
 					messagingChannel.sendMessage(eBuilder);
 

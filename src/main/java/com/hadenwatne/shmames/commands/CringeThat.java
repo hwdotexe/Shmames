@@ -30,10 +30,11 @@ public class CringeThat implements ICommand {
 		this.commandStructure = CommandBuilder.Create("cringethat", "Rewrite a previous message in a cringy way.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
-								.setPattern("([\\^]{1,15})"),
+								.setPattern("([\\^]{1,15})")
+								.setExample("^^^"),
 						new CommandParameter("times", "Number of cringe iterations", ParameterType.INTEGER, false)
+								.setExample("2")
 				)
-				.setExample("cringethat ^^^ 2")
 				.build();
 
 		cringeDict.put("food", "numsies");

@@ -16,9 +16,9 @@ public class Wiki implements ICommand {
 		this.commandStructure = CommandBuilder.Create("wiki", "Ask the oracle your question, and I shall answer. That, or the Internet will.")
 				.addParameters(
 						new CommandParameter("query", "A short search query", ParameterType.STRING)
-						.setPattern(".{3,150}")
+								.setPattern(".{3,150}")
+								.setExample("mass of Uranus")
 				)
-				.setExample("wiki mass of Uranus")
 				.build();
 	}
 

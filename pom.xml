@@ -4,7 +4,7 @@
 
 <groupId>com.hadenwatne</groupId>
 <artifactId>shmames</artifactId>
-<version>1.1.53</version>
+<version>1.1.54</version>
 <packaging>jar</packaging>
 
 <name>Shmames</name>

@@ -40,42 +40,42 @@ public class Tally implements ICommand {
 							.addParameters(
 									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
 											.setPattern("[\\w\\d\\s]{3,}")
+											.setExample("myTally")
 							)
-							.setExample("tally add myTally")
 							.build(),
 					CommandBuilder.Create("drop", "Decrement a tally or delete it if 0.")
 							.addAlias("d")
 							.addParameters(
 									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
 											.setPattern("[\\w\\d\\s]{3,}")
+											.setExample("myTally")
 							)
-							.setExample("tally drop myTally")
 							.build(),
 					CommandBuilder.Create("set", "Overwrite the value of a tally.")
 							.addAlias("s")
 							.addParameters(
 									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-											.setPattern("[\\w\\d\\s]{3,}"),
+											.setPattern("[\\w\\d\\s]{3,}")
+											.setExample("myTally"),
 									new CommandParameter("count", "The new count for this tally.", ParameterType.INTEGER)
+											.setExample("3")
 							)
-							.setExample("tally set myTally 3")
 							.build(),
 					CommandBuilder.Create("list", "Display all of the current tallies.")
 							.addAlias("l")
 							.addParameters(
 									new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+											.setExample("2")
 							)
-							.setExample("tally list 2")
 							.build(),
 					CommandBuilder.Create("search", "Find a tally based on a partial match.")
 							.addParameters(
 									new CommandParameter("tallyName", "The tally to search for.", ParameterType.STRING)
 											.setPattern("[\\w\\d\\s]{3,}")
+											.setExample("tally")
 							)
-							.setExample("tally search tally")
 							.build()
 				)
-				.setExample("tally")
 				.build();
 	}
 

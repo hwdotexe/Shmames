@@ -33,23 +33,24 @@ public class FamilyCmd implements ICommand {
 								.addParameters(
 										new CommandParameter("familyName", "The amount of time the poll should last.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												.setExample("coolFam")
 								)
-								.setExample("family create coolFam")
 								.build(),
 						CommandBuilder.Create("leave", "Leave a Family.")
 								.addParameters(
 										new CommandParameter("familyName", "The Family to leave.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												.setExample("coolFam")
 								)
-								.setExample("family leave coolFam")
 								.build(),
 						CommandBuilder.Create("kick", "Kick another server from a Family.")
 								.addParameters(
 										new CommandParameter("familyName", "The Family to leave.", ParameterType.STRING)
-												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												.setExample("coolFam"),
 										new CommandParameter("serverNumber", "The server to kick.", ParameterType.INTEGER)
+												.setExample("3")
 								)
-								.setExample("family kick coolFam 3")
 								.build()
 				)
 				.addSubCommandGroups(
@@ -59,14 +60,14 @@ public class FamilyCmd implements ICommand {
 												.addParameters(
 														new CommandParameter("familyName", "The Family to create a Join Code for.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("coolFam")
 												)
-												.setExample("family code generate coolFam")
 												.build(),
 										CommandBuilder.Create("redeem", "Redeem a Join Code to join a Family.")
 												.addParameters(
 														new CommandParameter("joinCode", "The Join Code to use.", ParameterType.STRING)
+																.setExample("ABC123")
 												)
-												.setExample("family code redeem ABC123")
 												.build()
 								),
 						new SubCommandGroup("view", "View Family information.")
@@ -75,18 +76,15 @@ public class FamilyCmd implements ICommand {
 												.addParameters(
 														new CommandParameter("familyName", "The Family to view.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("coolFam")
 												)
-												.setExample("family view servers coolFam")
 												.build(),
 										CommandBuilder.Create("emotes", "View a list of Family emotes the server has access to.")
-												.setExample("family view emotes")
 												.build(),
 										CommandBuilder.Create("families", "View a list of Families this server belongs to.")
-												.setExample("family view families")
 												.build()
 								)
 				)
-				.setExample("family")
 				.build();
 	}
 

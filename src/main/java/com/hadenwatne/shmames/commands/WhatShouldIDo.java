@@ -13,7 +13,6 @@ public class WhatShouldIDo implements ICommand {
 	public WhatShouldIDo() {
 		this.commandStructure = CommandBuilder.Create("whatshouldido", "Get a randomized, possibly sarcastic suggestion to cure your boredom.")
 				.addAlias("what should i do")
-				.setExample("whatshouldido")
 				.build();
 	}
 

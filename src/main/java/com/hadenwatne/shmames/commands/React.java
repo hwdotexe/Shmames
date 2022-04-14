@@ -23,11 +23,12 @@ public class React implements ICommand {
 		this.commandStructure = CommandBuilder.Create("react", "Reacts to the specified message with emoji that spell out your word.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
-								.setPattern("([\\^]{1,15})"),
+								.setPattern("([\\^]{1,15})")
+								.setExample("^^^"),
 						new CommandParameter("word", "the word to react with", ParameterType.STRING)
 								.setPattern("\\w+")
+								.setExample("dope")
 				)
-				.setExample("react ^^^ dope")
 				.build();
 	}
 

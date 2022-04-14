@@ -25,8 +25,8 @@ public class SimonSays implements ICommand {
 				.addAlias("repeat")
 				.addParameters(
 						new CommandParameter("message", "The message you want me to repeat.", ParameterType.STRING)
+								.setExample("Am I kawaii??")
 				)
-				.setExample("simonsays Who thinks I'm kawaii?")
 				.build();
 	}
 

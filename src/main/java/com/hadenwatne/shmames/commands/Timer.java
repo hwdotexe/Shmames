@@ -23,10 +23,11 @@ public class Timer implements ICommand {
 				.addAlias("remind me in")
 				.addAlias("alert")
 				.addParameters(
-						new CommandParameter("duration", "The amount of time before the timer runs", ParameterType.TIMECODE),
+						new CommandParameter("duration", "The amount of time before the timer runs", ParameterType.TIMECODE)
+								.setExample("1d12h"),
 						new CommandParameter("message", "The description of the timer", ParameterType.STRING, false)
+								.setExample("Pizza time!")
 				)
-				.setExample("timer 1d12h Pizza time")
 				.build();
 	}
 

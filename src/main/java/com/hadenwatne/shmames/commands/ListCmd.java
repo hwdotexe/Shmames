@@ -35,59 +35,62 @@ public class ListCmd implements ICommand {
 						CommandBuilder.Create("create", "Create a new list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to create.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+"),
+												.setPattern("[\\w\\d-_]+")
+												.setExample("myList"),
 										new CommandParameter("privacy", "Whether others can view and add to the list.", ParameterType.SELECTION, false)
 												.addSelectionOptions("public", "private")
+												.setExample("public")
 								)
-								.setExample("list create myList public")
 								.build(),
 						CommandBuilder.Create("add", "Add an item to a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to add to.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+"),
+												.setPattern("[\\w\\d-_]+")
+												.setExample("myList"),
 										new CommandParameter("item", "The item to add to the list.", ParameterType.STRING)
+												.setExample("newItem")
 								)
-								.setExample("list add myList newItem")
 								.build(),
 						CommandBuilder.Create("remove", "Remove an item from a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to remove from.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+"),
+												.setPattern("[\\w\\d-_]+")
+												.setExample("myList"),
 										new CommandParameter("index", "The item position to remove.", ParameterType.INTEGER)
+												.setExample("3")
 								)
-								.setExample("list remove myList 3")
 								.build(),
 						CommandBuilder.Create("delete", "Delete a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to delete.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
+												.setExample("myList")
 								)
-								.setExample("list delete myList")
 								.build(),
 						CommandBuilder.Create("toggle", "Toggle a List between Public and Private.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to toggle.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
+												.setExample("myList")
 								)
-								.setExample("list toggle myList")
 								.build(),
 						CommandBuilder.Create("random", "Get a random item from a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to get a random item from.", ParameterType.STRING)
 												.setPattern("[\\w\\d-_]+")
+												.setExample("myList")
 								)
-								.setExample("list random myList")
 								.build(),
 						CommandBuilder.Create("list", "Show all available lists.")
-								.setExample("list list")
 								.build(),
 						CommandBuilder.Create("view", "View the items in a list.")
 								.addParameters(
 										new CommandParameter("listName", "The name of the list to view.", ParameterType.STRING)
-												.setPattern("[\\w\\d-_]+"),
+												.setPattern("[\\w\\d-_]+")
+												.setExample("myList"),
 										new CommandParameter("page", "The name of the list to view.", ParameterType.INTEGER, false)
+												.setExample("2")
 								)
-								.setExample("list view myList 2")
 								.build()
 				)
 				.build();

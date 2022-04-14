@@ -16,8 +16,8 @@ public class EightBall implements ICommand {
 		this.commandStructure = CommandBuilder.Create("8ball", "Shake a Magic 8 Ball and let me see your future.")
 				.addParameters(
 						new CommandParameter("question", "The question to ask the magic 8 ball.", ParameterType.STRING)
+								.setExample("Will I ever find true love?")
 				)
-				.setExample("8ball Will I ever find true love?")
 				.build();
 	}
 

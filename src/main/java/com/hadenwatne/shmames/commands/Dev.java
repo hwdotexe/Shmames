@@ -40,10 +40,11 @@ public class Dev implements ICommand {
 								.addSelectionOptions("clearcommandstats")
 								.addSelectionOptions("leave")
 								.addSelectionOptions("getreports")
-								.addSelectionOptions("savebrains"),
+								.addSelectionOptions("savebrains")
+								.setExample("addstatus"),
 						new CommandParameter("data", "The optional data to send to the subcommand", ParameterType.STRING, false)
+								.setExample("stuff")
 				)
-				.setExample("")
 				.build();
 	}
 

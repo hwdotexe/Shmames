@@ -35,22 +35,21 @@ public class Hangman implements ICommand {
 						CommandBuilder.Create("start", "Begin a new game.")
 								.addParameters(
 										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
-												.setPattern("[a-z0-9,]+"),
+												.setPattern("[a-z0-9,]+")
+												.setExample("mainDictionary"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
+												.setExample("true")
 								)
-								.setExample("hangman start mainDictionary true")
 								.build(),
 						CommandBuilder.Create("guess", "Submit a guess for a letter or solution.")
 								.addParameters(
 										new CommandParameter("guess", "A letter, word, or phrase.", ParameterType.STRING)
+												.setExample("e")
 								)
-								.setExample("hangman guess e")
 								.build(),
 						CommandBuilder.Create("list", "List available dictionaries.")
-								.setExample("hangman list")
 								.build()
 				)
-				.setExample("hangman")
 				.build();
 	}
 

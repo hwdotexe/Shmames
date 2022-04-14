@@ -38,27 +38,27 @@ public class Trigger implements ICommand {
 					CommandBuilder.Create("add", "Add a new trigger to the bot.")
 							.addAlias("a")
 							.addParameters(
-									triggerType,
+									triggerType
+											.setExample("random"),
 									new CommandParameter("triggerWord", "The trigger word to add.", ParameterType.STRING)
+											.setExample("pizza")
 							)
-							.setExample("trigger add random pizza")
 							.build(),
 					CommandBuilder.Create("drop", "Remove a trigger from the bot.")
 							.addAlias("d")
 							.addParameters(
 									new CommandParameter("triggerWord", "The trigger word to remove.", ParameterType.STRING)
+											.setExample("pizza")
 							)
-							.setExample("trigger drop pizza")
 							.build(),
 					CommandBuilder.Create("list", "Display all of the current triggers.")
 							.addAlias("l")
 							.addParameters(
 									new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+											.setExample("2")
 							)
-							.setExample("trigger list 2")
 							.build()
 				)
-				.setExample("trigger")
 				.build();
 	}
 

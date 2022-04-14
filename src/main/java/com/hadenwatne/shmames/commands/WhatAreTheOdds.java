@@ -21,8 +21,8 @@ public class WhatAreTheOdds implements ICommand {
 				.addAlias("what are the odds")
 				.addParameters(
 						new CommandParameter("query", "The event to determine the odds of.", ParameterType.STRING)
+								.setExample("I become famous")
 				)
-				.setExample("whataretheodds I strike gold?")
 				.build();
 	}
 

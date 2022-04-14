@@ -39,63 +39,64 @@ public class ForumWeapon implements ICommand {
 						CommandBuilder.Create("create", "Create a new Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
-												.setPattern("\\w{3,}"),
+												.setPattern("\\w{3,}")
+												.setExample("myWeapon"),
 										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern(RegexPatterns.URL.getPattern())
+												.setExample("url/")
 								)
-								.setExample("forumweapon create myWeapon https://link")
 								.build(),
 						CommandBuilder.Create("update", "Change the URL of an existing Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
-												.setPattern("\\w{3,}"),
+												.setPattern("\\w{3,}")
+												.setExample("myWeapon"),
 										new CommandParameter("weaponURL", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern(RegexPatterns.URL.getPattern())
+												.setExample("url/")
 								)
-								.setExample("forumweapon update myWeapon https://link")
 								.build(),
 						CommandBuilder.Create("remove", "Delete a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
+												.setExample("myWeapon")
 								)
-								.setExample("forumweapon remove myWeapon")
 								.build(),
 						CommandBuilder.Create("list", "List all available Forum Weapons.")
 								.addParameters(
 										new CommandParameter("all", "Whether to search all connected guilds.", ParameterType.BOOLEAN, false)
+												.setExample("true")
 								)
-								.setExample("forumweapon list true")
 								.build(),
 						CommandBuilder.Create("search", "Search for a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("searchTerm", "The partial name of the Forum Weapon to search for.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
+												.setExample("explo")
 								)
-								.setExample("forumweapon search explo")
 								.build(),
 						CommandBuilder.Create("alias", "Add an alternative name for a Forum Weapon.")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
-												.setPattern("\\w{3,}"),
+												.setPattern("\\w{3,}")
+												.setExample("myWeapon"),
 										new CommandParameter("newAlias", "The URL this weapon directs to.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
+												.setExample("coolWeapon")
 								)
-								.setExample("forumweapon alias myWeapon coolWeapon")
 								.build(),
 						CommandBuilder.Create("send", "Send a Forum Weapon.")
 								.addAlias("s")
 								.addParameters(
 										new CommandParameter("weaponName", "The name of the Forum Weapon.", ParameterType.STRING)
 												.setPattern("\\w{3,}")
+												.setExample("myWeapon")
 								)
-								.setExample("forumweapon send myWeapon")
 								.build(),
 						CommandBuilder.Create("prune", "List and delete unused Forum Weapons.")
-								.setExample("forumweapon prune")
 								.build()
 				)
-				.setExample("forumweapon")
 				.build();
 	}
 

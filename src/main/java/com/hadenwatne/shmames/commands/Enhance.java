@@ -17,8 +17,8 @@ public class Enhance implements ICommand {
 		this.commandStructure = CommandBuilder.Create("enhance", "Enhance things.")
 				.addParameters(
 						new CommandParameter("thing", "The item you want to enhance.", ParameterType.STRING)
+								.setExample("the national debt")
 				)
-				.setExample("enhance the national debt")
 				.build();
 	}
 

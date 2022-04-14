@@ -15,7 +15,7 @@ public class CommandStructure {
 
     private Pattern pattern;
     private String usage;
-    private String example;
+    private String examples;
 
     public CommandStructure(String name, String description) {
         this.name = name;
@@ -42,8 +42,8 @@ public class CommandStructure {
         return this.description;
     }
 
-    public String getExample() {
-        return this.example;
+    public String getExamples() {
+        return this.examples;
     }
 
     public List<String> getAliases() {
@@ -52,12 +52,6 @@ public class CommandStructure {
 
     public CommandStructure addAlias(String alias) {
         this.aliases.add(alias);
-
-        return this;
-    }
-
-    public CommandStructure setExample(String example) {
-        this.example = example;
 
         return this;
     }
@@ -105,7 +99,7 @@ public class CommandStructure {
 
         this.pattern = CommandBuilder.BuildPattern(this);
         this.usage = CommandBuilder.BuildUsage(this, false);
-        this.example = CommandBuilder.BuildExample(this);
+        this.examples = CommandBuilder.BuildExample(this);
 
         return this;
     }

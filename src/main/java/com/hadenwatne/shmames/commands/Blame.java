@@ -17,8 +17,8 @@ public class Blame implements ICommand {
 				.addAlias("why")
 				.addParameters(
 						new CommandParameter("item", "The item to blame", ParameterType.STRING)
+								.setExample("cropcircles")
 				)
-				.setExample("blame cropcircles")
 				.build();
 	}
 

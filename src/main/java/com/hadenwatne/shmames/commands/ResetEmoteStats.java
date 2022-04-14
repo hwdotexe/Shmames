@@ -16,7 +16,6 @@ public class ResetEmoteStats implements ICommand {
 	public ResetEmoteStats() {
 		this.commandStructure = CommandBuilder.Create("resetemotestats", "Reset emote usage statistics.")
 				.addAlias("reset emote stats")
-				.setExample("resetemotestats")
 				.build();
 	}
 

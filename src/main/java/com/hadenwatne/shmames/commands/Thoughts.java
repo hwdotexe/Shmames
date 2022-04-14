@@ -18,8 +18,8 @@ public class Thoughts implements ICommand {
 				.addAlias("what do you think of")
 				.addParameters(
 						new CommandParameter("item", "The item to get my thoughts about", ParameterType.STRING)
+								.setExample("my style")
 				)
-				.setExample("thoughts my fit?")
 				.build();
 	}
 

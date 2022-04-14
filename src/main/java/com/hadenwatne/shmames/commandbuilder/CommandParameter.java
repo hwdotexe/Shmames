@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 public class CommandParameter implements Cloneable {
     private final String name;
+    private String example;
     private String regexName;
     private final String description;
     private final Boolean isRequired;
@@ -37,6 +38,16 @@ public class CommandParameter implements Cloneable {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getExample() {
+        return this.example;
+    }
+
+    public CommandParameter setExample(String example) {
+        this.example = example;
+
+        return this;
     }
 
     public void setRegexName(String regexName) {

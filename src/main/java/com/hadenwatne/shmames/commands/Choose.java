@@ -21,9 +21,9 @@ public class Choose implements ICommand {
 		this.commandStructure = CommandBuilder.Create("choose", "Let me make a decision for you.")
 				.addParameters(
 						new CommandParameter("thisOrThat", "Two options, separated by 'or'.", ParameterType.STRING)
-						.setPattern("(.{1,}) or (.{1,})")
+							.setPattern("(.{1,}) or (.{1,})")
+							.setExample("Go outside or One more level")
 				)
-				.setExample("choose Go outside or One more level")
 				.build();
 	}
 

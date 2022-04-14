@@ -20,8 +20,8 @@ public class When implements ICommand {
 		this.commandStructure = CommandBuilder.Create("when", "I'll tell you when something will happen.")
 				.addParameters(
 						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING)
+								.setExample("will I get rich")
 				)
-				.setExample("when will I get rich?")
 				.build();
 	}
 

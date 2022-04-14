@@ -44,41 +44,35 @@ public class Music implements ICommand {
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 										new CommandParameter("URL", "The URL of the song to play.", ParameterType.STRING, false)
 												.setPattern(RegexPatterns.URL.getPattern())
+												.setExample("url/")
 								)
-								.setExample("music play https://link")
 								.build(),
 						CommandBuilder.Create("pause", "Pause any playing music.")
-								.setExample("music pause")
 								.build(),
 						CommandBuilder.Create("resume", "Resume after pausing.")
 								.addAlias("r")
-								.setExample("music resume")
 								.build(),
 						CommandBuilder.Create("skip", "Skip the current track.")
 								.addParameters(
 										new CommandParameter("number", "How many tracks to skip.", ParameterType.INTEGER, false)
+												.setExample("3")
 								)
-								.setExample("music skip 3")
 								.build(),
 						CommandBuilder.Create("stop", "Stop playing music.")
-								.setExample("music stop")
 								.build(),
 						CommandBuilder.Create("loop", "Toggle track looping.")
-								.setExample("music loop")
 								.build(),
 						CommandBuilder.Create("loopqueue", "Toggle queue looping.")
-								.setExample("music loopqueue")
 								.build(),
 						CommandBuilder.Create("playing", "See what's playing.")
 								.addAlias("np")
-								.setExample("music playing")
 								.build(),
 						CommandBuilder.Create("convert", "Convert the queue to a playlist.")
 								.addParameters(
 										new CommandParameter("playlistName", "The name to use for the new playlist.", ParameterType.STRING)
 												.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+												.setExample("newPlaylist")
 								)
-								.setExample("music convert newPlaylist")
 								.build()
 				)
 				.addSubCommandGroups(
@@ -90,45 +84,49 @@ public class Music implements ICommand {
 												.addParameters(
 														new CommandParameter("playlistName", "The name of the new playlist.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("newPlaylist")
 												)
-												.setExample("music playlist create newPlaylist")
 												.build(),
 										CommandBuilder.Create("add", "Add a track to a playlist.")
 												.addAlias("a")
 												.addParameters(
 														new CommandParameter("playlistName", "The name of the playlist to add to.", ParameterType.STRING)
-																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("newPlaylist"),
 														new CommandParameter("URL", "The URL of the track to add.", ParameterType.STRING)
-																.setPattern(RegexPatterns.URL.getPattern()),
+																.setPattern(RegexPatterns.URL.getPattern())
+																.setExample("url/"),
 														new CommandParameter("memo", "A memo about the track being added.", ParameterType.STRING, false)
+																.setExample("great song")
 												)
-												.setExample("music playlist add newPlaylist https://link great song")
 												.build(),
 										CommandBuilder.Create("list", "Show available playlists.")
 												.addAlias("l")
 												.addParameters(
 														new CommandParameter("playlistName", "The name of the playlist.", ParameterType.STRING, false)
-																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("newPlaylist"),
 														new CommandParameter("page", "The page to view.", ParameterType.INTEGER, false)
+																.setExample("2")
 												)
-												.setExample("music playlist list newPlaylist 2")
 												.build(),
 										CommandBuilder.Create("remove", "Remove a track from a playlist.")
 												.addAlias("r")
 												.addParameters(
 														new CommandParameter("playlistName", "The playlist to remove an item from.", ParameterType.STRING)
-																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
+																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("newPlaylist"),
 														new CommandParameter("position", "The position of the item to remove.", ParameterType.INTEGER)
+																.setExample("3")
 												)
-												.setExample("music playlist remove newPlaylist 3")
 												.build(),
 										CommandBuilder.Create("delete", "Delete a playlist.")
 												.addAlias("d")
 												.addParameters(
 														new CommandParameter("playlistName", "The name of the playlist to delete.", ParameterType.STRING)
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern())
+																.setExample("newPlaylist")
 												)
-												.setExample("music playlist delete newPlaylist")
 												.build()
 								),
 						new SubCommandGroup("queue", "Manage the queue.")
@@ -136,15 +134,12 @@ public class Music implements ICommand {
 								.addSubCommands(
 										CommandBuilder.Create("clear", "Clear the list of upcoming tracks.")
 												.addAlias("c")
-												.setExample("music queue clear")
 												.build(),
 										CommandBuilder.Create("reverse", "Reverse the order of the queue.")
 												.addAlias("r")
-												.setExample("music queue reverse")
 												.build(),
 										CommandBuilder.Create("shuffle", "Shuffle the upcoming tracks.")
 												.addAlias("s")
-												.setExample("music queue shuffle")
 												.build(),
 										CommandBuilder.Create("append", "Add more tracks or playlists to the queue.")
 												.addAlias("a")
@@ -153,19 +148,18 @@ public class Music implements ICommand {
 																.setPattern(RegexPatterns.ALPHANUMERIC.getPattern()),
 														new CommandParameter("URL", "The URL of the song to append.", ParameterType.STRING, false)
 																.setPattern(RegexPatterns.URL.getPattern())
+																.setExample("url/")
 												)
-												.setExample("music queue append https://link")
 												.build(),
 										CommandBuilder.Create("view", "View the queue.")
 												.addAlias("v")
 												.addParameters(
 														new CommandParameter("page", "The page of the queue to view.", ParameterType.INTEGER, false)
+																.setExample("4")
 												)
-												.setExample("music queue view 4")
 												.build()
 								)
 				)
-				.setExample("music")
 				.build();
 	}
 

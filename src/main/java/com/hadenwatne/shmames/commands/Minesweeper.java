@@ -16,8 +16,8 @@ public class Minesweeper implements ICommand {
 		this.commandStructure = CommandBuilder.Create("minesweeper", "Play a game of Minesweeper, using a grid size of 6 through 11.")
 				.addParameters(
 						new CommandParameter("size", "The size of the minefield, 6-11", ParameterType.INTEGER)
+								.setExample("7")
 				)
-				.setExample("minesweeper 7")
 				.build();
 	}
 

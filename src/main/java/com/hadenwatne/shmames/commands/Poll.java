@@ -36,23 +36,24 @@ public class Poll implements ICommand {
 				.addSubCommands(
 						CommandBuilder.Create("start", "Begin a new poll in the channel.")
 								.addParameters(
-										new CommandParameter("time", "The amount of time the poll should last.", ParameterType.TIMECODE),
+										new CommandParameter("time", "The amount of time the poll should last.", ParameterType.TIMECODE)
+												.setExample("24h"),
 										new CommandParameter("question", "The question to ask", ParameterType.STRING)
-												.setPattern(".+\\?"),
+												.setPattern(".+\\?")
+												.setExample("Thoughts?"),
 										new CommandParameter("options", "The poll's options, separated by ';'", ParameterType.STRING)
 												.setPattern("(.+;)+(.+);?")
+												.setExample("Yes; No")
 								)
-								.setExample("poll start 24h Thoughts? Yes; No")
 								.build(),
 						CommandBuilder.Create("close", "Close an existing poll.")
 								.addParameters(
 										new CommandParameter("pollID", "The ID of the poll to close.", ParameterType.STRING)
 												.setPattern("#?[a-z0-9]{5}")
+												.setExample("#12345")
 								)
-								.setExample("poll close #12345")
 								.build()
 				)
-				.setExample("poll")
 				.build();
 	}
 

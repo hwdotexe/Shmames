@@ -20,7 +20,6 @@ public class Storytime implements ICommand {
 
 	public Storytime() {
 		this.commandStructure = CommandBuilder.Create("storytime", "I tell you a high-quality story.")
-				.setExample("storytime")
 				.build();
 	}
 
