@@ -144,7 +144,7 @@ public class Lang {
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});
         errors.put(Errors.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"});
         errors.put(Errors.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."});
-        errors.put(Errors.WRONG_USAGE, new String[]{"I don't think that's how you do it."});
+        errors.put(Errors.WRONG_USAGE, new String[]{"The command syntax you used is incorrect."});
 
         messages.put(Langs.ADD_TRIGGER_SUCCESS, new String[]{"I will now send a `" + wildcard + "` response when I hear `" + wildcard + "`!"});
         messages.put(Langs.BLAME, new String[]{"I blame " + wildcard});

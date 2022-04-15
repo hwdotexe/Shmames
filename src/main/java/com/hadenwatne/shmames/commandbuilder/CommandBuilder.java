@@ -1,11 +1,10 @@
 package com.hadenwatne.shmames.commandbuilder;
 
 import com.hadenwatne.shmames.commands.ICommand;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.api.interactions.commands.build.*;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -15,11 +14,11 @@ public class CommandBuilder {
         return new CommandStructure(name, description);
     }
 
-    public static CommandData BuildCommandData(ICommand command) {
+    public static CommandData BuildSlashCommandData(ICommand command) {
         CommandStructure structure = command.getCommandStructure();
         String description = structure.getDescription();
         String shortDesc = description.length() > 100 ? (description.substring(0, 96) + "...") : description;
-        CommandData data = new CommandData(structure.getName(), shortDesc);
+        CommandDataImpl data = new CommandDataImpl(structure.getName(), shortDesc);
 
         // If there are subcommands, add these instead.
         if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
@@ -143,11 +142,33 @@ public class CommandBuilder {
             sb.append(")");
         }
 
-        // Seal the pattern to match the whole string.
-        sb.insert(0, "^");
-        sb.append("$");
+        // Prepend the primary command name and all aliases.
+        StringBuilder primary = new StringBuilder();
+        primary.append("(?<command>(");
+        primary.append("(");
+        primary.append(command.getName());
+        primary.append(")");
 
-        return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+        for(String alias : command.getAliases()) {
+            primary.append("|");
+            primary.append("(");
+            primary.append(alias);
+            primary.append(")");
+        }
+
+        primary.append("))");
+        primary.append("\\s?");
+
+        // Put the rest of the command in another named group and make it optional for the purposes of matching.
+        primary.append("(?<context>");
+        primary.append(sb); //?
+        primary.append(")?");
+
+        // Seal the pattern to match the whole string.
+        primary.insert(0, "^");
+        primary.append("$");
+
+        return Pattern.compile(primary.toString(), Pattern.CASE_INSENSITIVE);
     }
 
     private static String BuildSubCommandPattern(List<CommandStructure> subCommands) {

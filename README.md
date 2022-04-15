@@ -61,8 +61,6 @@ Shmames can send a random response based on a **message trigger**. Valid trigger
 > `Random`: For any other type of response. Shmames might occasionally send one of these messages, if
 he's feeling like it.
 > 
-> `React`: Shmames will add a reaction to the message.
-> 
 > `Command`: Use this trigger to customize how you summon the bot.
 
 ## Custom Shmames Installation

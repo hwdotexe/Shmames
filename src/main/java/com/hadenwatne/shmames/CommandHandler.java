@@ -86,6 +86,53 @@ public class CommandHandler {
 	public List<Command> getLoadedCommands(){
 		return commands;
 	}
+
+
+
+
+	/**
+	 * Attempts to match the raw command data to a Command. This does not check for usage errors.
+	 * @param commandText The raw text of the command being run.
+	 * @return A Command object if found, otherwise null.
+	 */
+	public Command PreProcessCommand(String commandText) {
+		for(Command command : commands) {
+			Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+
+			if(commandMatcher.find()) {
+				return command;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Attempts to validate the command for usage errors.
+	 * @param command The command to validate against.
+	 * @param commandText The command usage to validate.
+	 * @return True, if the validation was successful. Otherwise false.
+	 */
+	public boolean ValidateCommand(Command command, String commandText) {
+		Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+
+		if(commandMatcher.find()) {
+			return commandMatcher.group("context") != null;
+		}
+
+		return false;
+	}
+
+
+	public void ParseCommand(Command command, String commandText) {
+		// TODO can we call the pattern matcher once instead of 3 times?
+		// TODO use the pattern and context group to split the command, subcommand group, subcommand, and parameters into
+		// TODO custom objects.
+	}
+
+
+
+
 	
 	/**
 	 * Parses the command provided, and performs an action based on the command determined.
@@ -408,7 +455,7 @@ public class CommandHandler {
 		try {
 			for (ICommand command : commands) {
 				if (command.getCommandStructure().getDescription().length() > 0) {
-					cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+					cUpdate.addCommands(CommandBuilder.BuildSlashCommandData(command));
 				}
 			}
 

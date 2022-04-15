@@ -1,14 +1,16 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.Response;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.services.HTTPService;
-import com.hadenwatne.shmames.services.MessageService;
-import com.hadenwatne.shmames.services.RandomService;
-import com.hadenwatne.shmames.services.ShmamesService;
+import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,11 +20,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatListener extends ListenerAdapter {
+
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if (!e.getAuthor().isBot()) {
 			Message message = e.getMessage();
-			String messageText = message.getContentRaw();
+			final String messageText = message.getContentRaw();
 
 			// Messages from a Guild may contain additional data or context for the bot.
 			if(e.isFromGuild()) {
@@ -32,15 +35,11 @@ public class ChatListener extends ListenerAdapter {
 				// Check if this message is trying to run a command.
 				for (String trigger : brain.getTriggers().keySet()) {
 					if(brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
-						if (messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
-							String command = messageText.substring(trigger.length()).trim();
+						final String command = messageText.substring(trigger.length()).trim();
 
-							// Send to the command handler for further processing.
-							// TODO don't do this
-							App.Shmames.getCommandHandler().PerformCommand(command, e.getMessage(), server, brain);
+						handleCommand(message, command, brain);
 
-							return;
-						}
+						return;
 					}
 				}
 
@@ -62,13 +61,39 @@ public class ChatListener extends ListenerAdapter {
 					final String botNameLower = App.Shmames.getBotName().toLowerCase();
 
 					if (messageText.toLowerCase().startsWith(botNameLower)) {
-						String command = messageText.substring(botNameLower.length()).trim();
+						final String command = messageText.substring(botNameLower.length()).trim();
 
-						// Send to the command handler for further processing.
-						App.Shmames.getCommandHandler().PerformCommand(command, message,null, null);
+						handleCommand(message, command, null);
 					}
 				}
 			}
+		}
+	}
+
+	// TODO possibly move this to a shared location for slash commands to use as well.
+	private void handleCommand(Message message, String commandText, Brain brain) {
+		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
+		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+
+		if(command != null) {
+			if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
+				// TODO parse command into subcommand, parameters
+				// TODO run the command asynchronously
+			} else {
+				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
+						.addField(null, lang.getError(Errors.WRONG_USAGE, false), false);
+
+				for(MessageEmbed.Field field : command.getHelpFields()) {
+					embed.addField(field);
+				}
+
+				MessageService.ReplyToMessage(message, embed);
+			}
+		} else {
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
+					.addField(null, lang.getError(Errors.COMMAND_NOT_FOUND, false), false);
+
+			MessageService.ReplyToMessage(message, embed);
 		}
 	}
 
@@ -100,11 +125,6 @@ public class ChatListener extends ListenerAdapter {
 		return false;
 	}
 
-	/**
-	 * Chooses a random response from the server's list for a given response trigger.
-	 * @param t The trigger type being called.
-	 * @param message The message that triggered this event.
-	 */
 	private void sendRandom(Message message, TriggerType t, Brain brain) {
 		Member author = message.getMember();
 

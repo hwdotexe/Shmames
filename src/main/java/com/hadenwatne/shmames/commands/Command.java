@@ -6,8 +6,11 @@ import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,5 +52,19 @@ public abstract class Command {
 
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
+    }
+
+    public List<MessageEmbed.Field> getHelpFields() {
+        List<MessageEmbed.Field> fields = new ArrayList<>();
+        String list = PaginationService.GenerateList(this.commandStructure.getAliases(), -1, false, false);
+        list = list.length() == 0 ? "None" : list;
+
+        fields.add(new MessageEmbed.Field("Aliases", list, true));
+        fields.add(new MessageEmbed.Field("Server-only", this.requiresGuild ? "Yes" : "No", true));
+        fields.add(new MessageEmbed.Field("Description", this.commandStructure.getDescription(), false));
+        fields.add(new MessageEmbed.Field("Usage", this.commandStructure.getUsage(), true));
+        fields.add(new MessageEmbed.Field("Examples", this.commandStructure.getExamples(), true));
+
+        return fields;
     }
 }

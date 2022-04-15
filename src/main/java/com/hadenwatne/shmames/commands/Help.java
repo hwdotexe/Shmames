@@ -50,19 +50,7 @@ public class Help implements ICommand {
 			// Wants help on specific command.
 			for(ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
 				if(c.getCommandStructure().getName().equalsIgnoreCase(commandHelp)) {
-					// Create list of aliases
-					String list = PaginationService.GenerateList(c.getCommandStructure().getAliases(), -1, false, false);
-					list = list.length() == 0 ? "None" : list;
-
-					EmbedBuilder eBuilder = new EmbedBuilder();
-
-					eBuilder.setAuthor("Help » "+c.getCommandStructure().getName());
-					eBuilder.setColor(Color.MAGENTA);
-					eBuilder.addField("Aliases", list, true);
-					eBuilder.addField("Server-only", c.requiresGuild() ? "Yes" : "No", true);
-					eBuilder.addField("Description", c.getCommandStructure().getDescription(), false);
-					eBuilder.addField("Usage", c.getCommandStructure().getUsage(), true);
-					eBuilder.addField("Examples", c.getCommandStructure().getExamples(), true);
+					// TODO send using method from parent.
 
 					messagingChannel.sendMessage(eBuilder);
 
