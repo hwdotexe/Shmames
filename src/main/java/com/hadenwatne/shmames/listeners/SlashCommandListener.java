@@ -10,6 +10,7 @@ import com.hadenwatne.shmames.models.command.ParsedCommandResult;
 import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -19,7 +20,8 @@ import java.util.LinkedHashMap;
 public class SlashCommandListener extends ListenerAdapter {
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        // TODO don't do this
         ParsedCommandResult parsedCommand = App.Shmames.getCommandHandler().parseCommandString(event.getName());
 
         if (parsedCommand != null) {

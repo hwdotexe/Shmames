@@ -26,7 +26,6 @@ public class Brain {
 	private final List<JTimerTask> timers;
 	private final List<Playlist> playlists;
 	private boolean isReportCooldown;
-	private boolean isJinping;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
 	
@@ -45,7 +44,6 @@ public class Brain {
 		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
 		isReportCooldown = false;
-		isJinping = false;
 		sentWelcome = false;
 		hangmanGame = null;
 		
@@ -55,15 +53,6 @@ public class Brain {
 	/*
 	 * Temporary state items
 	 */
-	
-	public boolean getJinping() {
-		return isJinping;
-	}
-	
-	public void setJinping(boolean j) {
-		isJinping = j;
-	}
-	
 	public boolean getReportCooldown() {
 		return isReportCooldown;
 	}
@@ -163,18 +152,6 @@ public class Brain {
 	
 	public List<String> getFeedback(){
 		return feedback;
-	}
-	
-	public List<String> getTriggers(TriggerType type){
-		List<String> tt = new ArrayList<String>();
-		
-		for(String k : triggers.keySet()) {
-			if(triggers.get(k) == type) {
-				tt.add(k);
-			}
-		}
-		
-		return tt;
 	}
 
 	public List<String> getFamilies(){

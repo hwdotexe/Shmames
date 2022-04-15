@@ -45,31 +45,11 @@ public class RandomService {
     }
 
     /**
-     * Returns a random string from a Set of strings.
-     * @param items The Set to use.
-     * @return A random string.
-     */
-    public static String GetRandomStringFromSet(Set<String> items) {
-        int target = r.nextInt(items.size());
-        int i = 0;
-
-        for(String o : items) {
-            if(i == target) {
-                return o;
-            }
-
-            i++;
-        }
-
-        return "";
-    }
-
-    /**
-     * Returns a random string from a List of strings.
+     * Returns a random object from a List of objects.
      * @param items The List to use.
-     * @return A random string.
+     * @return A random object.
      */
-    public static String GetRandomStringFromList(List<String> items) {
+    public static <T> T GetRandomObjectFromList(List<T> items) {
         int target = r.nextInt(items.size());
 
         return items.get(target);

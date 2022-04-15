@@ -33,11 +33,11 @@ import javax.annotation.Nullable;
 
 // After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
-	private static List<ICommand> commands;
+	private static List<Command> commands;
 	private final Lang defaultLang = App.Shmames.getLanguageService().getDefaultLang();
 
 	public CommandHandler() {
-		commands = new ArrayList<ICommand>();
+		commands = new ArrayList<>();
 
 		commands.add(new Blame());
 		commands.add(new Cactpot());
@@ -52,7 +52,6 @@ public class CommandHandler {
 		commands.add(new Hangman());
 		commands.add(new Help());
 		commands.add(new IdiotThat());
-		commands.add(new Jinping());
 		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
 		commands.add(new Minesweeper());
@@ -84,7 +83,7 @@ public class CommandHandler {
 	 * Gets a list of commands actively loaded.
 	 * @return A list of commands.
 	 */
-	public List<ICommand> getLoadedCommands(){
+	public List<Command> getLoadedCommands(){
 		return commands;
 	}
 	

@@ -6,7 +6,6 @@ public enum TriggerType {
 	HELLO,
 	GOODBYE,
 	RANDOM,
-	REACT,
 	COMMAND;
 	
 	public static TriggerType byName(String name) {

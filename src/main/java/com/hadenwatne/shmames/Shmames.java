@@ -21,6 +21,7 @@ public class Shmames {
 	private JDA jda;
 	private final LanguageService languageService;
 	private String botName;
+	private String botAvatarUrl;
 	private MusicManager musicManager;
 	private CommandHandler commandHandler;
 	private final StorageService storageService;
@@ -39,6 +40,14 @@ public class Shmames {
 	 */
 	public String getBotName() {
 		return this.botName;
+	}
+
+	/**
+	 * Returns the URL of the bot's avatar image.
+	 * @return The Discord application avatar image.
+	 */
+	public String getBotAvatarUrl() {
+		return this.botAvatarUrl;
 	}
 
 	/**
@@ -96,8 +105,9 @@ public class Shmames {
 		// Start automated tasks.
 		new SaveDataTask();
 
-		// Set the bot name.
+		// Set the bot name and avatar URL.
 		this.botName = getJDA().getSelfUser().getName();
+		this.botAvatarUrl = getJDA().getSelfUser().getAvatarUrl();
 
 		// Load commands.
 		this.commandHandler = new CommandHandler();

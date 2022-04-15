@@ -7,67 +7,57 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.enums.Errors;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class Choose implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Choose extends Command {
 	public Choose() {
-		this.commandStructure = CommandBuilder.Create("choose", "Let me make a decision for you.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("choose", "Let me make a decision for you.")
 				.addParameters(
 						new CommandParameter("thisOrThat", "Two options, separated by 'or'.", ParameterType.STRING)
-							.setPattern("(.{1,}) or (.{1,})")
-							.setExample("Go outside or One more level")
+								.setPattern("(.{1,}) or (.{1,})")
+								.setExample("Go outside or One more level")
 				)
 				.build();
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+	public EmbedBuilder run (Lang lang, Brain brain, ShmamesCommandData data) {
 		Pattern p = data.getCommand().getCommandStructure().getParameters().get(0).getPattern();
 		Matcher m = p.matcher(data.getArguments().getAsString());
+		String thisOrThat = data.getArguments().getAsString("thisOrThat");
 
-		// Using another Matcher to separate out the 2 options inside the command arguments.
-		// At this point during runtime, the command has already been validated.
-		if (m.find()) {
-			int mutator = RandomService.GetRandom(75);
-			String response;
+		// The command is already validated. Call m.find() to prepare a new matcher and separate out the arguments.
+		m.find();
 
-			if (mutator < 5) {
-				response = "Neither";
-			} else if (mutator < 10) {
-				response = "Both";
-			} else {
-				// Starting at group 2 base because the pattern is wrapped inside a named group.
-				response = m.group(2 + RandomService.GetRandom(2));
-			}
+		int mutator = RandomService.GetRandom(75);
+		String response;
 
-			String choice = lang.getMsg(Langs.CHOOSE, new String[]{response});
-
-			if (data.getMessagingChannel().hasHook()) {
-				String question = data.getArguments().getAsString("thisOrThat");
-
-				return "> _" + question + "_\n" + choice;
-			}
-
-			return choice;
+		if (mutator < 5) {
+			response = "Neither";
+		} else if (mutator < 10) {
+			response = "Both";
 		} else {
-			return lang.getError(Errors.INCOMPLETE, true);
+			// Starting at group 2 base because the pattern is wrapped inside a named group.
+			response = m.group(2 + RandomService.GetRandom(2));
 		}
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return false;
+
+		String choice = lang.getMsg(Langs.CHOOSE, new String[]{response});
+
+		return response(EmbedType.INFO)
+				.addField(null, thisOrThat, false)
+				.addField(null, choice, false);
 	}
 }

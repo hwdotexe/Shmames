@@ -89,6 +89,7 @@ public class Help implements ICommand {
 			eBuilder.setTitle("Command Help for "+App.Shmames.getBotName());
 			eBuilder.addField("All Commands", list, false);
 			eBuilder.addField("Information", "View additional information for each command by using `"+App.Shmames.getBotName()+" help <command>`!", false);
+			eBuilder.setFooter(App.Shmames.getBotName() + " " + App.Version + (App.IsDebug ? " **Debug Mode**" : ""));
 
 			if(messagingChannel.hasHook()) {
 				messagingChannel.sendMessage(eBuilder);
