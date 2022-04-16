@@ -83,8 +83,20 @@ public class ExecutingCommand {
         this.hook = hook;
     }
 
+    public Message getMessage() {
+        return this.message;
+    }
+
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public boolean hasMessage() {
+        return this.message != null;
+    }
+
+    public boolean hasInteractionHook() {
+        return this.hook != null;
     }
 
     public User getAuthorUser() {

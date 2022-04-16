@@ -3,10 +3,9 @@ package com.hadenwatne.shmames.services;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
@@ -65,20 +64,20 @@ public class MessageService {
 
     /**
      * Retrieves a Message indicated by the user. Aware of slash commands & traditional commands.
-     * @param messagingChannel The channel data to use.
+     * @param executingCommand The command context running.
      * @param count The number of messages above to retrieve.
      * @return A Message, if possible.
      */
-    public static Message GetMessageIndicated(ShmamesCommandMessagingChannel messagingChannel, int count) {
+    public static Message GetMessageIndicated(ExecutingCommand executingCommand, int count) {
         try {
-            long latestMessageID = messagingChannel.getChannel().getLatestMessageIdLong();
-            Message originMessage = messagingChannel.hasOriginMessage() ? messagingChannel.getOriginMessage() : messagingChannel.getChannel().retrieveMessageById(latestMessageID).complete();
+            long latestMessageID = executingCommand.getChannel().getLatestMessageIdLong();
+            Message originMessage = executingCommand.hasMessage() ? executingCommand.getMessage() : executingCommand.getChannel().retrieveMessageById(latestMessageID).complete();
 
             Message indicated = null;
             List<Message> messageHistory;
             int limit = count;
 
-            if (messagingChannel.hasHook()) {
+            if (executingCommand.hasInteractionHook()) {
                 if (count == 1) {
                     indicated = originMessage;
                     limit = 0;
@@ -88,7 +87,7 @@ public class MessageService {
             }
 
             if (limit > 0) {
-                messageHistory = messagingChannel.getChannel().getHistoryBefore(originMessage, limit).complete().getRetrievedHistory();
+                messageHistory = executingCommand.getChannel().getHistoryBefore(originMessage, limit).complete().getRetrievedHistory();
 
                 // The oldest message in the history we fetched.
                 indicated = messageHistory.get(messageHistory.size() - 1);

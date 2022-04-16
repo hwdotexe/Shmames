@@ -96,7 +96,7 @@ public class MotherBrain {
 	 * Loads default settings into the system.
 	 */
 	public void loadDefaults() {
-		statuses.put("Bagpipes", ActivityType.DEFAULT);
+		statuses.put("Bagpipes", ActivityType.PLAYING);
 		statuses.put("Netflix", ActivityType.WATCHING);
 		statuses.put("Game Soundtracks", ActivityType.LISTENING);
 	}

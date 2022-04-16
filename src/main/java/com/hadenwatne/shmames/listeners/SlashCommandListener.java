@@ -41,7 +41,7 @@ public class SlashCommandListener extends ListenerAdapter {
         ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
 
         if(command != null) {
-            executingCommand.setCommandName(command.commandStructure.getName());
+            executingCommand.setCommandName(command.getCommandStructure().getName());
             executingCommand.setInteractionHook(hook);
 
             App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);

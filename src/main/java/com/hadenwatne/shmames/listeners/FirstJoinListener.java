@@ -6,6 +6,7 @@ import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
+import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,7 +21,7 @@ public class FirstJoinListener extends ListenerAdapter {
 		if(!b.didSendWelcome()){
 			// Try to set default values for this specific guild.
 			try{
-				TextChannel defaultChannel = e.getGuild().getDefaultChannel();
+				BaseGuildMessageChannel defaultChannel = e.getGuild().getDefaultChannel();
 
 				if(defaultChannel != null){
 					BotSetting pin = b.getSettingFor(BotSettingName.PIN_CHANNEL);
@@ -41,7 +42,7 @@ public class FirstJoinListener extends ListenerAdapter {
 		}
 	}
 
-	private void sendMessage(TextChannel tc){
+	private void sendMessage(BaseGuildMessageChannel tc){
 		String name = App.Shmames.getBotName();
 
 		tc.sendMessage("``` __ _                                         \n" +

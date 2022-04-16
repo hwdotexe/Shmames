@@ -2,21 +2,18 @@ package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.services.ShmamesService;
-import com.hadenwatne.shmames.commands.ICommand;
-import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.data.Brain;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ReactListener extends ListenerAdapter {

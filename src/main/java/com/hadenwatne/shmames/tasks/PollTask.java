@@ -64,7 +64,7 @@ public class PollTask extends TimerTask{
 	        }
 	
 	        MessageEmbed embed = eBuilder.build();
-	        MessageAction ma = message.getChannel().sendMessage(embed);
+	        MessageAction ma = message.getChannel().sendMessageEmbeds(embed);
 	        
 	        ma.complete();
 			
@@ -94,7 +94,7 @@ public class PollTask extends TimerTask{
 		}
 
 		MessageEmbed messageEmbed = eBuilder.build();
-		MessageAction messageAction = channel.sendMessage(messageEmbed);
+		MessageAction messageAction = channel.sendMessageEmbeds(messageEmbed);
 		Message message = messageAction.complete();
 		pollModel.setMessageID(message.getId());
 

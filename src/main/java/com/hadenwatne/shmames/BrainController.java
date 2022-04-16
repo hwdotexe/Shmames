@@ -126,9 +126,6 @@ public class BrainController {
 			// Manually reset any cooldowns that don't have a task set up.
 			if(brain.getReportCooldown())
 				brain.setReportCooldown(false);
-
-			if(brain.getJinping())
-				brain.setJinping(false);
 		}
 	}
 
