@@ -14,7 +14,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -41,7 +41,7 @@ public class Help implements ICommand {
 
 	@Override
 	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		ShmamesCommandArguments args = data.getArguments();
+		ExecutingCommandArguments args = data.getArguments();
 		ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
 
 		if(args.count() > 0) {

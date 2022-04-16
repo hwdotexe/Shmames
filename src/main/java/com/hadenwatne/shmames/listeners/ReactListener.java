@@ -2,14 +2,13 @@ package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.commands.ICommand;
 import com.hadenwatne.shmames.enums.BotSettingName;
@@ -115,7 +114,7 @@ public class ReactListener extends ListenerAdapter {
 
 				ShmamesCommandData data = new ShmamesCommandData(
 						c,
-						new ShmamesCommandArguments(tallyArgs),
+						new ExecutingCommandArguments(tallyArgs),
 						new ShmamesCommandMessagingChannel(message, channel),
 						App.Shmames.getJDA().getSelfUser(),
 						message.getGuild()

@@ -1,0 +1,147 @@
+package com.hadenwatne.shmames.models.command;
+
+import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.MessageService;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+
+import javax.annotation.Nullable;
+
+public class ExecutingCommand {
+    // Primary command name
+    // Group (nullable)
+    // Subcommand (nullable)
+    // Parameters (nullable)
+
+    // If group, then subcommand is sub of that group
+    // If no group, then subcommand is sun of primary
+
+    // If subcommand, then parameters are sub of that command
+    // If no subcommand, then parameters are sub of primary
+
+    private final String commandName;
+    private final Lang language;
+    private final @Nullable Brain brain;
+
+    private String subCommandGroup;
+    private String subCommand;
+    private ExecutingCommandArguments commandArguments;
+    private InteractionHook hook;
+    private Message message;
+
+    public ExecutingCommand(String commandName, Lang language, @Nullable Brain brain) {
+        this.commandName = commandName;
+        this.language = language;
+        this.brain = brain;
+    }
+
+    public String getCommandName() {
+        return this.commandName;
+    }
+
+    public Lang getLanguage() {
+        return this.language;
+    }
+
+    public @Nullable Brain getBrain() {
+        return this.brain;
+    }
+
+    public @Nullable String getSubCommandGroup() {
+        return this.subCommandGroup;
+    }
+
+    public void setSubCommandGroup(String subCommandGroup) {
+        this.subCommandGroup = subCommandGroup;
+    }
+
+    public boolean hasSubCommandGroup() {
+        return this.subCommandGroup != null;
+    }
+
+    public @Nullable String getSubCommand() {
+        return this.subCommand;
+    }
+
+    public void setSubCommand(String subCommand) {
+        this.subCommand = subCommand;
+    }
+
+    public boolean hasSubCommand() {
+        return this.subCommand != null;
+    }
+
+    public @Nullable ExecutingCommandArguments getCommandArguments() {
+        return this.commandArguments;
+    }
+
+    public void setCommandArguments(ExecutingCommandArguments commandArguments) {
+        this.commandArguments = commandArguments;
+    }
+
+    public boolean hasCommandArguments() {
+        return this.commandArguments != null;
+    }
+
+    public void setInteractionHook(InteractionHook hook) {
+        this.hook = hook;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public User getAuthorUser() {
+        if(hook != null) {
+            return hook.getInteraction().getUser();
+        } else if(message != null) {
+            return message.getAuthor();
+        } else {
+            return null;
+        }
+    }
+
+    public Member getAuthorMember() {
+        if(hook != null) {
+            return hook.getInteraction().getMember();
+        } else if(message != null) {
+            return message.getMember();
+        } else {
+            return null;
+        }
+    }
+
+    public Guild getServer() {
+        if(hook != null) {
+            return hook.getInteraction().getGuild();
+        } else if(message != null) {
+            return message.getGuild();
+        } else {
+            return null;
+        }
+    }
+
+    public MessageChannel getChannel() {
+        if(hook != null) {
+            return hook.getInteraction().getMessageChannel();
+        } else if(message != null) {
+            return message.getChannel();
+        } else {
+            return null;
+        }
+    }
+
+    public void reply(EmbedBuilder embedBuilder) {
+        if(hook != null) {
+            MessageService.ReplyToMessage(hook, embedBuilder);
+        } else if(message != null) {
+            MessageService.ReplyToMessage(message, embedBuilder);
+        } else {
+            LoggingService.Log(LogType.ERROR, "Could not send response for command "+this.commandName);
+        }
+    }
+}

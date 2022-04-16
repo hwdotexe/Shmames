@@ -1,12 +1,11 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
@@ -44,7 +43,7 @@ public class WhatAreTheOdds implements ICommand {
 
 				ShmamesCommandData rollData = new ShmamesCommandData(
 						c,
-						new ShmamesCommandArguments(rollArgs),
+						new ExecutingCommandArguments(rollArgs),
 						data.getMessagingChannel(),
 						App.Shmames.getJDA().getSelfUser(),
 						data.getServer()

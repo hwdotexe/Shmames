@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -11,7 +10,7 @@ import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.UserListType;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.UserCustomList;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
@@ -104,7 +103,7 @@ public class ListCmd implements ICommand {
 	@Override
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		String subCmd = data.getSubCommandData().getCommandName();
-		ShmamesCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
+		ExecutingCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
 
 		switch(subCmd.toLowerCase()) {
 			case "create":
@@ -137,7 +136,7 @@ public class ListCmd implements ICommand {
 		return true;
 	}
 
-	private String cmdCreate(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdCreate(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String privacy = subCmdArgs.getAsString("privacy");
 		UserListType listType = privacy != null ? UserListType.parseOrPrivate(privacy) : UserListType.PRIVATE;
@@ -152,7 +151,7 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdAdd(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdAdd(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String item = subCmdArgs.getAsString("item");
 		UserCustomList existingList = getList(userID, listName, brain);
@@ -166,7 +165,7 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdRemove(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdRemove(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		int index = subCmdArgs.getAsInteger("index") - 1;
 		UserCustomList existingList = getList(userID, listName, brain);
@@ -185,7 +184,7 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdDelete(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdDelete(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -202,7 +201,7 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdToggle(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs) {
+	private String cmdToggle(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -223,7 +222,7 @@ public class ListCmd implements ICommand {
 		}
 	}
 
-	private String cmdRandom(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
+	private String cmdRandom(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -267,7 +266,7 @@ public class ListCmd implements ICommand {
 		return buildListEmbed(userListsFormatted, publicListsFormatted);
 	}
 
-	private String cmdView(Brain brain, Lang lang, String userID, ShmamesCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
+	private String cmdView(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs, ShmamesCommandMessagingChannel messagingChannel) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		int page = subCmdArgs.getAsInteger("page");
 		UserCustomList list = getList(userID, listName, brain);

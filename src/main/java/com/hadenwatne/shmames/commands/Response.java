@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -9,19 +8,16 @@ import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
-import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Response implements ICommand {
@@ -99,7 +95,7 @@ public class Response implements ICommand {
 		return true;
 	}
 
-	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		String responseText = args.getAsString("responseText");
 
@@ -108,7 +104,7 @@ public class Response implements ICommand {
 		messagingChannel.sendMessage(lang.getMsg(Langs.ITEM_ADDED));
 	}
 
-	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		int responseIndex = args.getAsInteger("responseIndex");
 
@@ -124,7 +120,7 @@ public class Response implements ICommand {
 		}
 	}
 
-	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		int page = args.getAsInteger("page");
 

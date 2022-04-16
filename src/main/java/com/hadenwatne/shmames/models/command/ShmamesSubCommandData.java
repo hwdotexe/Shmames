@@ -3,15 +3,15 @@ package com.hadenwatne.shmames.models.command;
 public class ShmamesSubCommandData {
     private final String groupName;
     private final String commandName;
-    private final ShmamesCommandArguments arguments;
+    private final ExecutingCommandArguments arguments;
 
-    public ShmamesSubCommandData(String groupName, String commandName, ShmamesCommandArguments arguments) {
+    public ShmamesSubCommandData(String groupName, String commandName, ExecutingCommandArguments arguments) {
         this.groupName = groupName;
         this.commandName = commandName;
         this.arguments = arguments;
     }
 
-    public ShmamesSubCommandData(String commandName, ShmamesCommandArguments arguments) {
+    public ShmamesSubCommandData(String commandName, ExecutingCommandArguments arguments) {
         this.groupName = null;
         this.commandName = commandName;
         this.arguments = arguments;
@@ -37,7 +37,7 @@ public class ShmamesSubCommandData {
         return this.commandName;
     }
 
-    public ShmamesCommandArguments getArguments() {
+    public ExecutingCommandArguments getArguments() {
         return this.arguments;
     }
 }

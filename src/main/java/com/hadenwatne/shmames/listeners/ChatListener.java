@@ -7,6 +7,7 @@ import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.Response;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.*;
@@ -76,9 +77,15 @@ public class ChatListener extends ListenerAdapter {
 		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
 
 		if(command != null) {
+			// TODO: validation error type (wrong usage, requires guild, etc.)?
 			if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
-				// TODO parse command into subcommand, parameters
-				// TODO run the command asynchronously
+				// TODO check for errors before/after parsing (i.e., guild only)
+				ExecutingCommand executingCommand = new ExecutingCommand(command.commandStructure.getName(), lang, brain);
+				executingCommand = App.Shmames.getCommandHandler().ParseCommand(command, commandText, executingCommand);
+
+				executingCommand.setMessage(message);
+
+				App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
 			} else {
 				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
 						.addField(null, lang.getError(Errors.WRONG_USAGE, false), false);

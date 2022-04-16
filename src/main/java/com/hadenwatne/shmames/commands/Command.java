@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
@@ -24,6 +25,8 @@ public abstract class Command {
     - Language
     - Logic
     - Responses
+    - Author
+    - Channel/Hook
 
     Inherit / One-time:
     - Command structure
@@ -48,12 +51,13 @@ public abstract class Command {
         return EmbedFactory.GetEmbed(type, this.commandStructure.getName(), subLevel);
     }
 
-    public abstract EmbedBuilder run(Lang language, Brain brain, ShmamesCommandData commandData);
+    public abstract EmbedBuilder run(ExecutingCommand executingCommand);
 
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
     }
 
+    // TODO load this at instantiation so we don't cause performance issues if called repeatedly
     public List<MessageEmbed.Field> getHelpFields() {
         List<MessageEmbed.Field> fields = new ArrayList<>();
         String list = PaginationService.GenerateList(this.commandStructure.getAliases(), -1, false, false);

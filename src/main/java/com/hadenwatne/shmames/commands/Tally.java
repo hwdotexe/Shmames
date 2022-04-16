@@ -1,28 +1,22 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.music.GuildOcarina;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -117,7 +111,7 @@ public class Tally implements ICommand {
 		return true;
 	}
 
-	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) + 1;
@@ -127,7 +121,7 @@ public class Tally implements ICommand {
 		messagingChannel.sendMessage(lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
 	}
 
-	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) - 1;
@@ -148,7 +142,7 @@ public class Tally implements ICommand {
 		}
 	}
 
-	private void cmdSet(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdSet(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		int count = args.getAsInteger("count");
 		String tally = formatTally(rawTally);
@@ -164,7 +158,7 @@ public class Tally implements ICommand {
 		}
 	}
 
-	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		int page = args.getAsInteger("page");
 		LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
 		List<String> talliesFormatted = formatTalliesToStringList(tSorted);
@@ -174,7 +168,7 @@ public class Tally implements ICommand {
 		messagingChannel.sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.TALLY_LIST), Color.ORANGE, lang));
 	}
 
-	private void cmdSearch(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdSearch(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		List<String> searchResults = new ArrayList<>();

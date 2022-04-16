@@ -6,7 +6,7 @@ import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
@@ -16,7 +16,6 @@ import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.ShmamesService;
 
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class FamilyCmd implements ICommand {
 		return true;
 	}
 
-	private String cmdCreate(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
+	private String cmdCreate(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
@@ -148,7 +147,7 @@ public class FamilyCmd implements ICommand {
 		}
 	}
 
-	private String cmdLeave(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
+	private String cmdLeave(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
@@ -173,7 +172,7 @@ public class FamilyCmd implements ICommand {
 		}
 	}
 
-	private String cmdKick(Lang lang, Brain brain, Member author, ShmamesCommandArguments args) {
+	private String cmdKick(Lang lang, Brain brain, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 		int serverIndex = args.getAsInteger("serverNumber")-1;
 
@@ -210,7 +209,7 @@ public class FamilyCmd implements ICommand {
 	}
 
 	private String cmdCode(Lang lang, Brain brain, Guild server, Member author, ShmamesSubCommandData commandData) {
-		ShmamesCommandArguments args = commandData.getArguments();
+		ExecutingCommandArguments args = commandData.getArguments();
 		String subCommand = commandData.getCommandName();
 
 		switch (subCommand.toLowerCase()) {
@@ -223,7 +222,7 @@ public class FamilyCmd implements ICommand {
 		}
 	}
 
-	private String cmdCodeCreate(Lang lang, User author, ShmamesCommandArguments args) {
+	private String cmdCodeCreate(Lang lang, User author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
@@ -241,7 +240,7 @@ public class FamilyCmd implements ICommand {
 		return lang.getError(Errors.NOT_FOUND, true);
 	}
 
-	private String cmdCodeRedeem(Lang lang, Brain brain, Guild server, Member author, ShmamesCommandArguments args) {
+	private String cmdCodeRedeem(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String joinCode = args.getAsString("joinCode").toLowerCase();
 
 		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()){
@@ -271,7 +270,7 @@ public class FamilyCmd implements ICommand {
 	}
 
 	private String cmdView(Lang lang, Brain brain, Guild server, Member author, ShmamesSubCommandData commandData, ShmamesCommandMessagingChannel messagingChannel) {
-		ShmamesCommandArguments args = commandData.getArguments();
+		ExecutingCommandArguments args = commandData.getArguments();
 		String subCommand = commandData.getCommandName();
 
 		switch (subCommand.toLowerCase()) {
@@ -286,7 +285,7 @@ public class FamilyCmd implements ICommand {
 		}
 	}
 
-	private String cmdViewServers(Lang lang, Brain brain, Member author, ShmamesCommandArguments args) {
+	private String cmdViewServers(Lang lang, Brain brain, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {

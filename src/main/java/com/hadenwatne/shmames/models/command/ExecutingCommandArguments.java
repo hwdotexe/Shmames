@@ -8,11 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ShmamesCommandArguments {
-    private LinkedHashMap<String, Object> arguments;
+public class ExecutingCommandArguments {
+    private LinkedHashMap<String, String> arguments;
 
-    public ShmamesCommandArguments(LinkedHashMap<String, Object> arguments) {
+    public ExecutingCommandArguments(LinkedHashMap<String, String> arguments) {
         this.arguments = arguments;
+    }
+
+    public ExecutingCommandArguments() {
+        this.arguments = new LinkedHashMap<>();
+    }
+
+    public void add(String key, String value) {
+        this.arguments.put(key, value);
     }
 
     public int count() {
@@ -35,7 +43,7 @@ public class ShmamesCommandArguments {
 
     public String getAsString(String key) {
         try {
-            return (String) this.arguments.get(key);
+            return this.arguments.get(key);
         } catch (Exception e) {
             LoggingService.LogException(e);
         }
@@ -46,7 +54,7 @@ public class ShmamesCommandArguments {
     public boolean getAsBoolean(String key) {
         if(this.arguments.containsKey(key)) {
             try {
-                return (boolean) this.arguments.get(key);
+                return Boolean.parseBoolean(this.arguments.get(key));
             } catch (Exception e) {
                 LoggingService.LogException(e);
             }
@@ -58,7 +66,7 @@ public class ShmamesCommandArguments {
     public int getAsInteger(String key) {
         if(this.arguments.containsKey(key)) {
             try {
-                return (Integer) this.arguments.get(key);
+                return Integer.parseInt(this.arguments.get(key));
             } catch (Exception e) {
                 LoggingService.LogException(e);
             }

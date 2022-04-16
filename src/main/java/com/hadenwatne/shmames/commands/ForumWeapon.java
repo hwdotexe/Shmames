@@ -14,7 +14,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.ForumWeaponObj;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
@@ -22,10 +22,8 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.dv8tion.jda.api.entities.Guild;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.ShmamesService;
 
 
@@ -150,7 +148,7 @@ public class ForumWeapon implements ICommand {
 		return true;
 	}
 
-	private String cmdCreate(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdCreate(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
 
@@ -178,7 +176,7 @@ public class ForumWeapon implements ICommand {
 		}
 	}
 
-	private String cmdUpdate(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdUpdate(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
 		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);
@@ -196,7 +194,7 @@ public class ForumWeapon implements ICommand {
 		}
 	}
 
-	private String cmdRemove(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdRemove(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		ForumWeaponObj fwr = findFW(weaponName, brain, server);
 
@@ -213,7 +211,7 @@ public class ForumWeapon implements ICommand {
 		}
 	}
 
-	private String cmdList(Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdList(Brain brain, Guild server, ExecutingCommandArguments args) {
 		boolean all = args.getAsBoolean("all");
 
 		if (all) {
@@ -235,7 +233,7 @@ public class ForumWeapon implements ICommand {
 		}
 	}
 
-	private String cmdSearch(Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdSearch(Brain brain, Guild server, ExecutingCommandArguments args) {
 		String searchTerm = args.getAsString("searchTerm");
 		StringBuilder sb = new StringBuilder();
 
@@ -252,7 +250,7 @@ public class ForumWeapon implements ICommand {
 		return sb.toString();
 	}
 
-	private String cmdAlias(Lang lang, Brain brain, Guild server, ShmamesCommandArguments args) {
+	private String cmdAlias(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String aliasName = args.getAsString("newAlias");
 		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);

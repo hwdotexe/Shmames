@@ -9,7 +9,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.models.PollModel;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.data.Brain;
@@ -66,7 +66,7 @@ public class Poll implements ICommand {
 	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		if (ShmamesService.CheckUserPermission(data.getServer(), brain.getSettingFor(BotSettingName.ALLOW_POLLS), data.getAuthor())) {
 			String subCmd = data.getSubCommandData().getCommandName();
-			ShmamesCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
+			ExecutingCommandArguments subCmdArgs = data.getSubCommandData().getArguments();
 
 			switch (subCmd.toLowerCase()) {
 				case "start":
@@ -86,7 +86,7 @@ public class Poll implements ICommand {
 		return true;
 	}
 
-	private String closePoll(ShmamesCommandArguments args, Brain brain, Lang lang) {
+	private String closePoll(ExecutingCommandArguments args, Brain brain, Lang lang) {
 		String pollID = args.getAsString("pollID");
 
 		if (pollID.startsWith("#")) {
@@ -105,7 +105,7 @@ public class Poll implements ICommand {
 		return lang.getError(Errors.NOT_FOUND, true);
 	}
 
-	private String startPoll(ShmamesCommandArguments args, Lang lang, Brain brain, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
+	private String startPoll(ExecutingCommandArguments args, Lang lang, Brain brain, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
 		String time = args.getAsString("time");
 		String question = args.getAsString("question");
 		String options = args.getAsString("options");

@@ -10,6 +10,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
@@ -34,7 +35,7 @@ public class Choose extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (Lang lang, Brain brain, ShmamesCommandData data) {
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		Pattern p = data.getCommand().getCommandStructure().getParameters().get(0).getPattern();
 		Matcher m = p.matcher(data.getArguments().getAsString());
 		String thisOrThat = data.getArguments().getAsString("thisOrThat");

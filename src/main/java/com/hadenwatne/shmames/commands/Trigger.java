@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -10,7 +9,7 @@ import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
@@ -94,7 +93,7 @@ public class Trigger implements ICommand {
 		return true;
 	}
 
-	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String triggerType = args.getAsString("triggerType");
 		String triggerWord = args.getAsString("triggerWord");
 
@@ -107,7 +106,7 @@ public class Trigger implements ICommand {
 		}
 	}
 
-	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		String triggerWord = args.getAsString("triggerWord");
 
 		if(triggerWord.equalsIgnoreCase(App.Shmames.getBotName())) {
@@ -124,7 +123,7 @@ public class Trigger implements ICommand {
 		}
 	}
 
-	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ShmamesCommandArguments args) {
+	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
 		int page = args.getAsInteger("page");
 		HashMap<String, TriggerType> triggers = brain.getTriggers();
 		List<String> triggersFormatted = formatTriggersToStringList(triggers);

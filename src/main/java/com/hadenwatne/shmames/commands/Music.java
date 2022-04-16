@@ -16,7 +16,7 @@ import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.models.Playlist;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
 import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
@@ -28,7 +28,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.music.GuildOcarina;
-import com.hadenwatne.shmames.Shmames;
 
 public class Music implements ICommand {
 	private final CommandStructure commandStructure;
@@ -263,7 +262,7 @@ public class Music implements ICommand {
 		return "";
 	}
 
-	private String cmdPlay(Lang lang, Brain brain, Guild server, Member member, ShmamesCommandMessagingChannel messagingChannel, GuildOcarina ocarina, ShmamesCommandArguments args) {
+	private String cmdPlay(Lang lang, Brain brain, Guild server, Member member, ShmamesCommandMessagingChannel messagingChannel, GuildOcarina ocarina, ExecutingCommandArguments args) {
 		String playlist = args.getAsString("playlistName");
 		String url = args.getAsString("URL");
 
@@ -305,7 +304,7 @@ public class Music implements ICommand {
 		}
 	}
 
-	private void cmdSkip(GuildOcarina ocarina, ShmamesCommandArguments args) {
+	private void cmdSkip(GuildOcarina ocarina, ExecutingCommandArguments args) {
 		int times = args.getAsInteger("number");
 
 		if (times > 0) {
@@ -326,7 +325,7 @@ public class Music implements ICommand {
 	}
 
 	private String cmdQueue(Brain brain, Lang lang, GuildOcarina ocarina, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData commandData) {
-		ShmamesCommandArguments args = commandData.getArguments();
+		ExecutingCommandArguments args = commandData.getArguments();
 		String subCommand = commandData.getCommandName();
 
 		if (ocarina.isInVoiceChannel()) {
@@ -376,7 +375,7 @@ public class Music implements ICommand {
 		}
 	}
 
-	private String cmdConvert(Brain brain, Lang lang, GuildOcarina ocarina, ShmamesCommandArguments args) {
+	private String cmdConvert(Brain brain, Lang lang, GuildOcarina ocarina, ExecutingCommandArguments args) {
 		String newPlaylistName = args.getAsString("playlistName");
 
 		if (ocarina.getNowPlaying() != null) {
@@ -403,7 +402,7 @@ public class Music implements ICommand {
 	}
 
 	private String cmdPlaylist(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData commandData) {
-		ShmamesCommandArguments args = commandData.getArguments();
+		ExecutingCommandArguments args = commandData.getArguments();
 		String subCommand = commandData.getCommandName();
 
 		switch (subCommand) {
