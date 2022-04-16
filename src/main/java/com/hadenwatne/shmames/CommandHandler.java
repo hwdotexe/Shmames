@@ -58,7 +58,7 @@ public class CommandHandler {
 //		commands.add(new Tally());
 //		commands.add(new Thoughts());
 //		commands.add(new Timer());
-//		commands.add(new Trigger());
+		commands.add(new Trigger());
 //		commands.add(new WhatAreTheOdds());
 //		commands.add(new WhatShouldIDo());
 //		commands.add(new When());
@@ -83,7 +83,9 @@ public class CommandHandler {
 	 */
 	public Command PreProcessCommand(String commandText) {
 		for(Command command : commands) {
-			if(commandText.matches(command.getCommandStructure().getPattern().pattern())) {
+			Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+
+			if(commandMatcher.find()) {
 				return command;
 			}
 		}
@@ -102,7 +104,7 @@ public class CommandHandler {
 			// If this command requires a server, but none is accessible, throw an error.
 			if(command.requiresGuild() && executingCommand.getServer() == null) {
 				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.GUILD_REQUIRED.name())
-						.addField(null, executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED, false), false);
+						.addField("", executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED), false);
 
 				executingCommand.reply(embed);
 
@@ -113,7 +115,7 @@ public class CommandHandler {
 			App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
 		} else {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
-					.addField(null, executingCommand.getLanguage().getError(Errors.WRONG_USAGE, false), false);
+					.addField("", executingCommand.getLanguage().getError(Errors.WRONG_USAGE), false);
 
 			for(MessageEmbed.Field field : command.getHelpFields()) {
 				embed.addField(field);
@@ -234,8 +236,8 @@ public class CommandHandler {
 		CompletableFuture.supplyAsync(() -> command.run(executingCommand))
 				.thenAccept(executingCommand::reply)
 				.exceptionally(exception -> {
-					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.BOT_ERROR.name());
-					embedBuilder.addField(null, executingCommand.getLanguage().getError(Errors.BOT_ERROR, true), false);
+					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error");
+					embedBuilder.addField(Errors.BOT_ERROR.name(), executingCommand.getLanguage().getError(Errors.BOT_ERROR), false);
 
 					executingCommand.reply(embedBuilder);
 					LoggingService.LogException(exception);

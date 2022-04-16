@@ -15,12 +15,15 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+
+import java.util.List;
 
 public class SlashCommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        String commandText = event.getCommandString();
+        String commandText = normalizeCommandText(event);
         Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 
         // Ensure we own this command before continuing.
@@ -36,6 +39,29 @@ public class SlashCommandListener extends ListenerAdapter {
         }
     }
 
+    private String normalizeCommandText(SlashCommandInteractionEvent event) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(event.getName());
+
+        if(event.getSubcommandGroup() != null) {
+            sb.append(" ");
+            sb.append(event.getSubcommandGroup());
+        }
+
+        if(event.getSubcommandName() != null) {
+            sb.append(" ");
+            sb.append(event.getSubcommandName());
+        }
+
+        for(OptionMapping option : event.getOptions()) {
+            sb.append(" ");
+            sb.append(option.getAsString());
+        }
+
+        return sb.toString();
+    }
+
     private void handleCommand(Command command, InteractionHook hook, String commandText, Brain brain) {
         Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
         ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
@@ -46,8 +72,8 @@ public class SlashCommandListener extends ListenerAdapter {
 
             App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
         } else {
-            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
-                    .addField(null, lang.getError(Errors.COMMAND_NOT_FOUND, false), false);
+            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error")
+                    .addField(Errors.COMMAND_NOT_FOUND.name(), lang.getError(Errors.COMMAND_NOT_FOUND), false);
 
             MessageService.ReplyToMessage(hook, embed);
         }

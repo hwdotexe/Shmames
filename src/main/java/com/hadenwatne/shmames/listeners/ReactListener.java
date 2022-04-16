@@ -94,7 +94,7 @@ public class ReactListener extends ListenerAdapter {
 					try {
 						channel.deleteMessageById(message.getIdLong()).queue();
 					} catch (Exception ex) {
-						channel.sendMessage(App.Shmames.getLanguageService().getDefaultLang().getError(Errors.NO_PERMISSION_BOT, true)).queue();
+						channel.sendMessage(App.Shmames.getLanguageService().getDefaultLang().getError(Errors.NO_PERMISSION_BOT)).queue();
 					}
 				}
 			}

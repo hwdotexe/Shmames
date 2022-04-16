@@ -21,16 +21,14 @@ public class EmbedFactory {
 
         embedBuilder.setColor(type.getColor());
 
-        for(String nav : navigation) {
-            if(navigationHeader.length() > 0) {
-              navigationHeader.append(NAVIGATION_INDICATOR);
-            }
+        navigationHeader.append(App.Shmames.getBotName());
 
+        for(String nav : navigation) {
+            navigationHeader.append(NAVIGATION_INDICATOR);
             navigationHeader.append(nav);
         }
 
-        embedBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getBotAvatarUrl());
-        embedBuilder.setTitle(navigationHeader.toString());
+        embedBuilder.setAuthor(navigationHeader.toString(), null, App.Shmames.getBotAvatarUrl());
 
         return embedBuilder;
     }

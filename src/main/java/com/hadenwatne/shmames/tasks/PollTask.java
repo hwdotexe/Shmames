@@ -114,7 +114,7 @@ public class PollTask extends TimerTask{
 			try {
 				message.pin().queue();
 			}catch(Exception e) {
-				message.getChannel().sendMessage(lang.getError(Errors.NO_PERMISSION_BOT, true)).queue();
+				message.getChannel().sendMessage(lang.getError(Errors.NO_PERMISSION_BOT)).queue();
 			}
 		}
 	}

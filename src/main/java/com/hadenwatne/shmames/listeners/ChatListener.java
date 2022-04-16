@@ -36,11 +36,13 @@ public class ChatListener extends ListenerAdapter {
 				// Check if this message is trying to run a command.
 				for (String trigger : brain.getTriggers().keySet()) {
 					if(brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
-						final String command = messageText.substring(trigger.length()).trim();
+						if(messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
+							final String command = messageText.substring(trigger.length()).trim();
 
-						handleCommand(message, command, brain);
+							handleCommand(message, command, brain);
 
-						return;
+							return;
+						}
 					}
 				}
 
@@ -82,8 +84,8 @@ public class ChatListener extends ListenerAdapter {
 
 			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		} else {
-			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
-					.addField(null, lang.getError(Errors.COMMAND_NOT_FOUND, false), false);
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error")
+					.addField(Errors.COMMAND_NOT_FOUND.name(), lang.getError(Errors.COMMAND_NOT_FOUND), false);
 
 			MessageService.ReplyToMessage(message, embed);
 		}

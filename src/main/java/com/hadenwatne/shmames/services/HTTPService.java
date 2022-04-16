@@ -86,10 +86,10 @@ public class HTTPService {
             if (result != null) {
                 return result.trim();
             } else {
-                return lang.getError(Errors.ITEMS_NOT_FOUND, true);
+                return lang.getError(Errors.ITEMS_NOT_FOUND);
             }
         } catch (Exception e) {
-            return lang.getError(Errors.BOT_ERROR, true);
+            return lang.getError(Errors.BOT_ERROR);
         }
     }
 

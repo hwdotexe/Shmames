@@ -463,7 +463,7 @@
       "There isn't a track playing right now."
     ],
     "WRONG_USAGE": [
-      "I don't think that's how you do it."
+      "The command syntax you used is incorrect."
     ]
   },
   "wildcard": "%WC%",

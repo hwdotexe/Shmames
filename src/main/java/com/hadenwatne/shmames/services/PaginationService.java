@@ -79,7 +79,7 @@ public class PaginationService {
         eBuilder.setFooter(paginatedList.getItemCount() + " items");
 
         if(pageToDisplay > listData.size() || pageToDisplay == 0) {
-            eBuilder.addField("Error", lang.getError(Errors.PAGE_NOT_FOUND, false), false);
+            eBuilder.addField("Error", lang.getError(Errors.PAGE_NOT_FOUND), false);
         } else {
             eBuilder.addField(prefix + " (Page " + pageToDisplay + " of " + listData.size() + ")", listData.get(pageIndex), false);
         }

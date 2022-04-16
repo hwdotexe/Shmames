@@ -60,20 +60,18 @@ public class Lang {
         return msg;
     }
 
-    public String getError(Errors key, boolean showError) {
-        String s = showError ? ("\n`// " + key.toString() + "`") : "";
-
+    public String getError(Errors key) {
         if (errors.containsKey(key)) {
             String[] messageArray = errors.get(key);
 
             if (messageArray.length > 1) {
-                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]) + s;
+                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]);
             }
 
-            return processBreaks(errors.get(key)[0]) + s;
+            return processBreaks(errors.get(key)[0]);
         } else {
             if (!langName.equalsIgnoreCase("default")) {
-                return App.Shmames.getLanguageService().getDefaultLang().getError(key, showError) + s;
+                return App.Shmames.getLanguageService().getDefaultLang().getError(key);
             } else {
                 LoggingService.Log(LogType.ERROR, "An unknown Lang key was used: " + key);
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
@@ -81,18 +79,14 @@ public class Lang {
         }
     }
 
-    public String getError(Errors key, boolean showError, String[] replacements) {
-        String msg = getError(key, showError);
+    public String getError(Errors key, String[] replacements) {
+        String msg = getError(key);
 
         for (String r : replacements) {
             msg = msg.replaceFirst(wildcard, r);
         }
 
         return msg;
-    }
-
-    public String wrongUsage(String usage) {
-        return getError(Errors.WRONG_USAGE, true) + "\n> " + getMsg(Langs.COMMAND_USAGE, new String[]{usage});
     }
 
     private String processBreaks(String msg) {

@@ -21,6 +21,6 @@ public class Cactpot extends Command {
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		return response(EmbedType.INFO)
-				.addField(null, MiniCactpotGame.BuildNewGame(), false);
+				.setDescription(MiniCactpotGame.BuildNewGame());
 	}
 }
