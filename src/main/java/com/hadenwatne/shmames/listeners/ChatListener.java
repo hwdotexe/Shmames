@@ -71,31 +71,16 @@ public class ChatListener extends ListenerAdapter {
 		}
 	}
 
-	// TODO possibly move this to a shared location for slash commands to use as well.
 	private void handleCommand(Message message, String commandText, Brain brain) {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+		ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
 
 		if(command != null) {
-			// TODO: validation error type (wrong usage, requires guild, etc.)?
-			if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
-				// TODO check for errors before/after parsing (i.e., guild only)
-				ExecutingCommand executingCommand = new ExecutingCommand(command.commandStructure.getName(), lang, brain);
-				executingCommand = App.Shmames.getCommandHandler().ParseCommand(command, commandText, executingCommand);
+			executingCommand.setCommandName(command.getCommandStructure().getName());
+			executingCommand.setMessage(message);
 
-				executingCommand.setMessage(message);
-
-				App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
-			} else {
-				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
-						.addField(null, lang.getError(Errors.WRONG_USAGE, false), false);
-
-				for(MessageEmbed.Field field : command.getHelpFields()) {
-					embed.addField(field);
-				}
-
-				MessageService.ReplyToMessage(message, embed);
-			}
+			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		} else {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
 					.addField(null, lang.getError(Errors.COMMAND_NOT_FOUND, false), false);

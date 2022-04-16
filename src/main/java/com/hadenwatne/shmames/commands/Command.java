@@ -4,9 +4,6 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -33,8 +30,8 @@ public abstract class Command {
     - Requires guild
      */
 
-    public final CommandStructure commandStructure;
-    public final boolean requiresGuild;
+    private final CommandStructure commandStructure;
+    private final boolean requiresGuild;
 
     Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
@@ -55,6 +52,10 @@ public abstract class Command {
 
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
+    }
+
+    public boolean requiresGuild() {
+        return this.requiresGuild;
     }
 
     // TODO load this at instantiation so we don't cause performance issues if called repeatedly

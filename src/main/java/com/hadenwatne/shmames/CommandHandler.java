@@ -13,6 +13,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class CommandHandler {
 		commands = new ArrayList<>();
 
 		commands.add(new Blame());
-//		commands.add(new Cactpot());
+		commands.add(new Cactpot());
 		commands.add(new Choose());
 //		commands.add(new CringeThat());
 //		commands.add(new Dev());
@@ -91,12 +92,44 @@ public class CommandHandler {
 	}
 
 	/**
+	 * Begins processing a command, handling errors, and sending a response.
+	 * @param command The command to handle.
+	 * @param executingCommand The command context to use.
+	 * @param commandText The raw text of the command.
+	 */
+	public void HandleCommand(Command command, ExecutingCommand executingCommand, String commandText) {
+		if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
+			// If this command requires a server, but none is accessible, throw an error.
+			if(command.requiresGuild() && executingCommand.getServer() == null) {
+				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.GUILD_REQUIRED.name())
+						.addField(null, executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED, false), false);
+
+				executingCommand.reply(embed);
+
+				return;
+			}
+
+			App.Shmames.getCommandHandler().ParseCommand(command, commandText, executingCommand);
+			App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
+		} else {
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
+					.addField(null, executingCommand.getLanguage().getError(Errors.WRONG_USAGE, false), false);
+
+			for(MessageEmbed.Field field : command.getHelpFields()) {
+				embed.addField(field);
+			}
+
+			executingCommand.reply(embed);
+		}
+	}
+
+	/**
 	 * Attempts to validate the command for usage errors.
 	 * @param command The command to validate against.
 	 * @param commandText The command usage to validate.
 	 * @return True, if the validation was successful. Otherwise false.
 	 */
-	public boolean ValidateCommand(Command command, String commandText) {
+	private boolean ValidateCommand(Command command, String commandText) {
 		Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
 
 		if(commandMatcher.find()) {
@@ -106,11 +139,13 @@ public class CommandHandler {
 		return false;
 	}
 
-
-	// Requires we build a basic executingCommand in advance, which this function will append to.
-	public ExecutingCommand ParseCommand(Command command, String commandText, ExecutingCommand executingCommand) {
-		// TODO can we call the pattern matcher once instead of 3 times?
-
+	/**
+	 * Breaks down a validated raw string command into a parseable context object with named parameters.
+	 * @param command The command to parse against.
+	 * @param commandText The raw command.
+	 * @param executingCommand The command context to update.
+	 */
+	private void ParseCommand(Command command, String commandText, ExecutingCommand executingCommand) {
 		Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
 
 		if(commandMatcher.find()) {
@@ -125,38 +160,65 @@ public class CommandHandler {
 					executingCommand.setSubCommandGroup(groupMatch);
 
 					// Sub-command Specific
-					for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
-						final String subCommandMatch = matchStringToCommand(context, subCommand.getName(), subCommand.getAliases());
-
-						if(subCommandMatch != null) {
-							executingCommand.setSubCommand(subCommandMatch);
-							ExecutingCommandArguments commandArguments = new ExecutingCommandArguments();
-
-							// Parameter-specific
-							for(CommandParameter commandParameter : subCommand.getParameters()) {
-								String parameterMatch = commandMatcher.group(commandParameter.getRegexName());
-
-								if(parameterMatch != null) {
-									commandArguments.add(commandParameter.getName(), parameterMatch);
-								}
-							}
-
-							executingCommand.setCommandArguments(commandArguments);
-
-							break;
-						}
-					}
+					ParseCommandSubCommands(subCommandGroup.getSubCommands(), context, executingCommand, commandMatcher);
 
 					break;
 				}
 			}
 
-			// TODO sub-command only (!has group)
+			// Process sub commands on the primary command structure, if any.
+			if(!executingCommand.hasSubCommandGroup()) {
+				ParseCommandSubCommands(commandStructure.getSubCommands(), context, executingCommand, commandMatcher);
+			}
 
-			// TODO parameter only (!has subcommand)
+			// Process command arguments on the primary command structure, if any.
+			if(!executingCommand.hasSubCommand()) {
+				ParseCommandArguments(commandStructure, executingCommand, commandMatcher);
+			}
 		}
+	}
 
-		return executingCommand;
+	/**
+	 * Breaks down sub commands into a parseable object.
+	 * @param subCommands A list of subcommands to test against.
+	 * @param context The raw command.
+	 * @param executingCommand The running context.
+	 * @param commandMatcher The matcher object.
+	 */
+	private void ParseCommandSubCommands(List<CommandStructure> subCommands, String context, ExecutingCommand executingCommand, Matcher commandMatcher) {
+		for(CommandStructure subCommand : subCommands) {
+			final String subCommandMatch = matchStringToCommand(context, subCommand.getName(), subCommand.getAliases());
+
+			if(subCommandMatch != null) {
+				executingCommand.setSubCommand(subCommandMatch);
+
+				ParseCommandArguments(subCommand, executingCommand, commandMatcher);
+
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Breaks down parameter arguments into a parseable object.
+	 * @param commandStructure The command to check against.
+	 * @param executingCommand The running context.
+	 * @param commandMatcher The matcher object.
+	 */
+	private void ParseCommandArguments(CommandStructure commandStructure, ExecutingCommand executingCommand, Matcher commandMatcher) {
+		if(commandStructure.getParameters().size() > 0) {
+			ExecutingCommandArguments commandArguments = new ExecutingCommandArguments();
+
+			for (CommandParameter commandParameter : commandStructure.getParameters()) {
+				String parameterMatch = commandMatcher.group(commandParameter.getRegexName());
+
+				if (parameterMatch != null) {
+					commandArguments.add(commandParameter.getName(), parameterMatch);
+				}
+			}
+
+			executingCommand.setCommandArguments(commandArguments);
+		}
 	}
 
 	/**
@@ -164,7 +226,7 @@ public class CommandHandler {
 	 * @param command The command to execute.
 	 * @param executingCommand An object containing context for the command running.
 	 */
-	public void ExecuteCommand(Command command, ExecutingCommand executingCommand) {
+	private void ExecuteCommand(Command command, ExecutingCommand executingCommand) {
 		// TODO log command (log it here before or after validation? Spam vs. Debugging?)
 		// TODO clean up typing indicator
 		// TODO splitting up a long reply (message service!)

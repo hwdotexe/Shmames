@@ -12,35 +12,27 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import javax.annotation.Nullable;
 
 public class ExecutingCommand {
-    // Primary command name
-    // Group (nullable)
-    // Subcommand (nullable)
-    // Parameters (nullable)
-
-    // If group, then subcommand is sub of that group
-    // If no group, then subcommand is sun of primary
-
-    // If subcommand, then parameters are sub of that command
-    // If no subcommand, then parameters are sub of primary
-
-    private final String commandName;
     private final Lang language;
     private final @Nullable Brain brain;
 
+    private String commandName;
     private String subCommandGroup;
     private String subCommand;
     private ExecutingCommandArguments commandArguments;
     private InteractionHook hook;
     private Message message;
 
-    public ExecutingCommand(String commandName, Lang language, @Nullable Brain brain) {
-        this.commandName = commandName;
+    public ExecutingCommand(Lang language, @Nullable Brain brain) {
         this.language = language;
         this.brain = brain;
     }
 
     public String getCommandName() {
         return this.commandName;
+    }
+
+    public void setCommandName(String commandName) {
+        this.commandName = commandName;
     }
 
     public Lang getLanguage() {

@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.commandbuilder;
 
 import com.hadenwatne.shmames.commands.Command;
-import com.hadenwatne.shmames.commands.ICommand;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
@@ -41,7 +40,7 @@ public class CommandBuilder {
             for(SubCommandGroup subCommandGroup : structure.getSubcommandGroups()) {
                 SubcommandGroupData group = new SubcommandGroupData(subCommandGroup.getName(), subCommandGroup.getDescription());
 
-                for (CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+                for (CommandStructure subCommand : subCommandGroup.getSubCommands()) {
                     String subShortDesc = subCommand.getDescription().length() > 100 ? (subCommand.getDescription().substring(0, 96) + "...") : subCommand.getDescription();
                     SubcommandData subCommandData = new SubcommandData(subCommand.getName(), subShortDesc);
 
@@ -106,7 +105,7 @@ public class CommandBuilder {
 
                 sb.append("\\s");
                 sb.append("(");
-                sb.append(BuildSubCommandPattern(group.getSubcommands()));
+                sb.append(BuildSubCommandPattern(group.getSubCommands()));
                 sb.append("))");
             }
         }
@@ -244,7 +243,7 @@ public class CommandBuilder {
             }
 
             for(SubCommandGroup subCommandGroup: subCommandGroups) {
-                for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
+                for(CommandStructure subCommand : subCommandGroup.getSubCommands()) {
                     example.append(System.lineSeparator());
 
                     example.append(command.getName());
@@ -392,7 +391,7 @@ public class CommandBuilder {
                 subCommandGroupData.append("\n• ");
             }
 
-            for (CommandStructure subCommand : group.getSubcommands()) {
+            for (CommandStructure subCommand : group.getSubCommands()) {
                 if (subCommandData.length() > 0) {
                     subCommandData.append("\n• ");
                 }

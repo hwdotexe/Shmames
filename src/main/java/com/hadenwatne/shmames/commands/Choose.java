@@ -1,22 +1,18 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.RandomService;
-import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Choose extends Command {
 	public Choose() {
@@ -36,9 +32,10 @@ public class Choose extends Command {
 
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		Pattern p = data.getCommand().getCommandStructure().getParameters().get(0).getPattern();
-		Matcher m = p.matcher(data.getArguments().getAsString());
-		String thisOrThat = data.getArguments().getAsString("thisOrThat");
+		Pattern p = getCommandStructure().getParameters().get(0).getPattern();
+		ExecutingCommandArguments arguments = executingCommand.getCommandArguments();
+		Matcher m = p.matcher(arguments.getAsString());
+		String thisOrThat = arguments.getAsString("thisOrThat");
 
 		// The command is already validated. Call m.find() to prepare a new matcher and separate out the arguments.
 		m.find();
@@ -55,7 +52,7 @@ public class Choose extends Command {
 			response = m.group(2 + RandomService.GetRandom(2));
 		}
 
-		String choice = lang.getMsg(Langs.CHOOSE, new String[]{response});
+		String choice = executingCommand.getLanguage().getMsg(Langs.CHOOSE, new String[]{response});
 
 		return response(EmbedType.INFO)
 				.addField(null, thisOrThat, false)

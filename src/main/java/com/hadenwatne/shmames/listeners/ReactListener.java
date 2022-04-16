@@ -1,9 +1,10 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.data.Lang;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
@@ -104,26 +105,16 @@ public class ReactListener extends ListenerAdapter {
 	}
 
 	private void runAddTallyCommand(String tallyValue, Brain brain, Message message) {
-		MessageChannel channel = message.getTextChannel();
+		final String commandText = "addtally "+tallyValue;
+		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
+		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+		ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
 
-		for (ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
-			if (c.getCommandStructure().getName().equalsIgnoreCase("addtally")) {
-				LinkedHashMap<String, Object> tallyArgs = new LinkedHashMap<>();
+		if(command != null) {
+			executingCommand.setCommandName(command.getCommandStructure().getName());
+			executingCommand.setMessage(message);
 
-				tallyArgs.put("tallyName", tallyValue);
-
-				ShmamesCommandData data = new ShmamesCommandData(
-						c,
-						new ExecutingCommandArguments(tallyArgs),
-						new ShmamesCommandMessagingChannel(message, channel),
-						App.Shmames.getJDA().getSelfUser(),
-						message.getGuild()
-				);
-
-				String response = c.run(App.Shmames.getLanguageService().getLangFor(brain), brain, data);
-				channel.sendMessage(response).queue();
-				return;
-			}
+			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		}
 	}
 }
