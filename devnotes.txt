@@ -1,21 +1,12 @@
-- Command result type NONE/UPDATE/NEW
-- All responses in embeds
-- EmbedService
 - Refine listeners
-- New first join message
 - Update poll interface
-- Standardize embed color scheme
 - CommandState<T> for keeping track of stateful things? (message IDs, hangman, etc.) - could be stored in parent as a map of channel to state
-
-
-- See how Lawliet passes Locale through Command super class
 
 
 - More permissions
   - Deleting lists
 
 
-- Reply to everything
 - Every reply is an Embed
 - Do not delete triggering messages
 - Help should not DM user

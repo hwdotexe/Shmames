@@ -6,12 +6,24 @@ import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.util.List;
 
 public class MessageService {
+    /**
+     * Sends a message in a channel without replying - ideal for messages that were not prompted by a user or command.
+     * @param channel The channel to send a message in.
+     * @param message The message to send.
+     */
+    public static void SendMessage(MessageChannel channel, EmbedBuilder message) {
+        channel.sendMessageEmbeds(message.build()).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
+        });
+    }
+
     /**
      * A centralized place to send message replies to Discord, and to handle issues when they arise.
      * @param message The message to reply to.
