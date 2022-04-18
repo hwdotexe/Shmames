@@ -1,13 +1,11 @@
 - Refine listeners
 - Update poll interface
-- CommandState<T> for keeping track of stateful things? (message IDs, hangman, etc.) - could be stored in parent as a map of channel to state
 
 
 - More permissions
   - Deleting lists
 
 
-- Every reply is an Embed
 - Do not delete triggering messages
 - Help should not DM user
 - Spin up instance react listener for polls

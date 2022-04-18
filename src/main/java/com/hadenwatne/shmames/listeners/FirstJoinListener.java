@@ -31,14 +31,12 @@ public class FirstJoinListener extends ListenerAdapter {
 				"\n" +
 				"• Adjust settings and permissions with `"+name+" modify`\n" +
 				"• Play music using `"+name+" music`\n" +
-				"• Create polls with `"+name+" poll`\n" +
-				"_... and a whole lot more!_", false);
+				"• Create polls with `"+name+" poll`", false);
 
-		embedBuilder.addField("Customization Tips", "• **Triggers** let you change how you summon "+name+"\n" +
-				"• **Responses** are messages sent at random based on a Trigger Type.\n" +
-				"• **Families** let you use "+name+" across multiple Discord servers.\n" +
-				"• **Tallies** can keep track of things that are important to you.\n" +
-				"• **Forum Weapons** are shorthand pointers to your favorite GIFs and links.", false);
+		embedBuilder.addField("Customization Tips", "• `"+name+" trigger` lets you change how you summon "+name+"\n" +
+				"• `"+name+" response` sends random messages based on a Trigger Type.\n" +
+				"• `"+name+" family` lets you use "+name+" across multiple Discord servers.\n" +
+				"• `"+name+" forumweapon` creates shorthand pointers to your favorite GIFs and links.", false);
 
 		embedBuilder.addField("Just Have Fun!", "• `"+name+" hangman` to play a game of Hangman\n" +
 				"• `"+name+" cactpot` to get a new Gold Saucer scratch ticket\n" +

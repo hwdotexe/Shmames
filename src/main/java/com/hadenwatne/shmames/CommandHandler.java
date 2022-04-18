@@ -7,6 +7,7 @@ import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
@@ -31,7 +32,7 @@ public class CommandHandler {
 		commands.add(new Blame());
 		commands.add(new Cactpot());
 		commands.add(new Choose());
-//		commands.add(new CringeThat());
+		commands.add(new CringeThat());
 //		commands.add(new Dev());
 //		commands.add(new EightBall());
 //		commands.add(new Enhance());
@@ -39,7 +40,7 @@ public class CommandHandler {
 //		commands.add(new ForumWeapon());
 //		commands.add(new GIF());
 //		commands.add(new Hangman());
-//		commands.add(new Help());
+		commands.add(new Help());
 //		commands.add(new IdiotThat());
 //		commands.add(new ListCmd());
 //		commands.add(new ListEmoteStats());
@@ -104,7 +105,7 @@ public class CommandHandler {
 			// If this command requires a server, but none is accessible, throw an error.
 			if(command.requiresGuild() && executingCommand.getServer() == null) {
 				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.GUILD_REQUIRED.name())
-						.addField("", executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED), false);
+						.setDescription(executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED));
 
 				executingCommand.reply(embed);
 
@@ -115,7 +116,7 @@ public class CommandHandler {
 			App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
 		} else {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
-					.addField("", executingCommand.getLanguage().getError(Errors.WRONG_USAGE), false);
+					.setDescription(executingCommand.getLanguage().getError(Errors.WRONG_USAGE));
 
 			for(MessageEmbed.Field field : command.getHelpFields()) {
 				embed.addField(field);
@@ -178,6 +179,12 @@ public class CommandHandler {
 				ParseCommandArguments(commandStructure, executingCommand, commandMatcher);
 			}
 		}
+
+		if(executingCommand.getServer() != null) {
+			LoggingService.Log(LogType.COMMAND, "["+executingCommand.getAuthorUser().getId()+"@"+executingCommand.getServer().getId()+"] "+commandText);
+		} else {
+			LoggingService.Log(LogType.COMMAND, "["+executingCommand.getAuthorUser().getId()+"@"+"Private] "+commandText);
+		}
 	}
 
 	/**
@@ -229,7 +236,6 @@ public class CommandHandler {
 	 * @param executingCommand An object containing context for the command running.
 	 */
 	private void ExecuteCommand(Command command, ExecutingCommand executingCommand) {
-		// TODO log command (log it here before or after validation? Spam vs. Debugging?)
 		// TODO clean up typing indicator
 		// TODO splitting up a long reply (message service!)
 

@@ -121,9 +121,9 @@ public class ExecutingCommand {
 
     public Guild getServer() {
         if(hook != null) {
-            return hook.getInteraction().getGuild();
+            return hook.getInteraction().isFromGuild() ? hook.getInteraction().getGuild() : null;
         } else if(message != null) {
-            return message.getGuild();
+            return message.isFromGuild() ? message.getGuild() : null;
         } else {
             return null;
         }

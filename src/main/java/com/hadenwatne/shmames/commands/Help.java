@@ -9,22 +9,24 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import com.hadenwatne.shmames.enums.Errors;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class Help implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Help extends Command {
 	public Help() {
-		this.commandStructure = CommandBuilder.Create("help", "Shows help & additional information.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("help", "Shows help & additional information.")
 				.addAlias("how do i use")
 				.addAlias("how do you use")
 				.addParameters(
@@ -35,68 +37,62 @@ public class Help implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		ExecutingCommandArguments args = executingCommand.getCommandArguments();
+		String commandHelp = args.getAsString("command");
+		EmbedBuilder embedBuilder = null;
 
-	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		ExecutingCommandArguments args = data.getArguments();
-		ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
+		if(commandHelp != null) {
+			embedBuilder = getCommandHelp(commandHelp);
 
-		if(args.count() > 0) {
-			String commandHelp = args.getAsString("command");
-
-			// Wants help on specific command.
-			for(ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
-				if(c.getCommandStructure().getName().equalsIgnoreCase(commandHelp)) {
-					// TODO send using method from parent.
-
-					messagingChannel.sendMessage(eBuilder);
-
-					return "";
-				}
+			if(embedBuilder == null) {
+				return response(EmbedType.ERROR)
+						.addField(Errors.COMMAND_NOT_FOUND.name(), executingCommand.getLanguage().getError(Errors.COMMAND_NOT_FOUND), false);
 			}
-
-			return lang.getError(Errors.COMMAND_NOT_FOUND, true);
 		} else {
-			// Wants a list of all commands.
 			List<String> cmds = new ArrayList<>();
 
-			for(ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
-				if(c.getCommandStructure().getDescription().length() > 0) {
-					cmds.add(c.getCommandStructure().getName());
+			for(Command command : App.Shmames.getCommandHandler().getLoadedCommands()) {
+				if(command.getCommandStructure().getDescription().length() > 0) {
+					cmds.add(command.getCommandStructure().getName());
 				}
 			}
 
 			String list = PaginationService.GenerateList(cmds, -1, false, false);
 
-			EmbedBuilder eBuilder = new EmbedBuilder();
+			embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Help");
 
-			eBuilder.setColor(Color.MAGENTA);
-			eBuilder.setTitle("Command Help for "+App.Shmames.getBotName());
-			eBuilder.addField("All Commands", list, false);
-			eBuilder.addField("Information", "View additional information for each command by using `"+App.Shmames.getBotName()+" help <command>`!", false);
-			eBuilder.setFooter(App.Shmames.getBotName() + " " + App.Version + (App.IsDebug ? " **Debug Mode**" : ""));
+			embedBuilder.addField("All Commands", list, false);
+			embedBuilder.addField("Information", "View additional information for each command by using `"+App.Shmames.getBotName()+" help <command>`!", false);
 
-			if(messagingChannel.hasHook()) {
-				messagingChannel.sendMessage(eBuilder);
-			} else {
-				if (messagingChannel.getChannel().getType() == ChannelType.TEXT) {
-					data.getAuthor().openPrivateChannel().queue((c) -> c.sendMessageEmbeds(eBuilder.build()).queue(), (error) -> messagingChannel.sendMessage(eBuilder));
+			embedBuilder.setFooter(App.Shmames.getBotName() + " " + App.Version + (App.IsDebug ? " **Debug Mode**" : ""));
 
-					return lang.getMsg(Langs.SENT_PRIVATE_MESSAGE);
-				} else if (messagingChannel.getChannel().getType() == ChannelType.PRIVATE) {
-					messagingChannel.sendMessage(eBuilder);
-				}
-			}
-
-			return "";
 		}
+
+		embedBuilder.setThumbnail(App.Shmames.getBotAvatarUrl());
+
+		embedBuilder.addField("Syntax", "`<angle brackets>` are **required**\n" +
+				"`[square brackets]` are **optional**\n" +
+				"`[items|in|a|list]` are **possible values**", false);
+
+		return embedBuilder;
 	}
 
-	@Override
-	public boolean requiresGuild() {
-		return false;
+	private EmbedBuilder getCommandHelp(String commandHelp) {
+		for(Command command : App.Shmames.getCommandHandler().getLoadedCommands()) {
+			String commandName = command.getCommandStructure().getName();
+
+			if(commandName.equalsIgnoreCase(commandHelp)) {
+				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Help", commandName);
+
+				for(MessageEmbed.Field field : command.getHelpFields()) {
+					embedBuilder.addField(field);
+				}
+
+				return embedBuilder;
+			}
+		}
+
+		return null;
 	}
 }

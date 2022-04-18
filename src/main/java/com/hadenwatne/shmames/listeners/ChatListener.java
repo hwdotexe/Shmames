@@ -84,8 +84,8 @@ public class ChatListener extends ListenerAdapter {
 
 			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		} else {
-			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error")
-					.addField(Errors.COMMAND_NOT_FOUND.name(), lang.getError(Errors.COMMAND_NOT_FOUND), false);
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
+					.setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
 
 			MessageService.ReplyToMessage(message, embed);
 		}
