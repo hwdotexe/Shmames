@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.InputStream;
 
 public class ExecutingCommand {
     private final Lang language;
@@ -140,12 +142,26 @@ public class ExecutingCommand {
     }
 
     public void reply(EmbedBuilder embedBuilder) {
-        if(hook != null) {
-            MessageService.ReplyToMessage(hook, embedBuilder);
-        } else if(message != null) {
-            MessageService.ReplyToMessage(message, embedBuilder);
-        } else {
-            LoggingService.Log(LogType.ERROR, "Could not send response for command "+this.commandName);
+        if(embedBuilder != null) {
+            if (hook != null) {
+                MessageService.ReplyToMessage(hook, embedBuilder);
+            } else if (message != null) {
+                MessageService.ReplyToMessage(message, embedBuilder);
+            } else {
+                LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
+            }
+        }
+    }
+
+    public void replyFile(InputStream file, String name, EmbedBuilder embedBuilder) {
+        if(embedBuilder != null && file != null) {
+            if (hook != null) {
+                MessageService.ReplyToMessage(hook, file, name, embedBuilder);
+            } else if (message != null) {
+                MessageService.ReplyToMessage(message, file, name, embedBuilder);
+            } else {
+                LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
+            }
         }
     }
 }

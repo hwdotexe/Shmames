@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 public class MessageService {
@@ -21,6 +23,32 @@ public class MessageService {
     public static void SendMessage(MessageChannel channel, EmbedBuilder message) {
         channel.sendMessageEmbeds(message.build()).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
+        });
+    }
+
+    /**
+     * Replies to a message and embeds a file - typically an image - into the response.
+     * @param message The message to reply to.
+     * @param file The file to send.
+     * @param name The name of the file to send.
+     * @param response The embed to include with this file.
+     */
+    public static void ReplyToMessage(Message message, InputStream file, String name, EmbedBuilder response) {
+        message.reply(file, name).setEmbeds(response.build()).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in server "+ message.getGuild().getId());
+        });
+    }
+
+    /**
+     * Replies to a message and embeds a file - typically an image - into the response.
+     * @param hook The message to reply to.
+     * @param file The file to send.
+     * @param name The name of the file to send.
+     * @param response The embed to include with this file.
+     */
+    public static void ReplyToMessage(InteractionHook hook, InputStream file, String name, EmbedBuilder response) {
+        hook.sendFile(file, name).addEmbeds(response.build()).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in server "+ hook.getInteraction().getGuild().getId());
         });
     }
 

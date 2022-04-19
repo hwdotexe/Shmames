@@ -7,5 +7,4 @@
 
 
 - Do not delete triggering messages
-- Help should not DM user
 - Spin up instance react listener for polls

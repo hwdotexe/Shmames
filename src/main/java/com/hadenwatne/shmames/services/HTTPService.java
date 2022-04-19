@@ -106,9 +106,20 @@ public class HTTPService {
         JSONObject json = new JSONObject(result);
         JSONArray jsonArray = json.getJSONArray("results");
         List<String> gifURLs = new ArrayList<>();
+        List<JSONArray> gifMedia = new ArrayList<>();
 
+        // Add the media array of each result.
         for (int i = 0; i < jsonArray.length(); i++) {
-            gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
+            gifMedia.add(jsonArray.getJSONObject(i).getJSONArray("media"));
+        }
+
+        // For each media array, add the gif value.
+        for (int i=0; i < gifMedia.size(); i++) {
+            JSONArray media = gifMedia.get(i);
+
+            for (int o=0; o < media.length(); o++) {
+                gifURLs.add(media.getJSONObject(o).getJSONObject("gif").getString("url"));
+            }
         }
 
         if (gifURLs.size() > 0) {

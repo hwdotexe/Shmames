@@ -24,7 +24,7 @@ public class LoggingService {
     }
 
     public static void Log(LogType type, String log) {
-        log = "["+getDateTime()+"]["+type.name()+"] "+log;
+        log = "["+getDateTime()+"] ["+type.name()+"] "+log;
 
         System.out.println(log);
         tempLog.add(log);
@@ -35,7 +35,7 @@ public class LoggingService {
 
         sb.append("[");
         sb.append(getDateTime());
-        sb.append("]");
+        sb.append("] ");
         sb.append("[");
         sb.append(LogType.ERROR.name());
         sb.append("] ");

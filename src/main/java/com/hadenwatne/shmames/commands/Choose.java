@@ -55,7 +55,6 @@ public class Choose extends Command {
 		String choice = executingCommand.getLanguage().getMsg(Langs.CHOOSE, new String[]{response});
 
 		return response(EmbedType.INFO)
-				.addField(null, thisOrThat, false)
-				.addField(null, choice, false);
+				.addField(thisOrThat, choice, false);
 	}
 }
