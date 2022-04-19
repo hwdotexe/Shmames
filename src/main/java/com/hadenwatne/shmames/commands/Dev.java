@@ -220,7 +220,7 @@ public class Dev extends Command {
 			b.getFeedback().clear();
 		}
 
-		return response;
+		return null;
 	}
 
 	private void saveBrains() {

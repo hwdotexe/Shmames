@@ -1,14 +1,16 @@
 package com.hadenwatne.shmames.commands;
 
 import java.awt.Color;
+import java.io.InputStream;
+import java.net.URL;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,11 +20,14 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.BotSettingName;
 
-public class PinThat implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class PinThat extends Command {
 	public PinThat() {
-		this.commandStructure = CommandBuilder.Create("pinthat", "Sends a copy of the specified message over to the Pin Channel, if configured.")
+		super(true);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("pinthat", "Sends a copy of the specified message over to the Pin Channel, if configured.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})")
@@ -32,54 +37,51 @@ public class PinThat implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		int messages = data.getArguments().getAsString("position").length();
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		int messages = executingCommand.getCommandArguments().getAsString("position").length();
 
 		try {
-			Message toPin = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toPin = MessageService.GetMessageIndicated(executingCommand, messages);
+			TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getValue());
 
-			boolean channelFound = false;
-			for (TextChannel ch : data.getServer().getTextChannels()) {
-				if (ch.getId().equalsIgnoreCase(brain.getSettingFor(BotSettingName.PIN_CHANNEL).getValue())) {
-					channelFound = true;
+			if(channelToSendPin != null) {
+				EmbedBuilder response = response(EmbedType.INFO);
+				InputStream file = new URL(toPin.getAuthor().getEffectiveAvatarUrl()).openStream();
 
-					EmbedBuilder eBuilder = new EmbedBuilder();
+				response.setAuthor(toPin.getAuthor().getName(), null, "attachment://profile.png");
+				response.setThumbnail("attachment://profile.png");
+				response.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @" + executingCommand.getAuthorUser().getName(), null);
 
-					eBuilder.setAuthor(toPin.getAuthor().getName(), null, toPin.getAuthor().getEffectiveAvatarUrl());
-					eBuilder.setColor(Color.CYAN);
+				StringBuilder msg = new StringBuilder();
 
-					StringBuilder msg = new StringBuilder(toPin.getContentRaw());
-					for (Attachment a : toPin.getAttachments()) {
-						msg.append("\n");
-						msg.append(a.getUrl());
-					}
-					eBuilder.appendDescription(msg.toString());
-					eBuilder.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @" + data.getAuthor().getName(), null);
+				msg.append("\"");
+				msg.append(toPin.getContentRaw());
+				msg.append("\"");
 
-					MessageEmbed embed = eBuilder.build();
-					ch.sendMessageEmbeds(embed).queue();
-
-					break;
+				for (Attachment a : toPin.getAttachments()) {
+					msg.append("\n");
+					msg.append(a.getUrl());
 				}
+				response.setDescription(msg.toString());
+
+				MessageService.SendMessage(channelToSendPin, file, "profile.png", response);
+
+				return response(EmbedType.SUCCESS)
+						.setDescription("Pinned!");
+			}else{
+				return response(EmbedType.ERROR, Errors.CHANNEL_NOT_FOUND.name())
+						.setDescription(executingCommand.getLanguage().getError(Errors.CHANNEL_NOT_FOUND));
 			}
+		} catch (NumberFormatException e) {
+			LoggingService.LogException(e);
 
-			if (!channelFound)
-				return lang.getError(Errors.CHANNEL_NOT_FOUND, true);
+			return response(EmbedType.ERROR, Errors.CHANNEL_NOT_FOUND.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.CHANNEL_NOT_FOUND));
+		} catch (Exception e) {
+			LoggingService.LogException(e);
 
-			return "";
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return lang.getError(Errors.NO_PERMISSION_BOT, true);
+			return response(EmbedType.ERROR, Errors.NO_PERMISSION_BOT.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.NO_PERMISSION_BOT));
 		}
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return true;
 	}
 }

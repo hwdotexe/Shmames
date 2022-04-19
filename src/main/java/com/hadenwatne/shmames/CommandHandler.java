@@ -44,10 +44,10 @@ public class CommandHandler {
 		commands.add(new IdiotThat());
 //		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
-//		commands.add(new Minesweeper());
+		commands.add(new Minesweeper());
 //		commands.add(new Modify());
 //		commands.add(new Music());
-//		commands.add(new PinThat());
+		commands.add(new PinThat());
 //		commands.add(new Poll());
 //		commands.add(new React());
 //		commands.add(new Report());

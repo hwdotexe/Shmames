@@ -27,6 +27,19 @@ public class MessageService {
     }
 
     /**
+     * Sends a message in a channel without replying - ideal for messages that were not prompted by a user or command.
+     * @param channel The channel to send a message in.
+     * @param file The file to send.
+     * @param name The name of the file to send.
+     * @param message The message to send.
+     */
+    public static void SendMessage(MessageChannel channel, InputStream file, String name, EmbedBuilder message) {
+        channel.sendFile(file, name).setEmbeds(message.build()).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
+        });
+    }
+
+    /**
      * Replies to a message and embeds a file - typically an image - into the response.
      * @param message The message to reply to.
      * @param file The file to send.
