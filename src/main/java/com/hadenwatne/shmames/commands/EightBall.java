@@ -4,16 +4,19 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class EightBall implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class EightBall extends Command {
 	public EightBall() {
-		this.commandStructure = CommandBuilder.Create("8ball", "Shake a Magic 8 Ball and let me see your future.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("8ball", "Shake a Magic 8 Ball and let me see your future.")
 				.addParameters(
 						new CommandParameter("question", "The question to ask the magic 8 ball.", ParameterType.STRING)
 								.setExample("Will I ever find true love?")
@@ -22,25 +25,11 @@ public class EightBall implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String question = executingCommand.getCommandArguments().getAsString("question");
+		String answer = executingCommand.getLanguage().getMsg(Langs.EIGHT_BALL_OPTIONS);
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String answer = lang.getMsg(Langs.EIGHT_BALL_OPTIONS);
-
-		if (data.getMessagingChannel().hasHook()) {
-			String question = data.getArguments().getAsString("question");
-
-			return "> _" + question + "_\n" + answer;
-		}
-
-		return answer;
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.addField(question, answer, false);
 	}
 }

@@ -7,16 +7,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.DataService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import com.hadenwatne.shmames.Shmames;
@@ -26,11 +28,14 @@ import com.hadenwatne.shmames.Shmames;
  * The goal is to provide easy-access commands in the event of bot maintenance, or to gauge which bot features
  * are used most.
  */
-public class Dev implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Dev extends Command {
 	public Dev() {
-		this.commandStructure = CommandBuilder.Create("dev", "")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("dev", "")
 				.addAlias("developer")
 				.addParameters(
 						new CommandParameter("subCommand", "The subcommand to run", ParameterType.SELECTION)
@@ -49,53 +54,51 @@ public class Dev implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		if (data.getMessagingChannel().getChannel() instanceof PrivateChannel) {
-			if (data.getAuthor().getId().equals("294671756155682828")) {
-				String subCommand = data.getArguments().getAsString("subCommand");
-				String commandData = data.getArguments().getAsString("data");
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		if (executingCommand.getChannel() instanceof PrivateChannel) {
+			if (executingCommand.getAuthorUser().getId().equals(App.Shmames.getStorageService().getMotherBrain().getBotAdminID())) {
+				String subCommand = executingCommand.getCommandArguments().getAsString("subCommand");
+				String commandData = executingCommand.getCommandArguments().getAsString("data");
 
 				switch (subCommand.toLowerCase()) {
 					case "addstatus":
-						return addStatus(commandData) ? "Status change successful!" : "Invalid syntax or bot error.";
+						return addStatus(commandData);
 					case "getguilds":
 						return getGuilds();
 					case "getcommandstats":
 						return getCommandStats();
 					case "clearcommandstats":
 						clearCommandStats();
-						return "Command statistics cleared!";
+
+						return response(EmbedType.SUCCESS)
+								.setDescription("Command statistics cleared!");
 					case "leave":
-						return leave(commandData) ? "Successfully left the server!" : "Could not leave that server.";
+						leave(commandData);
+
+						return response(EmbedType.SUCCESS)
+								.setDescription(App.Shmames.getBotName()+" is queued to leave the server!");
 					case "getreports":
-						getReports(data.getMessagingChannel().getChannel());
-						return "";
+						return getReports(executingCommand);
 					case "savebrains":
 						saveBrains();
-						return "All brains were saved!";
+
+						return response(EmbedType.SUCCESS)
+								.setDescription("All brains were saved!");
 					default:
-						return "That command wasn't recognized!";
+						return response(EmbedType.ERROR)
+								.setDescription("That command wasn't recognized!");
 				}
 			} else {
-				return "You cannot use the Developer command! This is used for bot maintenance tasks, and is restricted" +
-						"to the bot developer.";
+				return response(EmbedType.ERROR)
+						.setDescription("You cannot use the Developer command! This is used for bot maintenance tasks, and is restricted " +
+								"to the bot developer.");
 			}
 		}
 
 		return null;
 	}
 
-	@Override
-	public boolean requiresGuild() {
-		return false;
-	}
-
-	private boolean addStatus(String args) {
+	private EmbedBuilder addStatus(String args) {
 		Matcher m = Pattern.compile("^([a-z]+)\\s(.+)$", Pattern.CASE_INSENSITIVE).matcher(args);
 
 		if (m.find()) {
@@ -108,16 +111,18 @@ public class Dev implements ICommand {
 				App.Shmames.getJDA().getPresence().setActivity(Activity.of(type, msg));
 				App.Shmames.getStorageService().getBrainController().saveMotherBrain();
 
-				return true;
+				return response(EmbedType.INFO)
+						.setDescription("New status added!");
 			} catch (Exception e) {
-				return false;
+				LoggingService.LogException(e);
 			}
-		} else {
-			return false;
 		}
+
+		return response(EmbedType.ERROR)
+				.setDescription("There was a problem adding your new status.");
 	}
 
-	private String getGuilds() {
+	private EmbedBuilder getGuilds() {
 		StringBuilder sb = new StringBuilder();
 
 		for (Guild g : App.Shmames.getJDA().getGuilds()) {
@@ -133,40 +138,43 @@ public class Dev implements ICommand {
 
 		sb.insert(0, "**Guilds the bot runs on**\n");
 
-		return sb.toString();
+		return response(EmbedType.INFO)
+				.addField("Guilds the bot runs on", sb.toString(), false);
 	}
 
-	private String getCommandStats() {
-		StringBuilder answer = new StringBuilder("**Command Usage Statistics**");
+	private EmbedBuilder getCommandStats() {
+		StringBuilder answer = new StringBuilder();
 
 		// Sort
 		LinkedHashMap<String, Integer> cmdStats = DataService.SortHashMap(App.Shmames.getStorageService().getMotherBrain().getCommandStats());
 
 		for (String c : cmdStats.keySet()) {
-			answer.append("\n");
+			if(answer.length() > 0) {
+				answer.append("\n");
+			}
+
 			answer.append("`").append(c).append("`: ").append(cmdStats.get(c));
 		}
 
-		return answer.toString();
+		return response(EmbedType.INFO)
+				.setDescription(answer.toString());
 	}
 
 	private void clearCommandStats() {
 		App.Shmames.getStorageService().getMotherBrain().getCommandStats().clear();
 	}
 
-	private boolean leave(String gid) {
+	private void leave(String gid) {
 		for (Guild g : App.Shmames.getJDA().getGuilds()) {
 			if (g.getId().equals(gid)) {
 				g.leave().queue();
 
-				return true;
+				break;
 			}
 		}
-
-		return false;
 	}
 
-	private void getReports(MessageChannel c) {
+	private EmbedBuilder getReports(ExecutingCommand executingCommand) {
 		StringBuilder reports = new StringBuilder("== User Reports ==");
 
 		// Build list of reports.
@@ -201,10 +209,9 @@ public class Dev implements ICommand {
 		}
 
 		// Send to me.
-		c.sendFile(f).complete();
-
-		// Delete report on disk.
-		f.delete();
+		EmbedBuilder response = response(EmbedType.INFO)
+				.setTitle("Download Reports", "attachment://"+f.getName());
+		executingCommand.replyFile(f, response);
 
 		// Clear out guild feedback.
 		for (Guild g : App.Shmames.getJDA().getGuilds()) {
@@ -212,6 +219,8 @@ public class Dev implements ICommand {
 
 			b.getFeedback().clear();
 		}
+
+		return response;
 	}
 
 	private void saveBrains() {

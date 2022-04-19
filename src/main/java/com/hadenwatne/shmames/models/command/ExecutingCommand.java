@@ -164,4 +164,16 @@ public class ExecutingCommand {
             }
         }
     }
+
+    public void replyFile(File file, EmbedBuilder embedBuilder) {
+        if(embedBuilder != null && file != null) {
+            if (hook != null) {
+                MessageService.ReplyToMessage(hook, file, embedBuilder);
+            } else if (message != null) {
+                MessageService.ReplyToMessage(message, file, embedBuilder);
+            } else {
+                LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
+            }
+        }
+    }
 }

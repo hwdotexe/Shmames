@@ -8,3 +8,4 @@
 
 - Do not delete triggering messages
 - Spin up instance react listener for polls
+- Messages larger than the character maximum for fields/description (see Storytime)

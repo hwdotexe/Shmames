@@ -15,6 +15,7 @@ public class MotherBrain {
 	private String botAPIKeySecondary;
 	private String tenorAPIKey;
 	private String wolframAPIKey;
+	private String botAdminID;
 	private boolean updateDiscordSlashCommands;
 	
 	public MotherBrain() {
@@ -25,6 +26,7 @@ public class MotherBrain {
 		this.botAPIKeySecondary = "API_KEY_HERE";
 		this.tenorAPIKey = "API_KEY_HERE";
 		this.wolframAPIKey = "API_KEY_HERE";
+		this.botAdminID = "Bot_Admin_Discord_User_ID";
 		this.updateDiscordSlashCommands = false;
 	}
 	
@@ -54,6 +56,14 @@ public class MotherBrain {
 		}
 
 		return null;
+	}
+
+	public String getBotAdminID() {
+		if(this.botAdminID == null) {
+			this.botAdminID = "Bot_Admin_Discord_User_ID";
+		}
+
+		return this.botAdminID;
 	}
 
 	public String getBotAPIKey(){

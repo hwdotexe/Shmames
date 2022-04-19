@@ -30,6 +30,30 @@ public class MessageService {
      * Replies to a message and embeds a file - typically an image - into the response.
      * @param message The message to reply to.
      * @param file The file to send.
+     * @param response The embed to include with this file.
+     */
+    public static void ReplyToMessage(Message message, File file, EmbedBuilder response) {
+        message.reply(file).setEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in server "+ message.getGuild().getId());
+        });
+    }
+
+    /**
+     * Replies to a message and embeds a file - typically an image - into the response.
+     * @param hook The message to reply to.
+     * @param file The file to send.
+     * @param response The embed to include with this file.
+     */
+    public static void ReplyToMessage(InteractionHook hook, File file, EmbedBuilder response) {
+        hook.sendFile(file).addEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in server "+ hook.getInteraction().getGuild().getId());
+        });
+    }
+
+    /**
+     * Replies to a message and embeds a file - typically an image - into the response.
+     * @param message The message to reply to.
+     * @param file The file to send.
      * @param name The name of the file to send.
      * @param response The embed to include with this file.
      */
