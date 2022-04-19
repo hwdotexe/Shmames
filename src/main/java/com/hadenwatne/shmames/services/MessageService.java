@@ -36,6 +36,7 @@ public class MessageService {
     public static void SendMessage(MessageChannel channel, InputStream file, String name, EmbedBuilder message) {
         channel.sendFile(file, name).setEmbeds(message.build()).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -47,7 +48,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(Message message, File file, EmbedBuilder response) {
         message.reply(file).setEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in server "+ message.getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -59,7 +61,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(InteractionHook hook, File file, EmbedBuilder response) {
         hook.sendFile(file).addEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in server "+ hook.getInteraction().getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -72,7 +75,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(Message message, InputStream file, String name, EmbedBuilder response) {
         message.reply(file, name).setEmbeds(response.build()).queue(success -> {}, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in server "+ message.getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -85,7 +89,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(InteractionHook hook, InputStream file, String name, EmbedBuilder response) {
         hook.sendFile(file, name).addEmbeds(response.build()).queue(success -> {}, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in server "+ hook.getInteraction().getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -96,7 +101,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(Message message, EmbedBuilder response) {
         message.replyEmbeds(response.build()).queue(success -> {}, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in server "+ message.getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 
@@ -107,7 +113,8 @@ public class MessageService {
      */
     public static void ReplyToMessage(InteractionHook hook, EmbedBuilder response) {
         hook.sendMessageEmbeds(response.build()).queue(success -> {}, error -> {
-            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in server "+ hook.getInteraction().getGuild().getId());
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
         });
     }
 

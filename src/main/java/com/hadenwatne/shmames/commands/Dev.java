@@ -209,8 +209,8 @@ public class Dev extends Command {
 		}
 
 		// Send to me.
-		EmbedBuilder response = response(EmbedType.INFO)
-				.setTitle("Download Reports", "attachment://"+f.getName());
+		EmbedBuilder response = response(EmbedType.SUCCESS)
+				.setDescription("Reports were gathered and cleared from servers!");
 		executingCommand.replyFile(f, response);
 
 		// Clear out guild feedback.
