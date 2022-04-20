@@ -16,6 +16,17 @@ import java.util.List;
 
 public class MessageService {
     /**
+     * Sends a message in a channel without replying and without any embed information.
+     * @param channel The channel to send a message in.
+     * @param message The message to send.
+     */
+    public static void SendSimpleMessage(MessageChannel channel, String message) {
+        channel.sendMessage(message).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
+        });
+    }
+
+    /**
      * Sends a message in a channel without replying - ideal for messages that were not prompted by a user or command.
      * @param channel The channel to send a message in.
      * @param message The message to send.

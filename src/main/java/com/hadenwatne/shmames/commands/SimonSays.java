@@ -8,19 +8,25 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
-public class SimonSays implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class SimonSays extends Command {
 	public SimonSays() {
-		this.commandStructure = CommandBuilder.Create("simonsays", "I'll repeat after you! Send messages, links, or server emotes!")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("simonsays", "I'll repeat after you! Send messages, links, or server emotes!")
 				.addAlias("echo")
 				.addAlias("repeat")
 				.addParameters(
@@ -31,28 +37,29 @@ public class SimonSays implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String message = executingCommand.getCommandArguments().getAsString("message");
+		boolean sendSimple = false;
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String message = data.getArguments().getAsString("message");
+		// if is message, delete message and send simple message back.
+		// if is hook, build an embed.
 
-		// Delete the message that ran this command, if possible.
-		try {
-			if(data.getMessagingChannel().hasOriginMessage()){
-				data.getMessagingChannel().getOriginMessage().delete().queue();
-			}
-		} catch (PermissionException ignored) {}
+		if(executingCommand.hasMessage()) {
+			// Delete the message that ran this command, if possible.
+			try {
+				executingCommand.getMessage().delete().queue();
+			} catch (PermissionException ignored) {}
 
-		// If the command is being run on a server, check for emotes.
-		if(brain != null && data.getServer() != null) {
+			sendSimple = true;
+		}
+
+		if(executingCommand.getServer() != null) {
 			Matcher m = Pattern.compile("(?!<):([\\w\\d_]+):(?!\\d+>)", Pattern.CASE_INSENSITIVE).matcher(message);
+			Brain brain = executingCommand.getBrain();
 
 			while (m.find()) {
 				String eName = m.group(1);
-				Emote emote = ShmamesService.GetFamilyEmote(eName, brain, data.getServer());
+				Emote emote = ShmamesService.GetFamilyEmote(eName, brain, executingCommand.getServer());
 
 				if(emote != null) {
 					// Replace the emote name with the emote mention.
@@ -67,11 +74,13 @@ public class SimonSays implements ICommand {
 			}
 		}
 
-		return message;
-	}
+		if(sendSimple) {
+			MessageService.SendSimpleMessage(executingCommand.getChannel(), message);
 
-	@Override
-	public boolean requiresGuild() {
-		return false;
+			return null;
+		} else {
+			return response(EmbedType.INFO)
+					.setDescription(message);
+		}
 	}
 }

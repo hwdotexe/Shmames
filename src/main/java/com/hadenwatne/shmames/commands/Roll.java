@@ -11,33 +11,37 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.RandomService;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class Roll implements ICommand {
-	private final CommandStructure commandStructure;
+public class Roll extends Command {
 	private final Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
 
 	public Roll() {
-		this.commandStructure = CommandBuilder.Create("roll", "Roll some dice with optional modifiers.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("roll", "Roll some dice with optional modifiers.")
 				.addParameters(
 						new CommandParameter("dice", "The dice to roll.", ParameterType.STRING)
 								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
-								.setExample("2d20^kh+1d4")
+								.setExample("2d20^kh+1d4"),
+						new CommandParameter("memo", "A short description of the roll.", ParameterType.STRING, false)
+								.setExample("I roll for initiative!")
 				)
 				.build();
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String diceArg = data.getArguments().getAsString("dice");
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String diceArg = executingCommand.getCommandArguments().getAsString("dice");
+		String memo = executingCommand.getCommandArguments().getAsString("memo");
 		Matcher dice = dicePattern.matcher(diceArg);
 		List<String> diceOps = new ArrayList<String>();
 
@@ -45,21 +49,10 @@ public class Roll implements ICommand {
 			diceOps.add(dice.group().replaceAll("\\s", ""));
 		}
 
-		try {
-			if (data.getMessagingChannel().hasOriginMessage()) {
-				data.getMessagingChannel().getOriginMessage().delete().queue();
-			}
-		} catch (Exception ignored) {
-		}
-
 		String rollResult = processRoll(dicePattern, diceOps);
 
-		return ":game_die: " + data.getAuthor().getAsMention() + "\n> " + rollResult;
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.addField(":game_die: " + (memo != null ? memo : executingCommand.getAuthorUser().getName() + "'s roll"), rollResult, false);
 	}
 
 	private String processRoll(Pattern p, List<String> diceRolls) {
