@@ -42,7 +42,7 @@ public class CommandHandler {
 //		commands.add(new Hangman());
 		commands.add(new Help());
 		commands.add(new IdiotThat());
-//		commands.add(new ListCmd());
+		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
 		commands.add(new Minesweeper());
 //		commands.add(new Modify());
@@ -52,11 +52,11 @@ public class CommandHandler {
 		commands.add(new React());
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
-//		commands.add(new Response());
+		commands.add(new Response());
 		commands.add(new Roll());
 		commands.add(new SimonSays());
 		commands.add(new Storytime());
-//		commands.add(new Tally());
+		commands.add(new Tally());
 		commands.add(new Thoughts());
 		commands.add(new Timer());
 		commands.add(new Trigger());
@@ -263,7 +263,7 @@ public class CommandHandler {
 				Matcher aliasBorderMatcher = Pattern.compile("^"+alias+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
 
 				if(aliasBorderMatcher.find()) {
-					match = alias;
+					match = commandName;
 					break;
 				}
 			}

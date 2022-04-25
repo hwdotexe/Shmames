@@ -4,33 +4,36 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.PaginatedList;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.PaginationService;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Response implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Response extends Command {
 	public Response() {
+		super(true);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
 		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger to provoke this response", ParameterType.SELECTION);
 
 		for(TriggerType type : TriggerType.values()) {
 			triggerType.addSelectionOptions(type.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("response", "Manage bot responses.")
+		return CommandBuilder.Create("response", "Manage bot responses.")
 			.addSubCommands(
 				CommandBuilder.Create("add", "Add a new response to the random pool.")
 						.addAlias("a")
@@ -64,47 +67,34 @@ public class Response implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run(ExecutingCommand executingCommand) {
+		String subCommand = executingCommand.getSubCommand();
+		Lang lang = executingCommand.getLanguage();
+		Brain brain = executingCommand.getBrain();
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		ShmamesSubCommandData subCommand = data.getSubCommandData();
-		String nameOrGroup = subCommand.getNameOrGroup();
-
-		switch (nameOrGroup) {
+		switch (subCommand) {
 			case "add":
-				cmdAdd(lang, brain, data.getMessagingChannel(), subCommand.getArguments());
-				break;
+				return cmdAdd(lang, brain, executingCommand.getCommandArguments());
 			case "drop":
-				cmdDrop(lang, brain, data.getMessagingChannel(), subCommand.getArguments());
-				break;
+				return cmdDrop(lang, brain, executingCommand.getCommandArguments());
 			case "list":
-				cmdList(lang, brain, data.getMessagingChannel(), subCommand.getArguments());
-				break;
-			default:
-				return lang.wrongUsage(commandStructure.getUsage());
+				return cmdList(lang, brain, executingCommand.getCommandArguments());
 		}
 
-		return "";
+		return null;
 	}
 
-	@Override
-	public boolean requiresGuild() {
-		return true;
-	}
-
-	private void cmdAdd(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdAdd(Lang lang, Brain brain, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		String responseText = args.getAsString("responseText");
 
 		brain.getTriggerResponses().add(new com.hadenwatne.shmames.models.Response(TriggerType.byName(responseType), responseText));
 
-		messagingChannel.sendMessage(lang.getMsg(Langs.ITEM_ADDED));
+		return response(EmbedType.SUCCESS)
+				.setDescription(lang.getMsg(Langs.ITEM_ADDED));
 	}
 
-	private void cmdDrop(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdDrop(Lang lang, Brain brain, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		int responseIndex = args.getAsInteger("responseIndex");
 
@@ -114,21 +104,23 @@ public class Response implements ICommand {
 			com.hadenwatne.shmames.models.Response r = responses.get(responseIndex-1);
 			brain.removeTriggerResponse(r);
 
-			messagingChannel.sendMessage(lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() }));
+			return response(EmbedType.SUCCESS)
+					.setDescription(lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() }));
 		}else {
-			messagingChannel.sendMessage(lang.getError(Errors.NOT_FOUND, true));
+			return response(EmbedType.ERROR)
+					.setDescription(lang.getError(Errors.NOT_FOUND));
 		}
 	}
 
-	private void cmdList(Lang lang, Brain brain, ShmamesCommandMessagingChannel messagingChannel, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommandArguments args) {
 		String responseType = args.getAsString("triggerType");
 		int page = args.getAsInteger("page");
 
 		List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(responseType));
 
 		if(responses.size() == 0) {
-			messagingChannel.sendMessage(lang.getError(Errors.ITEMS_NOT_FOUND, true));
-			return;
+			return response(EmbedType.ERROR)
+					.setDescription(lang.getError(Errors.ITEMS_NOT_FOUND));
 		}
 
 		List<String> responseTexts = new ArrayList<>();
@@ -139,6 +131,8 @@ public class Response implements ICommand {
 
 		PaginatedList paginatedList = PaginationService.GetPaginatedList(responseTexts, 10, 100, true);
 
-		messagingChannel.sendMessage(PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), responseType.toUpperCase() + " Responses", Color.ORANGE, lang));
+		EmbedBuilder embed = PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), responseType.toUpperCase() + " Responses", Color.ORANGE, lang);
+
+		return embed;
 	}
 }

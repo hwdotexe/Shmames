@@ -16,6 +16,9 @@
 
 - Do reactions trigger the correct tally command?
 
+- When pre-processing, just check if the command being run exists. Validate should care about the entire pattern.
+  - Ex. "tally search x" fails with a command not found, because x is < 3 chars, so the pattern fails.
+
 - Command stats public?
 
 - Delete generic success messages after a period of time

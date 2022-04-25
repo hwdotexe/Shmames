@@ -133,12 +133,12 @@ public class MessageService {
      * A shorthand method for sending a basic reply with minimal styling.
      * @param message The message to reply to.
      * @param type The type of response to create.
-     * @param header The navigation header for this response.
+     * @param navHeader The navigation header for this response.
      * @param body The body of the response.
      */
-    public static void ReplyToMessage(Message message, EmbedType type, String header, String body) {
-        EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(type, header);
-        embedBuilder.addField(null, body, false);
+    public static void ReplyToMessage(Message message, EmbedType type, String navHeader, String body) {
+        EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(type, navHeader);
+        embedBuilder.setDescription(body);
 
         ReplyToMessage(message, embedBuilder);
     }
