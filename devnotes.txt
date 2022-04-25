@@ -16,6 +16,8 @@
 
 - Do reactions trigger the correct tally command?
 
+- Command stats public?
+
 - Delete generic success messages after a period of time
   - React
   - Simon Says

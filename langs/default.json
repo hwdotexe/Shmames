@@ -226,6 +226,9 @@
     "SETTING_UPDATED_SUCCESS": [
       "Setting was updated successfully!"
     ],
+    "STORY_INTRO": [
+      "Let's read a story!"
+    ],
     "TALLY_CURRENT_VALUE": [
       "Current tally for `%WC%`: `%WC%`"
     ],
@@ -255,6 +258,9 @@
     ],
     "TRIGGER_LIST": [
       "I'll respond to these things:"
+    ],
+    "WHAT_ARE_THE_ODDS": [
+      "About %WC%"
     ],
     "WHATSHOULDIDO_INTRO_OPTIONS": [
       "I think you should",

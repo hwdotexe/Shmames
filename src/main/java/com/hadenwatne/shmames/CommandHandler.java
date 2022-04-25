@@ -50,8 +50,8 @@ public class CommandHandler {
 		commands.add(new PinThat());
 //		commands.add(new Poll());
 		commands.add(new React());
-//		commands.add(new Report());
-//		commands.add(new ResetEmoteStats());
+		commands.add(new Report());
+		commands.add(new ResetEmoteStats());
 //		commands.add(new Response());
 		commands.add(new Roll());
 		commands.add(new SimonSays());
@@ -63,7 +63,7 @@ public class CommandHandler {
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());
 		commands.add(new When());
-//		commands.add(new Wiki());
+		commands.add(new Wiki());
 
 		// Send Discord the syntax we plan to use for slash commands.
 		updateSlashCommands();
