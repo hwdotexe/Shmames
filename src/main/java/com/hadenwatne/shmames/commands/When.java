@@ -4,20 +4,23 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class When implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class When extends Command {
 	public When() {
-		this.commandStructure = CommandBuilder.Create("when", "I'll tell you when something will happen.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("when", "I'll tell you when something will happen.")
 				.addParameters(
 						new CommandParameter("event", "The event that will happen later.", ParameterType.STRING)
 								.setExample("will I get rich")
@@ -26,30 +29,16 @@ public class When implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String msg = lang.getMsg(Langs.WHEN_OPTIONS);
-		Matcher m = Pattern.compile(lang.wildcard).matcher(msg);
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String msg = executingCommand.getLanguage().getMsg(Langs.WHEN_OPTIONS);
+		Matcher m = Pattern.compile(executingCommand.getLanguage().wildcard).matcher(msg);
+		String question = executingCommand.getCommandArguments().getAsString("event");
 
 		while (m.find()) {
 			msg = msg.replaceFirst(m.group(), Integer.toString(RandomService.GetRandom(150) + 1));
 		}
 
-		if (data.getMessagingChannel().hasHook()) {
-			String question = data.getArguments().getAsString("event");
-
-			return "> _When " + question + "_\n" + msg;
-		}
-
-		return msg;
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.addField(question, msg, false);
 	}
 }

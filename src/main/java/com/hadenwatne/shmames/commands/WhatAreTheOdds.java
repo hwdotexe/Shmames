@@ -1,22 +1,23 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.services.RandomService;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.util.LinkedHashMap;
-
-public class WhatAreTheOdds implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class WhatAreTheOdds extends Command {
 	public WhatAreTheOdds() {
-		this.commandStructure = CommandBuilder.Create("whataretheodds", "Get the odds out of 100 of something happening.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("whataretheodds", "Get the odds out of 100 of something happening.")
 				.addAlias("what are the odds")
 				.addParameters(
 						new CommandParameter("query", "The event to determine the odds of.", ParameterType.STRING)
@@ -26,38 +27,11 @@ public class WhatAreTheOdds implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String query = executingCommand.getCommandArguments().getAsString("query");
+		int result = RandomService.GetRandom(100) + 1;
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String query = data.getArguments().getAsString("query");
-
-		for (ICommand c : App.Shmames.getCommandHandler().getLoadedCommands()) {
-			if (c.getCommandStructure().getName().equalsIgnoreCase("roll")) {
-				String prefix = "\"What are the odds " + query + "\"\n";
-				LinkedHashMap<String, Object> rollArgs = new LinkedHashMap<>();
-
-				rollArgs.put("dice", "1d100");
-
-				ShmamesCommandData rollData = new ShmamesCommandData(
-						c,
-						new ExecutingCommandArguments(rollArgs),
-						data.getMessagingChannel(),
-						App.Shmames.getJDA().getSelfUser(),
-						data.getServer()
-				);
-
-				return prefix + c.run(lang, brain, rollData);
-			}
-		}
-
-		return null;
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.addField(query, executingCommand.getLanguage().getMsg(Langs.WHAT_ARE_THE_ODDS, new String[]{Integer.toString(result)+"%"}), false);
 	}
 }

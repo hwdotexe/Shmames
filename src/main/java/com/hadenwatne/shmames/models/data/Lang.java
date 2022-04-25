@@ -1,11 +1,10 @@
 package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.LinkedHashMap;
@@ -193,12 +192,14 @@ public class Lang {
         messages.put(Langs.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"});
         messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings:"});
         messages.put(Langs.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"});
+        messages.put(Langs.STORY_INTRO, new String[]{"Let's read a story!"});
         messages.put(Langs.TALLY_CURRENT_VALUE, new String[]{"Current tally for `" + wildcard + "`: `" + wildcard + "`"});
         messages.put(Langs.TALLY_LIST, new String[]{"Here's what I have written down:"});
         messages.put(Langs.TALLY_REMOVED, new String[]{"`" + wildcard + "` hast been removed, sire."});
         messages.put(Langs.THOUGHTS_OPTIONS, new String[]{"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", "Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.", "I hate that.", "Get that garbage out of my face!"});
         messages.put(Langs.TIMER_STARTED, new String[]{"Started a new :alarm_clock: for " + wildcard});
         messages.put(Langs.TRIGGER_LIST, new String[]{"I'll respond to these things:"});
+        messages.put(Langs.WHAT_ARE_THE_ODDS, new String[]{"About " + wildcard});
         messages.put(Langs.WHATSHOULDIDO_INTRO_OPTIONS, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"});
         messages.put(Langs.WHATSHOULDIDO_OPTIONS, new String[]{"defile a grave", "rob a candy store", "deface a subway", "steal a baby's candy", "pirate a low-budget film", "start a riot about gas prices", "rewatch the Star Wars sequels", "curse at an old woman", "donate to a shady charity in Saudi Arabia", "prank call insurance companies", "sell drugs to minors", "write a program in PHP", "narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic", "confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky", "create a reaction video for YouTube", "invite me to other servers >:}", "sell essential oils", "demand to see the manager", "start a Flat Earth rally", "uncover the truth behind 9/11", "vaguepost on Instagram for attention", "play Madden", "scam impressionable old women out of their retirement funds", "get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant", "steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner", "drink questionable chemicals", "throw a prom in the McDonalds Playplace"});
         messages.put(Langs.WHEN_OPTIONS, new String[]{"In "+wildcard+" years", "In "+wildcard+" minutes", ""+wildcard+" days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe", "Not sure, ask your mom", ""+wildcard+" years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe", "In precisely "+wildcard+"", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall", "Probably within "+wildcard+" days", "I'd say in "+wildcard+" months", "In "+wildcard+"? "+wildcard+"? Maybe "+wildcard+"?", "Between "+wildcard+" and "+wildcard+" centuries", "Sooner shall "+wildcard+" days pass", ""+wildcard+" seconds", ""+wildcard+" hours, "+wildcard+" minutes, and "+wildcard+" seconds", "Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"});

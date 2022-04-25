@@ -2,35 +2,29 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class WhatShouldIDo implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class WhatShouldIDo extends Command {
 	public WhatShouldIDo() {
-		this.commandStructure = CommandBuilder.Create("whatshouldido", "Get a randomized, possibly sarcastic suggestion to cure your boredom.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("whatshouldido", "Get a randomized, possibly sarcastic suggestion to cure your boredom.")
 				.addAlias("what should i do")
 				.build();
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String randomIntro = executingCommand.getLanguage().getMsg(Langs.WHATSHOULDIDO_INTRO_OPTIONS);
+		String randomAnswer = executingCommand.getLanguage().getMsg(Langs.WHATSHOULDIDO_OPTIONS);
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		String randomIntro = lang.getMsg(Langs.WHATSHOULDIDO_INTRO_OPTIONS);
-		String randomAnswer = lang.getMsg(Langs.WHATSHOULDIDO_OPTIONS);
-
-		return randomIntro + " " + randomAnswer + "!";
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.setDescription(randomIntro + " " + randomAnswer + "!");
 	}
 }

@@ -4,8 +4,18 @@
 
 - More permissions
   - Deleting lists
+  - Closing polls
+  - Managing triggers
+  - PinThat
 
 
+- Language combine enum and default values?
 - Do not delete triggering messages
 - Spin up instance react listener for polls
 - Messages larger than the character maximum for fields/description (see Storytime)
+
+- Do reactions trigger the correct tally command?
+
+- Delete generic success messages after a period of time
+  - React
+  - Simon Says

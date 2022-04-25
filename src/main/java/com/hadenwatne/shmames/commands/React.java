@@ -1,26 +1,30 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.TextFormatService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-public class React implements ICommand {
-	private final CommandStructure commandStructure;
+import java.util.ArrayList;
+import java.util.List;
 
+public class React extends Command {
 	public React() {
-		this.commandStructure = CommandBuilder.Create("react", "Reacts to the specified message with emoji that spell out your word.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("react", "Reacts to the specified message with emoji that spell out your word.")
 				.addParameters(
 						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
 								.setPattern("([\\^]{1,15})")
@@ -33,39 +37,21 @@ public class React implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		int messages = data.getArguments().getAsString("position").length();
-		String word = data.getArguments().getAsString("word");
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		int messages = executingCommand.getCommandArguments().getAsString("position").length();
+		String word = executingCommand.getCommandArguments().getAsString("word");
 
 		try {
-			Message toReact = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toReact = MessageService.GetMessageIndicated(executingCommand, messages);
 
 			reactToMessageWithEmoji(toReact, word.toLowerCase());
 
-			// Remove the querying message
-			try {
-				if (data.getMessagingChannel().hasOriginMessage()) {
-					data.getMessagingChannel().getOriginMessage().delete().queue();
-				}
-			} catch (Exception ignored) {
-			}
-
-			return "";
-		} catch (InsufficientPermissionException ex) {
-			ex.printStackTrace();
-
-			return lang.getError(Errors.NO_PERMISSION_BOT, true);
+			return response(EmbedType.SUCCESS)
+					.setDescription(executingCommand.getLanguage().getMsg(Langs.GENERIC_SUCCESS));
+		} catch (InsufficientPermissionException e) {
+			return response(EmbedType.ERROR, Errors.NO_PERMISSION_BOT.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.NO_PERMISSION_BOT));
 		}
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
 	}
 
 	private void reactToMessageWithEmoji(Message toReact, String word) {
