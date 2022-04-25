@@ -132,10 +132,6 @@ public class ChatListener extends ListenerAdapter {
 				// Handle special responses.
 				response = response.replaceAll("%NAME%", authorName);
 
-				if (response.startsWith("[gif]")) {
-					response = HTTPService.GetGIF(response.split("\\[gif\\]", 2)[1], "high");
-				}
-
 				// Send the response.
 				MessageService.ReplyToMessage(message, EmbedType.INFO, t.name() + " Response", response);
 			}
