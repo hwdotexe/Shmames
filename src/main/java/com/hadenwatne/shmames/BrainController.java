@@ -12,7 +12,7 @@ import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.models.data.*;
 import com.hadenwatne.shmames.services.FileService;
-import com.hadenwatne.shmames.tasks.JTimerTask;
+import com.hadenwatne.shmames.tasks.AlarmTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 
 /**
@@ -87,7 +87,7 @@ public class BrainController {
 			}
 
 			if(brain.getTimers().size() > 0){
-				for(JTimerTask t : brain.getTimers()){
+				for(AlarmTask t : brain.getTimers()){
 					t.rescheduleTimer();
 				}
 			}

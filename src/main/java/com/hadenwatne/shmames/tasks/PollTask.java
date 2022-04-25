@@ -1,22 +1,27 @@
 package com.hadenwatne.shmames.tasks;
 
-import java.awt.Color;
-import java.util.*;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import com.hadenwatne.shmames.models.PollModel;
-import com.hadenwatne.shmames.Shmames;
 
-public class PollTask extends TimerTask{
+import java.awt.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimerTask;
+
+public class PollTask extends TimerTask {
 	private PollModel pollModel;
 	private Message message;
 	private Lang lang;

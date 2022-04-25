@@ -256,6 +256,9 @@
     "TIMER_STARTED": [
       "Started a new :alarm_clock: for %WC%"
     ],
+    "TIMER_ALERT": [
+      ":alarm_clock: (%WC%): The timer you set is finished!"
+    ],
     "TRIGGER_LIST": [
       "I'll respond to these things:"
     ],
@@ -464,6 +467,9 @@
     ],
     "TIME_VALUE_INCORRECT": [
       "The amount of time provided is invalid!"
+    ],
+    "TIMER_LENGTH_INCORRECT": [
+      "Timers must be set between 1 second and 365 days."
     ],
     "TRACK_NOT_PLAYING": [
       "There isn't a track playing right now."

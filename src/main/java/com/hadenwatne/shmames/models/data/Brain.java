@@ -6,10 +6,9 @@ import java.util.List;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.*;
-import com.hadenwatne.shmames.tasks.JTimerTask;
+import com.hadenwatne.shmames.tasks.AlarmTask;
 
 public class Brain {
 	private final String guildID;
@@ -23,7 +22,7 @@ public class Brain {
 	private final List<PollModel> activePolls;
 	private final List<String> families;
 	private final List<ForumWeaponObj> forumWeapons;
-	private final List<JTimerTask> timers;
+	private final List<AlarmTask> timers;
 	private final List<Playlist> playlists;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
@@ -73,7 +72,7 @@ public class Brain {
 		this.hangmanGame = g;
 	}
 
-	public List<JTimerTask> getTimers(){
+	public List<AlarmTask> getTimers(){
 		return timers;
 	}
 	

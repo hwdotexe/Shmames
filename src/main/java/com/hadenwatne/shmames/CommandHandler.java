@@ -58,7 +58,7 @@ public class CommandHandler {
 		commands.add(new Storytime());
 //		commands.add(new Tally());
 		commands.add(new Thoughts());
-//		commands.add(new Timer());
+		commands.add(new Timer());
 		commands.add(new Trigger());
 		commands.add(new WhatAreTheOdds());
 		commands.add(new WhatShouldIDo());

@@ -136,6 +136,7 @@ public class Lang {
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."});
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});
         errors.put(Errors.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"});
+        errors.put(Errors.TIMER_LENGTH_INCORRECT, new String[]{"Timers must be set between 1 second and 365 days."});
         errors.put(Errors.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."});
         errors.put(Errors.WRONG_USAGE, new String[]{"The command syntax you used is incorrect."});
 
@@ -198,6 +199,7 @@ public class Lang {
         messages.put(Langs.TALLY_REMOVED, new String[]{"`" + wildcard + "` hast been removed, sire."});
         messages.put(Langs.THOUGHTS_OPTIONS, new String[]{"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", "Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.", "I hate that.", "Get that garbage out of my face!"});
         messages.put(Langs.TIMER_STARTED, new String[]{"Started a new :alarm_clock: for " + wildcard});
+        messages.put(Langs.TIMER_ALERT, new String[]{":alarm_clock: (" + wildcard + "): The timer you set is finished!"});
         messages.put(Langs.TRIGGER_LIST, new String[]{"I'll respond to these things:"});
         messages.put(Langs.WHAT_ARE_THE_ODDS, new String[]{"About " + wildcard});
         messages.put(Langs.WHATSHOULDIDO_INTRO_OPTIONS, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"});
