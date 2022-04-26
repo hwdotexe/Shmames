@@ -75,6 +75,12 @@ public class ExecutingCommandArguments {
         return -1;
     }
 
+    /**
+     * Attempts to convert the argument to a Role. Always returns null for administrator.
+     * @param key The parameter key.
+     * @param server The server this check is being performed against.
+     * @return A Role, if the ID is found, or if the value is "everyone." Otherwise, null.
+     */
     public Role getAsRole(String key, Guild server) {
         if(this.arguments.containsKey(key)) {
             try {
@@ -83,7 +89,9 @@ public class ExecutingCommandArguments {
                 if (DataService.IsLong(id)) {
                     return server.getRoleById(id);
                 } else {
-                    return server.getRolesByName(id, true).get(0);
+                    if(id.equalsIgnoreCase("everyone")) {
+                        return server.getPublicRole();
+                    }
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -100,8 +108,6 @@ public class ExecutingCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getMemberById(id).getUser();
-                } else {
-                    return server.getMembersByName(id, true).get(0).getUser();
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -118,8 +124,6 @@ public class ExecutingCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getEmoteById(id);
-                } else {
-                    return server.getEmotesByName(id, true).get(0);
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -136,8 +140,6 @@ public class ExecutingCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getTextChannelById(id);
-                } else {
-                    return server.getTextChannelsByName(id, true).get(0);
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);

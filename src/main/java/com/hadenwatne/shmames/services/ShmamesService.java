@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.data.BotSetting;
@@ -41,16 +40,13 @@ public class ShmamesService {
 				if (App.IsDebug)
 					return true;
 
-				if (sv.equals("everyone"))
-					return true;
-
 				Member member = server.retrieveMember(user).complete();
 
 				if (member != null) {
 					if (sv.equals("administrator"))
 						return member.hasPermission(Permission.ADMINISTRATOR);
 
-					Role r = server.getRolesByName(sv, true).get(0);
+					Role r = server.getRoleById(sv);
 
 					return member.getRoles().contains(r);
 				}

@@ -45,7 +45,7 @@ public class CommandHandler {
 		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
 		commands.add(new Minesweeper());
-//		commands.add(new Modify());
+		commands.add(new Modify());
 //		commands.add(new Music());
 		commands.add(new PinThat());
 //		commands.add(new Poll());

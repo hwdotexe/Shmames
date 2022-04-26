@@ -24,3 +24,8 @@
 - Delete generic success messages after a period of time
   - React
   - Simon Says
+
+
+Cache flag - Emojis
+Emoji intent
+Help text selection list add spaces?

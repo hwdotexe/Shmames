@@ -3,13 +3,10 @@ package com.hadenwatne.shmames.models.data;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.BotSettingType;
-import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.services.DataService;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
-import com.hadenwatne.shmames.Shmames;
-
-import java.util.List;
 
 public class BotSetting {
 	private BotSettingName name;
@@ -53,13 +50,15 @@ public class BotSetting {
 			
 			return false;
 		case ROLE:
-			if(v.equalsIgnoreCase("administrator") || v.equalsIgnoreCase("everyone")) {
+			if(v.equalsIgnoreCase("administrator")) {
 				value = v.toLowerCase();
 				return true;
 			}else {
-				for(Role r : App.Shmames.getJDA().getGuildById(b.getGuildID()).getRoles()) {
-					if(r.getName().equalsIgnoreCase(v)) {
-						value = r.getName();
+				if(DataService.IsLong(v)) {
+					Role role = App.Shmames.getJDA().getGuildById(b.getGuildID()).getRoleById(v);
+
+					if (role != null) {
+						value = v;
 						return true;
 					}
 				}
@@ -67,26 +66,24 @@ public class BotSetting {
 				return false;
 			}
 		case CHANNEL:
-			if(v.startsWith("#"))
-				v = v.replace("#", ""); // Replace all occurrences
+			if(DataService.IsLong(v)) {
+				TextChannel channel = App.Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelById(v);
 
-			List<TextChannel> tc = App.Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelsByName(v, true);
-			
-			if(tc.size() == 1) {
-				value = tc.get(0).getId();
-				return true;
+				if (channel != null) {
+					value = v;
+					return true;
+				}
 			}
 			
 			return false;
 		case EMOTE:
-			if(v.startsWith(":"))
-				v = v.replace(":", ""); // Replace all occurrences
+			if(DataService.IsLong(v)) {
+				Emote emote = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmoteById(v);
 
-			List<Emote> em = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmotesByName(v, true);
-
-			if(em.size() == 1) {
-				value = em.get(0).getId();
-				return true;
+				if (emote != null) {
+					value = v;
+					return true;
+				}
 			}
 			
 			return false;
@@ -102,7 +99,7 @@ public class BotSetting {
 	}
 	
 	private boolean isBoolean(String test) {
-		if(test.toLowerCase().equals("true") || test.toLowerCase().equals("false"))
+		if(test.equalsIgnoreCase("true") || test.equalsIgnoreCase("false"))
 			return true;
 		
 		return false;
