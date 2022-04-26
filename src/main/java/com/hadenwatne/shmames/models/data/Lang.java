@@ -191,7 +191,7 @@ public class Lang {
         messages.put(Langs.SEARCH_RESULTS, new String[]{"Search results:"});
         messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."});
         messages.put(Langs.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"});
-        messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings:"});
+        messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings"});
         messages.put(Langs.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"});
         messages.put(Langs.STORY_INTRO, new String[]{"Let's read a story!"});
         messages.put(Langs.TALLY_CURRENT_VALUE, new String[]{"Current tally for `" + wildcard + "`: `" + wildcard + "`"});

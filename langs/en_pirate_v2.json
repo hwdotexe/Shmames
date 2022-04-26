@@ -1,85 +1,85 @@
 {
   "messages": {
     "ADD_TRIGGER_SUCCESS": [
-      "I werde drone  `%WC%` were you comply `%WC%`!"
+      "I be singin' a `%WC%` shanty when the Lookout calls `%WC%`!"
     ],
     "BLAME": [
-      "I hose %WC%"
+      "Arr, it be because of %WC%"
     ],
     "CHOOSE": [
-      "My gribbed: %WC%!"
+      "The Landlubber say: %WC%!"
     ],
     "COMMAND_USAGE": [
-      "gid et a fink: `%WC%`"
+      "Avast! Consult the map: `%WC%`"
     ],
     "EMOTE_STATS_TITLE": [
-      "Skanning Basilisks:"
+      "Yarr! The Coxswain's been keepin' count:"
     ],
     "FAMILY_CREATED": [
-       "Legionspace manifested!"
+      "The Man-o'-War be ready! Weigh Anchor!"
     ],
     "FAMILY_JOIN_CODE": [
-      "**Code %WC%**%BR%`%WC%`%BR%_Comply code far sees Legionspace._"
+      "**Arr, yer Join Code for the S.S. %WC% is:**%BR%`%WC%`%BR%_Use it wisely, it only works once!_"
     ],
     "FAMILY_JOIN_CODE_INVALIDATED": [
-      "[Tha Cee-seek grib wavedown for' nada crawbar]"
+      "[The Cap'n tore up the contract! Ye must make a new one to try again.]"
     ],
     "FAMILY_JOINED": [
-      "Pass **%WC%** conjured to tha **%WC%** Legionspace!"
+      "Recruited **%WC%** to the Jolly Boat **%WC%**!"
     ],
     "FAMILY_REMOVED_SERVER": [
-      "Zeroed tha **%WC%** O't **%WC%** Legionspace!"
+      "Made **%WC%** walk the plank from the Brigantine **%WC%**!"
     ],
     "FAMILY_SERVER_LIST": [
-       "Tha \"%WC%\" Legionspace sardines thas Knee-hips:"
+      "The Brigantine \"%WC%\" has recruited the following hands:"
     ],
     "FEEDBACK_COOLDOWN": [
-      "Nag time afore comply again."
+      "The Cap'n is fed up with yer yappin'! He be takin' a caulk. Ye best not run a rig."
     ],
     "FEEDBACK_SENT": [
-      ":notepad_spiral: Thyne papermaize gribbed ice! %BR%You comply again en **5 minutes**."
+      "The Cap'n has received yer request. Ye best wait a few ticks of ye pocketwatch."
     ],
     "FORUM_WEAPON_ADDED_ALIAS": [
-       "Tha masquing werde manisfest!"
+      "A pirate always be needin' a good alias. That one'll do."
     ],
     "FORUM_WEAPON_CREATED": [
-      "Manifest nuevo Longunne: **%WC%**"
+      "Arr! We be sailin' with a new gun: **%WC%**"
     ],
     "FORUM_WEAPON_DESTROYED": [
-      "Longunne x-ed."
+       "Ye weapon's got a taste of the cat!"
     ],
     "FORUM_WEAPON_DUPLICATE": [
-      ":warning: Discover already Cicada tha baypass: **%WC%**"
+      ":warning: Arr! Ye breathren o' the coast may 'ave ye blunderbuss already: **%WC%**"
     ],
     "FORUM_WEAPON_UPDATED": [
-      "Tha Longonne gribbed tha juice!"
+      "New grape shots be loaded in the cannon!"
     ],
     "FORUM_WEAPONS_PRUNED": [
       "Pruned **%WC%** unused Forum Weapons!"
     ],
     "GENERIC_SUCCESS": [
-      "Baypass!"
+      "Arr!"
     ],
     "HANGMAN_FOOTER_GUESSED": [
-      "Try some-fink nuevo, Priyatel :"
+      "Past plunders:"
     ],
     "HANGMAN_TITLE": [
-       "Hangman Time Maguses!"
+      "A Dance with Jack Ketch!"
     ],
     "INVALID_TRIGGER_TYPE": [
-      ":scream: Plebes! Thyne comply: %WC%"
+      "Ye disgrace! Hasn't the Cap'n said ye can only use %WC%?"
     ],
     "ITEM_ADDED": [
-      "Comply up :+1:"
+      "Ye booty be placed in the coffers!"
     ],
     "ITEM_REMOVED": [
-       "I've X-ed \"%WC%\"!"
+       "\"%WC%\" has danced the hempen jig!"
     ],
     "LIST_CREATED": [
-      "Tha papermaize manisfest!!"
+      "The List was created!"
     ],
     "LIST_DELETED": [
-      "`%WC%` zeroed!"
+      "Deleted the `%WC%` List!"
     ],
     "LIST_PRIVACY_TOGGLED": [
       "The `%WC%` List is now `%WC%`!"
@@ -127,105 +127,105 @@
       "Queued the `%WC%` Playlist!"
     ],
     "POLL_TITLE": [
-      "== Thyne Commie Cypher =="
+      "== PARLEY =="
     ],
     "POLL_TITLE_RESULTS": [
-      "== Thyne Commie Cypher (Results) =="
+      "== PARLEY (Results) =="
     ],
     "RESET_EMOTE_STATS": [
-      "XXX-d tha Stats."
+      "Scupper that!"
     ],
     "SENT_PRIVATE_MESSAGE": [
-      "Subvoxed commie."
+       "Arr, be lookin' fer me message in a bottle."
     ],
     "SERVER_FAMILY_LIST": [
-      "Thar Knee-hip hath conjured ento tha Legionspaces:"
+      "We got the king's shilling for the followin':"
     ],
     "SETTING_LIST_TITLE": [
-      "StandOP:"
+      "Treasure maps:"
     ],
     "SETTING_UPDATED_SUCCESS": [
-      "Sys Op success!"
+      "The treasure map be marked with a new spot!"
     ],
     "TALLY_CURRENT_VALUE": [
-      "Skanned count far `%WC%`: `%WC%`"
+      "The Boatswain's new count fer `%WC%`: `%WC%`"
     ],
     "TALLY_LIST": [
-      "Wysiwyg:"
+      "Here be what is kept in the ship manifest:"
     ],
     "TALLY_REMOVED": [
-      "`%WC%` comply zeroe'd."
+       "`%WC%` met the rope's end."
     ],
     "TIMER_STARTED": [
-      "Timed far %WC%"
+       "Fire in the hole in %WC%!"
     ],
     "TRIGGER_LIST": [
-      "Code speaks werde flaps:"
+      "The lookout be watchin' fer:"
     ]
   },
   "errors": {
     "ALREADY_EXISTS": [
-      "Nada dupes, causing wavedown."
+      "We plundered that doubloon already!"
     ],
     "BOT_ERROR": [
-      "You tryna grib me Wyrm and Horsies?"
+      "Arr! We be bilged on her anchor!"
     ],
     "CANNOT_DELETE": [
-      "Secured codes: Can't be zeroed."
+      "Arr, the Cap'n not be lettin' ye blow the man down."
     ],
     "CHANNEL_NOT_FOUND": [
-      "Missing channel: Perhaps you werde finking meatspace."
+      "Me compass needle be pointin' wrong."
     ],
     "COMMAND_NOT_FOUND": [
-      "Comply nada exist."
+      "Get ye sea legs, matey! That order hasn't been called yet."
     ],
     "FAMILY_ALREADY_EXISTS": [
-      "Unique Legionspace locales only. Nuevo id comply."
+      "This vessel already be flyin' the Jolly Roger!"
     ],
     "FAMILY_ALREADY_JOINED": [
-      "Dis Legionspace already gribbed Knee-hip"
+      "Blimey! Another flag be usin' that name. Choose another!"
     ],
     "FAMILY_INVALID_DETAIL": [
-      "Invalid Baypass."
+       "Arr, ye flag be invalid."
     ],
     "FAMILY_NOT_JOINED": [
-      "Knee-hip nada Legionspace."
+      "Shiver me timbers! They not be flyin' the flag!"
     ],
     "FAMILY_MEMBER_MAXIMUM_REACHED": [
-      "Legionspace is occupado!"
+       "Blimey! Ye vessel be loaded to the gunwales!"
     ],
     "FAMILY_MAXIMUM_REACHED": [
-      "Max 3 Legionspace."
+      "Ye mast has room for 3 flags only!"
     ],
     "FAMILY_SERVER_LIST_EMPTY": [
-      "Legionspace hath nad Knee-hips, get some."
+      "Arr! There be nobody flyin' under the flag."
     ],
     "FORUM_WEAPON_MAXIMUM_REACHED": [
-      "100 longunnes Max. Anymore and Yun-Yun B jealous."
+      "Blimey! Ye vessel be loaded to the gunwales!"
     ],
     "FORUM_WEAPON_OWNED_OTHER": [
-      "Far Longunne over da Legionspace."
+      "Arr, that powder keg be on a different lugger."
     ],
     "GUILD_REQUIRED": [
-      "Nada hand-fabbing, need Knee-hip//Woodworking"
+       "Arr! That be needin' a proper vessel to use!"
     ],
     "HANGMAN_ALREADY_GUESSED": [
-       "Pick some-fink new, Priyatel."
+      "Ye've already hung that man!"
     ],
     "HANGMAN_NOT_STARTED": [
-      "Need conjure game to play, Priyatel."
+      "The noose be cold!"
     ],
     "HEY_THERE": [
-      "Gi! Comply `%WC% help`!"
+      "Aye! Call ye Cap'n with `%WC% help`!"
     ],
     "INCOMPLETE": [
-      "Baypass more commie, Priyatel."
+       "Arr, Lad! Ye be talkin' nonsense. What else ye need to say?"
     ],
     "INCORRECT_ITEM_COUNT": [
-       "Missing args, ya Planted Plebes."
+      "Arr, ye pieces don't be addin' up."
     ],
     "ITEMS_NOT_FOUND": [
-      "Hose it, empty handed."
+      "Blimey! The coffers be empty!"
     ],
     "MUSIC_NOT_IN_CHANNEL": [
       "Please join a voice channel and run this command again."
@@ -264,34 +264,34 @@
       "Please enter a media URL or playlist name!"
     ],
     "NO_PERMISSION_BOT": [
-      "Yun-yun is Unrechtssystem [nad permission]"
+      "Arr, they give no quarter to the crew."
     ],
     "NO_PERMISSION_USER": [
-      "Nada juice here, apprentice."
+      "Arr, the Cap'n won't give ye a nipperkin!"
     ],
     "NOT_FOUND": [
-      "Fatz Out: you sees nada exist."
+      "Arr! The coffers be empty!"
     ],
     "RESERVED_WORD": [
-      "Denied: Unique words preserved: nada wyrming allowed."
+      "Arr, that word be takin' by the Cap'n himself."
     ],
     "SERVER_FAMILY_LIST_EMPTY": [
-      "Far Knee-hip nada Legionspace"
+      "Shiver me timbers! There be no flag we flyin'"
     ],
     "SETTING_NOT_FOUND": [
-       "Skanning found nada-fink en Wink"
+      "The compass be pointin' in the wrong direction."
     ],
     "TIME_VALUE_INCORRECT": [
       "The amount of time provided is invalid!"
     ],
     "TRACK_NOT_PLAYING": [
-      "S.O.S. [Sound of space] (nada beats running, you Plebes)"
+      "The lass be keepin' quiet..."
     ],
     "WRONG_USAGE": [
-      "Screamer detected: Mangled comply, Plebe."
+      "Blasted Swab! That not be how it's done."
     ]
   },
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "horus"
+  "langName": "en_pirate"
 }

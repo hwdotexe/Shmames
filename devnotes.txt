@@ -26,6 +26,3 @@
   - Simon Says
 
 
-Cache flag - Emojis
-Emoji intent
-Help text selection list add spaces?

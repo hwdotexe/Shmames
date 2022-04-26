@@ -7,7 +7,6 @@ import com.hadenwatne.shmames.JSONFileFilter;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.services.FileService;
 import net.dv8tion.jda.api.entities.Guild;
 
 import javax.annotation.Nullable;
@@ -20,13 +19,14 @@ public class LanguageService {
 	private final List<Lang> langs;
 
 	private final String LANG_DIRECTORY = "langs";
+	private final String DEFAULT_LANGUAGE = "en_default";
 
 	public LanguageService() {
 		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		langs = new ArrayList<>();
 
 		// Always save a new copy of the default language file to disk.
-		Lang defaultLanguage = new Lang("default");
+		Lang defaultLanguage = new Lang(DEFAULT_LANGUAGE);
 		FileService.SaveBytesToFile(LANG_DIRECTORY, defaultLanguage.getLangName() + ".json", gson.toJson(defaultLanguage).getBytes());
 
 		// Load language files.
@@ -34,11 +34,11 @@ public class LanguageService {
 	}
 
 	/**
-	 * Gets the default Locale file.
-	 * @return The default Locale.
+	 * Gets the default language file.
+	 * @return The default language.
 	 */
 	public Lang getDefaultLang() {
-		return getLang("default");
+		return getLang(DEFAULT_LANGUAGE);
 	}
 
 	/**

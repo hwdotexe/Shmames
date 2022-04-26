@@ -427,7 +427,7 @@ public class CommandBuilder {
 
             for(String s : p.getSelectionOptions()) {
                 if(ssb.length() > 0) {
-                    ssb.append("|");
+                    ssb.append(" | ");
                 }
 
                 ssb.append(s);

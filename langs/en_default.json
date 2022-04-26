@@ -221,7 +221,7 @@
       "This server has joined the following Families:"
     ],
     "SETTING_LIST_TITLE": [
-      "Available settings:"
+      "Available settings"
     ],
     "SETTING_UPDATED_SUCCESS": [
       "Setting was updated successfully!"
@@ -480,5 +480,5 @@
   },
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "default"
+  "langName": "en_default"
 }
