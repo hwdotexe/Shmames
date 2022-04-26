@@ -184,8 +184,8 @@ public class Modify extends Command {
 					.addField(getFormattedSettingField(botSetting, server));
 		} else {
 			// Not successful
-			return response(EmbedType.ERROR, Errors.WRONG_USAGE.name())
-					.setDescription(lang.getError(Errors.WRONG_USAGE));
+			return response(EmbedType.ERROR, Errors.SETTING_VALUE_INVALID.name())
+					.setDescription(lang.getError(Errors.SETTING_VALUE_INVALID));
 		}
 	}
 

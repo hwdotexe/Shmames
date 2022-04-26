@@ -135,6 +135,7 @@ public class Lang {
         errors.put(Errors.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"});
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."});
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});
+        errors.put(Errors.SETTING_VALUE_INVALID, new String[]{"The value you provided is invalid. Please try again."});
         errors.put(Errors.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"});
         errors.put(Errors.TIMER_LENGTH_INCORRECT, new String[]{"Timers must be set between 1 second and 365 days."});
         errors.put(Errors.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."});

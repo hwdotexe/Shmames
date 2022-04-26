@@ -84,7 +84,7 @@ public class CommandHandler {
 	 */
 	public Command PreProcessCommand(String commandText) {
 		for(Command command : commands) {
-			Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+			Matcher commandMatcher = command.getCommandStructure().getPrimaryPattern().matcher(commandText);
 
 			if(commandMatcher.find()) {
 				return command;
@@ -133,7 +133,7 @@ public class CommandHandler {
 	 * @return True, if the validation was successful. Otherwise false.
 	 */
 	private boolean ValidateCommand(Command command, String commandText) {
-		Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+		Matcher commandMatcher = command.getCommandStructure().getMatcherPattern().matcher(commandText);
 
 		if(commandMatcher.find()) {
 			return commandMatcher.group("context") != null;
@@ -149,7 +149,7 @@ public class CommandHandler {
 	 * @param executingCommand The command context to update.
 	 */
 	private void ParseCommand(Command command, String commandText, ExecutingCommand executingCommand) {
-		Matcher commandMatcher = command.getCommandStructure().getPattern().matcher(commandText);
+		Matcher commandMatcher = command.getCommandStructure().getMatcherPattern().matcher(commandText);
 
 		if(commandMatcher.find()) {
 			final String context = commandMatcher.group("context");

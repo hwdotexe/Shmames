@@ -465,6 +465,9 @@
     "SETTING_NOT_FOUND": [
       "I couldn't find that setting."
     ],
+    "SETTING_VALUE_INVALID": [
+      "The value you provided is invalid. Please try again."
+    ],
     "TIME_VALUE_INCORRECT": [
       "The amount of time provided is invalid!"
     ],

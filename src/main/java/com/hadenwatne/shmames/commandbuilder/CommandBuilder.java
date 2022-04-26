@@ -68,21 +68,40 @@ public class CommandBuilder {
         return data;
     }
 
-    public static Pattern BuildPattern(CommandStructure command) {
+    public static Pattern BuildPrimaryPattern(CommandStructure command) {
+        StringBuilder primary = new StringBuilder();
+        primary.append("(?<command>(");
+        primary.append("(");
+        primary.append(command.getName());
+        primary.append(")");
+
+        for(String alias : command.getAliases()) {
+            primary.append("|");
+            primary.append("(");
+            primary.append(alias);
+            primary.append(")");
+        }
+
+        primary.append("))");
+
+        return Pattern.compile(primary.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
+    public static Pattern BuildContextPattern(CommandStructure command) {
         StringBuilder sb = new StringBuilder();
 
         // Build pattern for subCommandGroups.
         boolean hasSubCommandGroups = command.getSubcommandGroups().size() > 0;
 
-        if(hasSubCommandGroups) {
-            for(SubCommandGroup group : command.getSubcommandGroups()) {
-                if(sb.length() > 0) {
+        if (hasSubCommandGroups) {
+            for (SubCommandGroup group : command.getSubcommandGroups()) {
+                if (sb.length() > 0) {
                     sb.append("|");
                 }
 
                 sb.append("(");
 
-                if(group.getAliases().size() > 0) {
+                if (group.getAliases().size() > 0) {
                     sb.append("(");
 
                     // Add the main command
@@ -91,7 +110,7 @@ public class CommandBuilder {
                     sb.append(")");
 
                     // Add aliases
-                    for(String alias : group.getAliases()) {
+                    for (String alias : group.getAliases()) {
                         sb.append("|");
                         sb.append("(");
                         sb.append(alias);
@@ -111,7 +130,7 @@ public class CommandBuilder {
         }
 
         // Make sure that additional SubCommands are OR'd properly.
-        if(hasSubCommandGroups) {
+        if (hasSubCommandGroups) {
             sb.append("|(");
         }
 
@@ -124,37 +143,25 @@ public class CommandBuilder {
         sb.append(BuildParameterPattern(command));
 
         // Make sure that additional SubCommands are OR'd properly.
-        if(hasSubCommandGroups) {
+        if (hasSubCommandGroups) {
             sb.append(")");
         }
 
-        // Prepend the primary command name and all aliases.
-        StringBuilder primary = new StringBuilder();
-        primary.append("(?<command>(");
-        primary.append("(");
-        primary.append(command.getName());
-        primary.append(")");
+        String context = "(?<context>" +
+                sb +
+                ")?";
 
-        for(String alias : command.getAliases()) {
-            primary.append("|");
-            primary.append("(");
-            primary.append(alias);
-            primary.append(")");
-        }
+        return Pattern.compile(context, Pattern.CASE_INSENSITIVE);
+    }
 
-        primary.append("))");
-        primary.append("\\s?");
+    public static Pattern BuildMatcherPattern(CommandStructure command) {
+        String matcherPattern = "^" +
+                command.getPrimaryPattern().pattern() +
+                "\\s?" +
+                command.getContextPattern().pattern() +
+                "$";
 
-        // Put the rest of the command in another named group and make it optional for the purposes of matching.
-        primary.append("(?<context>");
-        primary.append(sb); //?
-        primary.append(")?");
-
-        // Seal the pattern to match the whole string.
-        primary.insert(0, "^");
-        primary.append("$");
-
-        return Pattern.compile(primary.toString(), Pattern.CASE_INSENSITIVE);
+        return Pattern.compile(matcherPattern, Pattern.CASE_INSENSITIVE);
     }
 
     public static String BuildUsage(CommandStructure command, boolean boldCommandName) {
