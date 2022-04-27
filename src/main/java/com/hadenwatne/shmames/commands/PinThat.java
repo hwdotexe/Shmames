@@ -3,6 +3,8 @@ package com.hadenwatne.shmames.commands;
 import java.awt.Color;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -12,6 +14,7 @@ import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
@@ -47,10 +50,14 @@ public class PinThat extends Command {
 			if(channelToSendPin != null) {
 				EmbedBuilder response = response(EmbedType.INFO);
 				InputStream file = new URL(toPin.getAuthor().getEffectiveAvatarUrl()).openStream();
+				Calendar c = Calendar.getInstance();
+
+				c.setTime(new Date());
+				String date = TextFormatService.GetISO8601Date(c);
 
 				response.setAuthor(toPin.getAuthor().getName(), null, "attachment://profile.png");
 				response.setThumbnail("attachment://profile.png");
-				response.setFooter("#" + toPin.getChannel().getName() + " - Pinned by @" + executingCommand.getAuthorUser().getName(), null);
+				response.setFooter("#" + toPin.getChannel().getName() + " - " + date + " - Pinned by @" + executingCommand.getAuthorUser().getName(), null);
 
 				StringBuilder msg = new StringBuilder();
 

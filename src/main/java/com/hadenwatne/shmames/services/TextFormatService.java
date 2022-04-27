@@ -8,11 +8,24 @@ public class TextFormatService {
      * @param c The Calendar to use.
      * @return A string representing this calendar.
      */
-    public static String GetFriendlyDate(Calendar c) {
+    public static String GetFriendlyDateTime(Calendar c) {
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
 
         return (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + " at " + (hour == 0 ? "12" : hour) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == Calendar.PM ? "PM" : "AM");
+    }
+
+    /**
+     * Creates a standardized date string.
+     * @param c The Calendar to use.
+     * @return A string representing this calendar.
+     */
+    public static String GetISO8601Date(Calendar c) {
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH) + 1;
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        return year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
     }
 
     /**

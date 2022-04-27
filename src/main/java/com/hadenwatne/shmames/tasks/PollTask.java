@@ -62,7 +62,7 @@ public class PollTask extends TimerTask {
 			eBuilder.setAuthor(lang.getMsg(Langs.POLL_TITLE_RESULTS));
 	        eBuilder.setColor(Color.GRAY);
 	        eBuilder.setTitle(pollModel.getQuestion());
-	        eBuilder.setFooter("#" + message.getChannel().getName() + " - Expired "+TextFormatService.GetFriendlyDate(c), null);
+	        eBuilder.setFooter("#" + message.getChannel().getName() + " - Expired "+TextFormatService.GetFriendlyDateTime(c), null);
 	        
 	        for(int i = 0; i< pollModel.getOptions().size(); i++) {
 	        	eBuilder.appendDescription("**"+(i+1)+"**: "+ pollModel.getOptions().get(i)+" **("+votes.get(i+1)+" votes)**"+"\n");
@@ -92,7 +92,7 @@ public class PollTask extends TimerTask {
 		eBuilder.setAuthor(this.lang.getMsg(Langs.POLL_TITLE));
 		eBuilder.setColor(Color.GREEN);
 		eBuilder.setTitle(this.pollModel.getQuestion());
-		eBuilder.setFooter("#" + channel.getName() + " - Expires "+ TextFormatService.GetFriendlyDate(calendar)+" - #"+pollModel.getID(), null);
+		eBuilder.setFooter("#" + channel.getName() + " - Expires "+ TextFormatService.GetFriendlyDateTime(calendar)+" - #"+pollModel.getID(), null);
 
 		for(int i=0; i<pollModel.getOptions().size(); i++) {
 			eBuilder.appendDescription("**"+(i+1)+"**: "+pollModel.getOptions().get(i)+"\n");
