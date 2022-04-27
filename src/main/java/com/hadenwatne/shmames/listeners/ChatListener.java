@@ -87,7 +87,7 @@ public class ChatListener extends ListenerAdapter {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
 					.setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
 
-			MessageService.ReplyToMessage(message, embed);
+			MessageService.ReplyToMessage(message, embed, false);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class ChatListener extends ListenerAdapter {
 				response = response.replaceAll("%NAME%", authorName);
 
 				// Send the response.
-				MessageService.ReplyToMessage(message, EmbedType.INFO, t.name() + " Response", response);
+				MessageService.ReplyToMessage(message, EmbedType.INFO, t.name() + " Response", response, false);
 			}
 		}
 	}

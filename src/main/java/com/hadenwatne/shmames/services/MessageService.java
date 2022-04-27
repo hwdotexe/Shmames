@@ -21,7 +21,7 @@ public class MessageService {
      * @param message The message to send.
      */
     public static void SendSimpleMessage(MessageChannel channel, String message) {
-        channel.sendMessage(message).queue(success -> {}, error -> {
+        channel.sendMessage(message).mentionRepliedUser(false).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
         });
     }
@@ -32,9 +32,19 @@ public class MessageService {
      * @param message The message to send.
      */
     public static void SendMessage(MessageChannel channel, EmbedBuilder message) {
-        channel.sendMessageEmbeds(message.build()).queue(success -> {}, error -> {
+        channel.sendMessageEmbeds(message.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
         });
+    }
+
+    /**
+     * Sends a message in a channel without replying - ideal for messages that were not prompted by a user or command.
+     * This option blocks the thread until the message is sent.
+     * @param channel The channel to send a message in.
+     * @param message The message to send.
+     */
+    public static Message SendMessageBlocking(MessageChannel channel, EmbedBuilder message) {
+        return channel.sendMessageEmbeds(message.build()).mentionRepliedUser(false).complete();
     }
 
     /**
@@ -45,7 +55,7 @@ public class MessageService {
      * @param message The message to send.
      */
     public static void SendMessage(MessageChannel channel, InputStream file, String name, EmbedBuilder message) {
-        channel.sendFile(file, name).setEmbeds(message.build()).queue(success -> {}, error -> {
+        channel.sendFile(file, name).mentionRepliedUser(false).setEmbeds(message.build()).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -58,7 +68,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, File file, EmbedBuilder response) {
-        message.reply(file).setEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
+        message.reply(file).setEmbeds(response.build()).mentionRepliedUser(false).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -71,7 +81,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, File file, EmbedBuilder response) {
-        hook.sendFile(file).addEmbeds(response.build()).queue(success -> { file.delete(); }, error -> {
+        hook.sendFile(file).addEmbeds(response.build()).mentionRepliedUser(false).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -85,7 +95,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, InputStream file, String name, EmbedBuilder response) {
-        message.reply(file, name).setEmbeds(response.build()).queue(success -> {}, error -> {
+        message.reply(file, name).setEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -99,7 +109,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, InputStream file, String name, EmbedBuilder response) {
-        hook.sendFile(file, name).addEmbeds(response.build()).queue(success -> {}, error -> {
+        hook.sendFile(file, name).addEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -110,8 +120,8 @@ public class MessageService {
      * @param message The message to reply to.
      * @param response The response to send.
      */
-    public static void ReplyToMessage(Message message, EmbedBuilder response) {
-        message.replyEmbeds(response.build()).queue(success -> {}, error -> {
+    public static void ReplyToMessage(Message message, EmbedBuilder response, boolean mention) {
+        message.replyEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -123,7 +133,7 @@ public class MessageService {
      * @param response The response to send.
      */
     public static void ReplyToMessage(InteractionHook hook, EmbedBuilder response) {
-        hook.sendMessageEmbeds(response.build()).queue(success -> {}, error -> {
+        hook.sendMessageEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -136,25 +146,11 @@ public class MessageService {
      * @param navHeader The navigation header for this response.
      * @param body The body of the response.
      */
-    public static void ReplyToMessage(Message message, EmbedType type, String navHeader, String body) {
+    public static void ReplyToMessage(Message message, EmbedType type, String navHeader, String body, boolean mention) {
         EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(type, navHeader);
         embedBuilder.setDescription(body);
 
-        ReplyToMessage(message, embedBuilder);
-    }
-
-    /**
-     * A shorthand method for sending a basic reply with minimal styling.
-     * @param hook The InteractionHook to reply to.
-     * @param type The type of response to create.
-     * @param header The navigation header for this response.
-     * @param body The body of the response.
-     */
-    public static void ReplyToMessage(InteractionHook hook, EmbedType type, String header, String body) {
-        EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(type, header);
-        embedBuilder.addField(null, body, false);
-
-        ReplyToMessage(hook, embedBuilder);
+        ReplyToMessage(message, embedBuilder, mention);
     }
 
     /**

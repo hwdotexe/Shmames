@@ -57,7 +57,7 @@ public class PinThat extends Command {
 
 				response.setAuthor(toPin.getAuthor().getName(), null, "attachment://profile.png");
 				response.setThumbnail("attachment://profile.png");
-				response.setFooter("#" + toPin.getChannel().getName() + " - " + date + " - Pinned by @" + executingCommand.getAuthorUser().getName(), null);
+				response.setFooter("#" + toPin.getChannel().getName() + " - " + date + " - Pinned by @" + executingCommand.getAuthorUser().getAsTag(), null);
 
 				StringBuilder msg = new StringBuilder();
 

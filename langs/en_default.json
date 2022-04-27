@@ -136,6 +136,9 @@
     "GENERIC_SUCCESS": [
       "Success!"
     ],
+    "HANGMAN_DICTIONARIES": [
+      "Available dictionaries: %WC% (or leave blank to use all of them)"
+    ],
     "HANGMAN_FOOTER_GUESSED": [
       "Already guessed:"
     ],
@@ -389,6 +392,9 @@
     ],
     "GUILD_REQUIRED": [
       "That command must be run on a server."
+    ],
+    "HANGMAN_ALREADY_STARTED": [
+      "There's already a Hangman game in %WC%"
     ],
     "HANGMAN_ALREADY_GUESSED": [
       "You've already guessed that letter!"

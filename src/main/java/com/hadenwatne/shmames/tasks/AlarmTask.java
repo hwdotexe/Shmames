@@ -84,7 +84,7 @@ public class AlarmTask {
 				}
 
 				if(originMessage != null) {
-					MessageService.ReplyToMessage(originMessage, response);
+					MessageService.ReplyToMessage(originMessage, response, true);
 				} else {
 					MessageService.SendMessage(channel, response);
 				}

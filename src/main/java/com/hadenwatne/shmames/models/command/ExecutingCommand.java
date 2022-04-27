@@ -146,7 +146,7 @@ public class ExecutingCommand {
             if (hook != null) {
                 MessageService.ReplyToMessage(hook, embedBuilder);
             } else if (message != null) {
-                MessageService.ReplyToMessage(message, embedBuilder);
+                MessageService.ReplyToMessage(message, embedBuilder, false);
             } else {
                 LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
             }

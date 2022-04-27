@@ -110,6 +110,7 @@ public class Lang {
         errors.put(Errors.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."});
         errors.put(Errors.FORUM_WEAPON_OWNED_OTHER, new String[]{"That weapon is owned by a different server!"});
         errors.put(Errors.GUILD_REQUIRED, new String[]{"That command must be run on a server."});
+        errors.put(Errors.HANGMAN_ALREADY_STARTED, new String[]{"There's already a Hangman game in " + wildcard});
         errors.put(Errors.HANGMAN_ALREADY_GUESSED, new String[]{"You've already guessed that letter!"});
         errors.put(Errors.HANGMAN_NOT_STARTED, new String[]{"There isn't a Hangman game running! Try starting one."});
         errors.put(Errors.HEY_THERE, new String[]{"Hey there! Try using `" + wildcard + " help`!"});
@@ -164,6 +165,7 @@ public class Lang {
         messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
         messages.put(Langs.FORUM_WEAPONS_PRUNED, new String[]{"Pruned **" + wildcard + "** unused Forum Weapons!"});
         messages.put(Langs.GENERIC_SUCCESS, new String[]{"Success!"});
+        messages.put(Langs.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: " + wildcard + " (or leave blank to use all of them)"});
         messages.put(Langs.HANGMAN_FOOTER_GUESSED, new String[]{"Already guessed:"});
         messages.put(Langs.HANGMAN_TITLE, new String[]{"Let's play Hangman!"});
         messages.put(Langs.INVALID_TRIGGER_TYPE, new String[]{":scream: Invalid trigger type! Your options are: " + wildcard});
