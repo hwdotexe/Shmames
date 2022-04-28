@@ -14,14 +14,25 @@
 - Spin up instance react listener for polls
 - Messages larger than the character maximum for fields/description (see Storytime)
 
-- Do reactions trigger the correct tally command?
-
-- When pre-processing, just check if the command being run exists. Validate should care about the entire pattern.
-  - Ex. "tally search x" fails with a command not found, because x is < 3 chars, so the pattern fails.
-
 - Command stats public?
 
 - Delete generic success messages after a period of time
   - React
   - Simon Says
   - Hangman start
+
+PaginationService paginationID to cache data that may be called multiple times
+-- server/user/time? channel? command?
+
+
+Not happy with:
+- Hangman
+  - Messy
+- ForumWeapon
+  - Very messy
+  - Some repeated code in Search and List
+- Pagination caching
+  - All commands currently re-run logic to build a page. We should cache all data and serve the pages as requested.
+- Returning null causes InteractionHook to stall
+  - Null should cause a default acknowledgement to fire
+  - Alternatively, can we acknowledge the command later in the process?

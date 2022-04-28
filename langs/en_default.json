@@ -127,11 +127,14 @@
     "FORUM_WEAPON_DUPLICATE": [
       ":warning: Found an existing Forum Weapon with that link: **%WC%**"
     ],
-    "FORUM_WEAPON_UPDATED": [
-      "The weapon was updated with a new link!"
+    "FORUM_WEAPON_LIST": [
+      "These are the weapons I found:"
     ],
     "FORUM_WEAPONS_PRUNED": [
       "Pruned **%WC%** unused Forum Weapons!"
+    ],
+    "FORUM_WEAPON_UPDATED": [
+      "The weapon was updated with a new link!"
     ],
     "GENERIC_SUCCESS": [
       "Success!"

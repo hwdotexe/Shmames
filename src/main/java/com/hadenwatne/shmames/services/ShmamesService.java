@@ -35,18 +35,17 @@ public class ShmamesService {
 	public static boolean CheckUserPermission(Guild server, BotSetting setting, User user) {
 		if(server != null) {
 			if (setting.getType() == BotSettingType.ROLE) {
-				String sv = setting.getAsString();
-
 				if (App.IsDebug)
 					return true;
 
+				String roleString = setting.getAsString();
 				Member member = server.retrieveMember(user).complete();
 
 				if (member != null) {
-					if (sv.equals("administrator"))
+					if (roleString.equals("administrator"))
 						return member.hasPermission(Permission.ADMINISTRATOR);
 
-					Role r = server.getRoleById(sv);
+					Role r = setting.getAsRole(server);
 
 					return member.getRoles().contains(r);
 				}

@@ -162,8 +162,9 @@ public class Lang {
         messages.put(Langs.FORUM_WEAPON_CREATED, new String[]{"Created a new Forum Weapon: **" + wildcard + "**"});
         messages.put(Langs.FORUM_WEAPON_DESTROYED, new String[]{"Weapon destroyed."});
         messages.put(Langs.FORUM_WEAPON_DUPLICATE, new String[]{":warning: Found an existing Forum Weapon with that link: **" + wildcard + "**"});
-        messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
+        messages.put(Langs.FORUM_WEAPON_LIST, new String[]{"These are the weapons I found:"});
         messages.put(Langs.FORUM_WEAPONS_PRUNED, new String[]{"Pruned **" + wildcard + "** unused Forum Weapons!"});
+        messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
         messages.put(Langs.GENERIC_SUCCESS, new String[]{"Success!"});
         messages.put(Langs.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: " + wildcard + " (or leave blank to use all of them)"});
         messages.put(Langs.HANGMAN_FOOTER_GUESSED, new String[]{"Already guessed:"});
