@@ -1,14 +1,14 @@
 package com.hadenwatne.shmames.models.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.tasks.AlarmTask;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Brain {
 	private final String guildID;
@@ -24,6 +24,7 @@ public class Brain {
 	private final List<ForumWeaponObj> forumWeapons;
 	private final List<AlarmTask> timers;
 	private final List<Playlist> playlists;
+	private List<String> talliedMessages;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -42,6 +43,7 @@ public class Brain {
 		forumWeapons = new ArrayList<>();
 		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
+		talliedMessages = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
 		hangmanGame = null;
@@ -160,7 +162,15 @@ public class Brain {
 	public List<ForumWeaponObj> getForumWeapons(){
 		return forumWeapons;
 	}
-	
+
+	public List<String> getTalliedMessages() {
+		if(this.talliedMessages == null) {
+			this.talliedMessages = new ArrayList<>();
+		}
+
+		return this.talliedMessages;
+	}
+
 	/**
 	 * Loads default setting values into the object. This method will only
 	 * run when this object is first created.
