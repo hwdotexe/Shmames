@@ -105,7 +105,7 @@ public class Modify extends Command {
 		embedBuilder.addField(getFormattedSettingField(botSetting, server));
 		embedBuilder.setDescription(botSettingName.getDescription());
 		embedBuilder.addField("Type", botSetting.getType().name(), true);
-		embedBuilder.addField("Possible Values", getSettingPossibleValues(botSettingName), false);
+		embedBuilder.addField("Possible Values", getSettingPossibleValues(botSetting), false);
 
 		return embedBuilder;
 	}
@@ -189,36 +189,33 @@ public class Modify extends Command {
 		}
 	}
 
-	private String getSettingPossibleValues(BotSettingName botSettingName) {
-		switch(botSettingName) {
-			case PIN_POLLS:
-				return "`true`, `false`";
-			case PIN_CHANNEL:
-				return "#my_channel";
-			case MANAGE_MUSIC:
-			case ALLOW_MODIFY:
-			case ALLOW_POLLS:
-			case RESET_EMOTE_STATS:
-				return "@Any_Role, `administrator`, `everyone`";
-			case REMOVAL_EMOTE:
-			case APPROVAL_EMOTE:
-				return ":AnyServerEmoji:";
-			case REMOVAL_THRESHOLD:
-			case APPROVAL_THRESHOLD:
-				return "1-99";
-			case SERVER_LANG:
-				StringBuilder sb = new StringBuilder();
-				List<String> langs = new ArrayList<>();
+	private String getSettingPossibleValues(BotSetting botSetting) {
+		if(botSetting.getName() == BotSettingName.SERVER_LANG) {
+			StringBuilder sb = new StringBuilder();
+			List<String> langs = new ArrayList<>();
 
-				for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
-					langs.add(l.getLangName());
-				}
+			for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
+				langs.add(l.getLangName());
+			}
 
-				sb.append(PaginationService.GenerateList(langs, -1, false, false));
+			sb.append(PaginationService.GenerateList(langs, -1, false, false));
 
-				return sb.toString();
-			default:
-				return "any";
+			return sb.toString();
+		} else {
+			switch(botSetting.getType()) {
+				case BOOLEAN:
+					return "`true`, `false`";
+				case CHANNEL:
+					return "#any_channel";
+				case EMOTE:
+					return ":AnyServerEmoji:";
+				case NUMBER:
+					return "1-99";
+				case ROLE:
+					return "@Any_Role, `administrator`, `everyone`";
+				default:
+					return "any";
+			}
 		}
 	}
 
