@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MessageService {
     /**
@@ -134,6 +135,33 @@ public class MessageService {
      */
     public static void ReplyToMessage(InteractionHook hook, EmbedBuilder response) {
         hook.sendMessageEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
+        });
+    }
+
+    /**
+     * Replies to the message and accepts a Consumer to handle the success value when the message is sent.
+     * @param message The Message to reply to.
+     * @param response The response to send.
+     * @param mention Whether to mention the author.
+     * @param onSuccess The Consumer action to take if successful.
+     */
+    public static void ReplyToMessage(Message message, EmbedBuilder response, boolean mention, Consumer<? super Message> onSuccess) {
+        message.replyEmbeds(response.build()).mentionRepliedUser(mention).queue(onSuccess, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
+        });
+    }
+
+    /**
+     * Replies to the message and accepts a Consumer to handle the success value when the message is sent.
+     * @param hook The InteractionHook to reply to.
+     * @param response The response to send.
+     * @param onSuccess The Consumer action to take if successful.
+     */
+    public static void ReplyToMessage(InteractionHook hook, EmbedBuilder response, Consumer<? super Message> onSuccess) {
+        hook.sendMessageEmbeds(response.build()).mentionRepliedUser(false).queue(onSuccess, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });

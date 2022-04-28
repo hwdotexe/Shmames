@@ -36,3 +36,5 @@ Not happy with:
 - Returning null causes InteractionHook to stall
   - Null should cause a default acknowledgement to fire
   - Alternatively, can we acknowledge the command later in the process?
+- Poll
+  - Maybe we should send a Please Wait message before the poll message is built.

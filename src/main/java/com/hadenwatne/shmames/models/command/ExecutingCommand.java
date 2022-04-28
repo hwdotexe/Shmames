@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 public class ExecutingCommand {
     private final Lang language;
@@ -147,6 +148,18 @@ public class ExecutingCommand {
                 MessageService.ReplyToMessage(hook, embedBuilder);
             } else if (message != null) {
                 MessageService.ReplyToMessage(message, embedBuilder, false);
+            } else {
+                LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
+            }
+        }
+    }
+
+    public void reply(EmbedBuilder embedBuilder, boolean mention, Consumer<? super Message> onSuccess) {
+        if(embedBuilder != null) {
+            if (hook != null) {
+                MessageService.ReplyToMessage(hook, embedBuilder, onSuccess);
+            } else if (message != null) {
+                MessageService.ReplyToMessage(message, embedBuilder, mention, onSuccess);
             } else {
                 LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
             }

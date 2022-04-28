@@ -160,6 +160,134 @@ public class TextFormatService {
     }
 
     /**
+     * Converts a number (1 - 26) to the corresponding letter in the alphabet. 1 = A, 26 = Z.
+     * @param number The number to convert.
+     * @return A Unicode string for the emoji.
+     */
+    public static String NumberToLetter(int number) {
+        switch(number) {
+            case 1:
+                return "\uD83C\uDDE6";
+            case 2:
+                return "\uD83C\uDDE7";
+            case 3:
+                return "\uD83C\uDDE8";
+            case 4:
+                return "\uD83C\uDDE9";
+            case 5:
+                return "\uD83C\uDDEA";
+            case 6:
+                return "\uD83C\uDDEB";
+            case 7:
+                return "\uD83C\uDDEC";
+            case 8:
+                return "\uD83C\uDDED";
+            case 9:
+                return "\uD83C\uDDEE";
+            case 10:
+                return "\uD83C\uDDEF";
+            case 11:
+                return "\uD83C\uDDF0";
+            case 12:
+                return "\uD83C\uDDF1";
+            case 13:
+                return "\uD83C\uDDF2";
+            case 14:
+                return "\uD83C\uDDF3";
+            case 15:
+                return "\uD83C\uDDF4";
+            case 16:
+                return "\uD83C\uDDF5";
+            case 17:
+                return "\uD83C\uDDF6";
+            case 18:
+                return "\uD83C\uDDF7";
+            case 19:
+                return "\uD83C\uDDF8";
+            case 20:
+                return "\uD83C\uDDF9";
+            case 21:
+                return "\uD83C\uDDFA";
+            case 22:
+                return "\uD83C\uDDFB";
+            case 23:
+                return "\uD83C\uDDFC";
+            case 24:
+                return "\uD83C\uDDFD";
+            case 25:
+                return "\uD83C\uDDFE";
+            case 26:
+                return "\uD83C\uDDFF";
+            default:
+                return "\uD83D\uDD95";
+        }
+    }
+
+    /**
+     * Converts a letter emoji to the corresponding position in the alphabet. 1 = A, 26 = Z.
+     * @param letterEmoji The letter to convert.
+     * @return An Integer
+     */
+    public static Integer LetterToNumber(String letterEmoji) {
+        switch(letterEmoji) {
+            case "\uD83C\uDDE6":
+                return 1;
+            case "\uD83C\uDDE7":
+                return 2;
+            case "\uD83C\uDDE8":
+                return 3;
+            case "\uD83C\uDDE9":
+                return 4;
+            case "\uD83C\uDDEA":
+                return 5;
+            case "\uD83C\uDDEB":
+                return 6;
+            case "\uD83C\uDDEC":
+                return 7;
+            case "\uD83C\uDDED":
+                return 8;
+            case "\uD83C\uDDEE":
+                return 9;
+            case "\uD83C\uDDEF":
+                return 10;
+            case "\uD83C\uDDF0":
+                return 11;
+            case "\uD83C\uDDF1":
+                return 12;
+            case "\uD83C\uDDF2":
+                return 13;
+            case "\uD83C\uDDF3":
+                return 14;
+            case "\uD83C\uDDF4":
+                return 15;
+            case "\uD83C\uDDF5":
+                return 16;
+            case "\uD83C\uDDF6":
+                return 17;
+            case "\uD83C\uDDF7":
+                return 18;
+            case "\uD83C\uDDF8":
+                return 19;
+            case "\uD83C\uDDF9":
+                return 20;
+            case "\uD83C\uDDFA":
+                return 21;
+            case "\uD83C\uDDFB":
+                return 22;
+            case "\uD83C\uDDFC":
+                return 23;
+            case "\uD83C\uDDFD":
+                return 24;
+            case "\uD83C\uDDFE":
+                return 25;
+            case "\uD83C\uDDFF":
+                return 26;
+            default:
+                return -1;
+        }
+    }
+
+    /**
      * Same as @letterToEmoji, but returns different emoji
      * in order to provide duplicates.
      * @param letter The letter to convert.
