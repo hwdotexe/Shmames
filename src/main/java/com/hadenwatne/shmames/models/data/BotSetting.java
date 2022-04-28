@@ -4,9 +4,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.services.DataService;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 
 public class BotSetting {
 	private BotSettingName name;
@@ -27,21 +25,61 @@ public class BotSetting {
 		return type;
 	}
 	
-	public String getValue() {
+	public String getAsString() {
 		return value;
+	}
+
+	public boolean getAsBoolean() {
+		if(DataService.IsBoolean(value)) {
+			return Boolean.parseBoolean(value);
+		}
+
+		return false;
+	}
+
+	public int getAsNumber() {
+		if(DataService.IsInteger(value)) {
+			return Integer.parseInt(value);
+		}
+
+		return -1;
+	}
+
+	public Role getAsRole(Guild server) {
+		if(DataService.IsLong(value)) {
+			return server.getRoleById(value);
+		}
+
+		return null;
+	}
+
+	public TextChannel getAsChannel(Guild server) {
+		if(DataService.IsLong(value)) {
+			return server.getTextChannelById(value);
+		}
+
+		return null;
+	}
+
+	public Emote getAsEmote(Guild server) {
+		if(DataService.IsLong(value)) {
+			return server.getEmoteById(value);
+		}
+
+		return null;
 	}
 	
 	public boolean setValue(String v, Brain b) {
 		switch(type) {
 		case BOOLEAN:
-			if(isBoolean(v)) {
+			if(DataService.IsBoolean(v)) {
 				value = v;
 				return true;
 			}
 			
 			return false;
 		case NUMBER:
-			if(isNumber(v)) {
+			if(DataService.IsInteger(v)) {
 				if(Integer.parseInt(v) > -1) {
 					value = v;
 					return true;
@@ -53,7 +91,7 @@ public class BotSetting {
 			if(v.equalsIgnoreCase("administrator")) {
 				value = v.toLowerCase();
 				return true;
-			}else {
+			} else {
 				if(DataService.IsLong(v)) {
 					Role role = App.Shmames.getJDA().getGuildById(b.getGuildID()).getRoleById(v);
 
@@ -95,22 +133,6 @@ public class BotSetting {
 				value = null;
 				return false;
 			}
-		}
-	}
-	
-	private boolean isBoolean(String test) {
-		if(test.equalsIgnoreCase("true") || test.equalsIgnoreCase("false"))
-			return true;
-		
-		return false;
-	}
-	
-	private boolean isNumber(String test) {
-		try {
-			Integer.parseInt(test);
-			return true;
-		}catch(Exception e) {
-			return false;
 		}
 	}
 }

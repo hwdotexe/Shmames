@@ -35,28 +35,31 @@ public class ReactListener extends ListenerAdapter {
 					if (server.getEmotes().contains(emote.getEmote())) {
 						// Begin processing.
 						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
-						String removalEmoteID = brain.getSettingFor(BotSettingName.REMOVAL_EMOTE).getValue();
-						String approvalEmoteID = brain.getSettingFor(BotSettingName.APPROVAL_EMOTE).getValue();
 
 						// Regardless of emote used, tally up the usage for this server.
 						ShmamesService.IncrementEmoteTally(brain, emote.getId());
 
-						// If the emote was an "approval" or "removal" emote, react accordingly.
-						if (!brain.getTalliedMessages().contains(e.getMessageId())) {
-							e.retrieveMessage().queue(success -> {
-								if (emote.getId().equals(removalEmoteID)) {
-									tallyMessage(removalEmoteID, success, brain, BotSettingName.REMOVAL_THRESHOLD);
+						if(brain.getSettingFor(BotSettingName.TALLY_REACTIONS).getAsBoolean()) {
+							String removalEmoteID = brain.getSettingFor(BotSettingName.REMOVAL_EMOTE).getAsString();
+							String approvalEmoteID = brain.getSettingFor(BotSettingName.APPROVAL_EMOTE).getAsString();
 
-									// Try to delete the message if this was a "bad" tally.
-									try {
-										e.getChannel().deleteMessageById(e.getMessageId()).queue();
-									} catch (Exception ignored) {
-										// Bot does not have message delete privileges, so do nothing.
+							// If the emote was an "approval" or "removal" emote, react accordingly.
+							if (!brain.getTalliedMessages().contains(e.getMessageId())) {
+								e.retrieveMessage().queue(success -> {
+									if (emote.getId().equals(removalEmoteID)) {
+										tallyMessage(removalEmoteID, success, brain, BotSettingName.REMOVAL_THRESHOLD);
+
+										// Try to delete the message if this was a "bad" tally.
+										try {
+											e.getChannel().deleteMessageById(e.getMessageId()).queue();
+										} catch (Exception ignored) {
+											// Bot does not have message delete privileges, so do nothing.
+										}
+									} else if (emote.getId().equals(approvalEmoteID)) {
+										tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
 									}
-								} else if (emote.getId().equals(approvalEmoteID)) {
-									tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
-								}
-							});
+								});
+							}
 						}
 					}
 				}
@@ -65,7 +68,7 @@ public class ReactListener extends ListenerAdapter {
 	}
 
 	private void tallyMessage(String emoteID, Message message, Brain brain, BotSettingName setting) {
-		int threshold = Integer.parseInt(brain.getSettingFor(setting).getValue());
+		int threshold = Integer.parseInt(brain.getSettingFor(setting).getAsString());
 		int votes = 0;
 
 		// Set the votes variable to this emote's count on the message.

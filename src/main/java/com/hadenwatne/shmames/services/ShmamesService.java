@@ -35,7 +35,7 @@ public class ShmamesService {
 	public static boolean CheckUserPermission(Guild server, BotSetting setting, User user) {
 		if(server != null) {
 			if (setting.getType() == BotSettingType.ROLE) {
-				String sv = setting.getValue();
+				String sv = setting.getAsString();
 
 				if (App.IsDebug)
 					return true;

@@ -1,23 +1,21 @@
 package com.hadenwatne.shmames.commands;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
-import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Help extends Command {
 	public Help() {
@@ -82,7 +80,7 @@ public class Help extends Command {
 		for(Command command : App.Shmames.getCommandHandler().getLoadedCommands()) {
 			String commandName = command.getCommandStructure().getName();
 
-			if(commandName.equalsIgnoreCase(commandHelp)) {
+			if(commandName.equalsIgnoreCase(commandHelp) || isAlias(command.getCommandStructure(), commandHelp)) {
 				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Help", commandName);
 
 				for(MessageEmbed.Field field : command.getHelpFields()) {
@@ -94,5 +92,15 @@ public class Help extends Command {
 		}
 
 		return null;
+	}
+
+	private boolean isAlias(CommandStructure structure, String commandHelp) {
+		for(String alias : structure.getAliases()) {
+			if(alias.equalsIgnoreCase(commandHelp)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

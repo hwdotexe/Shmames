@@ -70,7 +70,7 @@ public class CommandBuilder {
 
     public static Pattern BuildPrimaryPattern(CommandStructure command) {
         StringBuilder primary = new StringBuilder();
-        primary.append("(?<command>(");
+        primary.append("^(?<command>(");
         primary.append("(");
         primary.append(command.getName());
         primary.append(")");
@@ -155,8 +155,7 @@ public class CommandBuilder {
     }
 
     public static Pattern BuildMatcherPattern(CommandStructure command) {
-        String matcherPattern = "^" +
-                command.getPrimaryPattern().pattern() +
+        String matcherPattern = command.getPrimaryPattern().pattern() +
                 "\\s?" +
                 command.getContextPattern().pattern() +
                 "$";

@@ -115,7 +115,7 @@ public class PollTask extends TimerTask {
 	private void tryPinPollMessage(Message message) {
 		Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 
-		if(b.getSettingFor(BotSettingName.PIN_POLLS).getValue().equalsIgnoreCase("true")) {
+		if(b.getSettingFor(BotSettingName.PIN_POLLS).getAsString().equalsIgnoreCase("true")) {
 			try {
 				message.pin().queue();
 			}catch(Exception e) {

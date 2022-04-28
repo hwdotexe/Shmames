@@ -1,8 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
@@ -11,24 +8,26 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
-public class SimonSays extends Command {
-	public SimonSays() {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Say extends Command {
+	public Say() {
 		super(false);
 	}
 
 	@Override
 	protected CommandStructure buildCommandStructure() {
-		return CommandBuilder.Create("simonsays", "I'll repeat after you! Send messages, links, or server emotes!")
+		return CommandBuilder.Create("say", "I'll repeat after you! Send messages, links, or server emotes!")
 				.addAlias("echo")
 				.addAlias("repeat")
+				.addAlias("simonsays")
 				.addParameters(
 						new CommandParameter("message", "The message you want me to repeat.", ParameterType.STRING)
 								.setExample("Am I kawaii??")

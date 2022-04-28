@@ -54,7 +54,7 @@ public class CommandHandler {
 		commands.add(new ResetEmoteStats());
 		commands.add(new Response());
 		commands.add(new Roll());
-		commands.add(new SimonSays());
+		commands.add(new Say());
 		commands.add(new Storytime());
 		commands.add(new Tally());
 		commands.add(new Thoughts());

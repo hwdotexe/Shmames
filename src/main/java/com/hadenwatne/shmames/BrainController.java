@@ -104,7 +104,7 @@ public class BrainController {
 				}
 
 				if(!exists) {
-					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getValue()));
+					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getAsString()));
 				}
 			}
 

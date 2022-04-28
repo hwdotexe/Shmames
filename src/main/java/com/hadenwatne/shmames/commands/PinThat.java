@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import java.awt.Color;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
@@ -18,7 +17,6 @@ import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.BotSettingName;
@@ -45,7 +43,7 @@ public class PinThat extends Command {
 
 		try {
 			Message toPin = MessageService.GetMessageIndicated(executingCommand, messages);
-			TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getValue());
+			TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getAsString());
 
 			if(channelToSendPin != null) {
 				EmbedBuilder response = response(EmbedType.INFO);

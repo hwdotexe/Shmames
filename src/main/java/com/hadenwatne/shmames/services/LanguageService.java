@@ -47,7 +47,7 @@ public class LanguageService {
 	 */
 	public Lang getLangFor(@Nullable Brain brain) {
 		if(brain != null){
-			Lang l = getLang(brain.getSettingFor(BotSettingName.SERVER_LANG).getValue());
+			Lang l = getLang(brain.getSettingFor(BotSettingName.SERVER_LANG).getAsString());
 
 			if(l == null){
 				return getDefaultLang();

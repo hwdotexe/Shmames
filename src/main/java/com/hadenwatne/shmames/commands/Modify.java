@@ -225,7 +225,7 @@ public class Modify extends Command {
 	private MessageEmbed.Field getFormattedSettingField(BotSetting setting, Guild server){
 		boolean isValid = false;
 		String mention = "";
-		String settingValue = setting.getValue();
+		String settingValue = setting.getAsString();
 
 		switch(setting.getType()){
 			case CHANNEL:
