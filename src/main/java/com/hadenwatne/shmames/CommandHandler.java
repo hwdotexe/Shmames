@@ -47,7 +47,7 @@ public class CommandHandler {
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
 //		commands.add(new Music());
-		commands.add(new PinThat());
+		commands.add(new Pin());
 		commands.add(new Poll());
 		commands.add(new React());
 		commands.add(new Report());

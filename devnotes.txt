@@ -5,7 +5,6 @@
 - More permissions
   - Deleting lists
   - Managing triggers
-  - PinThat
 
 
 - Language combine enum and default values?
