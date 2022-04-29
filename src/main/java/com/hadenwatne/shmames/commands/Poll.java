@@ -54,19 +54,6 @@ public class Poll extends Command {
 			int seconds = DataService.ConvertTimeStringToSeconds(time);
 
 			if (seconds > 0) {
-				/*
-				// Use friendly channel names when possible.
-				Matcher channelReference = Pattern.compile("<#(\\d{15,})>").matcher(question);
-
-				while (channelReference.find()) {
-					TextChannel textChannel = server.getTextChannelById(channelReference.group(1));
-
-					if (textChannel != null) {
-						question = question.replaceFirst(channelReference.group(1), textChannel.getName());
-					}
-				}
-				 */
-
 				List<String> optionsList = new ArrayList<>();
 
 				for (String s : options.split(";")) {
@@ -80,6 +67,8 @@ public class Poll extends Command {
 					executingCommand.reply(embedBuilder, false, onSuccess -> {
 						PollModel poll = new PollModel(executingCommand.getChannel().getId(), executingCommand.getAuthorUser().getId(), onSuccess.getId(), question, optionsList, seconds);
 						brain.getActivePolls().add(poll);
+
+						poll.startPollInstrumentation();
 					});
 
 					return null;

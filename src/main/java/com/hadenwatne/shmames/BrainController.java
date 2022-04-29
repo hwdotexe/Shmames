@@ -8,13 +8,11 @@ import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.*;
 import com.hadenwatne.shmames.services.FileService;
 import com.hadenwatne.shmames.tasks.AlarmTask;
-import com.hadenwatne.shmames.tasks.PollTask;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Responsible for serialization of server-specific data files ("brains").
@@ -80,16 +78,14 @@ public class BrainController {
 
 			// Activate any threads that this brain may have had.
 			if(brain.getActivePolls().size() > 0) {
-				for(PollModel p : brain.getActivePolls()) {
-					// Create new task
-					Timer t = new Timer();
-					t.schedule(new PollTask(p), p.getExpiration());
+				for(PollModel pollModel : brain.getActivePolls()) {
+					pollModel.startPollInstrumentation();
 				}
 			}
 
 			if(brain.getTimers().size() > 0){
-				for(AlarmTask t : brain.getTimers()){
-					t.rescheduleTimer();
+				for(AlarmTask alarmTask : brain.getTimers()){
+					alarmTask.rescheduleTimer();
 				}
 			}
 

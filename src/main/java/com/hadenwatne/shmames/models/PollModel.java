@@ -41,8 +41,10 @@ public class PollModel {
     	calendar.add(Calendar.SECOND, seconds);
 		
     	this.expires = calendar;
+	}
 
-    	// Make sure this poll can expire over time.
+	public void startPollInstrumentation() {
+		// Make sure this poll can expire over time.
 		this.schedulePollExpirationTask(this.expires.getTime());
 
 		// Open a new listener unique to this poll.
@@ -75,10 +77,6 @@ public class PollModel {
 	
 	public String getChannelID() {
 		return channelID;
-	}
-	
-	public Date getExpiration() {
-		return expires.getTime();
 	}
 	
 	public List<String> getOptions(){
