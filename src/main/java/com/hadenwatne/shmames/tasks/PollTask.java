@@ -6,7 +6,6 @@ import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.TextFormatService;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -14,30 +13,31 @@ import java.util.TimerTask;
 
 public class PollTask extends TimerTask {
 	private final PollModel pollModel;
+	private final TextChannel channel;
 	private Message message;
 	private Lang lang;
-	private TextChannel channel;
 
 	public PollTask(PollModel pollModel) {
 		this.pollModel = pollModel;
-
-		this.channel = App.Shmames.getJDA().getTextChannelById(pollModel.getChannelID());
+		this.channel = App.Shmames.getJDA().getTextChannelById(this.pollModel.getChannelID());
 
 		if (this.channel != null) {
-			this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
-				this.message = success;
-				this.lang = App.Shmames.getLanguageService().getLangFor(this.channel.getGuild());
+			this.lang = App.Shmames.getLanguageService().getLangFor(this.channel.getGuild());
 
-				if (!this.pollModel.hasStarted()) {
-					this.tryPinPollMessage(this.message);
-					this.populatePollVoteOptions(this.message);
-					this.pollModel.setHasStarted(true);
-				}
+			if(this.pollModel.isActive()) {
+				this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
+					this.message = success;
 
-				EmbedBuilder embedBuilder = this.pollModel.buildMessageEmbed(this.lang, this.channel.getName(), this.pollModel.getExpiration(), false);
+					// Perform first-time Poll tasks if this Poll hasn't started yet.
+					if (!this.pollModel.hasStarted()) {
+						this.tryPinPollMessage(this.message);
+						this.populatePollVoteOptions(this.message);
 
-				this.message.editMessageEmbeds(embedBuilder.build()).queue();
-			});
+						this.pollModel.updateMessageEmbed(lang, this.channel.getName(), this.message);
+						this.pollModel.setHasStarted(true);
+					}
+				});
+			}
 		}
 	}
 
@@ -48,17 +48,12 @@ public class PollTask extends TimerTask {
 		if (pollModel.isActive()) {
 			pollModel.setActive(false);
 
-			/*
-			TODO: This is clearing out the results section, is there a way to preserve it without regenerating?
-			EmbedBuilder embedBuilder = this.pollModel.buildMessageEmbed(this.lang, this.channel.getName(), this.pollModel.getExpiration(), true);
+			this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
+				this.pollModel.updateMessageEmbed(this.lang, this.channel.getName(), success);
 
-			this.message.editMessageEmbeds(embedBuilder.build()).queue();
-			*/
-
-			this.message.clearReactions().queue();
-
-			Brain brain = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
-			brain.getActivePolls().remove(pollModel);
+				Brain brain = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
+				brain.getActivePolls().remove(pollModel);
+			});
 		}
 
 		this.cancel();
@@ -70,12 +65,14 @@ public class PollTask extends TimerTask {
 
 			message.addReaction(emoji).queue();
 		}
+
+		message.addReaction(TextFormatService.EMOJI_RED_X).queue();
 	}
 
 	private void tryPinPollMessage(Message message) {
 		Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 
-		if (b.getSettingFor(BotSettingName.PIN_POLLS).getAsBoolean()) {
+		if (b.getSettingFor(BotSettingName.POLL_PIN).getAsBoolean()) {
 			try {
 				message.pin().queue();
 			} catch (Exception ignored) {

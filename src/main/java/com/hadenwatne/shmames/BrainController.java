@@ -1,19 +1,20 @@
 package com.hadenwatne.shmames;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-
 import com.google.gson.Gson;
-
 import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.models.*;
+import com.hadenwatne.shmames.enums.BotSettingType;
+import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.*;
 import com.hadenwatne.shmames.services.FileService;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 import com.hadenwatne.shmames.tasks.PollTask;
+import net.dv8tion.jda.api.entities.Role;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
 
 /**
  * Responsible for serialization of server-specific data files ("brains").
@@ -65,14 +66,14 @@ public class BrainController {
 		// Load server settings files.
 		File[] brainFiles = FileService.ListFilesInDirectory(BRAIN_SERVER_DIRECTORY, new JSONFileFilter());
 
-		for(File b : brainFiles) {
-			Brain brain = gson.fromJson(FileService.LoadFileAsString(b), Brain.class);
+		for(File brainFile : brainFiles) {
+			Brain brain = gson.fromJson(FileService.LoadFileAsString(brainFile), Brain.class);
 
 			// If this brain belongs to a deleted server, remove it and continue.
 			if(App.Shmames.getJDA().getGuildById(brain.getGuildID()) != null) {
 				brains.add(brain);
 			} else {
-				b.delete();
+				brainFile.delete();
 
 				continue;
 			}
@@ -93,18 +94,27 @@ public class BrainController {
 			}
 
 			// Ensure new settings are made available for the user to change.
-			for(BotSetting s : App.Shmames.getStorageService().getDefaultSettings()) {
+			for(BotSetting defaultSetting : App.Shmames.getStorageService().getDefaultSettings()) {
 				boolean exists = false;
 
-				for(BotSetting bs : brain.getSettings()) {
-					if(bs.getName() == s.getName()) {
+				for(BotSetting botSetting : brain.getSettings()) {
+					if(botSetting.getName() == defaultSetting.getName()) {
 						exists = true;
 						break;
 					}
 				}
 
 				if(!exists) {
-					brain.getSettings().add(new BotSetting(s.getName(), s.getType(), s.getAsString()));
+					BotSetting newSetting = new BotSetting(defaultSetting.getName(), defaultSetting.getType(), defaultSetting.getAsString());
+
+					// Before adding a new ROLE setting with the "everyone" default, set its ID to this server's public role.
+					if(newSetting.getType() == BotSettingType.ROLE && newSetting.getAsString().equalsIgnoreCase("everyone")) {
+						Role everyone = App.Shmames.getJDA().getGuildById(brain.getGuildID()).getPublicRole();
+
+						newSetting.setValue(everyone.getId(), brain);
+					}
+
+					brain.getSettings().add(newSetting);
 				}
 			}
 

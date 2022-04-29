@@ -209,10 +209,10 @@
       "Queued the `%WC%` Playlist!"
     ],
     "POLL_TITLE": [
-      "== POLL =="
+      "Cast your vote!"
     ],
     "POLL_TITLE_RESULTS": [
-      "== POLL (Results) =="
+      "The Poll has closed."
     ],
     "RESET_EMOTE_STATS": [
       "Emoji usage stats have been reset!"

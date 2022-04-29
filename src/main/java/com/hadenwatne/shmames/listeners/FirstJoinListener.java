@@ -11,11 +11,9 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.shmames.Shmames;
 
 public class FirstJoinListener extends ListenerAdapter {
 	final EmbedBuilder welcomeMessage;
@@ -70,7 +68,7 @@ public class FirstJoinListener extends ListenerAdapter {
 
 	private void setDefaultChannelSettings(Brain brain, BaseGuildMessageChannel channel) {
 		if(channel != null){
-			BotSetting pin = brain.getSettingFor(BotSettingName.PIN_CHANNEL);
+			BotSetting pin = brain.getSettingFor(BotSettingName.POLL_PIN_CHANNEL);
 
 			pin.setValue(channel.getName(), brain);
 		}

@@ -4,7 +4,6 @@
 
 - More permissions
   - Deleting lists
-  - Closing polls
   - Managing triggers
   - PinThat
 

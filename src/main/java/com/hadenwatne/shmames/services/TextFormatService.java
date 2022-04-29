@@ -3,6 +3,51 @@ package com.hadenwatne.shmames.services;
 import java.util.Calendar;
 
 public class TextFormatService {
+    public static final String EMOJI_RED_X = "\u274c";
+
+    public static final String EMOJI_NUMBER_0 = "\u0030\u20E3";
+    public static final String EMOJI_NUMBER_1 = "\u0031\u20E3";
+    public static final String EMOJI_NUMBER_2 = "\u0032\u20E3";
+    public static final String EMOJI_NUMBER_3 = "\u0033\u20E3";
+    public static final String EMOJI_NUMBER_4 = "\u0034\u20E3";
+    public static final String EMOJI_NUMBER_5 = "\u0035\u20E3";
+    public static final String EMOJI_NUMBER_6 = "\u0036\u20E3";
+    public static final String EMOJI_NUMBER_7 = "\u0037\u20E3";
+    public static final String EMOJI_NUMBER_8 = "\u0038\u20E3";
+    public static final String EMOJI_NUMBER_9 = "\u0039\u20E3";
+
+    public static final String EMOJI_LETTER_A = "\uD83C\uDDE6";
+    public static final String EMOJI_LETTER_B = "\uD83C\uDDE7";
+    public static final String EMOJI_LETTER_C = "\uD83C\uDDE8";
+    public static final String EMOJI_LETTER_D = "\uD83C\uDDE9";
+    public static final String EMOJI_LETTER_E = "\uD83C\uDDEA";
+    public static final String EMOJI_LETTER_F = "\uD83C\uDDEB";
+    public static final String EMOJI_LETTER_G = "\uD83C\uDDEC";
+    public static final String EMOJI_LETTER_H = "\uD83C\uDDED";
+    public static final String EMOJI_LETTER_I = "\uD83C\uDDEE";
+    public static final String EMOJI_LETTER_J = "\uD83C\uDDEF";
+    public static final String EMOJI_LETTER_K = "\uD83C\uDDF0";
+    public static final String EMOJI_LETTER_L = "\uD83C\uDDF1";
+    public static final String EMOJI_LETTER_M = "\uD83C\uDDF2";
+    public static final String EMOJI_LETTER_N = "\uD83C\uDDF3";
+    public static final String EMOJI_LETTER_O = "\uD83C\uDDF4";
+    public static final String EMOJI_LETTER_P = "\uD83C\uDDF5";
+    public static final String EMOJI_LETTER_Q = "\uD83C\uDDF6";
+    public static final String EMOJI_LETTER_R = "\uD83C\uDDF7";
+    public static final String EMOJI_LETTER_S = "\uD83C\uDDF8";
+    public static final String EMOJI_LETTER_T = "\uD83C\uDDF9";
+    public static final String EMOJI_LETTER_U = "\uD83C\uDDFA";
+    public static final String EMOJI_LETTER_V = "\uD83C\uDDFB";
+    public static final String EMOJI_LETTER_W = "\uD83C\uDDFC";
+    public static final String EMOJI_LETTER_X = "\uD83C\uDDFD";
+    public static final String EMOJI_LETTER_Y = "\uD83C\uDDFE";
+    public static final String EMOJI_LETTER_Z = "\uD83C\uDDFF";
+
+    public static final String EMOJI_SYMBOL_DASH = "\u2796";
+    public static final String EMOJI_SYMBOL_DOLLAR = "\uD83D\uDCB2";
+    public static final String EMOJI_SYMBOL_MIDDLE_FINGER = "\uD83D\uDD95";
+
+
     /**
      * Creates a friendly time readout from a given Calendar object.
      * @param c The Calendar to use.
@@ -36,25 +81,25 @@ public class TextFormatService {
     public static String IntToEmoji(int i) {
         switch(i) {
             case 1:
-                return "\u0031\u20E3";
+                return EMOJI_NUMBER_1;
             case 2:
-                return "\u0032\u20E3";
+                return EMOJI_NUMBER_2;
             case 3:
-                return "\u0033\u20E3";
+                return EMOJI_NUMBER_3;
             case 4:
-                return "\u0034\u20E3";
+                return EMOJI_NUMBER_4;
             case 5:
-                return "\u0035\u20E3";
+                return EMOJI_NUMBER_5;
             case 6:
-                return "\u0036\u20E3";
+                return EMOJI_NUMBER_6;
             case 7:
-                return "\u0037\u20E3";
+                return EMOJI_NUMBER_7;
             case 8:
-                return "\u0038\u20E3";
+                return EMOJI_NUMBER_8;
             case 9:
-                return "\u0039\u20E3";
+                return EMOJI_NUMBER_9;
             default:
-                return "\u0030\u20E3";
+                return EMOJI_NUMBER_0;
         }
     }
 
@@ -66,23 +111,23 @@ public class TextFormatService {
      */
     public static int EmojiToInt(String i) {
         switch(i) {
-            case "\u0031\u20E3":
+            case EMOJI_NUMBER_1:
                 return 1;
-            case "\u0032\u20E3":
+            case EMOJI_NUMBER_2:
                 return 2;
-            case "\u0033\u20E3":
+            case EMOJI_NUMBER_3:
                 return 3;
-            case "\u0034\u20E3":
+            case EMOJI_NUMBER_4:
                 return 4;
-            case "\u0035\u20E3":
+            case EMOJI_NUMBER_5:
                 return 5;
-            case "\u0036\u20E3":
+            case EMOJI_NUMBER_6:
                 return 6;
-            case "\u0037\u20E3":
+            case EMOJI_NUMBER_7:
                 return 7;
-            case "\u0038\u20E3":
+            case EMOJI_NUMBER_8:
                 return 8;
-            case "\u0039\u20E3":
+            case EMOJI_NUMBER_9:
                 return 9;
             default:
                 return 0;
@@ -97,65 +142,64 @@ public class TextFormatService {
     public static String LetterToEmoji(char letter) {
         switch(letter) {
             case 'a':
-                return "\uD83C\uDDE6";
+                return EMOJI_LETTER_A;
             case 'b':
-                return "\uD83C\uDDE7";
+                return EMOJI_LETTER_B;
             case 'c':
-                return "\uD83C\uDDE8";
+                return EMOJI_LETTER_C;
             case 'd':
-                return "\uD83C\uDDE9";
+                return EMOJI_LETTER_D;
             case 'e':
-                return "\uD83C\uDDEA";
+                return EMOJI_LETTER_E;
             case 'f':
-                return "\uD83C\uDDEB";
+                return EMOJI_LETTER_F;
             case 'g':
-                return "\uD83C\uDDEC";
+                return EMOJI_LETTER_G;
             case 'h':
-                return "\uD83C\uDDED";
+                return EMOJI_LETTER_H;
             case 'i':
-                return "\uD83C\uDDEE";
+                return EMOJI_LETTER_I;
             case 'j':
-                return "\uD83C\uDDEF";
+                return EMOJI_LETTER_J;
             case 'k':
-                return "\uD83C\uDDF0";
+                return EMOJI_LETTER_K;
             case 'l':
-                return "\uD83C\uDDF1";
+                return EMOJI_LETTER_L;
             case 'm':
-                return "\uD83C\uDDF2";
+                return EMOJI_LETTER_M;
             case 'n':
-                return "\uD83C\uDDF3";
+                return EMOJI_LETTER_N;
             case 'o':
-                return "\uD83C\uDDF4";
+                return EMOJI_LETTER_O;
             case 'p':
-                return "\uD83C\uDDF5";
+                return EMOJI_LETTER_P;
             case 'q':
-                return "\uD83C\uDDF6";
+                return EMOJI_LETTER_Q;
             case 'r':
-                return "\uD83C\uDDF7";
+                return EMOJI_LETTER_R;
             case 's':
-                return "\uD83C\uDDF8";
+                return EMOJI_LETTER_S;
             case 't':
-                return "\uD83C\uDDF9";
+                return EMOJI_LETTER_T;
             case 'u':
-                return "\uD83C\uDDFA";
+                return EMOJI_LETTER_U;
             case 'v':
-                return "\uD83C\uDDFB";
+                return EMOJI_LETTER_V;
             case 'w':
-                return "\uD83C\uDDFC";
+                return EMOJI_LETTER_W;
             case 'x':
-                return "\uD83C\uDDFD";
+                return EMOJI_LETTER_X;
             case 'y':
-                return "\uD83C\uDDFE";
+                return EMOJI_LETTER_Y;
             case 'z':
-                return "\uD83C\uDDFF";
+                return EMOJI_LETTER_Z;
             case '-':
-                return "\u2796";
             case '_':
-                return "\u2796";
+                return EMOJI_SYMBOL_DASH;
             case '$':
-                return "\uD83D\uDCB2";
+                return EMOJI_SYMBOL_DOLLAR;
             default:
-                return "\uD83D\uDD95";
+                return EMOJI_SYMBOL_MIDDLE_FINGER;
         }
     }
 

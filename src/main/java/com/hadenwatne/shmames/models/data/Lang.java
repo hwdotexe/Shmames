@@ -189,8 +189,8 @@ public class Lang {
         messages.put(Langs.MUSIC_QUEUE_SHUFFLED, new String[]{"Shuffled the music queue!"});
         messages.put(Langs.MUSIC_QUEUE_REVERSED, new String[]{"Reversed the music queue!"});
         messages.put(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{"Queued the `" + wildcard + "` Playlist!"});
-        messages.put(Langs.POLL_TITLE, new String[]{"== POLL =="});
-        messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"== POLL (Results) =="});
+        messages.put(Langs.POLL_TITLE, new String[]{"Cast your vote!"});
+        messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"The Poll has closed."});
         messages.put(Langs.RESET_EMOTE_STATS, new String[]{"Emoji usage stats have been reset!"});
         messages.put(Langs.SEARCH_RESULTS, new String[]{"Search results:"});
         messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."});

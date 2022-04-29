@@ -43,7 +43,7 @@ public class PinThat extends Command {
 
 		try {
 			Message toPin = MessageService.GetMessageIndicated(executingCommand, messages);
-			TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getAsString());
+			TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.POLL_PIN_CHANNEL).getAsString());
 
 			if(channelToSendPin != null) {
 				EmbedBuilder response = response(EmbedType.INFO);

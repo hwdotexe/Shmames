@@ -47,7 +47,7 @@ public class Poll extends Command {
 		Brain brain = executingCommand.getBrain();
 		Lang lang = executingCommand.getLanguage();
 
-		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.ALLOW_POLLS), executingCommand.getAuthorUser())) {
+		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), executingCommand.getAuthorUser())) {
 			String time = executingCommand.getCommandArguments().getAsString("time");
 			String question = executingCommand.getCommandArguments().getAsString("question");
 			String options = executingCommand.getCommandArguments().getAsString("options");
@@ -78,7 +78,7 @@ public class Poll extends Command {
 							.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
 
 					executingCommand.reply(embedBuilder, false, onSuccess -> {
-						PollModel poll = new PollModel(executingCommand.getChannel().getId(), onSuccess.getId(), question, optionsList, seconds);
+						PollModel poll = new PollModel(executingCommand.getChannel().getId(), executingCommand.getAuthorUser().getId(), onSuccess.getId(), question, optionsList, seconds);
 						brain.getActivePolls().add(poll);
 					});
 
