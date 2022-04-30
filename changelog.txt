@@ -33,3 +33,4 @@ Technical
 - Commands now inherit from a Class instead of an Interface, allowing for more shared logic.
 - Brains now save the IDs for roles, emotes, and channels, instead of the names for each.
 - Regex generation is now separated into more steps for easier debugging and improved command matching.
+- Hangman code was cleaned up and its algorithms improved.

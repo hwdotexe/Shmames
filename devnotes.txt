@@ -1,15 +1,9 @@
-- Refine listeners
-- Update poll interface
-
-
 - More permissions
   - Deleting lists
   - Managing triggers
 
 
 - Language combine enum and default values?
-- Do not delete triggering messages
-- Spin up instance react listener for polls
 - Messages larger than the character maximum for fields/description (see Storytime)
 
 - Command stats public?
@@ -24,8 +18,6 @@ PaginationService paginationID to cache data that may be called multiple times
 
 
 Not happy with:
-- Hangman
-  - Messy
 - ForumWeapon
   - Very messy
   - Some repeated code in Search and List

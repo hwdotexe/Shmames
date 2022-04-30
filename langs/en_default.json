@@ -140,7 +140,7 @@
       "Success!"
     ],
     "HANGMAN_DICTIONARIES": [
-      "Available dictionaries: %WC% (or leave blank to use all of them)"
+      "Available dictionaries: **%WC%** (or leave blank to use all of them)"
     ],
     "HANGMAN_FOOTER_GUESSED": [
       "Already guessed:"

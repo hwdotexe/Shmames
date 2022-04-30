@@ -26,6 +26,6 @@ public class HangmanDictionary {
     }
 
     public String randomWord(){
-        return words.keySet().toArray()[RandomService.GetRandom(words.keySet().size())].toString();
+        return RandomService.GetRandomFromSet(words.keySet());
     }
 }

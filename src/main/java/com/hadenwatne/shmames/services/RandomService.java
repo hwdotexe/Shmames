@@ -36,7 +36,7 @@ public class RandomService {
      * @param set The unordered list to use.
      * @return A random item from the Set.
      */
-    public static <T> T GetRandomHashMap(Set<T> set) {
+    public static <T> T GetRandomFromSet(Set<T> set) {
         int num = GetRandom(set.size());
         for (T t : set)
             if (--num < 0)

@@ -20,8 +20,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Hangman extends Command {
@@ -40,8 +40,8 @@ public class Hangman extends Command {
 						CommandBuilder.Create("start", "Begin a new game.")
 								.addParameters(
 										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
-												.setPattern("[a-z0-9,]+")
-												.setExample("mainDictionary"),
+												.setPattern("([a-z0-9]+;)+([a-z0-9]+);?")
+												.setExample("game1;game2;"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 												.setExample("true")
 								)
@@ -104,47 +104,7 @@ public class Hangman extends Command {
 
 		String dictionaryNames = executingCommand.getCommandArguments().getAsString("dictionary");
 		boolean doExclude = executingCommand.getCommandArguments().getAsBoolean("exclude");
-		HangmanDictionary dictionary = null;
-
-		// Select the word list to pull from for this Hangman puzzle.
-		if(dictionaryNames != null) {
-			List<HangmanDictionary> availableDictionaries = new ArrayList<>();
-
-			if(doExclude) {
-				// Add all except the ones mentioned.
-				for(HangmanDictionary dict : dictionaries) {
-					boolean shouldAdd = true;
-
-					for (String n : dictionaryNames.split(",")) {
-						if(dict.getName().equalsIgnoreCase(n)){
-							shouldAdd = false;
-						}
-					}
-
-					if(shouldAdd) {
-						availableDictionaries.add(dict);
-					}
-				}
-			} else {
-				// Only add the mentioned dictionaries.
-				for (String n : dictionaryNames.split(",")) {
-					HangmanDictionary namedDictionary = getDictionaryByName(n);
-
-					if (namedDictionary != null) {
-						availableDictionaries.add(namedDictionary);
-					}
-				}
-			}
-
-			if(availableDictionaries.size() == 0){
-				return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-						.setDescription( lang.getError(Errors.NOT_FOUND));
-			}
-
-			dictionary = availableDictionaries.get(RandomService.GetRandom(availableDictionaries.size()));
-		} else {
-			dictionary = dictionaries.get(RandomService.GetRandom(dictionaries.size()));
-		}
+		HangmanDictionary dictionary = selectDictionary(dictionaryNames, doExclude);
 
 		String word = dictionary.randomWord();
 		String hint = dictionary.getWords().get(word);
@@ -228,14 +188,32 @@ public class Hangman extends Command {
 		return null;
 	}
 
-	private @Nullable HangmanDictionary getDictionaryByName(String name) {
-		for(HangmanDictionary dictionary : dictionaries) {
-			if(dictionary.getName().equalsIgnoreCase(name)) {
-				return dictionary;
+	private HangmanDictionary selectDictionary(String chosenNames, boolean exclude) {
+		List<HangmanDictionary> availableDictionaries = new ArrayList<>();
+
+		if(chosenNames != null) {
+			List<String> namesSplit = Arrays.asList(chosenNames.toLowerCase().split(";"));
+
+			for(HangmanDictionary dictionary : dictionaries) {
+				if(namesSplit.contains(dictionary.getName().toLowerCase())) {
+					// The dictionary we've called out is this one.
+					if(!exclude) {
+						// Include it
+						availableDictionaries.add(dictionary);
+					}
+				} else {
+					// This dictionary wasn't called out at all.
+					if(exclude) {
+						// If we're excluding dictionaries, then this one is safe to add.
+						availableDictionaries.add(dictionary);
+					}
+				}
 			}
+
+			return RandomService.GetRandomObjectFromList(availableDictionaries);
 		}
 
-		return null;
+		return RandomService.GetRandomObjectFromList(dictionaries);
 	}
 
 	private EmbedBuilder buildHangmanEmbed(Lang lang, HangmanGame g){
@@ -250,10 +228,6 @@ public class Hangman extends Command {
 		}
 
 		eBuilder.setFooter(lang.getMsg(Langs.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
-
-//		eBuilder.setTitle(g.getDictionary()+" » "+g.getHint());
-//		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
-//		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
 
 		eBuilder.addField(g.getDictionary()+" » "+g.getHint(), getHangmanASCII(g.getLivesRemaining())+"\n"+getWordProgressEmotes(g), false);
 

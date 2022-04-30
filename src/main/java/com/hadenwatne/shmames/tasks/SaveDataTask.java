@@ -33,7 +33,7 @@ public class SaveDataTask extends TimerTask {
 	
 	public void run() {
 		MotherBrain mb = App.Shmames.getStorageService().getMotherBrain();
-		String action = RandomService.GetRandomHashMap(mb.getStatuses().keySet());
+		String action = RandomService.GetRandomFromSet(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
 
 		updateRandomSeed();

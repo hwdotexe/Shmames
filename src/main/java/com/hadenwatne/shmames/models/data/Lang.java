@@ -166,7 +166,7 @@ public class Lang {
         messages.put(Langs.FORUM_WEAPONS_PRUNED, new String[]{"Pruned **" + wildcard + "** unused Forum Weapons!"});
         messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
         messages.put(Langs.GENERIC_SUCCESS, new String[]{"Success!"});
-        messages.put(Langs.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: " + wildcard + " (or leave blank to use all of them)"});
+        messages.put(Langs.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: **" + wildcard + "** (or leave blank to use all of them)"});
         messages.put(Langs.HANGMAN_FOOTER_GUESSED, new String[]{"Already guessed:"});
         messages.put(Langs.HANGMAN_TITLE, new String[]{"Let's play Hangman!"});
         messages.put(Langs.INVALID_TRIGGER_TYPE, new String[]{":scream: Invalid trigger type! Your options are: " + wildcard});
