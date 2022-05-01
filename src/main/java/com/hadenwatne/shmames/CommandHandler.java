@@ -36,7 +36,7 @@ public class CommandHandler {
 		commands.add(new Dev());
 		commands.add(new EightBall());
 		commands.add(new Enhance());
-//		commands.add(new FamilyCmd());
+		commands.add(new FamilyCmd());
 		commands.add(new ForumWeapon());
 		commands.add(new GIF());
 		commands.add(new Hangman());
@@ -163,7 +163,8 @@ public class CommandHandler {
 					executingCommand.setSubCommandGroup(groupMatch);
 
 					// Sub-command Specific
-					ParseCommandSubCommands(subCommandGroup.getSubCommands(), context, executingCommand, commandMatcher);
+					final String contextStripped = context.substring(groupMatch.length()).trim();
+					ParseCommandSubCommands(subCommandGroup.getSubCommands(), contextStripped, executingCommand, commandMatcher);
 
 					break;
 				}

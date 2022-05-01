@@ -71,7 +71,7 @@ public class SlashCommandListener extends ListenerAdapter {
             EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
                     .setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
 
-            MessageService.ReplyToMessage(hook, embed);
+            MessageService.ReplyToMessage(hook, embed, false);
         }
     }
 }

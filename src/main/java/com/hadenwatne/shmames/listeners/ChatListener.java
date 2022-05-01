@@ -133,7 +133,10 @@ public class ChatListener extends ListenerAdapter {
 				response = response.replaceAll("%NAME%", authorName);
 
 				// Send the response.
-				MessageService.ReplyToMessage(message, EmbedType.INFO, t.name() + " Response", response, false);
+				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, t.name() + "Response");
+
+				embedBuilder.setDescription(response);
+				MessageService.ReplyToMessage(message, embedBuilder, false);
 			}
 		}
 	}

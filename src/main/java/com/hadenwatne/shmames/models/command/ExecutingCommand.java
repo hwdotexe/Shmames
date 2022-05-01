@@ -46,7 +46,11 @@ public class ExecutingCommand {
         return this.brain;
     }
 
-    public @Nullable String getSubCommandGroup() {
+    public String getSubCommandGroup() {
+        if(this.subCommandGroup == null) {
+            return "";
+        }
+
         return this.subCommandGroup;
     }
 
@@ -58,7 +62,11 @@ public class ExecutingCommand {
         return this.subCommandGroup != null;
     }
 
-    public @Nullable String getSubCommand() {
+    public String getSubCommand() {
+        if(this.subCommand == null) {
+            return "";
+        }
+
         return this.subCommand;
     }
 
@@ -76,10 +84,6 @@ public class ExecutingCommand {
 
     public void setCommandArguments(ExecutingCommandArguments commandArguments) {
         this.commandArguments = commandArguments;
-    }
-
-    public boolean hasCommandArguments() {
-        return this.commandArguments != null;
     }
 
     public void setInteractionHook(InteractionHook hook) {
@@ -145,7 +149,7 @@ public class ExecutingCommand {
     public void reply(EmbedBuilder embedBuilder) {
         if(embedBuilder != null) {
             if (hook != null) {
-                MessageService.ReplyToMessage(hook, embedBuilder);
+                MessageService.ReplyToMessage(hook, embedBuilder, false);
             } else if (message != null) {
                 MessageService.ReplyToMessage(message, embedBuilder, false);
             } else {
@@ -157,7 +161,7 @@ public class ExecutingCommand {
     public void reply(EmbedBuilder embedBuilder, boolean mention, Consumer<? super Message> onSuccess) {
         if(embedBuilder != null) {
             if (hook != null) {
-                MessageService.ReplyToMessage(hook, embedBuilder, onSuccess);
+                MessageService.ReplyToMessage(hook, embedBuilder, mention, onSuccess);
             } else if (message != null) {
                 MessageService.ReplyToMessage(message, embedBuilder, mention, onSuccess);
             } else {
@@ -169,9 +173,9 @@ public class ExecutingCommand {
     public void replyFile(InputStream file, String name, EmbedBuilder embedBuilder) {
         if(embedBuilder != null && file != null) {
             if (hook != null) {
-                MessageService.ReplyToMessage(hook, file, name, embedBuilder);
+                MessageService.ReplyToMessage(hook, file, name, embedBuilder, false);
             } else if (message != null) {
-                MessageService.ReplyToMessage(message, file, name, embedBuilder);
+                MessageService.ReplyToMessage(message, file, name, embedBuilder, false);
             } else {
                 LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
             }
@@ -181,9 +185,9 @@ public class ExecutingCommand {
     public void replyFile(File file, EmbedBuilder embedBuilder) {
         if(embedBuilder != null && file != null) {
             if (hook != null) {
-                MessageService.ReplyToMessage(hook, file, embedBuilder);
+                MessageService.ReplyToMessage(hook, file, embedBuilder, false);
             } else if (message != null) {
-                MessageService.ReplyToMessage(message, file, embedBuilder);
+                MessageService.ReplyToMessage(message, file, embedBuilder, false);
             } else {
                 LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
             }

@@ -3,8 +3,12 @@
   - Managing triggers
 
 
+- Success, Error response in parent so we don't have to duplicate Error enum?
+
+
 - Language combine enum and default values?
 - Messages larger than the character maximum for fields/description (see Storytime)
+  - Alternatively: Family emotes, split a large embed at the reply level
 
 - Command stats public?
 
