@@ -174,8 +174,8 @@ public class MessageService {
      * @param channel The channel to send a message in.
      * @param message The message to send.
      */
-    public static void SendMessage(MessageChannel channel, EmbedBuilder message) {
-        channel.sendMessageEmbeds(message.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
+    public static void SendMessage(MessageChannel channel, EmbedBuilder message, boolean mention) {
+        channel.sendMessageEmbeds(message.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
         });
     }

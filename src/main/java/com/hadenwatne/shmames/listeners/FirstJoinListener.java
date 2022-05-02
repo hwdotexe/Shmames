@@ -58,7 +58,7 @@ public class FirstJoinListener extends ListenerAdapter {
 
 	private void sendWelcomeMessage(Brain brain, BaseGuildMessageChannel channel) {
 		try {
-			MessageService.SendMessage(channel, welcomeMessage);
+			MessageService.SendMessage(channel, welcomeMessage, false);
 		} catch (InsufficientPermissionException e) {
 			LoggingService.Log(LogType.ERROR, "Could not send a welcome mesage to a server.");
 		}

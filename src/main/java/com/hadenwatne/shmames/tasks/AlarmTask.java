@@ -86,7 +86,7 @@ public class AlarmTask {
 				if(originMessage != null) {
 					MessageService.ReplyToMessage(originMessage, response, true);
 				} else {
-					MessageService.SendMessage(channel, response);
+					MessageService.SendMessage(channel, response, true);
 				}
 
 				String serverID = channel.getGuild().getId();

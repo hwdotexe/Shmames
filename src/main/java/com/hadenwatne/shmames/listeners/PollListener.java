@@ -40,9 +40,14 @@ public class PollListener extends ListenerAdapter {
                             App.Shmames.getJDA().removeEventListener(this);
                         }
                     } else {
-                        Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+                        int alphabetNumber = TextFormatService.LetterToNumber(e.getReactionEmote().getName());
 
-                        this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                        // Don't bother updating if the reaction isn't an option.
+                        if(this.pollModel.getOptions().size() >= alphabetNumber) {
+                            Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+
+                            this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                        }
                     }
                 }
             }
@@ -54,10 +59,15 @@ public class PollListener extends ListenerAdapter {
         if(e.getMessageId().equals(this.pollModel.getMessageID())) {
             if(!e.getUser().isBot()) {
                 if (this.pollModel.isActive()) {
-                    Message message = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
-                    Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+                    int alphabetNumber = TextFormatService.LetterToNumber(e.getReactionEmote().getName());
 
-                    this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                    // Don't bother updating if the reaction isn't an option.
+                    if(this.pollModel.getOptions().size() >= alphabetNumber) {
+                        Message message = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
+                        Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+
+                        this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                    }
                 }
             }
         }
