@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.enums.LogType;
@@ -118,7 +117,7 @@ public class HTTPService {
             JSONArray media = gifMedia.get(i);
 
             for (int o=0; o < media.length(); o++) {
-                gifURLs.add(media.getJSONObject(o).getJSONObject("gif").getString("url"));
+                gifURLs.add(media.getJSONObject(o).getJSONObject("mediumgif").getString("url"));
             }
         }
 

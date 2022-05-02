@@ -39,6 +39,6 @@ public class When extends Command {
 		}
 
 		return response(EmbedType.INFO)
-				.addField(question, msg, false);
+				.addField("When " + question, msg, false);
 	}
 }

@@ -68,7 +68,7 @@ public class FirstJoinListener extends ListenerAdapter {
 
 	private void setDefaultChannelSettings(Brain brain, BaseGuildMessageChannel channel) {
 		if(channel != null){
-			BotSetting pin = brain.getSettingFor(BotSettingName.POLL_PIN_CHANNEL);
+			BotSetting pin = brain.getSettingFor(BotSettingName.PIN_CHANNEL);
 
 			pin.setValue(channel.getName(), brain);
 		}
