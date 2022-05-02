@@ -29,6 +29,7 @@ Removals
 
 Technical
 - Updated libraries.
+- Changed versioning format
 - Refactored command processing to improve reliability and performance.
 - Commands now inherit from a Class instead of an Interface, allowing for more shared logic.
 - Brains now save the IDs for roles, emotes, and channels, instead of the names for each.
