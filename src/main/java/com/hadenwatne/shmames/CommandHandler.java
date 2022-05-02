@@ -46,7 +46,7 @@ public class CommandHandler {
 		commands.add(new ListEmoteStats());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
-//		commands.add(new Music());
+		commands.add(new Music());
 		commands.add(new Pin());
 		commands.add(new Poll());
 		commands.add(new React());
@@ -160,7 +160,7 @@ public class CommandHandler {
 				final String groupMatch = matchStringToCommand(context, subCommandGroup.getName(), subCommandGroup.getAliases());
 
 				if(groupMatch != null) {
-					executingCommand.setSubCommandGroup(groupMatch);
+					executingCommand.setSubCommandGroup(subCommandGroup.getName());
 
 					// Sub-command Specific
 					final String contextStripped = context.substring(groupMatch.length()).trim();
@@ -200,7 +200,7 @@ public class CommandHandler {
 			final String subCommandMatch = matchStringToCommand(context, subCommand.getName(), subCommand.getAliases());
 
 			if(subCommandMatch != null) {
-				executingCommand.setSubCommand(subCommandMatch);
+				executingCommand.setSubCommand(subCommand.getName());
 
 				ParseCommandArguments(subCommand, executingCommand, commandMatcher);
 
@@ -254,23 +254,21 @@ public class CommandHandler {
 	}
 
 	private String matchStringToCommand(String toMatch, String commandName, List<String> aliases) {
-		String match = null;
-		Matcher commandBorderMatcher = Pattern.compile("^"+commandName+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
+		Matcher commandBorderMatcher = Pattern.compile("^("+commandName+")\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
 
 		if(commandBorderMatcher.find()) {
-			match = commandName;
+			return commandBorderMatcher.group(1);
 		} else {
 			for(String alias : aliases) {
-				Matcher aliasBorderMatcher = Pattern.compile("^"+alias+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
+				Matcher aliasBorderMatcher = Pattern.compile("^("+alias+")\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
 
 				if(aliasBorderMatcher.find()) {
-					match = commandName;
-					break;
+					return aliasBorderMatcher.group(1);
 				}
 			}
 		}
 
-		return match;
+		return null;
 	}
 
 	private void updateSlashCommands() {

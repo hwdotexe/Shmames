@@ -2,11 +2,15 @@
   - Deleting lists
   - Managing triggers
 
+- Consolidate errors & messages if any are too similar
+- Rename lang messages
 
 - Find a place to use modals
   - Reports
 
 - Success, Error response in parent so we don't have to duplicate Error enum?
+
+- Family view music playlists
 
 
 - Language combine enum and default values?
@@ -19,6 +23,7 @@
   - React
   - Simon Says
   - Hangman start
+  - Music pause/resume
 
 PaginationService paginationID to cache data that may be called multiple times
 -- server/user/time? channel? command?
@@ -35,3 +40,5 @@ Not happy with:
   - Alternatively, can we acknowledge the command later in the process?
 - Poll
   - Maybe we should send a Please Wait message before the poll message is built.
+- Music
+  - Messy

@@ -1,26 +1,23 @@
 package com.hadenwatne.shmames.music;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // A Guild-specific object created when music has been requested.
 // One per server.
@@ -65,7 +62,7 @@ public class GuildOcarina extends AudioEventAdapter {
 		return queue;
 	}
 	
-	public void connect(VoiceChannel vc, MessageChannel ch) {
+	public void connect(AudioChannel vc, MessageChannel ch) {
 		msgChannel = ch;
 		manager.openAudioConnection(vc);
 		manager.setSelfDeafened(true);
