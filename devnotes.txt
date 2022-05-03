@@ -1,33 +1,37 @@
-- More permissions
+Join/upgrade message
+    - Redo settings
+    - Link to gist with changelog
+
+Languages
+    - Fix messages not deserializing correctly. Gson -> LinkedHashMap throws an error when keys are removed because null is a duplicate key
+    - Consolidate errors & messages if any are too similar
+    - Rename lang messages
+    - Language combine enum and default values?
+
+More permissions
   - Deleting lists
   - Managing triggers
 
-- Consolidate errors & messages if any are too similar
-- Rename lang messages
-
-- Find a place to use modals
+Modals (slash command only)
   - Reports
+  - May require commands to be slash-only as a result
 
-- Success, Error response in parent so we don't have to duplicate Error enum?
+Code Organization
+    - Success, Error response in parent so we don't have to duplicate Error enum?
+    - Timer interaction hook: reply to bot's message instead of hook, see if that pings the user.
+    - Messages larger than the character maximum for fields/description (see Storytime)
+        - Alternatively: mirror Family emotes; split a large embed at the reply level
+    - PaginationService paginationID to cache data that may be called multiple times
+        - server/user/time? channel? command?
 
-- Family view music playlists
-
-
-- Language combine enum and default values?
-- Messages larger than the character maximum for fields/description (see Storytime)
-  - Alternatively: Family emotes, split a large embed at the reply level
-
-- Command stats public?
-
-- Delete generic success messages after a period of time
-  - React
-  - Simon Says
-  - Hangman start
-  - Music pause/resume
-
-PaginationService paginationID to cache data that may be called multiple times
--- server/user/time? channel? command?
-
+Functionality movement
+    - Family view music playlists
+    - Command stats public?
+    - Delete generic success messages after a period of time
+      - React
+      - Simon Says
+      - Hangman start
+      - Music pause/resume
 
 Not happy with:
 - ForumWeapon

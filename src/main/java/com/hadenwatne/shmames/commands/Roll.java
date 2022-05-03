@@ -1,22 +1,20 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Roll extends Command {
 	private final Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
@@ -51,8 +49,14 @@ public class Roll extends Command {
 
 		String rollResult = processRoll(dicePattern, diceOps);
 
-		return response(EmbedType.INFO)
-				.addField(":game_die: " + (memo != null ? memo : executingCommand.getAuthorUser().getName() + "'s roll"), rollResult, false);
+		EmbedBuilder response = response(EmbedType.INFO, executingCommand.getAuthorUser().getAsTag())
+				.setDescription(rollResult);
+
+		if(memo != null) {
+			response.addField("Memo", memo, false);
+		}
+
+		return response;
 	}
 
 	private String processRoll(Pattern p, List<String> diceRolls) {

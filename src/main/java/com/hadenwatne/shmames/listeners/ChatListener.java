@@ -10,7 +10,9 @@ import com.hadenwatne.shmames.models.Response;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.services.*;
+import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.services.RandomService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -37,9 +39,18 @@ public class ChatListener extends ListenerAdapter {
 				for (String trigger : brain.getTriggers().keySet()) {
 					if(brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
 						if(messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
+							Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+
+							if(messageText.trim().length() == trigger.length()) {
+								EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.INFO)
+										.setDescription(lang.getError(Errors.HEY_THERE));
+
+								MessageService.ReplyToMessage(message, embed, false);
+							}
+
 							final String command = messageText.substring(trigger.length()).trim();
 
-							handleCommand(message, command, brain);
+							handleCommand(message, command, brain, lang);
 
 							return;
 						}
@@ -66,16 +77,15 @@ public class ChatListener extends ListenerAdapter {
 					if (messageText.toLowerCase().startsWith(botNameLower)) {
 						final String command = messageText.substring(botNameLower.length()).trim();
 
-						handleCommand(message, command, null);
+						handleCommand(message, command, null, App.Shmames.getLanguageService().getDefaultLang());
 					}
 				}
 			}
 		}
 	}
 
-	private void handleCommand(Message message, String commandText, Brain brain) {
+	private void handleCommand(Message message, String commandText, Brain brain, Lang lang) {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
-		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
 		ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
 
 		if(command != null) {
