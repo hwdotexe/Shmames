@@ -1,10 +1,7 @@
 package com.hadenwatne.shmames;
 
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.listeners.ChatListener;
-import com.hadenwatne.shmames.listeners.FirstJoinListener;
-import com.hadenwatne.shmames.listeners.ReactListener;
-import com.hadenwatne.shmames.listeners.SlashCommandListener;
+import com.hadenwatne.shmames.listeners.*;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.services.LanguageService;
@@ -117,6 +114,9 @@ public class Shmames {
 		this.jda.addEventListener(new SlashCommandListener());
 		this.jda.addEventListener(new ReactListener());
 		this.jda.addEventListener(new FirstJoinListener());
+
+		// TODO: This is a temporary message for the 2.0.0 upgrade:
+		new BotReadyMessage();
 
 		// Prepare music playing functionality.
 		this.musicManager = new MusicManager();

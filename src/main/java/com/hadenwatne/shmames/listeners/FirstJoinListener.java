@@ -25,18 +25,18 @@ public class FirstJoinListener extends ListenerAdapter {
 		embedBuilder.setThumbnail(App.Shmames.getBotAvatarUrl());
 		embedBuilder.setDescription("Welcome to "+name+", a memeable utility bot with lots of customization!");
 
-		embedBuilder.addField("Get Started", "To view a list of commands and general information, use `"+name+" help`.\n" +
+		embedBuilder.addField(":bulb: Get Started", "To view a list of commands and general information, use `"+name+" help`.\n" +
 				"\n" +
 				"• Adjust settings and permissions with `"+name+" modify`\n" +
 				"• Play music using `"+name+" music`\n" +
 				"• Create polls with `"+name+" poll`", false);
 
-		embedBuilder.addField("Customization Tips", "• `"+name+" trigger` lets you change how you summon "+name+"\n" +
+		embedBuilder.addField(":art: Customization Tips", "• `"+name+" trigger` lets you change how you summon "+name+"\n" +
 				"• `"+name+" response` sends random messages based on a Trigger Type.\n" +
 				"• `"+name+" family` lets you use "+name+" across multiple Discord servers.\n" +
 				"• `"+name+" forumweapon` creates shorthand pointers to your favorite GIFs and links.", false);
 
-		embedBuilder.addField("Just Have Fun!", "• `"+name+" hangman` to play a game of Hangman\n" +
+		embedBuilder.addField(":game_die: Just Have Fun!", "• `"+name+" hangman` to play a game of Hangman\n" +
 				"• `"+name+" cactpot` to get a new Gold Saucer scratch ticket\n" +
 				"• `"+name+" minesweeper` to try your luck at diffusing bombs", false);
 
