@@ -37,15 +37,17 @@ public class ChatListener extends ListenerAdapter {
 
 				// Check if this message is trying to run a command.
 				for (String trigger : brain.getTriggers().keySet()) {
-					if(brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
-						if(messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
+					if (brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
+						if (messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
 							Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
 
-							if(messageText.trim().length() == trigger.length()) {
+							if (messageText.trim().length() == trigger.length()) {
 								EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.INFO)
-										.setDescription(lang.getError(Errors.HEY_THERE));
+										.setDescription(lang.getError(Errors.HEY_THERE, new String[]{App.Shmames.getBotName()}));
 
 								MessageService.ReplyToMessage(message, embed, false);
+
+								return;
 							}
 
 							final String command = messageText.substring(trigger.length()).trim();
