@@ -11,10 +11,10 @@ import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-public class BotReadyMessage {
+public class BotUpgradeMessage {
 	final EmbedBuilder upgradeMessage;
 
-	public BotReadyMessage() {
+	public BotUpgradeMessage() {
 		String name = App.Shmames.getBotName();
 		EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "v2.0.0 Upgrade");
 
@@ -29,9 +29,7 @@ public class BotReadyMessage {
 				"• ... and a ton more!", false);
 
 		embedBuilder.addField(":information_source: Next Steps", "With all these changes, server admins will need to **re-configure their /modify settings**, as some settings have changed and were reset to their defaults.", false);
-
-		// TODO this link is branch-specific.
-		embedBuilder.addField(":white_check_mark: List of Changes", "You can [read the full changelog](https://github.com/hwdotexe/Shmames/blob/interaction-cleanup/changelog.txt) for more details and a complete list of changes.", false);
+		embedBuilder.addField(":white_check_mark: List of Changes", "You can [read the full changelog](https://raw.githubusercontent.com/hwdotexe/Shmames/master/changelog.txt) for more details and a complete list of changes.", false);
 
 		upgradeMessage = embedBuilder;
 
