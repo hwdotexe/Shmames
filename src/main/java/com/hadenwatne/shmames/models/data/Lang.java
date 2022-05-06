@@ -1,11 +1,10 @@
 package com.hadenwatne.shmames.models.data;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.LinkedHashMap;
@@ -60,20 +59,18 @@ public class Lang {
         return msg;
     }
 
-    public String getError(Errors key, boolean showError) {
-        String s = showError ? ("\n`// " + key.toString() + "`") : "";
-
+    public String getError(Errors key) {
         if (errors.containsKey(key)) {
             String[] messageArray = errors.get(key);
 
             if (messageArray.length > 1) {
-                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]) + s;
+                return processBreaks(messageArray[RandomService.GetRandom(messageArray.length)]);
             }
 
-            return processBreaks(errors.get(key)[0]) + s;
+            return processBreaks(errors.get(key)[0]);
         } else {
             if (!langName.equalsIgnoreCase("default")) {
-                return App.Shmames.getLanguageService().getDefaultLang().getError(key, showError) + s;
+                return App.Shmames.getLanguageService().getDefaultLang().getError(key);
             } else {
                 LoggingService.Log(LogType.ERROR, "An unknown Lang key was used: " + key);
                 return "Unknown Lang key \"" + key + "\"\n> **You should report this error to the developer!**";
@@ -81,18 +78,14 @@ public class Lang {
         }
     }
 
-    public String getError(Errors key, boolean showError, String[] replacements) {
-        String msg = getError(key, showError);
+    public String getError(Errors key, String[] replacements) {
+        String msg = getError(key);
 
         for (String r : replacements) {
             msg = msg.replaceFirst(wildcard, r);
         }
 
         return msg;
-    }
-
-    public String wrongUsage(String usage) {
-        return getError(Errors.WRONG_USAGE, true) + "\n> " + getMsg(Langs.COMMAND_USAGE, new String[]{usage});
     }
 
     private String processBreaks(String msg) {
@@ -117,6 +110,7 @@ public class Lang {
         errors.put(Errors.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."});
         errors.put(Errors.FORUM_WEAPON_OWNED_OTHER, new String[]{"That weapon is owned by a different server!"});
         errors.put(Errors.GUILD_REQUIRED, new String[]{"That command must be run on a server."});
+        errors.put(Errors.HANGMAN_ALREADY_STARTED, new String[]{"There's already a Hangman game in " + wildcard});
         errors.put(Errors.HANGMAN_ALREADY_GUESSED, new String[]{"You've already guessed that letter!"});
         errors.put(Errors.HANGMAN_NOT_STARTED, new String[]{"There isn't a Hangman game running! Try starting one."});
         errors.put(Errors.HEY_THERE, new String[]{"Hey there! Try using `" + wildcard + " help`!"});
@@ -142,9 +136,11 @@ public class Lang {
         errors.put(Errors.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"});
         errors.put(Errors.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."});
         errors.put(Errors.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."});
+        errors.put(Errors.SETTING_VALUE_INVALID, new String[]{"The value you provided is invalid. Please try again."});
         errors.put(Errors.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"});
+        errors.put(Errors.TIMER_LENGTH_INCORRECT, new String[]{"Timers must be set between 1 second and 365 days."});
         errors.put(Errors.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."});
-        errors.put(Errors.WRONG_USAGE, new String[]{"I don't think that's how you do it."});
+        errors.put(Errors.WRONG_USAGE, new String[]{"The command syntax you used is incorrect."});
 
         messages.put(Langs.ADD_TRIGGER_SUCCESS, new String[]{"I will now send a `" + wildcard + "` response when I hear `" + wildcard + "`!"});
         messages.put(Langs.BLAME, new String[]{"I blame " + wildcard});
@@ -166,9 +162,11 @@ public class Lang {
         messages.put(Langs.FORUM_WEAPON_CREATED, new String[]{"Created a new Forum Weapon: **" + wildcard + "**"});
         messages.put(Langs.FORUM_WEAPON_DESTROYED, new String[]{"Weapon destroyed."});
         messages.put(Langs.FORUM_WEAPON_DUPLICATE, new String[]{":warning: Found an existing Forum Weapon with that link: **" + wildcard + "**"});
-        messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
+        messages.put(Langs.FORUM_WEAPON_LIST, new String[]{"These are the weapons I found:"});
         messages.put(Langs.FORUM_WEAPONS_PRUNED, new String[]{"Pruned **" + wildcard + "** unused Forum Weapons!"});
+        messages.put(Langs.FORUM_WEAPON_UPDATED, new String[]{"The weapon was updated with a new link!"});
         messages.put(Langs.GENERIC_SUCCESS, new String[]{"Success!"});
+        messages.put(Langs.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: **" + wildcard + "** (or leave blank to use all of them)"});
         messages.put(Langs.HANGMAN_FOOTER_GUESSED, new String[]{"Already guessed:"});
         messages.put(Langs.HANGMAN_TITLE, new String[]{"Let's play Hangman!"});
         messages.put(Langs.INVALID_TRIGGER_TYPE, new String[]{":scream: Invalid trigger type! Your options are: " + wildcard});
@@ -191,20 +189,23 @@ public class Lang {
         messages.put(Langs.MUSIC_QUEUE_SHUFFLED, new String[]{"Shuffled the music queue!"});
         messages.put(Langs.MUSIC_QUEUE_REVERSED, new String[]{"Reversed the music queue!"});
         messages.put(Langs.MUSIC_QUEUED_PLAYLIST, new String[]{"Queued the `" + wildcard + "` Playlist!"});
-        messages.put(Langs.POLL_TITLE, new String[]{"== POLL =="});
-        messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"== POLL (Results) =="});
+        messages.put(Langs.POLL_TITLE, new String[]{"Cast your vote!"});
+        messages.put(Langs.POLL_TITLE_RESULTS, new String[]{"The Poll has closed."});
         messages.put(Langs.RESET_EMOTE_STATS, new String[]{"Emoji usage stats have been reset!"});
         messages.put(Langs.SEARCH_RESULTS, new String[]{"Search results:"});
         messages.put(Langs.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."});
         messages.put(Langs.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"});
-        messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings:"});
+        messages.put(Langs.SETTING_LIST_TITLE, new String[]{"Available settings"});
         messages.put(Langs.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"});
+        messages.put(Langs.STORY_INTRO, new String[]{"Let's read a story!"});
         messages.put(Langs.TALLY_CURRENT_VALUE, new String[]{"Current tally for `" + wildcard + "`: `" + wildcard + "`"});
         messages.put(Langs.TALLY_LIST, new String[]{"Here's what I have written down:"});
         messages.put(Langs.TALLY_REMOVED, new String[]{"`" + wildcard + "` hast been removed, sire."});
         messages.put(Langs.THOUGHTS_OPTIONS, new String[]{"That's incredible!", "I love it.", "The best thing all week.", "YAAS QUEEN", "Amazing!", "Fantastic :ok_hand:", "I am indifferent.", "Could be better.", "Ick, no way!", "Just no.", "That is offensive.", "I hate that.", "Get that garbage out of my face!"});
         messages.put(Langs.TIMER_STARTED, new String[]{"Started a new :alarm_clock: for " + wildcard});
+        messages.put(Langs.TIMER_ALERT, new String[]{":alarm_clock: (" + wildcard + "): The timer you set is finished!"});
         messages.put(Langs.TRIGGER_LIST, new String[]{"I'll respond to these things:"});
+        messages.put(Langs.WHAT_ARE_THE_ODDS, new String[]{"About " + wildcard});
         messages.put(Langs.WHATSHOULDIDO_INTRO_OPTIONS, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"});
         messages.put(Langs.WHATSHOULDIDO_OPTIONS, new String[]{"defile a grave", "rob a candy store", "deface a subway", "steal a baby's candy", "pirate a low-budget film", "start a riot about gas prices", "rewatch the Star Wars sequels", "curse at an old woman", "donate to a shady charity in Saudi Arabia", "prank call insurance companies", "sell drugs to minors", "write a program in PHP", "narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic", "confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky", "create a reaction video for YouTube", "invite me to other servers >:}", "sell essential oils", "demand to see the manager", "start a Flat Earth rally", "uncover the truth behind 9/11", "vaguepost on Instagram for attention", "play Madden", "scam impressionable old women out of their retirement funds", "get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant", "steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner", "drink questionable chemicals", "throw a prom in the McDonalds Playplace"});
         messages.put(Langs.WHEN_OPTIONS, new String[]{"In "+wildcard+" years", "In "+wildcard+" minutes", ""+wildcard+" days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe", "Not sure, ask your mom", ""+wildcard+" years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe", "In precisely "+wildcard+"", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall", "Probably within "+wildcard+" days", "I'd say in "+wildcard+" months", "In "+wildcard+"? "+wildcard+"? Maybe "+wildcard+"?", "Between "+wildcard+" and "+wildcard+" centuries", "Sooner shall "+wildcard+" days pass", ""+wildcard+" seconds", ""+wildcard+" hours, "+wildcard+" minutes, and "+wildcard+" seconds", "Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"});

@@ -4,20 +4,21 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.tasks.ReportCooldownTask;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-import javax.annotation.Nullable;
-
-public class Report implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Report extends Command {
 	public Report() {
-		this.commandStructure = CommandBuilder.Create("report", "Send feedback to the bot developer")
+		super(true);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("report", "Send feedback to the bot developer")
 				.addAlias("feedback")
 				.addParameters(
 						new CommandParameter("reportType", "The type of report you are sending.", ParameterType.SELECTION)
@@ -30,29 +31,23 @@ public class Report implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		Brain brain = executingCommand.getBrain();
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
 		if (!brain.getReportCooldown()) {
-			String reportType = data.getArguments().getAsString("reportType");
-			String reportText = data.getArguments().getAsString("reportText");
+			String reportType = executingCommand.getCommandArguments().getAsString("reportType");
+			String reportText = executingCommand.getCommandArguments().getAsString("reportText");
 
-			brain.getFeedback().add(data.getAuthor().getName() + " (" + data.getServer().getName() + "): [" + reportType.toUpperCase() + "] " + reportText);
+			brain.getFeedback().add(executingCommand.getAuthorUser().getName() + " (" + executingCommand.getServer().getName() + "): [" + reportType.toUpperCase() + "] " + reportText);
 
 			// Start a cooldown
 			new ReportCooldownTask(brain);
 
-			return lang.getMsg(Langs.FEEDBACK_SENT);
+			return response(EmbedType.SUCCESS)
+					.setDescription(executingCommand.getLanguage().getMsg(Langs.FEEDBACK_SENT));
 		} else {
-			return lang.getMsg(Langs.FEEDBACK_COOLDOWN);
+			return response(EmbedType.ERROR)
+					.setDescription(executingCommand.getLanguage().getMsg(Langs.FEEDBACK_COOLDOWN));
 		}
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return true;
 	}
 }

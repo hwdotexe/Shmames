@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.game;
 
 import java.util.ArrayList;
 import java.util.List;

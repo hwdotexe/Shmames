@@ -1,97 +1,77 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.commandbuilder.CommandParameter;
-import com.hadenwatne.shmames.commandbuilder.CommandStructure;
-import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
-import com.hadenwatne.shmames.commands.ICommand;
-import com.hadenwatne.shmames.models.command.ParsedCommandResult;
-import com.hadenwatne.shmames.models.command.ShmamesCommandArguments;
-import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class SlashCommandListener extends ListenerAdapter {
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
-        ParsedCommandResult parsedCommand = App.Shmames.getCommandHandler().parseCommandString(event.getName());
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        String commandText = normalizeCommandText(event);
+        Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 
-        if (parsedCommand != null) {
-            ICommand command = parsedCommand.getCommand();
-            ShmamesCommandArguments commandArguments = new ShmamesCommandArguments(buildArgumentMap(command.getCommandStructure(), event));
-            ShmamesSubCommandData subCommandData = null;
+        // Ensure we own this command before continuing.
+        if(command != null) {
+            Brain brain = null;
 
-            // If this is a subcommand, build out the subcommand arguments.
-            if(event.getSubcommandGroup() != null) {
-                for(SubCommandGroup subCommandGroup : command.getCommandStructure().getSubcommandGroups()) {
-                    if(subCommandGroup.getName().equalsIgnoreCase(event.getSubcommandGroup())) {
-                        for (CommandStructure subCommand : subCommandGroup.getSubcommands()) {
-                            if (subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
-                                subCommandData = new ShmamesSubCommandData(subCommandGroup.getName(), event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));
-
-                                break;
-                            }
-                        }
-
-                        break;
-                    }
-                }
-            } else if(event.getSubcommandName() != null) {
-                for (CommandStructure subCommand : command.getCommandStructure().getSubCommands()) {
-                    if(subCommand.getName().equalsIgnoreCase(event.getSubcommandName())) {
-                        subCommandData = new ShmamesSubCommandData(event.getSubcommandName(), new ShmamesCommandArguments(buildArgumentMap(subCommand, event)));
-
-                        break;
-                    }
-                }
+            if(event.isFromGuild()) {
+                brain = App.Shmames.getStorageService().getBrain(event.getGuild().getId());
             }
 
-            App.Shmames.getCommandHandler().PerformCommand(command, subCommandData, commandArguments, event, event.getGuild());
+            event.deferReply().queue();
+            handleCommand(command, event.getHook(), commandText, brain);
         }
     }
 
-    private LinkedHashMap<String, Object> buildArgumentMap(CommandStructure structure, SlashCommandEvent event) {
-        LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
+    private String normalizeCommandText(SlashCommandInteractionEvent event) {
+        StringBuilder sb = new StringBuilder();
 
-        for (CommandParameter cp : structure.getParameters()) {
-            OptionMapping option = event.getOption(cp.getName().toLowerCase());
+        sb.append(event.getName());
 
-            if (option != null) {
-                insertArgumentWithType(namedArguments, option, cp);
-            }
+        if(event.getSubcommandGroup() != null) {
+            sb.append(" ");
+            sb.append(event.getSubcommandGroup());
         }
 
-        return namedArguments;
+        if(event.getSubcommandName() != null) {
+            sb.append(" ");
+            sb.append(event.getSubcommandName());
+        }
+
+        for(OptionMapping option : event.getOptions()) {
+            sb.append(" ");
+            sb.append(option.getAsString());
+        }
+
+        return sb.toString();
     }
 
-    private void insertArgumentWithType(HashMap<String, Object> map, OptionMapping option, CommandParameter parameter) {
-        switch(parameter.getType()) {
-            case BOOLEAN:
-                map.put(parameter.getName(), option.getAsBoolean());
-                break;
-            case INTEGER:
-                map.put(parameter.getName(), Integer.parseInt(option.getAsString()));
-                break;
-            case DISCORD_ROLE:
-                map.put(parameter.getName(), option.getAsRole());
-                break;
-            case DISCORD_USER:
-                map.put(parameter.getName(), option.getAsUser());
-                break;
-            case DISCORD_EMOTE:
-                map.put(parameter.getName(), option.getAsMentionable());
-                break;
-            case DISCORD_CHANNEL:
-                map.put(parameter.getName(), option.getAsMessageChannel());
-                break;
-            default:
-                map.put(parameter.getName(), option.getAsString());
+    private void handleCommand(Command command, InteractionHook hook, String commandText, Brain brain) {
+        Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+        ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
+
+        if(command != null) {
+            executingCommand.setCommandName(command.getCommandStructure().getName());
+            executingCommand.setInteractionHook(hook);
+
+            App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
+        } else {
+            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
+                    .setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
+
+            MessageService.ReplyToMessage(hook, embed, false);
         }
     }
 }

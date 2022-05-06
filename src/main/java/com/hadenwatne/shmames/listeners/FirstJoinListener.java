@@ -1,70 +1,76 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import net.dv8tion.jda.api.entities.TextChannel;
+import com.hadenwatne.shmames.services.MessageService;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import com.hadenwatne.shmames.Shmames;
 
 public class FirstJoinListener extends ListenerAdapter {
+	final EmbedBuilder welcomeMessage;
+
+	public FirstJoinListener() {
+		EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Welcome");
+		String name = App.Shmames.getBotName();
+
+		embedBuilder.setThumbnail(App.Shmames.getBotAvatarUrl());
+		embedBuilder.setDescription("Welcome to "+name+", a memeable utility bot with lots of customization!");
+
+		embedBuilder.addField(":bulb: Get Started", "To view a list of commands and general information, use `"+name+" help`.\n" +
+				"\n" +
+				"• Adjust settings and permissions with `"+name+" modify`\n" +
+				"• Play music using `"+name+" music`\n" +
+				"• Create polls with `"+name+" poll`", false);
+
+		embedBuilder.addField(":art: Customization Tips", "• `"+name+" trigger` lets you change how you summon "+name+"\n" +
+				"• `"+name+" response` sends random messages based on a Trigger Type.\n" +
+				"• `"+name+" family` lets you use "+name+" across multiple Discord servers.\n" +
+				"• `"+name+" forumweapon` creates shorthand pointers to your favorite GIFs and links.", false);
+
+		embedBuilder.addField(":game_die: Just Have Fun!", "• `"+name+" hangman` to play a game of Hangman\n" +
+				"• `"+name+" cactpot` to get a new Gold Saucer scratch ticket\n" +
+				"• `"+name+" minesweeper` to try your luck at diffusing bombs", false);
+
+		welcomeMessage = embedBuilder;
+	}
+
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
-		Brain b = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
+		Brain brain = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
-		if(!b.didSendWelcome()){
-			// Try to set default values for this specific guild.
-			try{
-				TextChannel defaultChannel = e.getGuild().getDefaultChannel();
+		if(!brain.didSendWelcome()){
+			BaseGuildMessageChannel defaultChannel = e.getGuild().getDefaultChannel();
 
-				if(defaultChannel != null){
-					BotSetting pin = b.getSettingFor(BotSettingName.PIN_CHANNEL);
-
-					pin.setValue(defaultChannel.getName(), b);
-				}
-			}catch (Exception ex){
-				LoggingService.Log(LogType.ERROR, "Shmames could not set default bot settings.");
-			}
-
-			// Try to send a welcome message.
-			try{
-				sendMessage(e.getGuild().getDefaultChannel());
-				b.setSentWelcome();
-			}catch (Exception ex){
-				LoggingService.Log(LogType.ERROR, "Shmames could not send a welcome message.");
-			}
+			sendWelcomeMessage(brain, defaultChannel);
+			setDefaultChannelSettings(brain, defaultChannel);
 		}
 	}
 
-	private void sendMessage(TextChannel tc){
-		String name = App.Shmames.getBotName();
+	private void sendWelcomeMessage(Brain brain, BaseGuildMessageChannel channel) {
+		try {
+			MessageService.SendMessage(channel, welcomeMessage, false);
+		} catch (InsufficientPermissionException e) {
+			LoggingService.Log(LogType.ERROR, "Could not send a welcome mesage to a server.");
+		}
 
-		tc.sendMessage("``` __ _                                         \n" +
-				"/ _\\ |__  _ __ ___   __ _ _ __ ___   ___  ___ \n" +
-				"\\ \\| '_ \\| '_ ` _ \\ / _` | '_ ` _ \\ / _ \\/ __|\n" +
-				"_\\ \\ | | | | | | | | (_| | | | | | |  __/\\__ \\\n" +
-				"\\__/_| |_|_| |_| |_|\\__,_|_| |_| |_|\\___||___/\n" +
-				"\n" +
-				"Welcome to "+name+" - the Discord bot that's changing\n" +
-				"the world. Thank you for installing me!\n" +
-				"\n" +
-				"For first-time setup, please take a look at the bot's\n" +
-				"settings, and tweak the values you want to change.\n" +
-				"• Choose the roles allowed to play music and create polls.\n" +
-				"• Decide which emoji should be used to \"approve\" or \"remove\" a message.\n" +
-				"• Add a custom alias to summon the bot.\n" +
-				"\n" +
-				"Some interesting commands to get you started:\n" +
-				"• "+name+" help\n" +
-				"• "+name+" modify\n" +
-				"• "+name+" music\n" +
-				"\n" +
-				"Hint: you can use my name to run a command in chat, or you can use a Slash Command (/)." +
-				"```").queue();
+		brain.setSentWelcome();
+	}
+
+	private void setDefaultChannelSettings(Brain brain, BaseGuildMessageChannel channel) {
+		if(channel != null){
+			BotSetting pin = brain.getSettingFor(BotSettingName.PIN_CHANNEL);
+
+			pin.setValue(channel.getName(), brain);
+		}
 	}
 }

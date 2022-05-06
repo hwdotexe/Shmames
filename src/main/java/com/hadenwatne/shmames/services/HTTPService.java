@@ -1,7 +1,6 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.enums.LogType;
@@ -86,10 +85,10 @@ public class HTTPService {
             if (result != null) {
                 return result.trim();
             } else {
-                return lang.getError(Errors.ITEMS_NOT_FOUND, true);
+                return lang.getError(Errors.ITEMS_NOT_FOUND);
             }
         } catch (Exception e) {
-            return lang.getError(Errors.BOT_ERROR, true);
+            return lang.getError(Errors.BOT_ERROR);
         }
     }
 
@@ -106,9 +105,20 @@ public class HTTPService {
         JSONObject json = new JSONObject(result);
         JSONArray jsonArray = json.getJSONArray("results");
         List<String> gifURLs = new ArrayList<>();
+        List<JSONArray> gifMedia = new ArrayList<>();
 
+        // Add the media array of each result.
         for (int i = 0; i < jsonArray.length(); i++) {
-            gifURLs.add(jsonArray.getJSONObject(i).getString("url"));
+            gifMedia.add(jsonArray.getJSONObject(i).getJSONArray("media"));
+        }
+
+        // For each media array, add the gif value.
+        for (int i=0; i < gifMedia.size(); i++) {
+            JSONArray media = gifMedia.get(i);
+
+            for (int o=0; o < media.length(); o++) {
+                gifURLs.add(media.getJSONObject(o).getJSONObject("mediumgif").getString("url"));
+            }
         }
 
         if (gifURLs.size() > 0) {

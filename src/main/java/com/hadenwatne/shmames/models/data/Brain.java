@@ -1,15 +1,15 @@
 package com.hadenwatne.shmames.models.data;
 
+import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.models.*;
+import com.hadenwatne.shmames.models.game.HangmanGame;
+import com.hadenwatne.shmames.tasks.AlarmTask;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.enums.TriggerType;
-import com.hadenwatne.shmames.models.*;
-import com.hadenwatne.shmames.tasks.JTimerTask;
 
 public class Brain {
 	private final String guildID;
@@ -23,11 +23,12 @@ public class Brain {
 	private final List<PollModel> activePolls;
 	private final List<String> families;
 	private final List<ForumWeaponObj> forumWeapons;
-	private final List<JTimerTask> timers;
+	private final List<AlarmTask> timers;
 	private final List<Playlist> playlists;
+	private List<String> talliedMessages;
 	private boolean isReportCooldown;
-	private boolean isJinping;
 	private boolean sentWelcome;
+	private boolean sentUpgrade;
 	private HangmanGame hangmanGame;
 	
 	public Brain(String gid) {
@@ -44,9 +45,10 @@ public class Brain {
 		forumWeapons = new ArrayList<>();
 		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
+		talliedMessages = new ArrayList<>();
 		isReportCooldown = false;
-		isJinping = false;
 		sentWelcome = false;
+		sentUpgrade = false;
 		hangmanGame = null;
 		
 		loadFirstRunDefaults();
@@ -55,15 +57,6 @@ public class Brain {
 	/*
 	 * Temporary state items
 	 */
-	
-	public boolean getJinping() {
-		return isJinping;
-	}
-	
-	public void setJinping(boolean j) {
-		isJinping = j;
-	}
-	
 	public boolean getReportCooldown() {
 		return isReportCooldown;
 	}
@@ -84,7 +77,7 @@ public class Brain {
 		this.hangmanGame = g;
 	}
 
-	public List<JTimerTask> getTimers(){
+	public List<AlarmTask> getTimers(){
 		return timers;
 	}
 	
@@ -100,8 +93,16 @@ public class Brain {
 		return sentWelcome;
 	}
 
+	public boolean didSendUpgrade() {
+		return this.sentUpgrade;
+	}
+
 	public void setSentWelcome(){
 		sentWelcome = true;
+	}
+
+	public void setSentUpgrade(){
+		this.sentUpgrade = true;
 	}
 	
 	public String getGuildID() {
@@ -164,18 +165,6 @@ public class Brain {
 	public List<String> getFeedback(){
 		return feedback;
 	}
-	
-	public List<String> getTriggers(TriggerType type){
-		List<String> tt = new ArrayList<String>();
-		
-		for(String k : triggers.keySet()) {
-			if(triggers.get(k) == type) {
-				tt.add(k);
-			}
-		}
-		
-		return tt;
-	}
 
 	public List<String> getFamilies(){
 		return this.families;
@@ -184,7 +173,15 @@ public class Brain {
 	public List<ForumWeaponObj> getForumWeapons(){
 		return forumWeapons;
 	}
-	
+
+	public List<String> getTalliedMessages() {
+		if(this.talliedMessages == null) {
+			this.talliedMessages = new ArrayList<>();
+		}
+
+		return this.talliedMessages;
+	}
+
 	/**
 	 * Loads default setting values into the object. This method will only
 	 * run when this object is first created.

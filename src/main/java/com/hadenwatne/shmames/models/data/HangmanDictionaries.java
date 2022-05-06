@@ -1,11 +1,8 @@
 package com.hadenwatne.shmames.models.data;
 
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.models.HangmanDictionary;
+import com.hadenwatne.shmames.models.game.HangmanDictionary;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class HangmanDictionaries {

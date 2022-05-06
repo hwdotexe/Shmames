@@ -1,120 +1,82 @@
 package com.hadenwatne.shmames.tasks;
 
-import java.awt.Color;
-import java.util.*;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.TextFormatService;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import com.hadenwatne.shmames.models.PollModel;
-import com.hadenwatne.shmames.Shmames;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 
-public class PollTask extends TimerTask{
-	private PollModel pollModel;
+import java.util.TimerTask;
+
+public class PollTask extends TimerTask {
+	private final PollModel pollModel;
+	private final TextChannel channel;
 	private Message message;
 	private Lang lang;
-	
+
 	public PollTask(PollModel pollModel) {
 		this.pollModel = pollModel;
+		this.channel = App.Shmames.getJDA().getTextChannelById(this.pollModel.getChannelID());
 
-		TextChannel textChannel = App.Shmames.getJDA().getTextChannelById(pollModel.getChannelID());
+		if (this.channel != null) {
+			this.lang = App.Shmames.getLanguageService().getLangFor(this.channel.getGuild());
 
-		if(textChannel != null) {
-			this.lang = App.Shmames.getLanguageService().getLangFor(textChannel.getGuild());
+			if(this.pollModel.isActive()) {
+				this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
+					this.message = success;
 
-			if(pollModel.getMessageID() == null) {
-				this.message = this.sendMessageEmbed(textChannel, pollModel.getExpiration());
-				this.populatePollVoteOptions(message);
-				this.tryPinPollMessage(message);
-			} else {
-				this.message = textChannel.retrieveMessageById(pollModel.getMessageID()).complete();
+					// Perform first-time Poll tasks if this Poll hasn't started yet.
+					if (!this.pollModel.hasStarted()) {
+						this.tryPinPollMessage(this.message);
+						this.populatePollVoteOptions(this.message);
+
+						this.pollModel.updateMessageEmbed(lang, this.channel.getName(), this.message);
+						this.pollModel.setHasStarted(true);
+					}
+				});
 			}
 		}
 	}
-	
+
+	/**
+	 * Called when the poll has expired.
+	 */
 	public void run() {
-		if(pollModel.isActive()) {
+		if (pollModel.isActive()) {
 			pollModel.setActive(false);
-			
-			EmbedBuilder eBuilder = new EmbedBuilder();
-			Calendar c = Calendar.getInstance();
-	    	c.setTime(new Date());
-			
-	    	message = message.getChannel().retrieveMessageById(message.getId()).complete();
-	    	HashMap<Integer, Integer> votes = new HashMap<Integer, Integer>();
-	    	
-	    	for(MessageReaction r : message.getReactions()) {
-	    		votes.put(TextFormatService.EmojiToInt(r.getReactionEmote().getName()), r.getCount()-1);
-	    	}
-	    	
-			eBuilder.setAuthor(lang.getMsg(Langs.POLL_TITLE_RESULTS));
-	        eBuilder.setColor(Color.GRAY);
-	        eBuilder.setTitle(pollModel.getQuestion());
-	        eBuilder.setFooter("#" + message.getChannel().getName() + " - Expired "+TextFormatService.GetFriendlyDate(c), null);
-	        
-	        for(int i = 0; i< pollModel.getOptions().size(); i++) {
-	        	eBuilder.appendDescription("**"+(i+1)+"**: "+ pollModel.getOptions().get(i)+" **("+votes.get(i+1)+" votes)**"+"\n");
-	        }
-	
-	        MessageEmbed embed = eBuilder.build();
-	        MessageAction ma = message.getChannel().sendMessage(embed);
-	        
-	        ma.complete();
-			
-			message.delete().queue();
-			
-			Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
-			b.getActivePolls().remove(pollModel);
-			App.Shmames.getStorageService().getBrainController().saveBrain(b);
+
+			this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
+				this.pollModel.updateMessageEmbed(this.lang, this.channel.getName(), success);
+
+				Brain brain = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
+				brain.getActivePolls().remove(pollModel);
+			});
 		}
-		
+
 		this.cancel();
 	}
 
-	private Message sendMessageEmbed(TextChannel channel, Date expiration) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
-		Calendar calendar = Calendar.getInstance();
-
-		calendar.setTime(expiration);
-
-		eBuilder.setAuthor(this.lang.getMsg(Langs.POLL_TITLE));
-		eBuilder.setColor(Color.GREEN);
-		eBuilder.setTitle(this.pollModel.getQuestion());
-		eBuilder.setFooter("#" + channel.getName() + " - Expires "+ TextFormatService.GetFriendlyDate(calendar)+" - #"+pollModel.getID(), null);
-
-		for(int i=0; i<pollModel.getOptions().size(); i++) {
-			eBuilder.appendDescription("**"+(i+1)+"**: "+pollModel.getOptions().get(i)+"\n");
-		}
-
-		MessageEmbed messageEmbed = eBuilder.build();
-		MessageAction messageAction = channel.sendMessage(messageEmbed);
-		Message message = messageAction.complete();
-		pollModel.setMessageID(message.getId());
-
-		return message;
-	}
-
 	private void populatePollVoteOptions(Message message) {
-		for(int i=0; i<pollModel.getOptions().size(); i++) {
-			message.addReaction(TextFormatService.IntToEmoji(i + 1)).queue();
+		for (int i = 0; i < pollModel.getOptions().size(); i++) {
+			String emoji = TextFormatService.NumberToLetter(i + 1);
+
+			message.addReaction(emoji).queue();
 		}
+
+		message.addReaction(TextFormatService.EMOJI_RED_X).queue();
 	}
 
 	private void tryPinPollMessage(Message message) {
 		Brain b = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 
-		if(b.getSettingFor(BotSettingName.PIN_POLLS).getValue().equalsIgnoreCase("true")) {
+		if (b.getSettingFor(BotSettingName.POLL_PIN).getAsBoolean()) {
 			try {
 				message.pin().queue();
-			}catch(Exception e) {
-				message.getChannel().sendMessage(lang.getError(Errors.NO_PERMISSION_BOT, true)).queue();
+			} catch (Exception ignored) {
+
 			}
 		}
 	}

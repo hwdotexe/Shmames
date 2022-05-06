@@ -8,11 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ShmamesCommandArguments {
-    private LinkedHashMap<String, Object> arguments;
+public class ExecutingCommandArguments {
+    private LinkedHashMap<String, String> arguments;
 
-    public ShmamesCommandArguments(LinkedHashMap<String, Object> arguments) {
+    public ExecutingCommandArguments(LinkedHashMap<String, String> arguments) {
         this.arguments = arguments;
+    }
+
+    public ExecutingCommandArguments() {
+        this.arguments = new LinkedHashMap<>();
+    }
+
+    public void add(String key, String value) {
+        this.arguments.put(key, value);
     }
 
     public int count() {
@@ -35,7 +43,7 @@ public class ShmamesCommandArguments {
 
     public String getAsString(String key) {
         try {
-            return (String) this.arguments.get(key);
+            return this.arguments.get(key);
         } catch (Exception e) {
             LoggingService.LogException(e);
         }
@@ -46,7 +54,7 @@ public class ShmamesCommandArguments {
     public boolean getAsBoolean(String key) {
         if(this.arguments.containsKey(key)) {
             try {
-                return (boolean) this.arguments.get(key);
+                return Boolean.parseBoolean(this.arguments.get(key));
             } catch (Exception e) {
                 LoggingService.LogException(e);
             }
@@ -58,7 +66,7 @@ public class ShmamesCommandArguments {
     public int getAsInteger(String key) {
         if(this.arguments.containsKey(key)) {
             try {
-                return (Integer) this.arguments.get(key);
+                return Integer.parseInt(this.arguments.get(key));
             } catch (Exception e) {
                 LoggingService.LogException(e);
             }
@@ -67,6 +75,12 @@ public class ShmamesCommandArguments {
         return -1;
     }
 
+    /**
+     * Attempts to convert the argument to a Role. Always returns null for administrator.
+     * @param key The parameter key.
+     * @param server The server this check is being performed against.
+     * @return A Role, if the ID is found, or if the value is "everyone." Otherwise, null.
+     */
     public Role getAsRole(String key, Guild server) {
         if(this.arguments.containsKey(key)) {
             try {
@@ -75,7 +89,9 @@ public class ShmamesCommandArguments {
                 if (DataService.IsLong(id)) {
                     return server.getRoleById(id);
                 } else {
-                    return server.getRolesByName(id, true).get(0);
+                    if(id.equalsIgnoreCase("everyone")) {
+                        return server.getPublicRole();
+                    }
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -92,8 +108,6 @@ public class ShmamesCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getMemberById(id).getUser();
-                } else {
-                    return server.getMembersByName(id, true).get(0).getUser();
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -110,8 +124,6 @@ public class ShmamesCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getEmoteById(id);
-                } else {
-                    return server.getEmotesByName(id, true).get(0);
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);
@@ -128,8 +140,6 @@ public class ShmamesCommandArguments {
 
                 if (DataService.IsLong(id)) {
                     return server.getTextChannelById(id);
-                } else {
-                    return server.getTextChannelsByName(id, true).get(0);
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);

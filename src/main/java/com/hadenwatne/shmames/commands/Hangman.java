@@ -5,38 +5,43 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.HangmanDictionary;
-import com.hadenwatne.shmames.models.HangmanGame;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.command.ShmamesSubCommandData;
+import com.hadenwatne.shmames.models.game.HangmanDictionary;
+import com.hadenwatne.shmames.models.game.HangmanGame;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.enums.Errors;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 
-import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Hangman implements ICommand {
+public class Hangman extends Command {
 	private List<HangmanDictionary> dictionaries;
-	private final CommandStructure commandStructure;
 
 	public Hangman() {
-		dictionaries = App.Shmames.getStorageService().getBrainController().getHangmanDictionaries().getDictionaries();
+		super(true);
 
-		this.commandStructure = CommandBuilder.Create("hangman", "Play a game of Hangman!")
+		dictionaries = App.Shmames.getStorageService().getBrainController().getHangmanDictionaries().getDictionaries();
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("hangman", "Play a game of Hangman!")
 				.addSubCommands(
 						CommandBuilder.Create("start", "Begin a new game.")
 								.addParameters(
 										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
-												.setPattern("[a-z0-9,]+")
-												.setExample("mainDictionary"),
+												.setPattern("([a-z0-9]+;)+([a-z0-9]+);?")
+												.setExample("game1;game2;"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 												.setExample("true")
 								)
@@ -54,33 +59,24 @@ public class Hangman implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run(ExecutingCommand executingCommand) {
+		String subCommand = executingCommand.getSubCommand();
+		Brain brain = executingCommand.getBrain();
+		Lang lang = executingCommand.getLanguage();
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		ShmamesSubCommandData subCommand = data.getSubCommandData();
-		String subCmd = subCommand.getCommandName();
-
-		switch(subCmd.toLowerCase()) {
+		switch(subCommand) {
 			case "start":
-				return cmdStart(brain, lang, data.getServer(), data.getMessagingChannel(), subCommand);
+				return cmdStart(brain, lang, executingCommand.getServer(), executingCommand);
 			case "guess":
-				return cmdGuess(brain, lang, data.getServer(), data.getMessagingChannel(), subCommand);
+				return cmdGuess(brain, lang, executingCommand.getServer(), executingCommand);
 			case "list":
-				return cmdList();
-			default:
-				return "";
+				return cmdList(lang);
 		}
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return true;
+
+		return null;
 	}
 
-	private String cmdList() {
+	private EmbedBuilder cmdList(Lang lang) {
 		StringBuilder sb = new StringBuilder();
 
 		for(HangmanDictionary hd : dictionaries){
@@ -90,61 +86,25 @@ public class Hangman implements ICommand {
 			sb.append(hd.getName());
 		}
 
-		return "Available dictionaries: "+sb.toString()+", or leave blank to use all.";
+		return response(EmbedType.INFO)
+				.setDescription(lang.getMsg(Langs.HANGMAN_DICTIONARIES, new String[] {sb.toString()}));
 	}
 
-	private String cmdStart(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData subCommand) {
+	private EmbedBuilder cmdStart(Brain brain, Lang lang, Guild server, ExecutingCommand executingCommand) {
 		if(brain.getHangmanGame() != null) {
 			TextChannel tc = server.getTextChannelById(brain.getHangmanGame().getChannelID());
 
 			if(tc != null) {
-				return "There is already a Hangman game running in " + tc.getAsMention();
+				return response(EmbedType.ERROR, Errors.HANGMAN_ALREADY_STARTED.name())
+						.setDescription(lang.getError(Errors.HANGMAN_ALREADY_STARTED, new String[]{tc.getAsMention()}));
 			} else {
 				brain.setHangmanGame(null);
 			}
 		}
 
-		String dictionaryNames = subCommand.getArguments().getAsString("dictionary");
-		boolean doExclude = subCommand.getArguments().getAsBoolean("exclude");
-		HangmanDictionary dictionary = null;
-
-		// Select the word list to pull from for this Hangman puzzle.
-		if(dictionaryNames != null) {
-			List<HangmanDictionary> availableDictionaries = new ArrayList<>();
-
-			if(doExclude) {
-				// Add all except the ones mentioned.
-				for(HangmanDictionary dict : dictionaries) {
-					boolean shouldAdd = true;
-
-					for (String n : dictionaryNames.split(",")) {
-						if(dict.getName().equalsIgnoreCase(n)){
-							shouldAdd = false;
-						}
-					}
-
-					if(shouldAdd) {
-						availableDictionaries.add(dict);
-					}
-				}
-			} else {
-				// Only add the mentioned dictionaries.
-				for (String n : dictionaryNames.split(",")) {
-					HangmanDictionary namedDictionary = getDictionaryByName(n);
-
-					if (namedDictionary != null) {
-						availableDictionaries.add(namedDictionary);
-					}
-				}
-			}
-
-			if(availableDictionaries.size() == 0)
-				return lang.getError(Errors.NOT_FOUND, true);
-
-			dictionary = availableDictionaries.get(RandomService.GetRandom(availableDictionaries.size()));
-		} else {
-			dictionary = dictionaries.get(RandomService.GetRandom(dictionaries.size()));
-		}
+		String dictionaryNames = executingCommand.getCommandArguments().getAsString("dictionary");
+		boolean doExclude = executingCommand.getCommandArguments().getAsBoolean("exclude");
+		HangmanDictionary dictionary = selectDictionary(dictionaryNames, doExclude);
 
 		String word = dictionary.randomWord();
 		String hint = dictionary.getWords().get(word);
@@ -152,30 +112,37 @@ public class Hangman implements ICommand {
 
 		HangmanGame newGame = new HangmanGame(word, hint, dictionaryName);
 
-		newGame.setChannel(messagingChannel.getChannel().getIdLong());
-		sendEmbeddedMessage(messagingChannel, lang, newGame);
+		newGame.setChannel(executingCommand.getChannel().getIdLong());
 		brain.setHangmanGame(newGame);
 
-		return "";
+		EmbedBuilder embedBuilder = buildHangmanEmbed(lang, newGame);
+		Message message = MessageService.SendMessageBlocking(executingCommand.getChannel(), embedBuilder);
+
+		newGame.setMessage(message.getIdLong());
+
+		if(executingCommand.hasInteractionHook()) {
+			return response(EmbedType.SUCCESS)
+					.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
+		}
+
+		return null;
 	}
 
-	private String cmdGuess(Brain brain, Lang lang, Guild server, ShmamesCommandMessagingChannel messagingChannel, ShmamesSubCommandData subCommand) {
-		String guess = subCommand.getArguments().getAsString("guess").toLowerCase();
+	private EmbedBuilder cmdGuess(Brain brain, Lang lang, Guild server, ExecutingCommand executingCommand) {
+		String guess = executingCommand.getCommandArguments().getAsString("guess").toLowerCase();
 		HangmanGame game = brain.getHangmanGame();
 
-		if (game == null)
-			return lang.getError(Errors.HANGMAN_NOT_STARTED, true);
-
-		// If there is a slash command, don't make it Ephemeral.
-		if(messagingChannel.hasHook()) {
-			messagingChannel.getHook().setEphemeral(false);
+		if (game == null) {
+			return response(EmbedType.ERROR, Errors.HANGMAN_NOT_STARTED.name())
+					.setDescription(lang.getError(Errors.HANGMAN_NOT_STARTED));
 		}
 
 		// Process the guess.
 		if(guess.length() == 1){
 			// Avoid re-guesses.
 			if(game.getCorrectGuesses().contains(guess.charAt(0)) || game.getIncorrectGuesses().contains(guess.charAt(0))){
-				return lang.getError(Errors.HANGMAN_ALREADY_GUESSED, true);
+				return response(EmbedType.ERROR, Errors.HANGMAN_ALREADY_GUESSED.name())
+						.setDescription(lang.getError(Errors.HANGMAN_ALREADY_GUESSED));
 			}
 
 			// Process their letter guess.
@@ -206,49 +173,65 @@ public class Hangman implements ICommand {
 		}
 
 		// Send an updated game board.
-		game.deleteMessage(server);
-		sendEmbeddedMessage(messagingChannel, lang, game);
+		game.updateMessage(server,buildHangmanEmbed(lang, game));
 
 		// If the game is over, clean up.
 		if(game.isFinished()) {
 			brain.setHangmanGame(null);
 		}
 
-		return "";
-	}
-
-	private @Nullable HangmanDictionary getDictionaryByName(String name) {
-		for(HangmanDictionary dictionary : dictionaries) {
-			if(dictionary.getName().equalsIgnoreCase(name)) {
-				return dictionary;
-			}
+		if(executingCommand.hasInteractionHook()) {
+			return response(EmbedType.SUCCESS)
+					.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
 		}
 
 		return null;
 	}
 
-	private void sendEmbeddedMessage(ShmamesCommandMessagingChannel messagingChannel, Lang lang, HangmanGame g){
-		EmbedBuilder eBuilder = new EmbedBuilder();
+	private HangmanDictionary selectDictionary(String chosenNames, boolean exclude) {
+		List<HangmanDictionary> availableDictionaries = new ArrayList<>();
+
+		if(chosenNames != null) {
+			List<String> namesSplit = Arrays.asList(chosenNames.toLowerCase().split(";"));
+
+			for(HangmanDictionary dictionary : dictionaries) {
+				if(namesSplit.contains(dictionary.getName().toLowerCase())) {
+					// The dictionary we've called out is this one.
+					if(!exclude) {
+						// Include it
+						availableDictionaries.add(dictionary);
+					}
+				} else {
+					// This dictionary wasn't called out at all.
+					if(exclude) {
+						// If we're excluding dictionaries, then this one is safe to add.
+						availableDictionaries.add(dictionary);
+					}
+				}
+			}
+
+			return RandomService.GetRandomObjectFromList(availableDictionaries);
+		}
+
+		return RandomService.GetRandomObjectFromList(dictionaries);
+	}
+
+	private EmbedBuilder buildHangmanEmbed(Lang lang, HangmanGame g){
+		EmbedBuilder eBuilder = response(EmbedType.INFO, lang.getMsg(Langs.HANGMAN_TITLE));
 
 		if(g.isFinished()) {
 			if(g.didWin()) {
-				eBuilder.setAuthor("You win!");
+				eBuilder.setDescription("You win!");
 			} else {
-				eBuilder.setAuthor("You lose! The word was \""+g.getWord()+"\"");
+				eBuilder.setDescription("You lose! The word was \""+g.getWord()+"\"");
 			}
-		} else {
-			eBuilder.setAuthor(lang.getMsg(Langs.HANGMAN_TITLE));
 		}
 
-		eBuilder.setTitle(g.getDictionary()+" » "+g.getHint());
-		eBuilder.setColor(Color.WHITE);
 		eBuilder.setFooter(lang.getMsg(Langs.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
 
-		eBuilder.appendDescription(getHangmanASCII(g.getLivesRemaining()));
-		eBuilder.appendDescription("\n"+getWordProgressEmotes(g));
+		eBuilder.addField(g.getDictionary()+" » "+g.getHint(), getHangmanASCII(g.getLivesRemaining())+"\n"+getWordProgressEmotes(g), false);
 
-
-		messagingChannel.sendMessage(eBuilder, (message -> g.setMessage(message.getIdLong())), (error -> {}));
+		return eBuilder;
 	}
 
 	private String getWordProgressEmotes(HangmanGame g){

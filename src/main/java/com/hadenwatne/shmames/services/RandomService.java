@@ -36,7 +36,7 @@ public class RandomService {
      * @param set The unordered list to use.
      * @return A random item from the Set.
      */
-    public static <T> T GetRandomHashMap(Set<T> set) {
+    public static <T> T GetRandomFromSet(Set<T> set) {
         int num = GetRandom(set.size());
         for (T t : set)
             if (--num < 0)
@@ -45,31 +45,11 @@ public class RandomService {
     }
 
     /**
-     * Returns a random string from a Set of strings.
-     * @param items The Set to use.
-     * @return A random string.
-     */
-    public static String GetRandomStringFromSet(Set<String> items) {
-        int target = r.nextInt(items.size());
-        int i = 0;
-
-        for(String o : items) {
-            if(i == target) {
-                return o;
-            }
-
-            i++;
-        }
-
-        return "";
-    }
-
-    /**
-     * Returns a random string from a List of strings.
+     * Returns a random object from a List of objects.
      * @param items The List to use.
-     * @return A random string.
+     * @return A random object.
      */
-    public static String GetRandomStringFromList(List<String> items) {
+    public static <T> T GetRandomObjectFromList(List<T> items) {
         int target = r.nextInt(items.size());
 
         return items.get(target);

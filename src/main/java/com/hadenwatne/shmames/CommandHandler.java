@@ -1,43 +1,33 @@
 package com.hadenwatne.shmames;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
 import com.hadenwatne.shmames.commands.*;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.command.*;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.LoggingService;
-import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.tasks.TypingTask;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-// After the bot is summoned, this is called to determine which command to run
 public class CommandHandler {
-	private static List<ICommand> commands;
-	private final Lang defaultLang = App.Shmames.getLanguageService().getDefaultLang();
+	private final List<Command> commands;
 
 	public CommandHandler() {
-		commands = new ArrayList<ICommand>();
+		commands = new ArrayList<>();
 
 		commands.add(new Blame());
 		commands.add(new Cactpot());
@@ -52,20 +42,19 @@ public class CommandHandler {
 		commands.add(new Hangman());
 		commands.add(new Help());
 		commands.add(new IdiotThat());
-		commands.add(new Jinping());
 		commands.add(new ListCmd());
 		commands.add(new ListEmoteStats());
 		commands.add(new Minesweeper());
 		commands.add(new Modify());
 		commands.add(new Music());
-		commands.add(new PinThat());
+		commands.add(new Pin());
 		commands.add(new Poll());
 		commands.add(new React());
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Response());
 		commands.add(new Roll());
-		commands.add(new SimonSays());
+		commands.add(new Say());
 		commands.add(new Storytime());
 		commands.add(new Tally());
 		commands.add(new Thoughts());
@@ -77,206 +66,204 @@ public class CommandHandler {
 		commands.add(new Wiki());
 
 		// Send Discord the syntax we plan to use for slash commands.
-		updateSlashCommands(commands);
+		updateSlashCommands();
 	}
 
 	/**
 	 * Gets a list of commands actively loaded.
 	 * @return A list of commands.
 	 */
-	public List<ICommand> getLoadedCommands(){
+	public List<Command> getLoadedCommands(){
 		return commands;
 	}
-	
-	/**
-	 * Parses the command provided, and performs an action based on the command determined.
-	 * @param commandText The raw String calling the command.
-	 * @param message The message.
-	 * @param server The server the command is running on, if applicable.
-	 * @param brain The brain of the server, if applicable.
-	 */
-	public void PerformCommand(String commandText, Message message, @Nullable Guild server, @Nullable Brain brain) {
-		Lang lang = defaultLang;
-		User author = message.getAuthor();
-		MessageChannel channel = message.getChannel();
 
-		// Log the command.
-		if(server != null) {
-			LoggingService.Log(LogType.COMMAND, "["+ server.getId() + "/" + author.getName() +"] "+ commandText);
-			lang = App.Shmames.getLanguageService().getLangFor(server);
-		} else {
-			LoggingService.Log(LogType.COMMAND, "["+ "Private Message" + "/" + author.getName() +"] "+ commandText);
+	/**
+	 * Attempts to match the raw command data to a Command. This does not check for usage errors.
+	 * @param commandText The raw text of the command being run.
+	 * @return A Command object if found, otherwise null.
+	 */
+	public Command PreProcessCommand(String commandText) {
+		for(Command command : commands) {
+			Matcher commandMatcher = command.getCommandStructure().getPrimaryPattern().matcher(commandText);
+
+			if(commandMatcher.find()) {
+				return command;
+			}
 		}
 
-		// Parse the command.
-		ParsedCommandResult parsedCommand = parseCommandString(commandText);
+		return null;
+	}
 
-		if(parsedCommand != null) {
-			ICommand c = parsedCommand.getCommand();
-			String args = parsedCommand.getArguments();
+	/**
+	 * Begins processing a command, handling errors, and sending a response.
+	 * @param command The command to handle.
+	 * @param executingCommand The command context to use.
+	 * @param commandText The raw text of the command.
+	 */
+	public void HandleCommand(Command command, ExecutingCommand executingCommand, String commandText) {
+		if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
+			// If this command requires a server, but none is accessible, throw an error.
+			if(command.requiresGuild() && executingCommand.getServer() == null) {
+				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.GUILD_REQUIRED.name())
+						.setDescription(executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED));
 
-			logCountCommandUsage(c);
-
-			if(server == null && c.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(message, channel), lang);
+				executingCommand.reply(embed);
 
 				return;
 			}
 
-			// Validate the command usage.
-			Matcher usageMatcher = c.getCommandStructure().getPattern().matcher(args);
-
-			if(usageMatcher.matches()) {
-				// Build map of arguments
-				ShmamesSubCommandData subCommandData = null;
-
-				// Build data for any subcommand groups this might have.
-				boolean hasGroup = false;
-				for(SubCommandGroup subCommandGroup : c.getCommandStructure().getSubcommandGroups()) {
-					String startsWithGroupNameMatch = matchStringToCommand(args.toLowerCase(), subCommandGroup.getName(), subCommandGroup.getAliases());
-
-					if(startsWithGroupNameMatch != null) {
-						String subArgs = args.replaceFirst("^"+startsWithGroupNameMatch, "").trim();
-						hasGroup = true;
-
-						for(CommandStructure subCommand : subCommandGroup.getSubcommands()) {
-							String startsWithSubCommandMatch = matchStringToCommand(subArgs.toLowerCase(), subCommand.getName(), subCommand.getAliases());
-
-							if(startsWithSubCommandMatch != null) {
-								LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
-
-								subCommandData = new ShmamesSubCommandData(subCommandGroup.getName(), subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
-
-								break;
-							}
-						}
-
-						break;
-					}
-				}
-
-				if(!hasGroup) {
-					// Build data for any subcommands this might have.
-					for (CommandStructure subCommand : c.getCommandStructure().getSubCommands()) {
-						String startsWithSubCommandMatch = matchStringToCommand(args.toLowerCase(), subCommand.getName(), subCommand.getAliases());
-
-						if (startsWithSubCommandMatch != null) {
-							LinkedHashMap<String, Object> subCommandArgs = buildArgumentsMap(subCommand, usageMatcher, server);
-
-							subCommandData = new ShmamesSubCommandData(subCommand.getName(), new ShmamesCommandArguments(subCommandArgs));
-							hasGroup = true;
-
-							break;
-						}
-					}
-				}
-
-				ShmamesCommandData data;
-				if(hasGroup) {
-					data = new ShmamesCommandData(
-							c,
-							subCommandData,
-							new ShmamesCommandMessagingChannel(message, channel),
-							author,
-							server
-					);
-				} else {
-					LinkedHashMap<String, Object> commandArgs = buildArgumentsMap(c.getCommandStructure(), usageMatcher, server);
-
-					data = new ShmamesCommandData(
-							c,
-							new ShmamesCommandArguments(commandArgs),
-							new ShmamesCommandMessagingChannel(message, channel),
-							author,
-							server
-					);
-				}
-
-				// Execute the command
-				executeCommand(lang, brain, data);
-			}else{
-				sendWrongUsageEmbed(lang, new ShmamesCommandMessagingChannel(message, channel), c.getCommandStructure().getUsage());
-			}
+			App.Shmames.getCommandHandler().ParseCommand(command, commandText, executingCommand);
+			App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
 		} else {
-			sendMessageResponse(lang.getError(Errors.COMMAND_NOT_FOUND, true), new ShmamesCommandMessagingChannel(message, channel), lang);
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.WRONG_USAGE));
+
+			for(MessageEmbed.Field field : command.getHelpFields()) {
+				embed.addField(field);
+			}
+
+			executingCommand.reply(embed);
 		}
 	}
 
 	/**
-	 * Performs additional validation on the command provided, and runs it if valid.
-	 * @param command The command to run.
-	 * @param arguments Arguments to pass into the command.
-	 * @param event The event that summoned this method.
-	 * @param server The server this command is running on, if applicable.
+	 * Attempts to validate the command for usage errors.
+	 * @param command The command to validate against.
+	 * @param commandText The command usage to validate.
+	 * @return True, if the validation was successful. Otherwise false.
 	 */
-	public void PerformCommand(ICommand command, ShmamesSubCommandData subCommand, ShmamesCommandArguments arguments, SlashCommandEvent event, @Nullable Guild server) {
-		event.deferReply().queue();
+	private boolean ValidateCommand(Command command, String commandText) {
+		Matcher commandMatcher = command.getCommandStructure().getMatcherPattern().matcher(commandText);
 
-		Brain brain = null;
-		Lang lang = defaultLang;
-		User author = event.getUser();
-		InteractionHook hook = event.getHook();
-		String cmdString = (subCommand == null ? arguments.getAsString() : subCommand.getAsString()).trim();
+		if(commandMatcher.find()) {
+			return commandMatcher.group("context") != null;
+		}
 
-		// Log the command statistic.
-		if (server != null) {
-			LoggingService.Log(LogType.COMMAND, "[" + server.getId() + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
-			lang = App.Shmames.getLanguageService().getLangFor(server);
-			brain = App.Shmames.getStorageService().getBrain(server.getId());
-		} else {
-			LoggingService.Log(LogType.COMMAND, "[" + "Private Message" + "/" + author.getName() + "] " + event.getName() + " " + cmdString);
+		return false;
+	}
 
-			if (command.requiresGuild()) {
-				sendMessageResponse(lang.getError(Errors.GUILD_REQUIRED, true), new ShmamesCommandMessagingChannel(hook, event.getChannel()), lang);
+	/**
+	 * Breaks down a validated raw string command into a parseable context object with named parameters.
+	 * @param command The command to parse against.
+	 * @param commandText The raw command.
+	 * @param executingCommand The command context to update.
+	 */
+	private void ParseCommand(Command command, String commandText, ExecutingCommand executingCommand) {
+		Matcher commandMatcher = command.getCommandStructure().getMatcherPattern().matcher(commandText);
 
-				return;
+		if(commandMatcher.find()) {
+			final String context = commandMatcher.group("context");
+			final CommandStructure commandStructure = command.getCommandStructure();
+
+			// Sub-command-group Specific
+			for(SubCommandGroup subCommandGroup : commandStructure.getSubcommandGroups()) {
+				final String groupMatch = matchStringToCommand(context, subCommandGroup.getName(), subCommandGroup.getAliases());
+
+				if(groupMatch != null) {
+					executingCommand.setSubCommandGroup(subCommandGroup.getName());
+
+					// Sub-command Specific
+					final String contextStripped = context.substring(groupMatch.length()).trim();
+					ParseCommandSubCommands(subCommandGroup.getSubCommands(), contextStripped, executingCommand, commandMatcher);
+
+					break;
+				}
+			}
+
+			// Process sub commands on the primary command structure, if any.
+			if(!executingCommand.hasSubCommandGroup()) {
+				ParseCommandSubCommands(commandStructure.getSubCommands(), context, executingCommand, commandMatcher);
+			}
+
+			// Process command arguments on the primary command structure, if any.
+			if(!executingCommand.hasSubCommand()) {
+				ParseCommandArguments(commandStructure, executingCommand, commandMatcher);
 			}
 		}
 
-		// Validate the command usage.
-		Matcher usageMatcher = command.getCommandStructure().getPattern().matcher(cmdString);
-
-		if (usageMatcher.matches()) {
-			// Build command data.
-			ShmamesCommandData data;
-			if(subCommand != null) {
-				 data = new ShmamesCommandData(
-						command,
-						subCommand,
-						new ShmamesCommandMessagingChannel(hook, event.getChannel()),
-						author,
-						server
-				);
-			} else {
-				data = new ShmamesCommandData(
-						command,
-						arguments,
-						new ShmamesCommandMessagingChannel(hook, event.getChannel()),
-						author,
-						server
-				);
-			}
-
-			// Execute the command.
-			executeCommand(lang, brain, data);
+		if(executingCommand.getServer() != null) {
+			LoggingService.Log(LogType.COMMAND, "["+executingCommand.getAuthorUser().getId()+"@"+executingCommand.getServer().getId()+"] "+commandText);
 		} else {
-			sendMessageResponse(lang.wrongUsage(command.getCommandStructure().getUsage()), new ShmamesCommandMessagingChannel(event.getHook(), event.getChannel()), lang);
+			LoggingService.Log(LogType.COMMAND, "["+executingCommand.getAuthorUser().getId()+"@"+"Private] "+commandText);
 		}
 	}
 
-	public @Nullable ParsedCommandResult parseCommandString(String cmd) {
-		for(ICommand c : commands) {
-			Matcher nameMatcher = Pattern.compile("^(" + c.getCommandStructure().getName() + ")\\b(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+	/**
+	 * Breaks down sub commands into a parseable object.
+	 * @param subCommands A list of subcommands to test against.
+	 * @param context The raw command.
+	 * @param executingCommand The running context.
+	 * @param commandMatcher The matcher object.
+	 */
+	private void ParseCommandSubCommands(List<CommandStructure> subCommands, String context, ExecutingCommand executingCommand, Matcher commandMatcher) {
+		for(CommandStructure subCommand : subCommands) {
+			final String subCommandMatch = matchStringToCommand(context, subCommand.getName(), subCommand.getAliases());
 
-			if (nameMatcher.matches()) {
-				return new ParsedCommandResult(c, nameMatcher.group(2) != null ? nameMatcher.group(2).trim() : "");
-			} else {
-				for(String a : c.getCommandStructure().getAliases()) {
-					Matcher aliasMatcher = Pattern.compile("^(" + a + ")\\b(.+)?$", Pattern.CASE_INSENSITIVE).matcher(cmd);
+			if(subCommandMatch != null) {
+				executingCommand.setSubCommand(subCommand.getName());
 
-					if(aliasMatcher.matches()) {
-						return new ParsedCommandResult(c, aliasMatcher.group(2) != null ? aliasMatcher.group(2).trim() : "");
-					}
+				ParseCommandArguments(subCommand, executingCommand, commandMatcher);
+
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Breaks down parameter arguments into a parseable object.
+	 * @param commandStructure The command to check against.
+	 * @param executingCommand The running context.
+	 * @param commandMatcher The matcher object.
+	 */
+	private void ParseCommandArguments(CommandStructure commandStructure, ExecutingCommand executingCommand, Matcher commandMatcher) {
+		if(commandStructure.getParameters().size() > 0) {
+			ExecutingCommandArguments commandArguments = new ExecutingCommandArguments();
+
+			for (CommandParameter commandParameter : commandStructure.getParameters()) {
+				String parameterMatch = commandMatcher.group(commandParameter.getRegexName());
+
+				if (parameterMatch != null) {
+					commandArguments.add(commandParameter.getName(), parameterMatch);
+				}
+			}
+
+			executingCommand.setCommandArguments(commandArguments);
+		}
+	}
+
+	/**
+	 * Asynchronously executes the provided command given an ExecuringCommand context.
+	 * @param command The command to execute.
+	 * @param executingCommand An object containing context for the command running.
+	 */
+	private void ExecuteCommand(Command command, ExecutingCommand executingCommand) {
+		// TODO clean up typing indicator
+		// TODO splitting up a long reply (message service!)
+
+		CompletableFuture.supplyAsync(() -> command.run(executingCommand))
+				.thenAccept(executingCommand::reply)
+				.exceptionally(exception -> {
+					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error");
+					embedBuilder.addField(Errors.BOT_ERROR.name(), executingCommand.getLanguage().getError(Errors.BOT_ERROR), false);
+
+					executingCommand.reply(embedBuilder);
+					LoggingService.LogException(exception);
+
+					return null;
+				});
+	}
+
+	private String matchStringToCommand(String toMatch, String commandName, List<String> aliases) {
+		Matcher commandBorderMatcher = Pattern.compile("^("+commandName+")\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
+
+		if(commandBorderMatcher.find()) {
+			return commandBorderMatcher.group(1);
+		} else {
+			for(String alias : aliases) {
+				Matcher aliasBorderMatcher = Pattern.compile("^("+alias+")\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
+
+				if(aliasBorderMatcher.find()) {
+					return aliasBorderMatcher.group(1);
 				}
 			}
 		}
@@ -284,107 +271,7 @@ public class CommandHandler {
 		return null;
 	}
 
-	private String matchStringToCommand(String toMatch, String commandName, List<String> aliases) {
-		String match = null;
-		Matcher commandBorderMatcher = Pattern.compile("^"+commandName+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
-
-		if(commandBorderMatcher.find()) {
-			match = commandName;
-		} else {
-			for(String alias : aliases) {
-				Matcher aliasBorderMatcher = Pattern.compile("^"+alias+"\\b(.+)?", Pattern.CASE_INSENSITIVE).matcher(toMatch);
-
-				if(aliasBorderMatcher.find()) {
-					match = alias;
-					break;
-				}
-			}
-		}
-
-		return match;
-	}
-
-	private void executeCommand(Lang lang, Brain brain, ShmamesCommandData data) {
-		try {
-			CompletableFuture.supplyAsync(() -> data.getCommand().run(lang, brain, data))
-					.thenAccept(r -> sendMessageResponse(r, data.getMessagingChannel(), lang))
-					.exceptionally(exception -> {
-						if(data.getMessagingChannel().hasHook()) {
-							data.getMessagingChannel().getHook().setEphemeral(true);
-						}
-
-						sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
-						LoggingService.LogException(exception);
-						return null;
-					});
-		}catch (Exception e){
-			if(data.getMessagingChannel().hasHook()) {
-				data.getMessagingChannel().getHook().setEphemeral(true);
-			}
-
-			LoggingService.LogException(e);
-			sendMessageResponse(lang.getError(Errors.BOT_ERROR, true), data.getMessagingChannel(), lang);
-		}
-	}
-
-	private void sendWrongUsageEmbed(Lang lang, ShmamesCommandMessagingChannel msg, String usage) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
-
-		eBuilder.setColor(new Color(166, 36, 36));
-		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
-
-		eBuilder.setTitle("Error: "+Errors.WRONG_USAGE.name());
-		eBuilder.setDescription(lang.getError(Errors.WRONG_USAGE, false));
-		eBuilder.addField("Command Help", usage, false);
-
-		if(msg.hasHook()) {
-			msg.getHook().setEphemeral(true);
-		}
-
-		msg.sendMessage(eBuilder);
-	}
-
-	private void sendMessageResponse(String r, ShmamesCommandMessagingChannel msg, Lang lang) {
-		if (msg.hasHook()) {
-			if (r.length() > 0) {
-				for (String m : PaginationService.SplitString(r, 2000)) {
-					msg.sendMessage(m);
-				}
-			} else {
-				// Send a generic message to this InteractionHook only if we haven't responded to it yet.
-				if(!msg.hasSentMessage()) {
-					msg.getHook().setEphemeral(true);
-					msg.sendMessage(lang.getMsg(Langs.GENERIC_SUCCESS));
-				}
-			}
-		} else {
-			new TypingTask(r, msg.getChannel(), false);
-		}
-	}
-
-	private LinkedHashMap<String, Object> buildArgumentsMap(CommandStructure c, Matcher usageMatcher, Guild server) {
-		LinkedHashMap<String, Object> namedArguments = new LinkedHashMap<>();
-
-		for(CommandParameter cp : c.getParameters()) {
-			String group = usageMatcher.group(cp.getRegexName());
-
-			if(group != null) {
-				insertArgumentWithType(namedArguments, group, cp, server);
-			}
-		}
-
-		return namedArguments;
-	}
-
-	private void logCountCommandUsage(ICommand command) {
-		String primaryCommandName = command.getCommandStructure().getName().toLowerCase();
-		HashMap<String, Integer> stats = App.Shmames.getStorageService().getMotherBrain().getCommandStats();
-		int count = stats.getOrDefault(primaryCommandName, 1) + 1;
-
-		stats.put(primaryCommandName, count);
-	}
-
-	private void updateSlashCommands(List<ICommand> commands) {
+	private void updateSlashCommands() {
 		// Update command syntax on individual test servers.
 		if(App.IsDebug) {
 			for(Guild g : App.Shmames.getJDA().getGuilds()) {
@@ -407,68 +294,15 @@ public class CommandHandler {
 
 	private void issueSlashCommandUpdate(CommandListUpdateAction cUpdate) {
 		try {
-			for (ICommand command : commands) {
+			for (Command command : this.commands) {
 				if (command.getCommandStructure().getDescription().length() > 0) {
-					cUpdate.addCommands(CommandBuilder.BuildCommandData(command));
+					cUpdate.addCommands(CommandBuilder.BuildSlashCommandData(command));
 				}
 			}
 
 			cUpdate.queue();
 		}catch (Exception e) {
 			LoggingService.LogException(e);
-		}
-	}
-
-	private void insertArgumentWithType(HashMap<String, Object> map, String value, CommandParameter parameter, @Nullable Guild guild) {
-		switch(parameter.getType()) {
-			case BOOLEAN:
-				map.put(parameter.getName(), Boolean.valueOf(value));
-				break;
-			case INTEGER:
-				map.put(parameter.getName(), Integer.parseInt(value));
-				break;
-			case DISCORD_ROLE:
-				if(guild != null) {
-					Matcher m = parameter.getPattern().matcher(value);
-
-					if(m.find()){
-						Role role = guild.getRoleById(m.group(2));
-						map.put(parameter.getName(), role);
-						break;
-					}
-				}
-			case DISCORD_USER:
-				if(guild != null) {
-					Matcher m = parameter.getPattern().matcher(value);
-
-					if(m.find()){
-						User user  = guild.getMemberById(m.group(2)).getUser();
-						map.put(parameter.getName(), user);
-						break;
-					}
-				}
-			case DISCORD_EMOTE:
-				if(guild != null) {
-					Matcher m = parameter.getPattern().matcher(value);
-
-					if(m.find()){
-						Emote emote = guild.getEmoteById(m.group(2));
-						map.put(parameter.getName(), emote);
-						break;
-					}
-				}
-			case DISCORD_CHANNEL:
-				if(guild != null) {
-					Matcher m = parameter.getPattern().matcher(value);
-
-					if(m.find()){
-						MessageChannel channel = guild.getTextChannelById(m.group(2));
-						map.put(parameter.getName(), channel);
-						break;
-					}
-				}
-			default:
-				map.put(parameter.getName(), value);
 		}
 	}
 }

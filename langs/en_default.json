@@ -127,14 +127,20 @@
     "FORUM_WEAPON_DUPLICATE": [
       ":warning: Found an existing Forum Weapon with that link: **%WC%**"
     ],
-    "FORUM_WEAPON_UPDATED": [
-      "The weapon was updated with a new link!"
+    "FORUM_WEAPON_LIST": [
+      "These are the weapons I found:"
     ],
     "FORUM_WEAPONS_PRUNED": [
       "Pruned **%WC%** unused Forum Weapons!"
     ],
+    "FORUM_WEAPON_UPDATED": [
+      "The weapon was updated with a new link!"
+    ],
     "GENERIC_SUCCESS": [
       "Success!"
+    ],
+    "HANGMAN_DICTIONARIES": [
+      "Available dictionaries: **%WC%** (or leave blank to use all of them)"
     ],
     "HANGMAN_FOOTER_GUESSED": [
       "Already guessed:"
@@ -203,10 +209,10 @@
       "Queued the `%WC%` Playlist!"
     ],
     "POLL_TITLE": [
-      "== POLL =="
+      "Cast your vote!"
     ],
     "POLL_TITLE_RESULTS": [
-      "== POLL (Results) =="
+      "The Poll has closed."
     ],
     "RESET_EMOTE_STATS": [
       "Emoji usage stats have been reset!"
@@ -221,10 +227,13 @@
       "This server has joined the following Families:"
     ],
     "SETTING_LIST_TITLE": [
-      "Available settings:"
+      "Available settings"
     ],
     "SETTING_UPDATED_SUCCESS": [
       "Setting was updated successfully!"
+    ],
+    "STORY_INTRO": [
+      "Let's read a story!"
     ],
     "TALLY_CURRENT_VALUE": [
       "Current tally for `%WC%`: `%WC%`"
@@ -253,8 +262,14 @@
     "TIMER_STARTED": [
       "Started a new :alarm_clock: for %WC%"
     ],
+    "TIMER_ALERT": [
+      ":alarm_clock: (%WC%): The timer you set is finished!"
+    ],
     "TRIGGER_LIST": [
       "I'll respond to these things:"
+    ],
+    "WHAT_ARE_THE_ODDS": [
+      "About %WC%"
     ],
     "WHATSHOULDIDO_INTRO_OPTIONS": [
       "I think you should",
@@ -381,6 +396,9 @@
     "GUILD_REQUIRED": [
       "That command must be run on a server."
     ],
+    "HANGMAN_ALREADY_STARTED": [
+      "There's already a Hangman game in %WC%"
+    ],
     "HANGMAN_ALREADY_GUESSED": [
       "You've already guessed that letter!"
     ],
@@ -456,17 +474,23 @@
     "SETTING_NOT_FOUND": [
       "I couldn't find that setting."
     ],
+    "SETTING_VALUE_INVALID": [
+      "The value you provided is invalid. Please try again."
+    ],
     "TIME_VALUE_INCORRECT": [
       "The amount of time provided is invalid!"
+    ],
+    "TIMER_LENGTH_INCORRECT": [
+      "Timers must be set between 1 second and 365 days."
     ],
     "TRACK_NOT_PLAYING": [
       "There isn't a track playing right now."
     ],
     "WRONG_USAGE": [
-      "I don't think that's how you do it."
+      "The command syntax you used is incorrect."
     ]
   },
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "default"
+  "langName": "en_default"
 }

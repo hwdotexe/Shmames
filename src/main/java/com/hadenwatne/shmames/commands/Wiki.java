@@ -4,16 +4,19 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.HTTPService;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class Wiki implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Wiki extends Command {
 	public Wiki() {
-		this.commandStructure = CommandBuilder.Create("wiki", "Ask the oracle your question, and I shall answer. That, or the Internet will.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("wiki", "Ask the oracle your question, and I shall answer. That, or the Internet will.")
 				.addParameters(
 						new CommandParameter("query", "A short search query", ParameterType.STRING)
 								.setPattern(".{3,150}")
@@ -23,19 +26,9 @@ public class Wiki implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String query = executingCommand.getCommandArguments().getAsString("query");
 
-	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		String query = data.getArguments().getAsString("query");
-
-		return HTTPService.GetWolfram(query);
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO).setDescription(HTTPService.GetWolfram(query));
 	}
 }

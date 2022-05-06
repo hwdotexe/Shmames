@@ -1,27 +1,31 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.concurrent.TimeUnit;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.tasks.AlarmTask;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import com.hadenwatne.shmames.tasks.JTimerTask;
 
-public class Timer implements ICommand {
-	private final CommandStructure commandStructure;
+import java.util.concurrent.TimeUnit;
 
+public class Timer extends Command {
 	public Timer() {
-		this.commandStructure = CommandBuilder.Create("timer", "Start a timer and be alerted when it's ready.")
+		super(true);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("timer", "Start a timer and be alerted when it's ready.")
 				.addAlias("remind me in")
 				.addAlias("alert")
+				.addAlias("alarm")
 				.addParameters(
 						new CommandParameter("duration", "The amount of time before the timer runs", ParameterType.TIMECODE)
 								.setExample("1d12h"),
@@ -32,23 +36,13 @@ public class Timer implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
-		String duration = data.getArguments().getAsString("duration");
-		String msg = data.getArguments().getAsString("message");
+	public EmbedBuilder run(ExecutingCommand executingCommand) {
+		String duration = executingCommand.getCommandArguments().getAsString("duration");
+		String msg = executingCommand.getCommandArguments().getAsString("message");
 		int seconds = DataService.ConvertTimeStringToSeconds(duration);
-		User author = data.getAuthor();
-		ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
+		User author = executingCommand.getAuthorUser();
 
-		if (seconds > 0) {
-			if (seconds > 31536000) {
-				return "Timers must be set for 365 days or sooner.";
-			}
-
+		if (seconds > 0 && seconds <= 31536000) {
 			long sLong = seconds;
 
 			// Days
@@ -67,29 +61,17 @@ public class Timer implements ICommand {
 			long f_sec = sLong;
 
 			// Schedule the task.
-			String messageID = messagingChannel.hasOriginMessage() ? messagingChannel.getOriginMessage().getId() : null;
-			JTimerTask t = new JTimerTask(author.getAsMention(), messagingChannel.getChannel().getIdLong(), messageID, seconds, msg);
+			String messageID = executingCommand.hasMessage() ? executingCommand.getMessage().getId() : null;
+			AlarmTask t = new AlarmTask(executingCommand.getChannel().getIdLong(), messageID, seconds, msg, executingCommand.getLanguage().getMsg(Langs.TIMER_ALERT, new String[]{author.getAsMention()}));
 			String timeMsg = (f_day > 0 ? f_day + "d " : "") + (f_hour > 0 ? f_hour + "h " : "") + (f_min > 0 ? f_min + "m " : "") + (f_sec > 0 ? f_sec + "s" : "");
 
-			brain.getTimers().add(t);
+			executingCommand.getBrain().getTimers().add(t);
 
-			String resultMessage = lang.getMsg(Langs.TIMER_STARTED, new String[]{"**" + timeMsg + "**"});
-
-			if(messagingChannel.hasHook()) {
-				messagingChannel.getHook().setEphemeral(true);
-				messagingChannel.getHook().sendMessage(resultMessage).queue();
-
-				return "";
-			} else {
-				return resultMessage;
-			}
+			return response(EmbedType.SUCCESS)
+					.setDescription(executingCommand.getLanguage().getMsg(Langs.TIMER_STARTED, new String[]{"**" + timeMsg + "**"}));
 		} else {
-			return lang.wrongUsage(commandStructure.getUsage());
+			return response(EmbedType.ERROR, Errors.TIMER_LENGTH_INCORRECT.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.TIMER_LENGTH_INCORRECT));
 		}
-	}
-	
-	@Override
-	public boolean requiresGuild() {
-		return true;
 	}
 }

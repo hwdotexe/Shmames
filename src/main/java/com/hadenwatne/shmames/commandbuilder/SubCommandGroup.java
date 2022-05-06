@@ -29,7 +29,7 @@ public class SubCommandGroup {
         return this.aliases;
     }
 
-    public List<CommandStructure> getSubcommands() {
+    public List<CommandStructure> getSubCommands() {
         return this.subcommands;
     }
 

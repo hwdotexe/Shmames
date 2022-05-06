@@ -10,32 +10,23 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.RandomService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import com.hadenwatne.shmames.enums.Errors;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-public class CringeThat implements ICommand {
-	private final CommandStructure commandStructure;
+public class CringeThat extends Command {
 	private final String[] creepyAsterisks = new String[]{"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*",
 			"*curious*", "*moves closer*", "*licks*", "*stares*", "*gag*", "*bites lip*"};
 	private final String[] creepyOwos = new String[]{"Owo", ">w<", "UwU", "OwO", "x3", ">^<", ";3", "^~^"};
-	private HashMap<String, String> cringeDict = new HashMap<>();
+	private final HashMap<String, String> cringeDict = new HashMap<>();
 
 	public CringeThat() {
-		this.commandStructure = CommandBuilder.Create("cringethat", "Rewrite a previous message in a cringy way.")
-				.addParameters(
-						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
-								.setPattern("([\\^]{1,15})")
-								.setExample("^^^"),
-						new CommandParameter("times", "Number of cringe iterations", ParameterType.INTEGER, false)
-								.setExample("2")
-				)
-				.build();
+		super(false);
 
 		cringeDict.put("food", "numsies");
 		cringeDict.put("can't", "nu can");
@@ -46,31 +37,35 @@ public class CringeThat implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("cringethat", "Rewrite a previous message in a cringy way.")
+				.addParameters(
+						new CommandParameter("position", "A number of carats (^) pointing to the message", ParameterType.STRING)
+								.setPattern("([\\^]{1,15})")
+								.setExample("^^^"),
+						new CommandParameter("times", "Number of cringe iterations", ParameterType.INTEGER, false)
+								.setExample("2")
+				)
+				.build();
 	}
 
 	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		int messages = data.getArguments().getAsString("position").length();
-		int times = data.getArguments().getAsInteger("times");
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		int messages = executingCommand.getCommandArguments().getAsString("position").length();
+		int times = executingCommand.getCommandArguments().getAsInteger("times");
 		int iterations = times > 0 ? times : 1;
 
 		try {
-			Message toCringe = MessageService.GetMessageIndicated(data.getMessagingChannel(), messages);
+			Message toCringe = MessageService.GetMessageIndicated(executingCommand, messages);
 			String cringe = toCringe.getContentDisplay();
 
-			return runCringeProcess(cringe, iterations);
+			return response(EmbedType.INFO).setDescription(runCringeProcess(cringe, iterations));
 		} catch (InsufficientPermissionException ex) {
 			ex.printStackTrace();
 
-			return lang.getError(Errors.NO_PERMISSION_BOT, true);
+			return response(EmbedType.ERROR)
+					.addField(Errors.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(Errors.NO_PERMISSION_BOT), false);
 		}
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
 	}
 
 	private String runCringeProcess(String cringe, int iterations) {

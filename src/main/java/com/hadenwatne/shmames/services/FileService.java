@@ -53,7 +53,7 @@ public class FileService {
      * @param fileName The name of the file to write, including extension.
      * @param bytesToWrite The byte array to write to file.
      */
-    public static void SaveBytesToFile(String directory, String fileName, byte[] bytesToWrite) {
+    public static File SaveBytesToFile(String directory, String fileName, byte[] bytesToWrite) {
         try {
             File file = new File(directory + File.separator + fileName);
             File parentDirectory = new File(directory);
@@ -71,8 +71,12 @@ public class FileService {
             os.write(bytesToWrite);
             os.flush();
             os.close();
+
+            return file;
         } catch (Exception e) {
             LoggingService.LogException(e);
         }
+
+        return null;
     }
 }

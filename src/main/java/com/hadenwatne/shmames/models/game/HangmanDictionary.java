@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.shmames.models.game;
 
 import com.hadenwatne.shmames.services.RandomService;
 
@@ -26,6 +26,6 @@ public class HangmanDictionary {
     }
 
     public String randomWord(){
-        return words.keySet().toArray()[RandomService.GetRandom(words.keySet().size())].toString();
+        return RandomService.GetRandomFromSet(words.keySet());
     }
 }

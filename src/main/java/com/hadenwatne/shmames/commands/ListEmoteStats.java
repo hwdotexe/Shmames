@@ -5,19 +5,22 @@ import java.util.LinkedHashMap;
 
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class ListEmoteStats implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class ListEmoteStats extends Command {
 	public ListEmoteStats() {
-		this.commandStructure = CommandBuilder.Create("listemotestats", "View emote usage statistics.")
+		super(true);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("listemotestats", "View emote usage statistics.")
 				.addAlias("list emote stats")
 				.addAlias("showemotestats")
 				.addAlias("show emote stats")
@@ -25,15 +28,11 @@ public class ListEmoteStats implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		Guild server = data.getServer();
-		StringBuilder statMsg = new StringBuilder("**" + lang.getMsg(Langs.EMOTE_STATS_TITLE) + "**\n");
-		HashMap<String, Integer> emStats = new HashMap<String, Integer>(brain.getEmoteStats());
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		Guild server = executingCommand.getServer();
+		final String headerMessage = executingCommand.getLanguage().getMsg(Langs.EMOTE_STATS_TITLE);
+		StringBuilder statMsg = new StringBuilder();
+		HashMap<String, Integer> emStats = new HashMap<String, Integer>(executingCommand.getBrain().getEmoteStats());
 
 		// Add emotes without any uses
 		for (Emote e : server.getEmotes()) {
@@ -70,11 +69,7 @@ public class ListEmoteStats implements ICommand {
 			statMsg.append("\nThere's nothing here!");
 		}
 
-		return statMsg.toString();
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return true;
+		return response(EmbedType.INFO)
+				.addField(headerMessage, statMsg.toString(), false);
 	}
 }

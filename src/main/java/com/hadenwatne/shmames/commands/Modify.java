@@ -1,266 +1,288 @@
 package com.hadenwatne.shmames.commands;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.command.ShmamesCommandMessagingChannel;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
 import com.hadenwatne.shmames.services.PaginationService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.services.ShmamesService;
 
-public class Modify implements ICommand {
-	private final CommandStructure commandStructure;
+import java.util.ArrayList;
+import java.util.List;
 
+public class Modify extends Command {
 	public Modify() {
-		CommandParameter setting = new CommandParameter("setting", "The setting to view or update", ParameterType.SELECTION, false);
+		super(true);
+	}
 
-		for(BotSettingName name : BotSettingName.values()) {
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		CommandParameter setting = new CommandParameter("setting", "The setting to view or update", ParameterType.SELECTION);
+
+		for (BotSettingName name : BotSettingName.values()) {
 			setting.addSelectionOptions(name.name());
 		}
 
-		this.commandStructure = CommandBuilder.Create("modify", "The Administrator's command to customize bot settings and behavior.")
-				.addParameters(
-						setting
-								.setExample("server_lang"),
-						new CommandParameter("value", "The new value for this setting.", ParameterType.STRING, false)
-								.setExample("pirate")
+		return CommandBuilder.Create("modify", "The Administrator's command to customize bot settings and behavior.")
+				.addAlias("settings")
+				.addSubCommands(
+						CommandBuilder.Create("set", "Change a setting.")
+								.addParameters(
+										setting
+												.setExample("server_lang"),
+										new CommandParameter("value", "The new value for this setting.", ParameterType.STRING)
+												.setExample("pirate")
+								)
+								.build(),
+						CommandBuilder.Create("view", "View all current settings.")
+								.build(),
+						CommandBuilder.Create("help", "View help information for a setting.")
+								.addParameters(
+										setting
+												.setExample("server_lang")
+								)
+								.build()
 				)
 				.build();
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
-
-	@Override
-	public String run (Lang lang, Brain brain, ShmamesCommandData data) {
+	public EmbedBuilder run(ExecutingCommand executingCommand) {
+		Lang lang = executingCommand.getLanguage();
+		Brain brain = executingCommand.getBrain();
 		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);
-		User author = data.getAuthor();
-		Guild server = data.getServer();
+		User author = executingCommand.getAuthorUser();
+		Guild server = executingCommand.getServer();
+		String subCommand = executingCommand.getSubCommand();
 
-		if(ShmamesService.CheckUserPermission(server, canModify, author)) {
-			String settingName = data.getArguments().getAsString("setting");
-			String settingValue = data.getArguments().getAsString("value");
-			ShmamesCommandMessagingChannel messagingChannel = data.getMessagingChannel();
+		// Disallow users if they don't have permission.
+		if(!ShmamesService.CheckUserPermission(server, canModify, author)) {
+			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
+					.setDescription(executingCommand.getLanguage().getError(Errors.NO_PERMISSION_USER));
+		}
 
-			// Send a list if no setting is provided.
-			if(settingName == null) {
-				EmbedBuilder eBuilder = new EmbedBuilder();
+		switch (subCommand) {
+			case "set":
+				return cmdSet(lang, brain, server, executingCommand);
+			case "view":
+				return cmdView(lang, brain, server);
+			case "help":
+				return cmdHelp(brain, server, executingCommand.getCommandArguments());
+		}
 
-				eBuilder.setColor(Color.ORANGE);
-				eBuilder.setTitle(lang.getMsg(Langs.SETTING_LIST_TITLE));
-				eBuilder.setFooter("Use \""+App.Shmames.getBotName()+" modify <setting>\" for info.");
+		return null;
+	}
 
-				for(BotSetting v : brain.getSettings()) {
-					appendValueEmbedField(eBuilder, v, server);
+	private EmbedBuilder cmdView(Lang lang, Brain brain, Guild server) {
+		EmbedBuilder embedBuilder = response(EmbedType.INFO, lang.getMsg(Langs.SETTING_LIST_TITLE));
+
+		for(BotSetting botSetting : brain.getSettings()) {
+			embedBuilder.addField(getFormattedSettingField(botSetting, server));
+		}
+
+		return embedBuilder;
+	}
+
+	private EmbedBuilder cmdHelp(Brain brain, Guild server, ExecutingCommandArguments arguments) {
+		String settingName = arguments.getAsString("setting").toUpperCase();
+		BotSettingName botSettingName = BotSettingName.valueOf(settingName);
+		BotSetting botSetting = brain.getSettingFor(botSettingName);
+		EmbedBuilder embedBuilder = response(EmbedType.INFO, settingName);
+
+		embedBuilder.addField(getFormattedSettingField(botSetting, server));
+		embedBuilder.setDescription(botSettingName.getDescription());
+		embedBuilder.addField("Type", botSetting.getType().name(), true);
+		embedBuilder.addField("Possible Values", getSettingPossibleValues(botSetting), false);
+
+		return embedBuilder;
+	}
+
+	private EmbedBuilder cmdSet(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+		String settingName = executingCommand.getCommandArguments().getAsString("setting").toUpperCase();
+		String settingValue = executingCommand.getCommandArguments().getAsString("value");
+		BotSettingName botSettingName = BotSettingName.valueOf(settingName);
+		BotSetting botSetting = brain.getSettingFor(botSettingName);
+
+		// Ensure that this setting is only changed by an Administrator.
+		if (botSettingName == BotSettingName.ALLOW_MODIFY) {
+			Member member = executingCommand.getAuthorMember();
+
+			if (!member.hasPermission(Permission.ADMINISTRATOR) && !App.IsDebug) {
+				return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
+						.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			}
+		}
+
+		// Ensure that this setting is only changed to an existing Lang.
+		if (botSettingName == BotSettingName.SERVER_LANG) {
+			boolean found = false;
+
+			for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
+				if (l.getLangName().equalsIgnoreCase(settingValue)) {
+					found = true;
+					break;
 				}
-
-				messagingChannel.sendMessage(eBuilder);
-
-				return "";
 			}
 
-			// Make this all uppercase.
-			settingName = settingName.toUpperCase();
-
-			if(BotSettingName.contains(settingName)) {
-				BotSettingName botSettingName = BotSettingName.valueOf(settingName);
-				BotSetting setting = brain.getSettingFor(botSettingName);
-
-				// Show the current value if no new value is provided.
-				if(settingValue == null) {
-					displayCurrentSetting(setting, server, messagingChannel);
-					return "";
-				}
-
-				// Ensure that this setting is only changed by an Administrator.
-				if (botSettingName == BotSettingName.ALLOW_MODIFY) {
-					Member member = server.getMember(author);
-
-					if (!member.hasPermission(Permission.ADMINISTRATOR) && !App.IsDebug) {
-						return lang.getError(Errors.NO_PERMISSION_USER, true);
-					}
-				}
-
-				// Ensure that this setting is only changed to an existing Lang.
-				if (botSettingName == BotSettingName.SERVER_LANG) {
-					boolean found = false;
-
-					for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
-						if(l.getLangName().equalsIgnoreCase(settingValue)){
-							found=true;
-							break;
-						}
-					}
-
-					if(!found) {
-						List<String> langNames = new ArrayList<>();
-
-						for(Lang l : App.Shmames.getLanguageService().getAllLangs()){
-							langNames.add(l.getLangName());
-						}
-
-						String langList = PaginationService.GenerateList(langNames, 0, false, false);
-
-						return lang.getError(Errors.NOT_FOUND, true) + System.lineSeparator() + "Options: " + langList;
-					}
-				}
-
-				// Adjust the value before trying to set.
-				switch(setting.getType()) {
-					case ROLE:
-						Role role = data.getArguments().getAsRole("value", server);
-
-						if(role != null) {
-							settingValue = role.getName();
-						}
-
-						break;
-					case EMOTE:
-						Emote emote = data.getArguments().getAsEmote("value", server);
-
-						if(emote != null) {
-							settingValue = emote.getName();
-						}
-
-						break;
-					case CHANNEL:
-						MessageChannel channel = data.getArguments().getAsChannel("value", server);
-
-						if(channel != null) {
-							settingValue = channel.getName();
-						}
-
-						break;
-				}
-
-				// Set the value and return a success message if complete.
-				if (setting.setValue(settingValue, brain)) {
-					EmbedBuilder eBuilder = new EmbedBuilder();
-
-					eBuilder.setColor(Color.ORANGE);
-					appendValueEmbedField(eBuilder, setting, server);
-					eBuilder.addField("Status", lang.getMsg(Langs.SETTING_UPDATED_SUCCESS), false);
-
-					messagingChannel.sendMessage(eBuilder);
-
-					return "";
-				} else {
-					// Not successful
-					return lang.wrongUsage("`modify " + setting.getName().toString() + " <" + setting.getType().toString() + ">`");
-				}
-			}else {
-				return lang.getError(Errors.SETTING_NOT_FOUND, true);
+			if(!found) {
+				return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
+						.setDescription(lang.getError(Errors.NOT_FOUND));
 			}
-		}else {
-			return lang.getError(Errors.NO_PERMISSION_USER, true);
+		}
+
+		// If the value is a mentionable, retrieve its ID.
+		switch(botSetting.getType()) {
+			case ROLE:
+				Role role = executingCommand.getCommandArguments().getAsRole("value", server);
+
+				if(role != null) {
+					// I have to do it this way, otherwise JDA returns a Snowflake.
+					settingValue = Long.toString(role.getIdLong());
+					break;
+				}
+
+				if(executingCommand.getCommandArguments().getAsString("value").equalsIgnoreCase("administrator")) {
+					settingValue = "administrator";
+				}
+
+				break;
+			case EMOTE:
+				Emote emote = executingCommand.getCommandArguments().getAsEmote("value", server);
+
+				if(emote != null) {
+					settingValue = emote.getId();
+				}
+
+				break;
+			case CHANNEL:
+				MessageChannel channel = executingCommand.getCommandArguments().getAsChannel("value", server);
+
+				if(channel != null) {
+					settingValue = channel.getId();
+				}
+
+				break;
+		}
+
+		// Set the value and return a success message if complete.
+		if (botSetting.setValue(settingValue, brain)) {
+			return response(EmbedType.SUCCESS, botSettingName.name())
+					.setDescription(lang.getMsg(Langs.SETTING_UPDATED_SUCCESS))
+					.addField(getFormattedSettingField(botSetting, server));
+		} else {
+			// Not successful
+			return response(EmbedType.ERROR, Errors.SETTING_VALUE_INVALID.name())
+					.setDescription(lang.getError(Errors.SETTING_VALUE_INVALID));
 		}
 	}
 
-	private void displayCurrentSetting(BotSetting setting, Guild server, ShmamesCommandMessagingChannel messagingChannel) {
-		EmbedBuilder eBuilder = new EmbedBuilder();
-		BotSettingName settingName = setting.getName();
+	private String getSettingPossibleValues(BotSetting botSetting) {
+		if(botSetting.getName() == BotSettingName.SERVER_LANG) {
+			StringBuilder sb = new StringBuilder();
+			List<String> langs = new ArrayList<>();
 
-		eBuilder.setColor(Color.ORANGE);
-		appendValueEmbedField(eBuilder, setting, server);
-		eBuilder.addField("Description", settingName.getDescription(), false);
-		eBuilder.addField("Type", setting.getType().name(), false);
+			for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
+				langs.add(l.getLangName());
+			}
 
-		switch(settingName) {
-			case PIN_POLLS:
-				eBuilder.addField("Possible Values", "`true`, `false`", false);
-				break;
-			case PIN_CHANNEL:
-				eBuilder.addField("Possible Values", "Any text channel", false);
-				break;
-			case MANAGE_MUSIC:
-			case ALLOW_MODIFY:
-			case ALLOW_POLLS:
-			case RESET_EMOTE_STATS:
-				eBuilder.addField("Possible Values", "Any role, `administrator`, `everyone`", false);
-				break;
-			case REMOVAL_EMOTE:
-			case APPROVAL_EMOTE:
-				eBuilder.addField("Possible Values", "Any server emoji", false);
-				break;
-			case REMOVAL_THRESHOLD:
-			case APPROVAL_THRESHOLD:
-				eBuilder.addField("Possible Values", "Any positive number", false);
-				break;
-			case SERVER_LANG:
-				StringBuilder sb = new StringBuilder();
-				List<String> langs = new ArrayList<>();
+			sb.append(PaginationService.GenerateList(langs, -1, false, false));
 
-				for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
-					langs.add(l.getLangName());
-				}
-
-				sb.append(PaginationService.GenerateList(langs, -1, false, false));
-
-				eBuilder.addField("Possible Values", sb.toString(), false);
-				break;
-			default:
+			return sb.toString();
+		} else {
+			switch(botSetting.getType()) {
+				case BOOLEAN:
+					return "`true`, `false`";
+				case CHANNEL:
+					return "#any_channel";
+				case EMOTE:
+					return ":AnyServerEmoji:";
+				case NUMBER:
+					return "1-99";
+				case ROLE:
+					return "@Any_Role, `administrator`, `everyone`";
+				default:
+					return "any";
+			}
 		}
-
-		messagingChannel.sendMessage(eBuilder);
 	}
 
-	private void appendValueEmbedField(EmbedBuilder eBuilder, BotSetting setting, Guild g){
+	private MessageEmbed.Field getFormattedSettingField(BotSetting setting, Guild server){
+		boolean isValid = false;
 		String mention = "";
+		String settingValue = setting.getAsString();
 
 		switch(setting.getType()){
 			case CHANNEL:
 				try {
-					TextChannel mc = g.getTextChannelById(setting.getValue());
+					TextChannel mc = server.getTextChannelById(settingValue);
 
 					if (mc != null) {
+						isValid = true;
 						mention = mc.getAsMention();
 					}
 				} catch (NumberFormatException e) {
-					mention = ":warning: INVALID";
+					isValid = false;
 				}
 
 				break;
 			case EMOTE:
 				try {
-					Emote em = g.getEmoteById(setting.getValue());
+					Emote em = server.getEmoteById(settingValue);
 
 					if(em != null) {
+						isValid = true;
 						mention = em.getAsMention();
 					}
 				} catch (NumberFormatException e) {
-					mention = ":warning: INVALID";
+					isValid = false;
+				}
+
+				break;
+			case ROLE:
+				try {
+					if(settingValue.equals("administrator")) {
+						mention = settingValue;
+						isValid = true;
+						break;
+					}
+
+					Role role = server.getRoleById(settingValue);
+
+					if(role != null) {
+						isValid = true;
+						mention = role.getAsMention();
+					}
+				} catch (Exception e) {
+					isValid = false;
 				}
 
 				break;
 			default:
-				mention = setting.getValue();
+				isValid = true;
+				mention = settingValue;
 		}
 
-		String value = "**Current Value:** " + mention;
+		String value;
 
-		eBuilder.addField("**__"+setting.getName()+"__**", value, true);
-	}
+		if(isValid) {
+			value = "**Current Value:** " + mention;
+		} else {
+			value = ":warning: INVALID :warning:";
+		}
 
-	@Override
-	public boolean requiresGuild() {
-		return true;
+		return new MessageEmbed.Field("**__"+setting.getName()+"__**", value, true);
 	}
 }

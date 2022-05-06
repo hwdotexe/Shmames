@@ -1,16 +1,10 @@
 package com.hadenwatne.shmames;
 
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.listeners.ChatListener;
-import com.hadenwatne.shmames.listeners.FirstJoinListener;
-import com.hadenwatne.shmames.listeners.ReactListener;
-import com.hadenwatne.shmames.listeners.SlashCommandListener;
+import com.hadenwatne.shmames.listeners.*;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.music.MusicManager;
-import com.hadenwatne.shmames.services.LanguageService;
-import com.hadenwatne.shmames.services.LoggingService;
-import com.hadenwatne.shmames.services.RandomService;
-import com.hadenwatne.shmames.services.StorageService;
+import com.hadenwatne.shmames.services.*;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -21,6 +15,7 @@ public class Shmames {
 	private JDA jda;
 	private final LanguageService languageService;
 	private String botName;
+	private String botAvatarUrl;
 	private MusicManager musicManager;
 	private CommandHandler commandHandler;
 	private final StorageService storageService;
@@ -28,6 +23,7 @@ public class Shmames {
 	public Shmames() {
 		LoggingService.Init();
 		RandomService.Init();
+		CacheService.Init();
 
 		this.languageService = new LanguageService();
 		this.storageService = new StorageService();
@@ -39,6 +35,14 @@ public class Shmames {
 	 */
 	public String getBotName() {
 		return this.botName;
+	}
+
+	/**
+	 * Returns the URL of the bot's avatar image.
+	 * @return The Discord application avatar image.
+	 */
+	public String getBotAvatarUrl() {
+		return this.botAvatarUrl;
 	}
 
 	/**
@@ -96,8 +100,9 @@ public class Shmames {
 		// Start automated tasks.
 		new SaveDataTask();
 
-		// Set the bot name.
+		// Set the bot name and avatar URL.
 		this.botName = getJDA().getSelfUser().getName();
+		this.botAvatarUrl = getJDA().getSelfUser().getAvatarUrl();
 
 		// Load commands.
 		this.commandHandler = new CommandHandler();
@@ -107,6 +112,9 @@ public class Shmames {
 		this.jda.addEventListener(new SlashCommandListener());
 		this.jda.addEventListener(new ReactListener());
 		this.jda.addEventListener(new FirstJoinListener());
+
+		// TODO: This is a temporary message for the 2.0.0 upgrade:
+		new BotReadyMessage();
 
 		// Prepare music playing functionality.
 		this.musicManager = new MusicManager();

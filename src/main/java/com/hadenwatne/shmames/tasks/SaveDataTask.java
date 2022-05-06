@@ -1,23 +1,25 @@
 package com.hadenwatne.shmames.tasks;
 
-import java.util.*;
-
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.HTTPVerb;
-import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
-import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.HTTPService;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
-import com.hadenwatne.shmames.Shmames;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Saves data objects to disk at a regular interval, and changes the bot's status for fun.
  */
-public class SaveDataTask extends TimerTask{
+public class SaveDataTask extends TimerTask {
 	
 	public SaveDataTask() {
 		Calendar c = Calendar.getInstance();
@@ -31,7 +33,7 @@ public class SaveDataTask extends TimerTask{
 	
 	public void run() {
 		MotherBrain mb = App.Shmames.getStorageService().getMotherBrain();
-		String action = RandomService.GetRandomHashMap(mb.getStatuses().keySet());
+		String action = RandomService.GetRandomFromSet(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
 
 		updateRandomSeed();

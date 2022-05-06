@@ -88,4 +88,27 @@ public class DataService {
 
         return false;
     }
+
+    /**
+     * Figures if the String input is a Boolean.
+     * @param test The String to test.
+     * @return True if and only if the String is a Long.
+     */
+    public static boolean IsBoolean(String test) {
+        return test.equalsIgnoreCase("true") || test.equalsIgnoreCase("false");
+    }
+
+    /**
+     * Figures if the String input is an Integer.
+     * @param test The String to test.
+     * @return True if and only if the String is an Integer.
+     */
+    public static boolean IsInteger(String test) {
+        try {
+            Integer.parseInt(test);
+            return true;
+        }catch(Exception e) {
+            return false;
+        }
+    }
 }

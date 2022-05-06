@@ -13,7 +13,9 @@ public class CommandStructure {
     private final List<CommandStructure> subCommands;
     private final List<SubCommandGroup> subCommandGroups;
 
-    private Pattern pattern;
+    private Pattern primaryPattern;
+    private Pattern contextPattern;
+    private Pattern matcherPattern;
     private String usage;
     private String examples;
 
@@ -26,8 +28,16 @@ public class CommandStructure {
         this.subCommandGroups = new ArrayList<>();
     }
 
-    public Pattern getPattern() {
-        return this.pattern;
+    public Pattern getPrimaryPattern() {
+        return this.primaryPattern;
+    }
+
+    public Pattern getContextPattern() {
+        return this.contextPattern;
+    }
+
+    public Pattern getMatcherPattern() {
+        return this.matcherPattern;
     }
 
     public String getUsage() {
@@ -97,7 +107,9 @@ public class CommandStructure {
             parameter.buildRegexPattern();
         }
 
-        this.pattern = CommandBuilder.BuildPattern(this);
+        this.primaryPattern = CommandBuilder.BuildPrimaryPattern(this);
+        this.contextPattern = CommandBuilder.BuildContextPattern(this);
+        this.matcherPattern = CommandBuilder.BuildMatcherPattern(this);
         this.usage = CommandBuilder.BuildUsage(this, false);
         this.examples = CommandBuilder.BuildExample(this);
 

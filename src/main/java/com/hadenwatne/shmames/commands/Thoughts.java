@@ -4,16 +4,19 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.models.command.ShmamesCommandData;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 
-public class Thoughts implements ICommand {
-	private final CommandStructure commandStructure;
-
+public class Thoughts extends Command {
 	public Thoughts() {
-		this.commandStructure = CommandBuilder.Create("thoughts", "Get my randomized opinion on something.")
+		super(false);
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("thoughts", "Get my randomized opinion on something.")
 				.addAlias("what do you think about")
 				.addAlias("what do you think of")
 				.addParameters(
@@ -24,17 +27,10 @@ public class Thoughts implements ICommand {
 	}
 
 	@Override
-	public CommandStructure getCommandStructure() {
-		return this.commandStructure;
-	}
+	public EmbedBuilder run (ExecutingCommand executingCommand) {
+		String item = executingCommand.getCommandArguments().getAsString("item");
 
-	@Override
-	public String run(Lang lang, Brain brain, ShmamesCommandData data) {
-		return lang.getMsg(Langs.THOUGHTS_OPTIONS);
-	}
-
-	@Override
-	public boolean requiresGuild() {
-		return false;
+		return response(EmbedType.INFO)
+				.addField(item, executingCommand.getLanguage().getMsg(Langs.THOUGHTS_OPTIONS), false);
 	}
 }
