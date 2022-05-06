@@ -118,7 +118,7 @@ public class ForumWeapon extends Command {
 			case "remove":
 				return cmdRemove(lang, brain, server, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdList(lang, brain, server, executingCommand);
 			case "search":
 				return cmdSearch(lang, brain, server, executingCommand.getCommandArguments());
 			case "alias":
@@ -208,44 +208,57 @@ public class ForumWeapon extends Command {
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
-		boolean all = args.getAsBoolean("all");
-		int page = args.getAsInteger("page");
+	private EmbedBuilder cmdList(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+		boolean all = executingCommand.getCommandArguments().getAsBoolean("all");
+		int page = executingCommand.getCommandArguments().getAsInteger("page");
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "fw-list", all ? "Y" : "N");
+		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
-		List<String> forumWeaponList = new ArrayList<>();
+		PaginatedList paginatedList;
 
-		if (all) {
-			// Start by listing this server.
-			LinkedHashMap<String, Integer> thisServer = buildServerFWList(server);
+		// If this list has been cached, retrieve it instead of building another one.
+		if (cachedList != null) {
+			paginatedList = cachedList;
+		} else {
 
-			forumWeaponList.add("**" + server.getName() + "**");
+			List<String> forumWeaponList = new ArrayList<>();
 
-			for (String fwKey : thisServer.keySet()) {
-				forumWeaponList.add(fwKey + ": **" + thisServer.get(fwKey) + "**");
-			}
+			if (all) {
+				// Start by listing this server.
+				LinkedHashMap<String, Integer> thisServer = buildServerFWList(server);
 
-			// List the Family.
-			for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
-				LinkedHashMap<String, Integer> familyServer = buildServerFWList(server);
+				forumWeaponList.add("**" + server.getName() + "**");
 
-				forumWeaponList.add("**" + family.getName() + "**");
+				for (String fwKey : thisServer.keySet()) {
+					forumWeaponList.add(fwKey + ": **" + thisServer.get(fwKey) + "**");
+				}
 
-				for (String fwKey : familyServer.keySet()) {
-					forumWeaponList.add(fwKey + ": **" + familyServer.get(fwKey) + "**");
+				// List the Family.
+				for(Guild family : ShmamesService.GetConnectedFamilyGuilds(brain, server)) {
+					LinkedHashMap<String, Integer> familyServer = buildServerFWList(server);
+
+					forumWeaponList.add("**" + family.getName() + "**");
+
+					for (String fwKey : familyServer.keySet()) {
+						forumWeaponList.add(fwKey + ": **" + familyServer.get(fwKey) + "**");
+					}
+				}
+			} else {
+				// Just list this Guild
+				LinkedHashMap<String, Integer> sorted = buildServerFWList(server);
+
+				forumWeaponList.add("**" + server.getName() + "**");
+
+				for (String fwKey : sorted.keySet()) {
+					forumWeaponList.add(fwKey + ": **" + sorted.get(fwKey) + "**");
 				}
 			}
-		} else {
-			// Just list this Guild
-			LinkedHashMap<String, Integer> sorted = buildServerFWList(server);
 
-			forumWeaponList.add("**" + server.getName() + "**");
+			paginatedList = PaginationService.GetPaginatedList(forumWeaponList, 15, -1, false);
 
-			for (String fwKey : sorted.keySet()) {
-				forumWeaponList.add(fwKey + ": **" + sorted.get(fwKey) + "**");
-			}
+			// Cache the list in case the user continues to call this command for other pages
+			CacheService.StoreItem(cacheKey, paginatedList);
 		}
-
-		PaginatedList paginatedList = PaginationService.GetPaginatedList(forumWeaponList, 15, -1, false);
 
 		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.FORUM_WEAPON_LIST), Color.ORANGE, lang);
 	}

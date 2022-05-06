@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -13,6 +12,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -89,7 +89,7 @@ public class Tally extends Command {
 			case "set":
 				return cmdSet(lang, brain, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(lang, brain, executingCommand.getCommandArguments());
+				return cmdList(lang, brain, executingCommand);
 			case "search":
 				return cmdSearch(lang, brain, executingCommand.getCommandArguments());
 		}
@@ -151,12 +151,25 @@ public class Tally extends Command {
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommandArguments args) {
-		int page = args.getAsInteger("page");
-		LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
-		List<String> talliesFormatted = formatTalliesToStringList(tSorted);
+	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
+		int page = executingCommand.getCommandArguments().getAsInteger("page");
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "tally-list");
+		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
-		PaginatedList paginatedList = PaginationService.GetPaginatedList(talliesFormatted, 15, -1, false);
+		PaginatedList paginatedList;
+
+		// If this list has been cached, retrieve it instead of building another one.
+		if (cachedList != null) {
+			paginatedList = cachedList;
+		} else {
+			LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
+			List<String> talliesFormatted = formatTalliesToStringList(tSorted);
+
+			paginatedList = PaginationService.GetPaginatedList(talliesFormatted, 15, -1, false);
+
+			// Cache the list in case the user continues to call this command for other pages
+			CacheService.StoreItem(cacheKey, paginatedList);
+		}
 
 		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.TALLY_LIST), Color.ORANGE, lang);
 	}
@@ -173,10 +186,7 @@ public class Tally extends Command {
 			}
 		}
 
-		EmbedBuilder eBuilder = new EmbedBuilder();
-
-		eBuilder.setColor(Color.ORANGE);
-		eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
+		EmbedBuilder eBuilder = response(EmbedType.INFO, "Search");
 
 		eBuilder.addField(lang.getMsg(Langs.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
 

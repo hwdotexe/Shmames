@@ -6,7 +6,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.MinesweepGame;
+import com.hadenwatne.shmames.models.game.MinesweepGame;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class Minesweeper extends Command {

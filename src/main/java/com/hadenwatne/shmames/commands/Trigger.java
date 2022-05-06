@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -76,7 +77,7 @@ public class Trigger extends Command {
 			case "drop":
 				return cmdDrop(language, brain, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(language, brain, executingCommand.getCommandArguments());
+				return cmdList(language, brain, executingCommand);
 		}
 
 		return null;
@@ -94,11 +95,8 @@ public class Trigger extends Command {
 			return response(EmbedType.SUCCESS)
 					.setDescription(response);
 		} else {
-			String response = lang.getError(Errors.ALREADY_EXISTS);
-
-			return response(EmbedType.ERROR)
-					.addField(Errors.ALREADY_EXISTS.name(), response, false);
-//					.setDescription(response);
+			return response(EmbedType.ERROR, Errors.ALREADY_EXISTS.name())
+					.setDescription(lang.getError(Errors.ALREADY_EXISTS));
 		}
 	}
 
@@ -106,10 +104,8 @@ public class Trigger extends Command {
 		String triggerWord = args.getAsString("triggerWord");
 
 		if(triggerWord.equalsIgnoreCase(App.Shmames.getBotName())) {
-			String response = lang.getError(Errors.CANNOT_DELETE);
-
-			return response(EmbedType.ERROR)
-					.addField(Errors.CANNOT_DELETE.name(), response, false);
+			return response(EmbedType.ERROR, Errors.CANNOT_DELETE.name())
+					.setDescription(lang.getError(Errors.CANNOT_DELETE));
 		}
 
 		if (brain.getTriggers().containsKey(triggerWord)) {
@@ -120,19 +116,30 @@ public class Trigger extends Command {
 			return response(EmbedType.SUCCESS)
 					.setDescription(response);
 		} else {
-			String response = lang.getError(Errors.NOT_FOUND);
-
-			return response(EmbedType.ERROR)
-					.addField(Errors.NOT_FOUND.name(), response, false);
+			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
+					.setDescription(lang.getError(Errors.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommandArguments args) {
-		int page = args.getAsInteger("page");
-		HashMap<String, TriggerType> triggers = brain.getTriggers();
-		List<String> triggersFormatted = formatTriggersToStringList(triggers);
+	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
+		int page = executingCommand.getCommandArguments().getAsInteger("page");
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "trigger-list");
+		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
-		PaginatedList paginatedList = PaginationService.GetPaginatedList(triggersFormatted, 15, -1, false);
+		PaginatedList paginatedList;
+
+		// If this list has been cached, retrieve it instead of building another one.
+		if (cachedList != null) {
+			paginatedList = cachedList;
+		} else {
+			HashMap<String, TriggerType> triggers = brain.getTriggers();
+			List<String> triggersFormatted = formatTriggersToStringList(triggers);
+
+			paginatedList = PaginationService.GetPaginatedList(triggersFormatted, 15, -1, false);
+
+			// Cache the list in case the user continues to call this command for other pages
+			CacheService.StoreItem(cacheKey, paginatedList);
+		}
 
 		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.TRIGGER_LIST), Color.ORANGE, lang);
 	}

@@ -4,6 +4,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.*;
+import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 
 import java.util.ArrayList;

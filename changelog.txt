@@ -13,6 +13,7 @@ Cosmetic
 - Polls now display a percentage for each option.
 - Added new messages and error texts for various commands.
 - Renamed several bot settings to be more clear regarding their purpose.
+- Added an Upgrade message to welcome users into the new version.
 
 Adjustments
 - Storytime stories now follow a defined data structure.
@@ -35,3 +36,6 @@ Technical
 - Brains now save the IDs for roles, emotes, and channels, instead of the names for each.
 - Regex generation is now separated into more steps for easier debugging and improved command matching.
 - Hangman code was cleaned up and its algorithms improved.
+- Added a CacheService to cache data instead of retrieving it multiple times in succession.
+  - Caching is determined by the server, channel, and user running the command. Cached data is saved only for a short time before being deleted.
+  - This change should speed up the use of commands that are often run multiple times, such as lists.

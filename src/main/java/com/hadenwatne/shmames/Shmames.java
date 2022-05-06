@@ -4,10 +4,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.listeners.*;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.music.MusicManager;
-import com.hadenwatne.shmames.services.LanguageService;
-import com.hadenwatne.shmames.services.LoggingService;
-import com.hadenwatne.shmames.services.RandomService;
-import com.hadenwatne.shmames.services.StorageService;
+import com.hadenwatne.shmames.services.*;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -26,6 +23,7 @@ public class Shmames {
 	public Shmames() {
 		LoggingService.Init();
 		RandomService.Init();
+		CacheService.Init();
 
 		this.languageService = new LanguageService();
 		this.storageService = new StorageService();

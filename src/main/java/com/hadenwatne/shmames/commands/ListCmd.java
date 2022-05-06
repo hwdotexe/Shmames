@@ -4,10 +4,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.enums.UserListType;
+import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.UserCustomList;
@@ -15,6 +12,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -121,7 +119,7 @@ public class ListCmd extends Command {
 			case "list":
 				return cmdList(brain, authorID);
 			case "view":
-				return cmdView(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdView(brain, lang, authorID, executingCommand);
 		}
 
 		return null;
@@ -280,26 +278,39 @@ public class ListCmd extends Command {
 		return eBuilder;
 	}
 
-	private EmbedBuilder cmdView(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("listName").toLowerCase();
-		int page = subCmdArgs.getAsInteger("page");
-		UserCustomList list = getList(userID, listName, brain);
+	private EmbedBuilder cmdView(Brain brain, Lang lang, String userID, ExecutingCommand executingCommand) {
+		String listName = executingCommand.getCommandArguments().getAsString("listName").toLowerCase();
+		int page = executingCommand.getCommandArguments().getAsInteger("page");
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "list-list", listName);
+		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
-		if (list != null) {
-			List<String> listItems = list.getValues();
+		PaginatedList paginatedList;
 
-			if (listItems.size() == 0) {
-				return response(EmbedType.ERROR)
-						.setDescription(lang.getError(Errors.ITEMS_NOT_FOUND));
+		// If this list has been cached, retrieve it instead of building another one.
+		if (cachedList != null) {
+			paginatedList = cachedList;
+		} else {
+			UserCustomList list = getList(userID, listName, brain);
+
+			if (list != null) {
+				List<String> listItems = list.getValues();
+
+				if (listItems.size() == 0) {
+					return response(EmbedType.ERROR, Errors.ITEMS_NOT_FOUND.name())
+							.setDescription(lang.getError(Errors.ITEMS_NOT_FOUND));
+				}
+
+				paginatedList = PaginationService.GetPaginatedList(listItems, 10, -1, true);
+			} else {
+				return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
+						.setDescription(lang.getError(Errors.NOT_FOUND));
 			}
 
-			PaginatedList paginatedList = PaginationService.GetPaginatedList(listItems, 10, -1, true);
-
-			return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), listName, Color.ORANGE, lang);
-		} else {
-			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			// Cache the list in case the user continues to call this command for other pages
+			CacheService.StoreItem(cacheKey, paginatedList);
 		}
+
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), listName, Color.ORANGE, lang);
 	}
 
 	private UserCustomList getList(String userID, String listName, Brain brain) {
