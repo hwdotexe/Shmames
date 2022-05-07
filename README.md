@@ -30,7 +30,7 @@ Shmames is feature-rich, quirky, and a fun new way to interact with your Discord
 * ... and much more
 
 ## Usage
-To add the official, hosted version of Shmames to your Discord server, [click this link](https://discord.com/api/oauth2/authorize?client_id=377639048573091860&permissions=70642752&redirect_uri=https%3A%2F%2Fdiscordapp.com%2Fapi%2Foauth2%2Fauthorize&scope=bot).
+To add the official, hosted version of Shmames to your Discord server, [click this link](https://discord.com/api/oauth2/authorize?client_id=377639048573091860&permissions=274948549696&scope=bot%20applications.commands).
 
 If you'd like to build and run your _own_ version of Shmames, keep reading.
 
