@@ -70,7 +70,7 @@ public class AlarmTask {
 
 			response.setDescription(this.timerUpMessage);
 
-			if(userMessage.length() > 0) {
+			if(userMessage != null && userMessage.length() > 0) {
 				response.addField("Memo", userMessage, false);
 			}
 

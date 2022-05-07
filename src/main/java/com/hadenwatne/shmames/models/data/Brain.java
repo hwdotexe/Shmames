@@ -28,7 +28,6 @@ public class Brain {
 	private List<String> talliedMessages;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
-	private boolean sentUpgrade;
 	private HangmanGame hangmanGame;
 	
 	public Brain(String gid) {
@@ -48,7 +47,6 @@ public class Brain {
 		talliedMessages = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
-		sentUpgrade = false;
 		hangmanGame = null;
 		
 		loadFirstRunDefaults();
@@ -93,16 +91,8 @@ public class Brain {
 		return sentWelcome;
 	}
 
-	public boolean didSendUpgrade() {
-		return this.sentUpgrade;
-	}
-
 	public void setSentWelcome(){
 		sentWelcome = true;
-	}
-
-	public void setSentUpgrade(){
-		this.sentUpgrade = true;
 	}
 	
 	public String getGuildID() {

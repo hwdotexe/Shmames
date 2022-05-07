@@ -145,7 +145,7 @@ public class ChatListener extends ListenerAdapter {
 				response = response.replaceAll("%NAME%", authorName);
 
 				// Send the response.
-				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, t.name() + "Response");
+				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, t.name() + " Response");
 
 				embedBuilder.setDescription(response);
 				MessageService.ReplyToMessage(message, embedBuilder, false);

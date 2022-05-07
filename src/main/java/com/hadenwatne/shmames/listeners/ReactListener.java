@@ -45,20 +45,15 @@ public class ReactListener extends ListenerAdapter {
 
 							// If the emote was an "approval" or "removal" emote, react accordingly.
 							if (!brain.getTalliedMessages().contains(e.getMessageId())) {
-								e.retrieveMessage().queue(success -> {
-									if (emote.getId().equals(removalEmoteID)) {
+								if (emote.getId().equals(removalEmoteID)) {
+									e.retrieveMessage().queue(success -> {
 										tallyMessage(removalEmoteID, success, brain, BotSettingName.REMOVAL_THRESHOLD);
-
-										// Try to delete the message if this was a "bad" tally.
-										try {
-											e.getChannel().deleteMessageById(e.getMessageId()).queue();
-										} catch (Exception ignored) {
-											// Bot does not have message delete privileges, so do nothing.
-										}
-									} else if (emote.getId().equals(approvalEmoteID)) {
+									});
+								} else if (emote.getId().equals(approvalEmoteID)) {
+									e.retrieveMessage().queue(success -> {
 										tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
-									}
-								});
+									});
+								}
 							}
 						}
 					}
@@ -68,7 +63,7 @@ public class ReactListener extends ListenerAdapter {
 	}
 
 	private void tallyMessage(String emoteID, Message message, Brain brain, BotSettingName setting) {
-		int threshold = Integer.parseInt(brain.getSettingFor(setting).getAsString());
+		int threshold = brain.getSettingFor(setting).getAsNumber();
 		int votes = 0;
 
 		// Set the votes variable to this emote's count on the message.
@@ -98,6 +93,15 @@ public class ReactListener extends ListenerAdapter {
 			}
 
 			runAddTallyCommand(toTally, brain, message);
+
+			// Try to delete the message if this was a "bad" tally.
+			if(setting == BotSettingName.REMOVAL_THRESHOLD) {
+				try {
+					message.delete().queue();
+				} catch (Exception ignored) {
+					// Bot does not have message delete privileges, so do nothing.
+				}
+			}
 		}
 	}
 

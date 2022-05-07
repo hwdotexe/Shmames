@@ -117,7 +117,21 @@ public class HTTPService {
             JSONArray media = gifMedia.get(i);
 
             for (int o=0; o < media.length(); o++) {
-                gifURLs.add(media.getJSONObject(o).getJSONObject("mediumgif").getString("url"));
+                JSONObject resultObject = media.getJSONObject(o);
+                JSONObject gif = resultObject.getJSONObject("gif");
+                JSONObject mediumgif = resultObject.getJSONObject("mediumgif");
+                JSONObject tinygif = resultObject.getJSONObject("tinygif");
+                String url;
+
+                if(gif.getInt("size") <= 8000000) {
+                    url = gif.getString("url");
+                } else if(mediumgif.getInt("size") <= 8000000) {
+                    url = mediumgif.getString("url");
+                } else {
+                    url = tinygif.getString("url");
+                }
+
+                gifURLs.add(url);
             }
         }
 

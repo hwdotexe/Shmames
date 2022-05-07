@@ -113,9 +113,6 @@ public class Shmames {
 		this.jda.addEventListener(new ReactListener());
 		this.jda.addEventListener(new FirstJoinListener());
 
-		// TODO: This is a temporary message for the 2.0.0 upgrade:
-		new BotUpgradeMessage();
-
 		// Prepare music playing functionality.
 		this.musicManager = new MusicManager();
 	}
