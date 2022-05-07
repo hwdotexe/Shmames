@@ -29,25 +29,29 @@ public class ShmamesService {
 	 * Checks whether the member complies with the setting's permission
 	 * requirements, if applicable.
 	 * @param setting The setting to check.
-	 * @param user The user to check.
+	 * @param member The user to check.
 	 * @return A boolean representing whether the user complies.
 	 */
-	public static boolean CheckUserPermission(Guild server, BotSetting setting, User user) {
+	public static boolean CheckUserPermission(Guild server, BotSetting setting, Member member) {
 		if(server != null) {
 			if (setting.getType() == BotSettingType.ROLE) {
 				if (App.IsDebug)
 					return true;
 
 				String roleString = setting.getAsString();
-				Member member = server.retrieveMember(user).complete();
 
 				if (member != null) {
-					if (roleString.equals("administrator"))
+					if (roleString.equals("administrator")) {
 						return member.hasPermission(Permission.ADMINISTRATOR);
+					}
 
-					Role r = setting.getAsRole(server);
+					Role role = setting.getAsRole(server);
 
-					return member.getRoles().contains(r);
+					if(server.getPublicRole().getIdLong() == role.getIdLong()) {
+						return true;
+					}
+
+					return member.getRoles().contains(role);
 				}
 			}
 		}

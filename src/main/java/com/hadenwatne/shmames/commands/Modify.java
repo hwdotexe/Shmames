@@ -64,12 +64,12 @@ public class Modify extends Command {
 		Lang lang = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);
-		User author = executingCommand.getAuthorUser();
+		Member member = executingCommand.getAuthorMember();
 		Guild server = executingCommand.getServer();
 		String subCommand = executingCommand.getSubCommand();
 
 		// Disallow users if they don't have permission.
-		if(!ShmamesService.CheckUserPermission(server, canModify, author)) {
+		if(!ShmamesService.CheckUserPermission(server, canModify, member)) {
 			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
 					.setDescription(executingCommand.getLanguage().getError(Errors.NO_PERMISSION_USER));
 		}

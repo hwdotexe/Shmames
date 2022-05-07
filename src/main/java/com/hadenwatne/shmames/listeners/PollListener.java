@@ -34,7 +34,7 @@ public class PollListener extends ListenerAdapter {
                         Brain brain = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
 
                         // Allow the author OR a user with permission to close the poll. Other reactions will be ignored.
-                        if(e.getUserId().equals(this.pollModel.getAuthorID()) || ShmamesService.CheckUserPermission(e.getGuild(), brain.getSettingFor(BotSettingName.POLL_CLOSE), e.getUser())) {
+                        if(e.getUserId().equals(this.pollModel.getAuthorID()) || ShmamesService.CheckUserPermission(e.getGuild(), brain.getSettingFor(BotSettingName.POLL_CLOSE), e.getMember())) {
                             Timer t = new Timer();
                             t.schedule(new PollTask(this.pollModel), new Date());
                             App.Shmames.getJDA().removeEventListener(this);

@@ -47,7 +47,7 @@ public class Poll extends Command {
 		Brain brain = executingCommand.getBrain();
 		Lang lang = executingCommand.getLanguage();
 
-		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), executingCommand.getAuthorUser())) {
+		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), executingCommand.getAuthorMember())) {
 			String time = executingCommand.getCommandArguments().getAsString("time");
 			String question = executingCommand.getCommandArguments().getAsString("question");
 			String options = executingCommand.getCommandArguments().getAsString("options");

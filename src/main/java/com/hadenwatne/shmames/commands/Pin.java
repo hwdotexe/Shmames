@@ -44,7 +44,7 @@ public class Pin extends Command {
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		int messages = executingCommand.getCommandArguments().getAsString("position").length();
 
-		if(ShmamesService.CheckUserPermission(executingCommand.getServer(), executingCommand.getBrain().getSettingFor(BotSettingName.ALLOW_PIN), executingCommand.getAuthorUser())) {
+		if(ShmamesService.CheckUserPermission(executingCommand.getServer(), executingCommand.getBrain().getSettingFor(BotSettingName.ALLOW_PIN), executingCommand.getAuthorMember())) {
 			try {
 				Message toPin = MessageService.GetMessageIndicated(executingCommand, messages);
 				TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getAsString());

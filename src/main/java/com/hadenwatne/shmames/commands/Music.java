@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -171,19 +170,19 @@ public class Music extends Command {
 		Lang lang = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 		Guild server = executingCommand.getServer();
-		User author = executingCommand.getAuthorUser();
+		Member member = executingCommand.getAuthorMember();
 		GuildOcarina ocarina = App.Shmames.getMusicManager().getOcarina(server.getId());
 
 		switch (subCommandGroup) {
 			case "playlist":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdPlaylist(brain, lang, executingCommand);
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
 							.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
 				}
 			case "queue":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdQueue(brain, lang, ocarina, server, executingCommand);
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
@@ -193,7 +192,7 @@ public class Music extends Command {
 
 		switch (subCommand) {
 			case "play":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdPlay(lang, brain, ocarina, executingCommand);
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
@@ -211,7 +210,7 @@ public class Music extends Command {
 						.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
 			case "skip":
 				if (ocarina.getNowPlaying() != null) {
-					if (canUse(server, brain, author)) {
+					if (canUse(server, brain, member)) {
 						int times = executingCommand.getCommandArguments().getAsInteger("number");
 
 						cmdSkip(ocarina, times);
@@ -228,7 +227,7 @@ public class Music extends Command {
 				}
 			case "stop":
 				if (ocarina.isInVoiceChannel()) {
-					if (canUse(server, brain, author)) {
+					if (canUse(server, brain, member)) {
 						ocarina.stop();
 
 						return response(EmbedType.SUCCESS)
@@ -242,14 +241,14 @@ public class Music extends Command {
 							.setDescription(lang.getError(Errors.TRACK_NOT_PLAYING));
 				}
 			case "loop":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdLoop(lang, ocarina);
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
 							.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
 				}
 			case "loopqueue":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdLoopQueue(lang, ocarina);
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
@@ -265,7 +264,7 @@ public class Music extends Command {
 							.setDescription(lang.getError(Errors.TRACK_NOT_PLAYING));
 				}
 			case "convert":
-				if (canUse(server, brain, author)) {
+				if (canUse(server, brain, member)) {
 					return cmdConvert(brain, lang, ocarina, executingCommand.getCommandArguments());
 				} else {
 					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
@@ -633,8 +632,8 @@ public class Music extends Command {
 		}
 	}
 
-	private boolean canUse(Guild server, Brain brain, User user) {
-		return ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_MUSIC), user);
+	private boolean canUse(Guild server, Brain brain, Member member) {
+		return ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_MUSIC), member);
 	}
 
 	private Playlist findPlaylistServer(String name, Brain b) {

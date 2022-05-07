@@ -323,7 +323,7 @@ public class ForumWeapon extends Command {
 	}
 
 	private EmbedBuilder cmdPrune(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
-		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.PRUNE_FW), executingCommand.getAuthorUser())) {
+		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.PRUNE_FW), executingCommand.getAuthorMember())) {
 			List<ForumWeaponObj> unused = getServerUnusedFWs(brain);
 			File file = buildPrunedWeaponFile(server.getName(), unused);
 

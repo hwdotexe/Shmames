@@ -27,7 +27,7 @@ public class ResetEmoteStats extends Command {
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		Brain brain = executingCommand.getBrain();
 
-		if(ShmamesService.CheckUserPermission(executingCommand.getServer(), brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), executingCommand.getAuthorUser())){
+		if(ShmamesService.CheckUserPermission(executingCommand.getServer(), brain.getSettingFor(BotSettingName.RESET_EMOTE_STATS), executingCommand.getAuthorMember())){
 			brain.getEmoteStats().clear();
 
 			return response(EmbedType.SUCCESS)
