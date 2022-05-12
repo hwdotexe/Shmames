@@ -15,11 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LanguageService {
+	public static final String DEFAULT_LANGUAGE = "en_default";
+
 	private final Gson gson;
 	private final List<Lang> langs;
 
 	private final String LANG_DIRECTORY = "langs";
-	private final String DEFAULT_LANGUAGE = "en_default";
 
 	public LanguageService() {
 		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
