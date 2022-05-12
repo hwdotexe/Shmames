@@ -38,15 +38,22 @@ public class ShmamesService {
 				if (App.IsDebug)
 					return true;
 
-				String roleString = setting.getAsString();
-
 				if (member != null) {
+					// Always return true for administrators regardless of setting.
+					if(member.hasPermission(Permission.ADMINISTRATOR)) {
+						return true;
+					}
+
+					String roleString = setting.getAsString();
+
+					// If the role requires administrator, make sure they are admin.
 					if (roleString.equals("administrator")) {
 						return member.hasPermission(Permission.ADMINISTRATOR);
 					}
 
 					Role role = setting.getAsRole(server);
 
+					// Check if the user has the given role.
 					if(server.getPublicRole().getIdLong() == role.getIdLong()) {
 						return true;
 					}

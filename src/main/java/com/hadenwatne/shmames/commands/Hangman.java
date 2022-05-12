@@ -40,8 +40,8 @@ public class Hangman extends Command {
 						CommandBuilder.Create("start", "Begin a new game.")
 								.addParameters(
 										new CommandParameter("dictionary", "The word list to choose from.", ParameterType.STRING, false)
-												.setPattern("([a-z0-9]+;)+([a-z0-9]+);?")
-												.setExample("game1;game2;"),
+												.setPattern("([a-z0-9]+;?)+")
+												.setExample("game1;game2"),
 										new CommandParameter("exclude", "Use true if you want to exclude these dictionaries.", ParameterType.BOOLEAN, false)
 												.setExample("true")
 								)

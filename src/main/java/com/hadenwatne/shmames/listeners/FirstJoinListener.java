@@ -11,6 +11,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -49,14 +50,14 @@ public class FirstJoinListener extends ListenerAdapter {
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
 		if(!brain.didSendWelcome()){
-			BaseGuildMessageChannel defaultChannel = e.getGuild().getDefaultChannel();
+			TextChannel defaultChannel = e.getGuild().getSystemChannel();
 
 			sendWelcomeMessage(brain, defaultChannel);
 			setDefaultChannelSettings(brain, defaultChannel);
 		}
 	}
 
-	private void sendWelcomeMessage(Brain brain, BaseGuildMessageChannel channel) {
+	private void sendWelcomeMessage(Brain brain, TextChannel channel) {
 		try {
 			MessageService.SendMessage(channel, welcomeMessage, false);
 		} catch (InsufficientPermissionException e) {
