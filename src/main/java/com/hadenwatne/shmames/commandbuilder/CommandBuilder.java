@@ -82,7 +82,7 @@ public class CommandBuilder {
             primary.append(")");
         }
 
-        primary.append("))");
+        primary.append(")\\b)");
 
         return Pattern.compile(primary.toString(), Pattern.CASE_INSENSITIVE);
     }

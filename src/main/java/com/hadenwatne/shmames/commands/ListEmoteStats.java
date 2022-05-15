@@ -1,17 +1,20 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Langs;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class ListEmoteStats extends Command {
 	public ListEmoteStats() {
@@ -21,7 +24,6 @@ public class ListEmoteStats extends Command {
 	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("listemotestats", "View emote usage statistics.")
-				.addAlias("list emote stats")
 				.addAlias("showemotestats")
 				.addAlias("show emote stats")
 				.build();
@@ -69,7 +71,14 @@ public class ListEmoteStats extends Command {
 			statMsg.append("\nThere's nothing here!");
 		}
 
-		return response(EmbedType.INFO)
-				.addField(headerMessage, statMsg.toString(), false);
+		List<String> splitEmoteList = PaginationService.SplitString(statMsg.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+		EmbedBuilder embed = response(EmbedType.INFO)
+				.setDescription(headerMessage);
+
+		for (String s : splitEmoteList) {
+			embed.addField("", s, false);
+		}
+
+		return embed;
 	}
 }

@@ -89,7 +89,7 @@ public class ExecutingCommandArguments {
                 if (DataService.IsLong(id)) {
                     return server.getRoleById(id);
                 } else {
-                    if(id.equalsIgnoreCase("everyone")) {
+                    if(id.equalsIgnoreCase("everyone") || id.equalsIgnoreCase("@everyone")) {
                         return server.getPublicRole();
                     }
                 }
