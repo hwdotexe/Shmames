@@ -2,22 +2,24 @@ package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.shmames.commands.ForumWeapon;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.Errors;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.models.ForumWeaponObj;
 import com.hadenwatne.shmames.models.Response;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Lang;
-import com.hadenwatne.shmames.services.MessageService;
-import com.hadenwatne.shmames.services.RandomService;
-import com.hadenwatne.shmames.services.ShmamesService;
+import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,7 +120,7 @@ public class ChatListener extends ListenerAdapter {
 			TriggerType type = brain.getTriggers().get(trigger);
 
 			if(type != TriggerType.COMMAND) {
-				Matcher m = Pattern.compile("\\b" + trigger + "\\b", Pattern.CASE_INSENSITIVE).matcher(message.getContentRaw());
+				Matcher m = Pattern.compile("(^"+trigger+")|([\\s\\\b]"+trigger+"\\b)", Pattern.CASE_INSENSITIVE).matcher(message.getContentRaw());
 
 				if(m.find()){
 					sendRandom(message, type, brain);
@@ -134,21 +136,43 @@ public class ChatListener extends ListenerAdapter {
 	private void sendRandom(Message message, TriggerType t, Brain brain) {
 		Member author = message.getMember();
 
-		if(author != null) {
+		if (author != null) {
 			String authorName = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 			List<Response> responses = brain.getResponsesFor(t);
 
 			if (responses.size() > 0) {
-				String response =  RandomService.GetRandomObjectFromList(responses).getResponse();
+				Response response = RandomService.GetRandomObjectFromList(responses);
+				String responseValue = response.getResponse();
 
-				// Handle special responses.
-				response = response.replaceAll("%NAME%", authorName);
+				responseValue = responseValue.replaceAll("%NAME%", authorName);
 
-				// Send the response.
 				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, t.name() + " Response");
 
-				embedBuilder.setDescription(response);
-				MessageService.ReplyToMessage(message, embedBuilder, false);
+				switch(response.getResponseType()) {
+					case GIF:
+						try {
+							String gifURL = HTTPService.GetGIF(responseValue, "high");
+							InputStream file = new URL(gifURL).openStream();
+							embedBuilder.setImage("attachment://result.gif");
+
+							MessageService.ReplyToMessage(message, file, "result.gif", embedBuilder, false);
+						} catch (Exception e) {
+							LoggingService.LogException(e);
+						}
+
+						return;
+					case FORUMWEAPON:
+						ForumWeaponObj forumWeapon = ForumWeapon.FindForumWeapon(responseValue, brain, message.getGuild());
+
+						if(forumWeapon != null) {
+							MessageService.ReplySimpleMessage(message, forumWeapon.getItemLink(), false);
+							break;
+						}
+					default:
+						embedBuilder.setDescription(responseValue);
+
+						MessageService.ReplyToMessage(message, embedBuilder, false);
+				}
 			}
 		}
 	}

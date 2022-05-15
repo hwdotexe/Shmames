@@ -4,10 +4,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
-import com.hadenwatne.shmames.enums.TriggerType;
+import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
@@ -29,42 +26,49 @@ public class Response extends Command {
 	@Override
 	protected CommandStructure buildCommandStructure() {
 		CommandParameter triggerType = new CommandParameter("triggerType", "The type of trigger to provoke this response", ParameterType.SELECTION);
+		CommandParameter responseType = new CommandParameter("responseType", "The type of response to send", ParameterType.SELECTION);
 
-		for(TriggerType type : TriggerType.values()) {
+		for (TriggerType type : TriggerType.values()) {
 			triggerType.addSelectionOptions(type.name());
 		}
 
+		for (ResponseType type : ResponseType.values()) {
+			responseType.addSelectionOptions(type.name());
+		}
+
 		return CommandBuilder.Create("response", "Manage bot responses.")
-			.addSubCommands(
-				CommandBuilder.Create("add", "Add a new response to the random pool.")
-						.addAlias("a")
-						.addParameters(
-								triggerType
-										.setExample("random"),
-								new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
-										.setExample("hello!")
-						)
-						.build(),
-				CommandBuilder.Create("drop", "Remove a response from the random pool.")
-						.addAlias("d")
-						.addParameters(
-								triggerType
-										.setExample("random"),
-								new CommandParameter("responseIndex", "The response's number in the list.", ParameterType.INTEGER)
-										.setExample("3")
-						)
-						.build(),
-				CommandBuilder.Create("list", "Display all of the current responses.")
-						.addAlias("l")
-						.addParameters(
-								triggerType
-										.setExample("random"),
-								new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
-										.setExample("2")
-						)
-						.build()
-			)
-			.build();
+				.addSubCommands(
+						CommandBuilder.Create("add", "Add a new response to the random pool.")
+								.addAlias("a")
+								.addParameters(
+										triggerType
+												.setExample("random"),
+										new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
+												.setExample("hello!"),
+										responseType
+												.setExample("text")
+								)
+								.build(),
+						CommandBuilder.Create("drop", "Remove a response from the random pool.")
+								.addAlias("d")
+								.addParameters(
+										triggerType
+												.setExample("random"),
+										new CommandParameter("responseIndex", "The response's number in the list.", ParameterType.INTEGER)
+												.setExample("3")
+								)
+								.build(),
+						CommandBuilder.Create("list", "Display all of the current responses.")
+								.addAlias("l")
+								.addParameters(
+										triggerType
+												.setExample("random"),
+										new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+												.setExample("2")
+								)
+								.build()
+				)
+				.build();
 	}
 
 	@Override
@@ -86,20 +90,23 @@ public class Response extends Command {
 	}
 
 	private EmbedBuilder cmdAdd(Lang lang, Brain brain, ExecutingCommandArguments args) {
-		String responseType = args.getAsString("triggerType");
+		String triggerType = args.getAsString("triggerType");
+		String responseType = args.getAsString("responseType");
 		String responseText = args.getAsString("responseText");
 
-		brain.getTriggerResponses().add(new com.hadenwatne.shmames.models.Response(TriggerType.byName(responseType), responseText));
+		ResponseType rType = responseType == null ? ResponseType.TEXT : ResponseType.valueOf(responseType);
+
+		brain.getTriggerResponses().add(new com.hadenwatne.shmames.models.Response(TriggerType.byName(triggerType), responseText, rType));
 
 		return response(EmbedType.SUCCESS)
 				.setDescription(lang.getMsg(Langs.ITEM_ADDED));
 	}
 
 	private EmbedBuilder cmdDrop(Lang lang, Brain brain, ExecutingCommandArguments args) {
-		String responseType = args.getAsString("triggerType");
+		String triggerType = args.getAsString("triggerType");
 		int responseIndex = args.getAsInteger("responseIndex");
 
-		List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(responseType));
+		List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(triggerType));
 
 		if(responses.size() >= responseIndex) {
 			com.hadenwatne.shmames.models.Response r = responses.get(responseIndex-1);
@@ -114,9 +121,9 @@ public class Response extends Command {
 	}
 
 	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
-		String responseType = executingCommand.getCommandArguments().getAsString("triggerType").toUpperCase();
+		String triggerType = executingCommand.getCommandArguments().getAsString("triggerType").toUpperCase();
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
-		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "response-list", responseType);
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "response-list", triggerType);
 		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
 		PaginatedList paginatedList;
@@ -125,7 +132,7 @@ public class Response extends Command {
 		if (cachedList != null) {
 			paginatedList = cachedList;
 		} else {
-			List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(responseType));
+			List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(triggerType));
 
 			if(responses.size() == 0) {
 				return response(EmbedType.ERROR, Errors.ITEMS_NOT_FOUND.name())
@@ -135,7 +142,7 @@ public class Response extends Command {
 			List<String> responseTexts = new ArrayList<>();
 
 			for(com.hadenwatne.shmames.models.Response response : responses) {
-				responseTexts.add(response.getResponse());
+				responseTexts.add("**["+response.getResponseType().name()+"]** " + response.getResponse());
 			}
 
 			paginatedList = PaginationService.GetPaginatedList(responseTexts, 10, 100, true);
@@ -144,6 +151,6 @@ public class Response extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), responseType + " Responses", Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), triggerType + " Responses", Color.ORANGE, lang);
 	}
 }

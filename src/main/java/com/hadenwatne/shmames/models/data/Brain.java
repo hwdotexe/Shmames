@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.models.data;
 
+import com.google.gson.annotations.SerializedName;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.TriggerType;
@@ -16,7 +17,8 @@ public class Brain {
 	private final HashMap<String, Integer> tallies;
 	private final HashMap<String, Integer> emoteStats;
 	private final HashMap<String, TriggerType> triggers;
-	private List<UserCustomList> userListsv2;
+	@SerializedName(value = "userLists", alternate = "userListsv2")
+	private List<UserCustomList> userLists;
 	private final List<Response> triggerResponses;
 	private final List<BotSetting> settings;
 	private final List<String> feedback;
@@ -35,7 +37,7 @@ public class Brain {
 		tallies = new HashMap<>();
 		emoteStats = new HashMap<>();
 		triggers = new HashMap<>();
-		userListsv2 = new ArrayList<>();
+		userLists = new ArrayList<>();
 		triggerResponses = new ArrayList<>();
 		settings = new ArrayList<>();
 		feedback = new ArrayList<>();
@@ -125,7 +127,7 @@ public class Brain {
 		List<Response> t = new ArrayList<Response>();
 
 		for(Response tr : getTriggerResponses()) {
-			if(tr.getType() == type)
+			if(tr.getTriggerType() == type)
 				t.add(tr);
 		}
 		
@@ -145,11 +147,11 @@ public class Brain {
 	}
 
 	public List<UserCustomList> getUserLists() {
-		if(userListsv2 == null) {
-			userListsv2 = new ArrayList<>();
+		if(userLists == null) {
+			userLists = new ArrayList<>();
 		}
 
-		return userListsv2;
+		return userLists;
 	}
 	
 	public List<String> getFeedback(){

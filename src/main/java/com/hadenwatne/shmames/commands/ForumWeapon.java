@@ -143,7 +143,7 @@ public class ForumWeapon extends Command {
 							.setDescription(lang.getError(Errors.RESERVED_WORD));
 				}
 
-				if (findFW(weaponName, brain, server) == null) {
+				if (FindForumWeapon(weaponName, brain, server) == null) {
 					ForumWeaponObj newWeapon = new ForumWeaponObj(weaponName, weaponURL, server.getId());
 					ForumWeaponObj existingUrl = findFWByURL(weaponURL, brain, server);
 
@@ -170,7 +170,7 @@ public class ForumWeapon extends Command {
 	private EmbedBuilder cmdUpdate(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
-		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);
+		ForumWeaponObj forumWeapon = FindForumWeapon(weaponName, brain, server);
 
 		if (forumWeapon != null) {
 			if (forumWeapon.getServerID().equals(server.getId())) {
@@ -190,7 +190,7 @@ public class ForumWeapon extends Command {
 
 	private EmbedBuilder cmdRemove(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
-		ForumWeaponObj fwr = findFW(weaponName, brain, server);
+		ForumWeaponObj fwr = FindForumWeapon(weaponName, brain, server);
 
 		if (fwr != null) {
 			if (fwr.getServerID().equals(server.getId())) {
@@ -297,11 +297,11 @@ public class ForumWeapon extends Command {
 	private EmbedBuilder cmdAlias(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String aliasName = args.getAsString("newAlias");
-		ForumWeaponObj forumWeapon = findFW(weaponName, brain, server);
+		ForumWeaponObj forumWeapon = FindForumWeapon(weaponName, brain, server);
 
 		if (forumWeapon != null) {
 			if (!forumWeapon.getAliases().contains(aliasName)) {
-				ForumWeaponObj otherFW = findFW(aliasName, brain, server);
+				ForumWeaponObj otherFW = FindForumWeapon(aliasName, brain, server);
 
 				if (otherFW == null) {
 					forumWeapon.getAliases().add(aliasName);
@@ -344,7 +344,7 @@ public class ForumWeapon extends Command {
 
 	private EmbedBuilder cmdSend(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
 		String weaponName = executingCommand.getCommandArguments().getAsString("weaponName");
-		ForumWeaponObj fws = findFW(weaponName, brain, server);
+		ForumWeaponObj fws = FindForumWeapon(weaponName, brain, server);
 
 		if (fws != null) {
 			fws.IncreaseUse();
@@ -358,7 +358,7 @@ public class ForumWeapon extends Command {
 		}
 	}
 
-	private ForumWeaponObj findFW(String name, Brain brain, Guild server) {
+	public static ForumWeaponObj FindForumWeapon(String name, Brain brain, Guild server) {
 		// Check local server.
 		for (ForumWeaponObj fw : brain.getForumWeapons()) {
 			if (fw.getItemName().equals(name) || fw.getAliases().contains(name)) {

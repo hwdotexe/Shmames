@@ -54,6 +54,19 @@ public class MessageService {
     }
 
     /**
+     * Replies to a message with a simple unformatted string.
+     * @param message The message to reply to.
+     * @param response The response to send.
+     * @param mention Whether to mention the author.
+     */
+    public static void ReplySimpleMessage(Message message, String response, boolean mention) {
+        message.reply(response).mentionRepliedUser(mention).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
+        });
+    }
+
+    /**
      * A centralized place to send message replies to Discord, and to handle issues when they arise.
      * @param hook The InteractionHook to reply to.
      * @param response The response to send.
@@ -72,7 +85,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, File file, EmbedBuilder response, boolean mention) {
-        hook.sendFile(file).addEmbeds(response.build()).mentionRepliedUser(false).queue(success -> { file.delete(); }, error -> {
+        hook.sendFile(file).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -86,7 +99,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, InputStream file, String name, EmbedBuilder response, boolean mention) {
-        hook.sendFile(file, name).addEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
+        hook.sendFile(file, name).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -99,7 +112,7 @@ public class MessageService {
      * @param onSuccess The Consumer action to take if successful.
      */
     public static void ReplyToMessage(InteractionHook hook, EmbedBuilder response, boolean mention, Consumer<? super Message> onSuccess) {
-        hook.sendMessageEmbeds(response.build()).mentionRepliedUser(false).queue(onSuccess, error -> {
+        hook.sendMessageEmbeds(response.build()).mentionRepliedUser(mention).queue(onSuccess, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -124,7 +137,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, File file, EmbedBuilder response, boolean mention) {
-        message.reply(file).setEmbeds(response.build()).mentionRepliedUser(false).queue(success -> { file.delete(); }, error -> {
+        message.reply(file).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -138,7 +151,7 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, InputStream file, String name, EmbedBuilder response, boolean mention) {
-        message.reply(file, name).setEmbeds(response.build()).mentionRepliedUser(false).queue(success -> {}, error -> {
+        message.reply(file, name).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });

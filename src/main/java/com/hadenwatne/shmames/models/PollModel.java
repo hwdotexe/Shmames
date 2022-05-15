@@ -98,6 +98,10 @@ public class PollModel {
 			eBuilder.addField("Topic", this.question, false);
 			eBuilder.setFooter("#" + channelName + " - Expire" + (this.isActive ? "s on " + TextFormatService.GetFriendlyDateTime(this.expires) : "d"), null);
 
+			if(this.isActive) {
+				eBuilder.addField("Controls", "This poll will automatically close at the time below. React with "+TextFormatService.EMOJI_RED_X+" to close it early.", false);
+			}
+
 			eBuilder.addField(buildOptionsField());
 
 			this.cachedEmbedBuilder = eBuilder;

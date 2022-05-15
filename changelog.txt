@@ -1,3 +1,9 @@
+===== v2.0.0-8b =====
+- Reintroduced GIF random responses through ResponseTypes - a new value for responses.
+- Polls now include a field to explain the controls of closing a poll.
+- Renamed and refactored some fields and variables.
+
+===== v2.0.0 =====
 Cosmetic
 - Improved the First Join Message to be more stylish, accessible, and helpful.
 - All default bot messages are now sent using a MessageEmbed.
