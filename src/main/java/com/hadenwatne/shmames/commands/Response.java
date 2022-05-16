@@ -43,10 +43,10 @@ public class Response extends Command {
 								.addParameters(
 										triggerType
 												.setExample("random"),
-										new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
-												.setExample("hello!"),
 										responseType
-												.setExample("text")
+												.setExample("text"),
+										new CommandParameter("responseText", "The actual text of this response.", ParameterType.STRING)
+												.setExample("hello!")
 								)
 								.build(),
 						CommandBuilder.Create("drop", "Remove a response from the random pool.")
@@ -94,7 +94,7 @@ public class Response extends Command {
 		String responseType = args.getAsString("responseType");
 		String responseText = args.getAsString("responseText");
 
-		ResponseType rType = responseType == null ? ResponseType.TEXT : ResponseType.valueOf(responseType);
+		ResponseType rType = responseType == null ? ResponseType.TEXT : ResponseType.valueOf(responseType.toUpperCase());
 
 		brain.getTriggerResponses().add(new com.hadenwatne.shmames.models.Response(TriggerType.byName(triggerType), responseText, rType));
 
