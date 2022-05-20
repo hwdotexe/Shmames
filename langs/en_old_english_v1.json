@@ -1,0 +1,421 @@
+{
+  "messages": {
+    "ADD_TRIGGER_SUCCESS": [
+      "I shall respond `%WC%` at the appointed time upon which I hear thy word `%WC%`!",
+      "Ever shall my lips reply `%WC%` when thou speakest the phrase `%WC%`."
+    ],
+    "BLAME": [
+      "Most assuredly it is %WC%"
+    ],
+    "BLAME_OPTIONS": [
+      "The Crown",
+      "The peasants",
+      "The Black Death",
+      "Witches who liveth among us",
+      "The Ether",
+      "Heretics",
+      "The Emperor",
+      "Lord Zeus"
+    ],
+    "CHOOSE": [
+      "Mine preference shall be %WC%",
+      "Thou asketh me, and thus I decide %WC%"
+    ],
+    "COMMAND_USAGE": [
+      "Mayhap thou endeavors shall succeed greater upon uttering `%WC%`"
+    ],
+    "EIGHT_BALL_OPTIONS": [
+      "Most assuredly.",
+      "Indeed it shall be so.",
+      "You speakest the truth.",
+      "It is most certain to come to pass.",
+      "The likelihood is plain.",
+      "Undoubtedly so.",
+      "Mine efforts to perceive what shall come to pass are unclear. Pray make thine supplication anew.",
+      "It is not certain.",
+      "It shall not be so.",
+      "Mine study suggests otherwise.",
+      "Thou speakest only in falsehood.",
+      "I shall be taken aback in surprise should thy petition succeed.",
+      "Nay, it shall not occur.",
+      "Thy prompting is doubtful.",
+      "Indeed not even in slight."
+    ],
+    "EMOTE_STATS_TITLE": [
+      "Thy depictions are counted thusly:"
+    ],
+    "ENHANCE_OPTIONS": [
+      "Finished - %WC% now lay fine gold.",
+      "Finished - %WC% now praises the sun.",
+      "Finished - %WC% hast been cured of the Black Death.",
+      "Finished - %WC% hast attained a fair maiden's favor.",
+      "Finished - %WC% hast attained a fine lord's favor.",
+      "Finished - %WC% is to be wed",
+      "Finished - %WC% did inherit seven years' wages"
+    ],
+    "FAMILY_CREATED": [
+      "Thy company has been established, but is yet lacking in membership."
+    ],
+    "FAMILY_JOIN_CODE": [
+      "**Thy company's secret phrase for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
+    ],
+    "FAMILY_JOIN_CODE_INVALIDATED": [
+      "[Thy secret phrase hast been invalidated by the King's guard]"
+    ],
+    "FAMILY_JOINED": [
+      "Behold! **%WC%** hast pledged loyalty to the great company **%WC%**!"
+    ],
+    "FAMILY_REMOVED_SERVER": [
+      "Woe is the world! **%WC%** hast betrayed **%WC%**!"
+    ],
+    "FAMILY_SERVER_LIST": [
+      "Thy company \"%WC%\" is beholden to the patriots:"
+    ],
+    "FEEDBACK_COOLDOWN": [
+      "Pray halt thy requests but for a moment."
+    ],
+    "FEEDBACK_SENT": [
+      ":notepad_spiral: Thy request hast been made known. Thou may proceed anew upon the passage of **5 minutes**."
+    ],
+    "FORUM_WEAPON_ADDED_ALIAS": [
+      "Thy alias hast been recorded."
+    ],
+    "FORUM_WEAPON_CREATED": [
+      "Thou hast summoned a new Forum Weapon: **%WC%**"
+    ],
+    "FORUM_WEAPON_DESTROYED": [
+      "Thy weapon destroyed."
+    ],
+    "FORUM_WEAPON_DUPLICATE": [
+      ":warning: Pray examine thy request, for a Forum Weapon with that link doth already exist: **%WC%**"
+    ],
+    "FORUM_WEAPON_LIST": [
+      "Thy strength in the forum doth shadow all others:"
+    ],
+    "FORUM_WEAPONS_PRUNED": [
+      "Pruned **%WC%** unused Forum Weapons!"
+    ],
+    "FORUM_WEAPON_UPDATED": [
+      "Thy weapon hast been updated with a new link!"
+    ],
+    "GENERIC_SUCCESS": [
+      "It hast been done."
+    ],
+    "HANGMAN_DICTIONARIES": [
+      "Thy tomes include thusly: **%WC%** (or leavest the field blank to use all of them)"
+    ],
+    "HANGMAN_FOOTER_GUESSED": [
+      "Thy failed attempts:"
+    ],
+    "HANGMAN_TITLE": [
+      "An execution at the gallows."
+    ],
+    "INVALID_TRIGGER_TYPE": [
+      ":scream: Invalid trigger type! Your options are: %WC%"
+    ],
+    "ITEM_ADDED": [
+      "Thy request hast been added."
+    ],
+    "ITEM_REMOVED": [
+      "\"%WC%\" hast been removed."
+    ],
+    "LIST_CREATED": [
+      "Thy ledger hast been created."
+    ],
+    "LIST_DELETED": [
+      "Thy ledger `%WC%` hast been deleted."
+    ],
+    "LIST_PRIVACY_TOGGLED": [
+      "At thy request, the ledger `%WC%` may now be considered `%WC%`."
+    ],
+    "MUSIC_ADDED_TO_QUEUE": [
+      "The bard has taken thy request."
+    ],
+    "MUSIC_LOOPING_TOGGLED": [
+      "The bard shall replay their song: **%WC%**"
+    ],
+    "MUSIC_LOOPING_QUEUE_TOGGLED": [
+      "The bard shall replay their set: **%WC%**"
+    ],
+    "MUSIC_PLAYING": [
+      "The bard has begun playing."
+    ],
+    "MUSIC_PLAYING_PLAYLIST": [
+      "The bard shall perform thy `%WC%` set."
+    ],
+    "MUSIC_PLAYLIST_CREATED": [
+      "Thou hast crated a new set `%WC%`."
+    ],
+    "MUSIC_PLAYLIST_CONVERTED": [
+      "Converted the bard's list into a new set `%WC%` with `%WC%` pieces."
+    ],
+    "MUSIC_PLAYLIST_DELETED": [
+      "Thy set hast been deleted!"
+    ],
+    "MUSIC_PLAYLIST_TRACK_ADDED": [
+      "The musical piece hast been added!"
+    ],
+    "MUSIC_PLAYLIST_TRACK_REMOVED": [
+      "The musical piece hast been removed!"
+    ],
+    "MUSIC_QUEUE_CLEARED": [
+      "Cleared the bard's set."
+    ],
+    "MUSIC_QUEUE_SHUFFLED": [
+      "Rearranged the bard's set!"
+    ],
+    "MUSIC_QUEUE_REVERSED": [
+      "Reversed the bard's set!"
+    ],
+    "MUSIC_QUEUED_PLAYLIST": [
+      "The bard shall remember to play the `%WC%` set!"
+    ],
+    "POLL_TITLE": [
+      "The Crown is conducting a census."
+    ],
+    "POLL_TITLE_RESULTS": [
+      "The census has ended."
+    ],
+    "RESET_EMOTE_STATS": [
+      "Thy depiction counts hast been reset!"
+    ],
+    "SEARCH_RESULTS": [
+      "I have researched thusly:"
+    ],
+    "SENT_PRIVATE_MESSAGE": [
+      "Pray inspect thine mailbox."
+    ],
+    "SERVER_FAMILY_LIST": [
+      "The current company has pledged to the following:"
+    ],
+    "SETTING_LIST_TITLE": [
+      "Constraints"
+    ],
+    "SETTING_UPDATED_SUCCESS": [
+      "Thy constraint hast been changed."
+    ],
+    "STORY_INTRO": [
+      "Pray, let us recount a tale!"
+    ],
+    "TALLY_CURRENT_VALUE": [
+      "The scholar's abacus has raised `%WC%` to `%WC%`"
+    ],
+    "TALLY_LIST": [
+      "The scholar's abacus doth record:"
+    ],
+    "TALLY_REMOVED": [
+      "`%WC%` hast been removed, sire."
+    ],
+    "THOUGHTS_OPTIONS": [
+      "By the Crown, I am taken with awe!",
+      "It is a manifestation of beauty and of grace.",
+      "Gazing upon its glory inspires one to weep.",
+      "I am unable to express mine favor.",
+      "It is neither great nor foul.",
+      "I find thy object of request lacking in the extreme.",
+      "Foul and rancid is its presence.",
+      "Its visage offends even the common dogs.",
+      "Truly, this creation colors ill the legacy of its maker.",
+      "I find mineself wanting relief.",
+      "Pray remove this wretched thing from mine presence at once."
+    ],
+    "TIMER_STARTED": [
+      ":bell: The bells shall toll when the timekeepers count %WC%"
+    ],
+    "TIMER_ALERT": [
+      ":bell: (%WC%): The timekeepers hast counted thy measure!"
+    ],
+    "TRIGGER_LIST": [
+      "Mine ears listen carefully for thus:"
+    ],
+    "WHAT_ARE_THE_ODDS": [
+      "I calculate it is %WC%",
+      "Mayhap it shall be close to %WC%"
+    ],
+    "WHATSHOULDIDO_INTRO_OPTIONS": [
+      "Mine advice is",
+      "Pray",
+      "Truly, thou best"
+    ],
+    "WHATSHOULDIDO_OPTIONS": [
+      "unseal a tomb",
+      "conduct theft of a sundry merchant",
+      "repaint a well-traveled road",
+      "consume the food of an infant",
+      "re-enact the plot of a foreign play",
+      "begin a crusade to attain justice for horse prices",
+      "hail curses at an old crone",
+      "donate to a charity of low repute",
+      "compose false letters to a noble house",
+      "market tonics and salves to children",
+      "petition a lowly merchant to trade responsibilities",
+      "exploit the elderly and stir confusion",
+      "hurl eggs at a flock of birds",
+      "borrow a tome, bathe it in the sap of a pine tree, and return it to its owner",
+      "erect signage in the public square regarding thy deepest insecurities",
+      "engage in a rousing game of lots",
+      "leave thy house and acquire a maiden",
+      "abandon thy village and seek a young lord"
+    ],
+    "WHEN_OPTIONS": [
+      "In %WC% years",
+      "In %WC% minutes",
+      "%WC% days ago",
+      "Absolutely never",
+      "%WC% years ago",
+      "In precisely %WC%",
+      "On the next full moon",
+      "When the sand in thy hourglass fall empty",
+      "Time is subjective",
+      "Between %WC% and %WC% centuries",
+      "Sooner shall %WC% days pass",
+      "%WC% seconds",
+      "%WC% hours, %WC% minutes, and %WC% seconds",
+      "Eventually",
+      "In your dreams"
+    ]
+  },
+  "errors": {
+    "ALREADY_EXISTS": [
+      "Alas, thy requested item exists already."
+    ],
+    "BOT_ERROR": [
+      "Mine humblest apologies, for thy request did cause an unforeseen catastrophe."
+    ],
+    "CANNOT_DELETE": [
+      "Should I answer thy request, I would find myself distraught and unable to carry out further duties."
+    ],
+    "CHANNEL_NOT_FOUND": [
+      "Nay, a forum with such a name cannot be found."
+    ],
+    "COMMAND_NOT_FOUND": [
+      "Nay, a command with such a name hast not yet been decreed."
+    ],
+    "FAMILY_ALREADY_EXISTS": [
+      "You already own a family with that name! Please choose a different name."
+    ],
+    "FAMILY_ALREADY_JOINED": [
+      "This server already belongs to that family!"
+    ],
+    "FAMILY_INVALID_DETAIL": [
+      "Invalid Family name or Join Code!"
+    ],
+    "FAMILY_NOT_JOINED": [
+      "That server has not joined that Family!"
+    ],
+    "FAMILY_MEMBER_MAXIMUM_REACHED": [
+      "That family has reached the maximum number of servers!"
+    ],
+    "FAMILY_MAXIMUM_REACHED": [
+      "You can only join up to 3 families!"
+    ],
+    "FAMILY_SERVER_LIST_EMPTY": [
+      "This Family does not contain any servers."
+    ],
+    "FORUM_WEAPON_MAXIMUM_REACHED": [
+      "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+    ],
+    "FORUM_WEAPON_OWNED_OTHER": [
+      "That weapon is owned by a different server!"
+    ],
+    "GUILD_REQUIRED": [
+      "That command must be run on a server."
+    ],
+    "HANGMAN_ALREADY_STARTED": [
+      "Alas, the gallows are already hung in the %WC% square"
+    ],
+    "HANGMAN_ALREADY_GUESSED": [
+      "The executioner hast heard thy cry already."
+    ],
+    "HANGMAN_NOT_STARTED": [
+      "The gallows hast not yet been hung. Mayhap they shall be soon."
+    ],
+    "HEY_THERE": [
+      "Hail to the crown! Makest thy request with `%WC% help`"
+    ],
+    "INCOMPLETE": [
+      "I'm gonna need a few more details."
+    ],
+    "INCORRECT_ITEM_COUNT": [
+      "Incorrect number of arguments provided!"
+    ],
+    "ITEMS_NOT_FOUND": [
+      "There weren't any results."
+    ],
+    "MUSIC_NOT_IN_CHANNEL": [
+      "Please join a voice channel and run this command again."
+    ],
+    "MUSIC_PLAYLIST_ALREADY_EXISTS": [
+      "A Playlist with that name already exists on this server!"
+    ],
+    "MUSIC_PLAYLIST_DOESNT_EXIST": [
+      "That Playlist doesn't exist!"
+    ],
+    "MUSIC_PLAYLIST_EMPTY": [
+      "There are no tracks in that Playlist."
+    ],
+    "MUSIC_PLAYLIST_LIST_EMPTY": [
+      "There aren't any Playlists yet!"
+    ],
+    "MUSIC_PLAYLIST_NAME_INVALID": [
+      "Playlist names must be alphanumeric!"
+    ],
+    "MUSIC_PLAYLIST_NAME_MISSING": [
+      "Please enter a name for the new Playlist."
+    ],
+    "MUSIC_PLAYLIST_PAGE_EMPTY": [
+      "There are no tracks in that Playlist on this page."
+    ],
+    "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED": [
+      "Playlists currently support a max of 50 tracks."
+    ],
+    "MUSIC_QUEUE_EMPTY": [
+      "There are no tracks in the Queue."
+    ],
+    "MUSIC_QUEUE_PAGE_EMPTY": [
+      "There are no tracks in the Queue on this page."
+    ],
+    "MUSIC_WRONG_INPUT": [
+      "Please enter a media URL or playlist name!"
+    ],
+    "NO_PERMISSION_BOT": [
+      "Behold, I am wont to complete thy request, yet the laws forbid me."
+    ],
+    "NO_PERMISSION_USER": [
+      "Behold, I have been tasked to forbid thee this access."
+    ],
+    "NOT_FOUND": [
+      "An item of such title could not be uncovered."
+    ],
+    "PAGE_NOT_FOUND": [
+      "The page you requested is empty or does not exist."
+    ],
+    "RESERVED_WORD": [
+      "It looks like you tried to use a reserved word. Try a different one!"
+    ],
+    "SERVER_FAMILY_LIST_EMPTY": [
+      "This server does not belong to a Family."
+    ],
+    "SETTING_NOT_FOUND": [
+      "I couldn't find that setting."
+    ],
+    "SETTING_VALUE_INVALID": [
+      "The value you provided is invalid. Please try again."
+    ],
+    "TIME_VALUE_INCORRECT": [
+      "The amount of time provided is invalid!"
+    ],
+    "TIMER_LENGTH_INCORRECT": [
+      "Timers must be set between 1 second and 365 days."
+    ],
+    "TRACK_NOT_PLAYING": [
+      "There isn't a track playing right now."
+    ],
+    "WRONG_USAGE": [
+      "Alas, I have heard thy request, and I declare it improper. Pray make thine attempt anew."
+    ]
+  },
+  "wildcard": "%WC%",
+  "linebreak": "%BR%",
+  "langName": "en_old_english"
+}
