@@ -1,11 +1,11 @@
 {
   "messages": {
     "ADD_TRIGGER_SUCCESS": [
-      "I shall respond `%WC%` at the appointed time upon which I hear thy word `%WC%`!",
       "Ever shall my lips reply `%WC%` when thou speakest the phrase `%WC%`."
     ],
     "BLAME": [
-      "Most assuredly it is %WC%"
+      "Most assuredly it is %WC%",
+	  "Thine answer mayhap be %WC%"
     ],
     "BLAME_OPTIONS": [
       "The Crown",
@@ -18,8 +18,8 @@
       "Lord Zeus"
     ],
     "CHOOSE": [
-      "Mine preference shall be %WC%",
-      "Thou asketh me, and thus I decide %WC%"
+      "Mine preference shall be known as %WC%",
+      "Thou asketh, and thus I reply %WC%"
     ],
     "COMMAND_USAGE": [
       "Mayhap thou endeavors shall succeed greater upon uttering `%WC%`"
@@ -42,7 +42,8 @@
       "Indeed not even in slight."
     ],
     "EMOTE_STATS_TITLE": [
-      "Thy depictions are counted thusly:"
+      "Thy depictions are counted thusly:",
+	  "I hath counted thy scrawlings thus:"
     ],
     "ENHANCE_OPTIONS": [
       "Finished - %WC% now lay fine gold.",
@@ -60,13 +61,13 @@
       "**Thy company's secret phrase for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
     ],
     "FAMILY_JOIN_CODE_INVALIDATED": [
-      "[Thy secret phrase hast been invalidated by the King's guard]"
+      "[Thy secret phrase hast been invalidated by command of the King]"
     ],
     "FAMILY_JOINED": [
       "Behold! **%WC%** hast pledged loyalty to the great company **%WC%**!"
     ],
     "FAMILY_REMOVED_SERVER": [
-      "Woe is the world! **%WC%** hast betrayed **%WC%**!"
+      "Woe is me! **%WC%** hast betrayed **%WC%**!"
     ],
     "FAMILY_SERVER_LIST": [
       "Thy company \"%WC%\" is beholden to the patriots:"
@@ -90,16 +91,17 @@
       ":warning: Pray examine thy request, for a Forum Weapon with that link doth already exist: **%WC%**"
     ],
     "FORUM_WEAPON_LIST": [
-      "Thy strength in the forum doth shadow all others:"
+      "Thy strength in the forum doth outnumber all others:"
     ],
     "FORUM_WEAPONS_PRUNED": [
-      "Pruned **%WC%** unused Forum Weapons!"
+      "**%WC%** Forum Weapons hast been expelled."
     ],
     "FORUM_WEAPON_UPDATED": [
       "Thy weapon hast been updated with a new link!"
     ],
     "GENERIC_SUCCESS": [
-      "It hast been done."
+      "Thy command is fulfilled.",
+	  "It hath been made so."
     ],
     "HANGMAN_DICTIONARIES": [
       "Thy tomes include thusly: **%WC%** (or leavest the field blank to use all of them)"
@@ -117,7 +119,8 @@
       "Thy request hast been added."
     ],
     "ITEM_REMOVED": [
-      "\"%WC%\" hast been removed."
+      "\"%WC%\" hast been removed.",
+	  "Mine hands hath removed \"%WC%\"."
     ],
     "LIST_CREATED": [
       "Thy ledger hast been created."
@@ -171,16 +174,16 @@
       "The bard shall remember to play the `%WC%` set!"
     ],
     "POLL_TITLE": [
-      "The Crown is conducting a census."
+      "Make heard thy voice."
     ],
     "POLL_TITLE_RESULTS": [
-      "The census has ended."
+      "The Crown hast noted thy supplication."
     ],
     "RESET_EMOTE_STATS": [
       "Thy depiction counts hast been reset!"
     ],
     "SEARCH_RESULTS": [
-      "I have researched thusly:"
+      "I hath researched thusly:"
     ],
     "SENT_PRIVATE_MESSAGE": [
       "Pray inspect thine mailbox."
@@ -217,13 +220,15 @@
       "Its visage offends even the common dogs.",
       "Truly, this creation colors ill the legacy of its maker.",
       "I find mineself wanting relief.",
-      "Pray remove this wretched thing from mine presence at once."
+      "Pray remove this wretched thing from mine presence at once.",
+	  "Clearest as daylight, it hath ne'ery a wench.",
+	  "Far better is it to die, I reason."
     ],
     "TIMER_STARTED": [
-      ":bell: The bells shall toll when the timekeepers count %WC%"
+      ":bell: The cathedral's bells shall toll upon the count of the timekeepers %WC%"
     ],
     "TIMER_ALERT": [
-      ":bell: (%WC%): The timekeepers hast counted thy measure!"
+      ":bell: (%WC%): The timekeepers hath counted thy measure!"
     ],
     "TRIGGER_LIST": [
       "Mine ears listen carefully for thus:"
@@ -235,7 +240,9 @@
     "WHATSHOULDIDO_INTRO_OPTIONS": [
       "Mine advice is",
       "Pray",
-      "Truly, thou best"
+      "Truly, thou best",
+	  "Thou hath best",
+	  "Indeed, it wouldst bring glory to the Crown should thee"
     ],
     "WHATSHOULDIDO_OPTIONS": [
       "unseal a tomb",
