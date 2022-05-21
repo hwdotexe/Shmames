@@ -2,8 +2,10 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -30,6 +32,8 @@ public abstract class Command {
         this.helpFields.add(new MessageEmbed.Field("Description", this.commandStructure.getDescription(), false));
         this.helpFields.add(new MessageEmbed.Field("Usage", this.commandStructure.getUsage(), true));
         this.helpFields.add(new MessageEmbed.Field("Examples", this.commandStructure.getExamples(), true));
+
+        LoggingService.Log(LogType.SYSTEM, "\tLoaded "+this.commandStructure.getName());
     }
 
     protected abstract CommandStructure buildCommandStructure();

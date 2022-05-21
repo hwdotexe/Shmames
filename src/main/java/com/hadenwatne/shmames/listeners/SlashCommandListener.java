@@ -3,11 +3,11 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -59,8 +59,8 @@ public class SlashCommandListener extends ListenerAdapter {
     }
 
     private void handleCommand(Command command, InteractionHook hook, String commandText, Brain brain) {
-        Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
-        ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
+        Language language = App.Shmames.getLanguageService().getLangFor(brain);
+        ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
         if(command != null) {
             executingCommand.setCommandName(command.getCommandStructure().getName());
@@ -68,8 +68,8 @@ public class SlashCommandListener extends ListenerAdapter {
 
             App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
         } else {
-            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
-                    .setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
+            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
+                    .setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));
 
             MessageService.ReplyToMessage(hook, embed, false);
         }

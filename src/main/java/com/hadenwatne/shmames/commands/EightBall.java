@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -27,7 +27,7 @@ public class EightBall extends Command {
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		String question = executingCommand.getCommandArguments().getAsString("question");
-		String answer = executingCommand.getLanguage().getMsg(Langs.EIGHT_BALL_OPTIONS);
+		String answer = executingCommand.getLanguage().getMsg(LanguageKeys.EIGHT_BALL_OPTIONS);
 
 		return response(EmbedType.INFO)
 				.addField(question, answer, false);

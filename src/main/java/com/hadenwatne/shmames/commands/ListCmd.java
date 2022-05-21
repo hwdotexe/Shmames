@@ -11,7 +11,7 @@ import com.hadenwatne.shmames.models.UserCustomList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
@@ -99,33 +99,33 @@ public class ListCmd extends Command {
 	@Override
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 		String authorID = executingCommand.getAuthorUser().getId();
 
 		switch (subCommand) {
 			case "create":
-				return cmdCreate(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdCreate(brain, language, authorID, executingCommand.getCommandArguments());
 			case "add":
-				return cmdAdd(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdAdd(brain, language, authorID, executingCommand.getCommandArguments());
 			case "remove":
-				return cmdRemove(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdRemove(brain, language, authorID, executingCommand.getCommandArguments());
 			case "delete":
-				return cmdDelete(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdDelete(brain, language, authorID, executingCommand.getCommandArguments());
 			case "toggle":
-				return cmdToggle(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdToggle(brain, language, authorID, executingCommand.getCommandArguments());
 			case "random":
-				return cmdRandom(brain, lang, authorID, executingCommand.getCommandArguments());
+				return cmdRandom(brain, language, authorID, executingCommand.getCommandArguments());
 			case "list":
 				return cmdList(brain, authorID);
 			case "view":
-				return cmdView(brain, lang, authorID, executingCommand);
+				return cmdView(brain, language, authorID, executingCommand);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdCreate(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdCreate(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String privacy = subCmdArgs.getAsString("privacy");
 		UserListType listType = privacy != null ? UserListType.parseOrPrivate(privacy) : UserListType.PRIVATE;
@@ -135,14 +135,14 @@ public class ListCmd extends Command {
 			brain.getUserLists().add((newList));
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.LIST_CREATED));
+					.setDescription(language.getMsg(LanguageKeys.LIST_CREATED));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.ALREADY_EXISTS));
+					.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
 		}
 	}
 
-	private EmbedBuilder cmdAdd(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdAdd(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		String item = subCmdArgs.getAsString("item");
 		UserCustomList existingList = getList(userID, listName, brain);
@@ -151,14 +151,14 @@ public class ListCmd extends Command {
 			existingList.getValues().add(item);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.ITEM_ADDED));
+					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdRemove(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdRemove(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		int index = subCmdArgs.getAsInteger("index") - 1;
 		UserCustomList existingList = getList(userID, listName, brain);
@@ -169,18 +169,18 @@ public class ListCmd extends Command {
 				existingList.getValues().remove(index);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(lang.getMsg(Langs.ITEM_REMOVED, new String[]{removed}));
+						.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{removed}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(lang.getError(Errors.NOT_FOUND));
+						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdDelete(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdDelete(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -189,18 +189,18 @@ public class ListCmd extends Command {
 				brain.getUserLists().remove((existingList));
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(lang.getMsg(Langs.LIST_DELETED, new String[]{existingList.getName()}));
+						.setDescription(language.getMsg(LanguageKeys.LIST_DELETED, new String[]{existingList.getName()}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdToggle(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdToggle(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -213,18 +213,18 @@ public class ListCmd extends Command {
 				}
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(lang.getMsg(Langs.LIST_PRIVACY_TOGGLED, new String[]{existingList.getName(), existingList.getType().toString()}));
+						.setDescription(language.getMsg(LanguageKeys.LIST_PRIVACY_TOGGLED, new String[]{existingList.getName(), existingList.getType().toString()}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdRandom(Brain brain, Lang lang, String userID, ExecutingCommandArguments subCmdArgs) {
+	private EmbedBuilder cmdRandom(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
 		String listName = subCmdArgs.getAsString("listName").toLowerCase();
 		UserCustomList existingList = getList(userID, listName, brain);
 
@@ -244,7 +244,7 @@ public class ListCmd extends Command {
 			return response;
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
@@ -278,7 +278,7 @@ public class ListCmd extends Command {
 		return eBuilder;
 	}
 
-	private EmbedBuilder cmdView(Brain brain, Lang lang, String userID, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdView(Brain brain, Language language, String userID, ExecutingCommand executingCommand) {
 		String listName = executingCommand.getCommandArguments().getAsString("listName").toLowerCase();
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
 		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "list-list", listName);
@@ -296,21 +296,21 @@ public class ListCmd extends Command {
 				List<String> listItems = list.getValues();
 
 				if (listItems.size() == 0) {
-					return response(EmbedType.ERROR, Errors.ITEMS_NOT_FOUND.name())
-							.setDescription(lang.getError(Errors.ITEMS_NOT_FOUND));
+					return response(EmbedType.ERROR, ErrorKeys.ITEMS_NOT_FOUND.name())
+							.setDescription(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
 				}
 
 				paginatedList = PaginationService.GetPaginatedList(listItems, 10, -1, true);
 			} else {
-				return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-						.setDescription(lang.getError(Errors.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 			}
 
 			// Cache the list in case the user continues to call this command for other pages
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), listName, Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), listName, Color.ORANGE, language);
 	}
 
 	private UserCustomList getList(String userID, String listName, Brain brain) {

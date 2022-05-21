@@ -1,17 +1,15 @@
 package com.hadenwatne.shmames.enums;
 
-public enum Langs {
+public enum LanguageKeys {
     ADD_TRIGGER_SUCCESS,
     BLAME,
     BLAME_OPTIONS,
     CHOOSE,
-    COMMAND_USAGE,
     EIGHT_BALL_OPTIONS,
     EMOTE_STATS_TITLE,
     ENHANCE_OPTIONS,
     FAMILY_CREATED,
     FAMILY_JOIN_CODE,
-    FAMILY_JOIN_CODE_CREATED,
     FAMILY_JOIN_CODE_INVALIDATED,
     FAMILY_JOINED,
     FAMILY_REMOVED_SERVER,

@@ -6,12 +6,12 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -45,7 +45,7 @@ public class Poll extends Command {
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		Guild server = executingCommand.getServer();
 		Brain brain = executingCommand.getBrain();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 
 		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), executingCommand.getAuthorMember())) {
 			String time = executingCommand.getCommandArguments().getAsString("time");
@@ -62,7 +62,7 @@ public class Poll extends Command {
 
 				if (optionsList.size() > 1 && optionsList.size() <= 26) {
 					EmbedBuilder embedBuilder = response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
+							.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
 
 					executingCommand.reply(embedBuilder, false, onSuccess -> {
 						PollModel poll = new PollModel(executingCommand.getChannel().getId(), executingCommand.getAuthorUser().getId(), onSuccess.getId(), question, optionsList, seconds);
@@ -73,16 +73,16 @@ public class Poll extends Command {
 
 					return null;
 				} else {
-					return response(EmbedType.ERROR, Errors.INCORRECT_ITEM_COUNT.name())
-							.setDescription(lang.getError(Errors.INCORRECT_ITEM_COUNT));
+					return response(EmbedType.ERROR, ErrorKeys.INCORRECT_ITEM_COUNT.name())
+							.setDescription(language.getError(ErrorKeys.INCORRECT_ITEM_COUNT));
 				}
 			} else {
-				return response(EmbedType.ERROR, Errors.TIME_VALUE_INCORRECT.name())
-						.setDescription(lang.getError(Errors.TIME_VALUE_INCORRECT));
+				return response(EmbedType.ERROR, ErrorKeys.TIME_VALUE_INCORRECT.name())
+						.setDescription(language.getError(ErrorKeys.TIME_VALUE_INCORRECT));
 			}
 		} else {
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 	}
 }

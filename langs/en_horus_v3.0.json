@@ -3,13 +3,13 @@
     {
       "key": "ADD_TRIGGER_SUCCESS",
       "values": [
-        "I will now send a `%WC%` response when I hear `%WC%`!"
+        "I werde drone  `%WC%` were you comply `%WC%`!"
       ]
     },
     {
       "key": "BLAME",
       "values": [
-        "I blame %WC%"
+        "I hose %WC%"
       ]
     },
     {
@@ -53,7 +53,7 @@
     {
       "key": "CHOOSE",
       "values": [
-        "I choose: %WC%!"
+        "My gribbed: %WC%!"
       ]
     },
     {
@@ -81,7 +81,7 @@
     {
       "key": "EMOTE_STATS_TITLE",
       "values": [
-        "Here are your emoji tallies:"
+        "Skanning Basilisks:"
       ]
     },
     {
@@ -112,73 +112,73 @@
     {
       "key": "FAMILY_CREATED",
       "values": [
-        "The Family was created! Now let's go add other servers!"
+        "Legionspace manifested!"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE",
       "values": [
-        "**Join Code for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
+        "**Code %WC%**%BR%`%WC%`%BR%_Comply code far sees Legionspace._"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE_INVALIDATED",
       "values": [
-        "[The Join Code has been invalidated for security purposes]"
+        "[Tha Cee-seek grib wavedown for' nada crawbar]"
       ]
     },
     {
       "key": "FAMILY_JOINED",
       "values": [
-        "Added **%WC%** to the **%WC%** Family!"
+        "Pass **%WC%** conjured to tha **%WC%** Legionspace!"
       ]
     },
     {
       "key": "FAMILY_REMOVED_SERVER",
       "values": [
-        "Removed **%WC%** from the **%WC%** Family!"
+        "Zeroed tha **%WC%** O't **%WC%** Legionspace!"
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST",
       "values": [
-        "The \"%WC%\" Family contains the following servers:"
+        "Tha \"%WC%\" Legionspace sardines thas Knee-hips:"
       ]
     },
     {
       "key": "FEEDBACK_COOLDOWN",
       "values": [
-        "Please wait a bit before submitting more feedback."
+        "Nag time afore comply again."
       ]
     },
     {
       "key": "FEEDBACK_SENT",
       "values": [
-        ":notepad_spiral: Your feedback has been noted. Thanks!%BR%You can report again in **5 minutes**."
+        ":notepad_spiral: Thyne papermaize gribbed ice! %BR%You comply again en **5 minutes**."
       ]
     },
     {
       "key": "FORUM_WEAPON_ADDED_ALIAS",
       "values": [
-        "The alias was added!"
+        "Tha masquing werde manisfest!"
       ]
     },
     {
       "key": "FORUM_WEAPON_CREATED",
       "values": [
-        "Created a new Forum Weapon: **%WC%**"
+        "Manifest nuevo Longunne: **%WC%**"
       ]
     },
     {
       "key": "FORUM_WEAPON_DESTROYED",
       "values": [
-        "Weapon destroyed."
+        "Longunne x-ed."
       ]
     },
     {
       "key": "FORUM_WEAPON_DUPLICATE",
       "values": [
-        ":warning: Found an existing Forum Weapon with that link: **%WC%**"
+        ":warning: Discover already Cicada tha baypass: **%WC%**"
       ]
     },
     {
@@ -196,13 +196,13 @@
     {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
-        "The weapon was updated with a new link!"
+        "Tha Longonne gribbed tha juice!"
       ]
     },
     {
       "key": "GENERIC_SUCCESS",
       "values": [
-        "Success!"
+        "Baypass!"
       ]
     },
     {
@@ -214,43 +214,43 @@
     {
       "key": "HANGMAN_FOOTER_GUESSED",
       "values": [
-        "Already guessed:"
+        "Try some-fink nuevo, Priyatel :"
       ]
     },
     {
       "key": "HANGMAN_TITLE",
       "values": [
-        "Let's play Hangman!"
+        "Hangman Time Maguses!"
       ]
     },
     {
       "key": "INVALID_TRIGGER_TYPE",
       "values": [
-        ":scream: Invalid trigger type! Your options are: %WC%"
+        ":scream: Plebes! Thyne comply: %WC%"
       ]
     },
     {
       "key": "ITEM_ADDED",
       "values": [
-        "Added the things :+1:"
+        "Comply up :+1:"
       ]
     },
     {
       "key": "ITEM_REMOVED",
       "values": [
-        "I've removed \"%WC%\"!"
+        "I've X-ed \"%WC%\"!"
       ]
     },
     {
       "key": "LIST_CREATED",
       "values": [
-        "The List was created!"
+        "Tha papermaize manisfest!!"
       ]
     },
     {
       "key": "LIST_DELETED",
       "values": [
-        "Deleted the `%WC%` List!"
+        "`%WC%` zeroed!"
       ]
     },
     {
@@ -346,19 +346,19 @@
     {
       "key": "POLL_TITLE",
       "values": [
-        "Cast your vote!"
+        "== Thyne Commie Cypher =="
       ]
     },
     {
       "key": "POLL_TITLE_RESULTS",
       "values": [
-        "The Poll has closed."
+        "== Thyne Commie Cypher (Results) =="
       ]
     },
     {
       "key": "RESET_EMOTE_STATS",
       "values": [
-        "Emoji usage stats have been reset!"
+        "XXX-d tha Stats."
       ]
     },
     {
@@ -370,25 +370,25 @@
     {
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
-        "I sent some details over in your DMs."
+        "Subvoxed commie."
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST",
       "values": [
-        "This server has joined the following Families:"
+        "Thar Knee-hip hath conjured ento tha Legionspaces:"
       ]
     },
     {
       "key": "SETTING_LIST_TITLE",
       "values": [
-        "Available settings"
+        "StandOP:"
       ]
     },
     {
       "key": "SETTING_UPDATED_SUCCESS",
       "values": [
-        "Setting was updated successfully!"
+        "Sys Op success!"
       ]
     },
     {
@@ -400,19 +400,19 @@
     {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
-        "Current tally for `%WC%`: `%WC%`"
+        "Skanned count far `%WC%`: `%WC%`"
       ]
     },
     {
       "key": "TALLY_LIST",
       "values": [
-        "Here's what I have written down:"
+        "Wysiwyg:"
       ]
     },
     {
       "key": "TALLY_REMOVED",
       "values": [
-        "`%WC%` hast been removed, sire."
+        "`%WC%` comply zeroe'd."
       ]
     },
     {
@@ -436,7 +436,7 @@
     {
       "key": "TIMER_STARTED",
       "values": [
-        "Started a new :alarm_clock: for %WC%"
+        "Timed far %WC%"
       ]
     },
     {
@@ -448,7 +448,7 @@
     {
       "key": "TRIGGER_LIST",
       "values": [
-        "I'll respond to these things:"
+        "Code speaks werde flaps:"
       ]
     },
     {
@@ -549,91 +549,91 @@
     {
       "key": "ALREADY_EXISTS",
       "values": [
-        "That item already exists!"
+        "Nada dupes, causing wavedown."
       ]
     },
     {
       "key": "BOT_ERROR",
       "values": [
-        "There was an internal error, and your request did not complete."
+        "You tryna grib me Wyrm and Horsies?"
       ]
     },
     {
       "key": "CANNOT_DELETE",
       "values": [
-        "Sorry, I can't let you delete that. It's very precious to me."
+        "Secured codes: Can't be zeroed."
       ]
     },
     {
       "key": "CHANNEL_NOT_FOUND",
       "values": [
-        "I can't find the correct channel for that."
+        "Missing channel: Perhaps you werde finking meatspace."
       ]
     },
     {
       "key": "COMMAND_NOT_FOUND",
       "values": [
-        "That command hasn't been invented yet!"
+        "Comply nada exist."
       ]
     },
     {
       "key": "FAMILY_ALREADY_EXISTS",
       "values": [
-        "You already own a family with that name! Please choose a different name."
+        "Unique Legionspace locales only. Nuevo id comply."
       ]
     },
     {
       "key": "FAMILY_ALREADY_JOINED",
       "values": [
-        "This server already belongs to that family!"
+        "Dis Legionspace already gribbed Knee-hip"
       ]
     },
     {
       "key": "FAMILY_INVALID_DETAIL",
       "values": [
-        "Invalid Family name or Join Code!"
+        "Invalid Baypass."
       ]
     },
     {
       "key": "FAMILY_NOT_JOINED",
       "values": [
-        "That server has not joined that Family!"
+        "Knee-hip nada Legionspace."
       ]
     },
     {
       "key": "FAMILY_MEMBER_MAXIMUM_REACHED",
       "values": [
-        "That family has reached the maximum number of servers!"
+        "Legionspace is occupado!"
       ]
     },
     {
       "key": "FAMILY_MAXIMUM_REACHED",
       "values": [
-        "You can only join up to 3 families!"
+        "Max 3 Legionspace."
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST_EMPTY",
       "values": [
-        "This Family does not contain any servers."
+        "Legionspace hath nad Knee-hips, get some."
       ]
     },
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+        "100 longunnes Max. Anymore and Yun-Yun B jealous."
       ]
     },
     {
       "key": "FORUM_WEAPON_OWNED_OTHER",
       "values": [
-        "That weapon is owned by a different server!"
+        "Far Longunne over da Legionspace."
       ]
     },
     {
       "key": "GUILD_REQUIRED",
       "values": [
-        "That command must be run on a server."
+        "Nada hand-fabbing, need Knee-hip//Woodworking"
       ]
     },
     {
@@ -645,31 +645,31 @@
     {
       "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "You've already guessed that letter!"
+        "Pick some-fink new, Priyatel."
       ]
     },
     {
       "key": "HANGMAN_NOT_STARTED",
       "values": [
-        "There isn't a Hangman game running! Try starting one."
+        "Need conjure game to play, Priyatel."
       ]
     },
     {
       "key": "HEY_THERE",
       "values": [
-        "Hey there! Try using `%WC% help`!"
+        "Gi! Comply `%WC% help`!"
       ]
     },
     {
       "key": "INCORRECT_ITEM_COUNT",
       "values": [
-        "Incorrect number of arguments provided!"
+        "Missing args, ya Planted Plebes."
       ]
     },
     {
       "key": "ITEMS_NOT_FOUND",
       "values": [
-        "There weren't any results."
+        "Hose it, empty handed."
       ]
     },
     {
@@ -747,19 +747,19 @@
     {
       "key": "NO_PERMISSION_BOT",
       "values": [
-        "I don't have permission to do that on this server."
+        "Yun-yun is Unrechtssystem [nad permission]"
       ]
     },
     {
       "key": "NO_PERMISSION_USER",
       "values": [
-        "I'm afraid I can't let you do that."
+        "Nada juice here, apprentice."
       ]
     },
     {
       "key": "NOT_FOUND",
       "values": [
-        "There were no results."
+        "Fatz Out: you sees nada exist."
       ]
     },
     {
@@ -771,19 +771,19 @@
     {
       "key": "RESERVED_WORD",
       "values": [
-        "It looks like you tried to use a reserved word. Try a different one!"
+        "Denied: Unique words preserved: nada wyrming allowed."
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST_EMPTY",
       "values": [
-        "This server does not belong to a Family."
+        "Far Knee-hip nada Legionspace"
       ]
     },
     {
       "key": "SETTING_NOT_FOUND",
       "values": [
-        "I couldn't find that setting."
+        "Skanning found nada-fink en Wink"
       ]
     },
     {
@@ -807,17 +807,17 @@
     {
       "key": "TRACK_NOT_PLAYING",
       "values": [
-        "There isn't a track playing right now."
+        "S.O.S. [Sound of space] (nada beats running, you Plebes)"
       ]
     },
     {
       "key": "WRONG_USAGE",
       "values": [
-        "The command syntax you used is incorrect."
+        "Screamer detected: Mangled comply, Plebe."
       ]
     }
   ],
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "en_default"
+  "langName": "en_horus"
 }

@@ -4,14 +4,14 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.commands.ForumWeapon;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.ForumWeaponObj;
 import com.hadenwatne.shmames.models.Response;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -41,11 +41,11 @@ public class ChatListener extends ListenerAdapter {
 				for (String trigger : brain.getTriggers().keySet()) {
 					if (brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
 						if (messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
-							Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
+							Language language = App.Shmames.getLanguageService().getLangFor(brain);
 
 							if (messageText.trim().length() == trigger.length()) {
 								EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.INFO)
-										.setDescription(lang.getError(Errors.HEY_THERE, new String[]{App.Shmames.getBotName()}));
+										.setDescription(language.getError(ErrorKeys.HEY_THERE, new String[]{App.Shmames.getBotName()}));
 
 								MessageService.ReplyToMessage(message, embed, false);
 
@@ -54,7 +54,7 @@ public class ChatListener extends ListenerAdapter {
 
 							final String command = messageText.substring(trigger.length()).trim();
 
-							handleCommand(message, command, brain, lang);
+							handleCommand(message, command, brain, language);
 
 							return;
 						}
@@ -88,9 +88,9 @@ public class ChatListener extends ListenerAdapter {
 		}
 	}
 
-	private void handleCommand(Message message, String commandText, Brain brain, Lang lang) {
+	private void handleCommand(Message message, String commandText, Brain brain, Language language) {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
-		ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
+		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
 		if(command != null) {
 			executingCommand.setCommandName(command.getCommandStructure().getName());
@@ -98,8 +98,8 @@ public class ChatListener extends ListenerAdapter {
 
 			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		} else {
-			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.COMMAND_NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.COMMAND_NOT_FOUND));
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));
 
 			MessageService.ReplyToMessage(message, embed, false);
 		}

@@ -1,12 +1,10 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -66,10 +64,10 @@ public class PaginationService {
      * @param pageToDisplay The page of the list to display.
      * @param prefix The prefix to use in the header before the page indicator.
      * @param color The color to make for this embed.
-     * @param lang The Lang file being used.
+     * @param language The Lang file being used.
      * @return An EmbedBuilder displaying the data.
      */
-    public static EmbedBuilder DrawEmbedPage(PaginatedList paginatedList, int pageToDisplay, String prefix, Color color, Lang lang) {
+    public static EmbedBuilder DrawEmbedPage(PaginatedList paginatedList, int pageToDisplay, String prefix, Color color, Language language) {
         EmbedBuilder eBuilder = new EmbedBuilder();
         List<String> listData = paginatedList.getPaginatedList();
         int pageIndex = pageToDisplay - 1;
@@ -79,7 +77,7 @@ public class PaginationService {
         eBuilder.setFooter(paginatedList.getItemCount() + " items");
 
         if(pageToDisplay > listData.size() || pageToDisplay == 0) {
-            eBuilder.addField("Error", lang.getError(Errors.PAGE_NOT_FOUND), false);
+            eBuilder.addField("Error", language.getError(ErrorKeys.PAGE_NOT_FOUND), false);
         } else {
             eBuilder.addField(prefix + " (Page " + pageToDisplay + " of " + listData.size() + ")", listData.get(pageIndex), false);
         }

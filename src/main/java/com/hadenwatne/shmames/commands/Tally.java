@@ -5,13 +5,13 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
@@ -78,26 +78,26 @@ public class Tally extends Command {
 	@Override
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 
 		switch (subCommand) {
 			case "add":
-				return cmdAdd(lang, brain, executingCommand.getCommandArguments());
+				return cmdAdd(language, brain, executingCommand.getCommandArguments());
 			case "drop":
-				return cmdDrop(lang, brain, executingCommand.getCommandArguments());
+				return cmdDrop(language, brain, executingCommand.getCommandArguments());
 			case "set":
-				return cmdSet(lang, brain, executingCommand.getCommandArguments());
+				return cmdSet(language, brain, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(lang, brain, executingCommand);
+				return cmdList(language, brain, executingCommand);
 			case "search":
-				return cmdSearch(lang, brain, executingCommand.getCommandArguments());
+				return cmdSearch(language, brain, executingCommand.getCommandArguments());
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdAdd(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdAdd(Language language, Brain brain, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) + 1;
@@ -105,10 +105,10 @@ public class Tally extends Command {
 		brain.getTallies().put(tally, newTally);
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+				.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
 	}
 
-	private EmbedBuilder cmdDrop(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdDrop(Language language, Brain brain, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) - 1;
@@ -116,24 +116,24 @@ public class Tally extends Command {
 		if (newTally == -1) {
 			// Never existed
 
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		} else if (newTally == 0) {
 			// Existed and removed
 			brain.getTallies().remove(tally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.TALLY_REMOVED, new String[]{tally}));
+					.setDescription(language.getMsg(LanguageKeys.TALLY_REMOVED, new String[]{tally}));
 		} else {
 			// Exists and lowers by 1
 			brain.getTallies().put(tally, newTally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+					.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
 		}
 	}
 
-	private EmbedBuilder cmdSet(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdSet(Language language, Brain brain, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		int count = args.getAsInteger("count");
 		String tally = formatTally(rawTally);
@@ -142,16 +142,16 @@ public class Tally extends Command {
 			brain.getTallies().put(tally, count);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(count)}));
+					.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(count)}));
 		} else {
 			brain.getTallies().remove(tally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.TALLY_REMOVED, new String[]{tally}));
+					.setDescription(language.getMsg(LanguageKeys.TALLY_REMOVED, new String[]{tally}));
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdList(Language language, Brain brain, ExecutingCommand executingCommand) {
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
 		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "tally-list");
 		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
@@ -171,10 +171,10 @@ public class Tally extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.TALLY_LIST), Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKeys.TALLY_LIST), Color.ORANGE, language);
 	}
 
-	private EmbedBuilder cmdSearch(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdSearch(Language language, Brain brain, ExecutingCommandArguments args) {
 		String rawTally = args.getAsString("tallyName");
 		String tally = formatTally(rawTally);
 		List<String> searchResults = new ArrayList<>();
@@ -188,7 +188,7 @@ public class Tally extends Command {
 
 		EmbedBuilder eBuilder = response(EmbedType.INFO, "Search");
 
-		eBuilder.addField(lang.getMsg(Langs.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
+		eBuilder.addField(language.getMsg(LanguageKeys.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
 
 		return eBuilder;
 	}

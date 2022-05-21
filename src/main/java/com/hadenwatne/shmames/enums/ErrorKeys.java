@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.enums;
 
-public enum Errors {
+public enum ErrorKeys {
 	ALREADY_EXISTS,
 	BOT_ERROR,
 	CANNOT_DELETE,
@@ -20,7 +20,6 @@ public enum Errors {
 	HANGMAN_ALREADY_STARTED,
 	HANGMAN_NOT_STARTED,
 	HEY_THERE,
-	INCOMPLETE,
 	INCORRECT_ITEM_COUNT,
 	ITEMS_NOT_FOUND,
 	MUSIC_NOT_IN_CHANNEL,

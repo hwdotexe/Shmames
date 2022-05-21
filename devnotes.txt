@@ -4,9 +4,8 @@
 [1,2] Convert more strings to Lang constants
 
 [2,1] Languages
-    - Fix messages not deserializing correctly. Gson -> LinkedHashMap throws an error when keys are removed because null is a duplicate key
     - Consolidate errors & messages if any are too similar
-    - Rename lang messages
+    - Rename language messages
     - Language combine enum and default values?
 
 [1,1] More permissions

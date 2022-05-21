@@ -9,7 +9,7 @@ import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -74,22 +74,22 @@ public class Response extends Command {
 	@Override
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 
 		switch (subCommand) {
 			case "add":
-				return cmdAdd(lang, brain, executingCommand.getCommandArguments());
+				return cmdAdd(language, brain, executingCommand.getCommandArguments());
 			case "drop":
-				return cmdDrop(lang, brain, executingCommand.getCommandArguments());
+				return cmdDrop(language, brain, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(lang, brain, executingCommand);
+				return cmdList(language, brain, executingCommand);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdAdd(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdAdd(Language language, Brain brain, ExecutingCommandArguments args) {
 		String triggerType = args.getAsString("triggerType");
 		String responseType = args.getAsString("responseType");
 		String responseText = args.getAsString("responseText");
@@ -99,10 +99,10 @@ public class Response extends Command {
 		brain.getTriggerResponses().add(new com.hadenwatne.shmames.models.Response(TriggerType.byName(triggerType), responseText, rType));
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(lang.getMsg(Langs.ITEM_ADDED));
+				.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
 	}
 
-	private EmbedBuilder cmdDrop(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdDrop(Language language, Brain brain, ExecutingCommandArguments args) {
 		String triggerType = args.getAsString("triggerType");
 		int responseIndex = args.getAsInteger("responseIndex");
 
@@ -113,14 +113,14 @@ public class Response extends Command {
 			brain.removeTriggerResponse(r);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.ITEM_REMOVED, new String[]{ r.getResponse() }));
+					.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{ r.getResponse() }));
 		}else {
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdList(Language language, Brain brain, ExecutingCommand executingCommand) {
 		String triggerType = executingCommand.getCommandArguments().getAsString("triggerType").toUpperCase();
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
 		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "response-list", triggerType);
@@ -135,8 +135,8 @@ public class Response extends Command {
 			List<com.hadenwatne.shmames.models.Response> responses = brain.getResponsesFor(TriggerType.byName(triggerType));
 
 			if(responses.size() == 0) {
-				return response(EmbedType.ERROR, Errors.ITEMS_NOT_FOUND.name())
-						.setDescription(lang.getError(Errors.ITEMS_NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKeys.ITEMS_NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
 			}
 
 			List<String> responseTexts = new ArrayList<>();
@@ -151,6 +151,6 @@ public class Response extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), triggerType + " Responses", Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), triggerType + " Responses", Color.ORANGE, language);
 	}
 }

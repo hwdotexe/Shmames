@@ -3,13 +3,13 @@
     {
       "key": "ADD_TRIGGER_SUCCESS",
       "values": [
-        "I will now send a `%WC%` response when I hear `%WC%`!"
+        "I be singin' a `%WC%` shanty when the Lookout calls `%WC%`!"
       ]
     },
     {
       "key": "BLAME",
       "values": [
-        "I blame %WC%"
+        "Arr, it be because of %WC%"
       ]
     },
     {
@@ -53,7 +53,7 @@
     {
       "key": "CHOOSE",
       "values": [
-        "I choose: %WC%!"
+        "The Landlubber say: %WC%!"
       ]
     },
     {
@@ -81,7 +81,7 @@
     {
       "key": "EMOTE_STATS_TITLE",
       "values": [
-        "Here are your emoji tallies:"
+        "Yarr! The Coxswain's been keepin' count:"
       ]
     },
     {
@@ -112,73 +112,73 @@
     {
       "key": "FAMILY_CREATED",
       "values": [
-        "The Family was created! Now let's go add other servers!"
+        "The Man-o'-War be ready! Weigh Anchor!"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE",
       "values": [
-        "**Join Code for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
+        "**Arr, yer Join Code for the S.S. %WC% is:**%BR%`%WC%`%BR%_Use it wisely, it only works once!_"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE_INVALIDATED",
       "values": [
-        "[The Join Code has been invalidated for security purposes]"
+        "[The Cap'n tore up the contract! Ye must make a new one to try again.]"
       ]
     },
     {
       "key": "FAMILY_JOINED",
       "values": [
-        "Added **%WC%** to the **%WC%** Family!"
+        "Recruited **%WC%** to the Jolly Boat **%WC%**!"
       ]
     },
     {
       "key": "FAMILY_REMOVED_SERVER",
       "values": [
-        "Removed **%WC%** from the **%WC%** Family!"
+        "Made **%WC%** walk the plank from the Brigantine **%WC%**!"
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST",
       "values": [
-        "The \"%WC%\" Family contains the following servers:"
+        "The Brigantine \"%WC%\" has recruited the following hands:"
       ]
     },
     {
       "key": "FEEDBACK_COOLDOWN",
       "values": [
-        "Please wait a bit before submitting more feedback."
+        "The Cap'n is fed up with yer yappin'! He be takin' a caulk. Ye best not run a rig."
       ]
     },
     {
       "key": "FEEDBACK_SENT",
       "values": [
-        ":notepad_spiral: Your feedback has been noted. Thanks!%BR%You can report again in **5 minutes**."
+        "The Cap'n has received yer request. Ye best wait a few ticks o' ye pocketwatch."
       ]
     },
     {
       "key": "FORUM_WEAPON_ADDED_ALIAS",
       "values": [
-        "The alias was added!"
+        "A pirate always be needin' a good alias. That one'll do."
       ]
     },
     {
       "key": "FORUM_WEAPON_CREATED",
       "values": [
-        "Created a new Forum Weapon: **%WC%**"
+        "Arr! We be sailin' with a new gun: **%WC%**"
       ]
     },
     {
       "key": "FORUM_WEAPON_DESTROYED",
       "values": [
-        "Weapon destroyed."
+        "Ye weapon's got a taste of the cat!"
       ]
     },
     {
       "key": "FORUM_WEAPON_DUPLICATE",
       "values": [
-        ":warning: Found an existing Forum Weapon with that link: **%WC%**"
+        ":warning: Arr! Ye breathren o' the coast may 'ave ye blunderbuss already: **%WC%**"
       ]
     },
     {
@@ -196,13 +196,13 @@
     {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
-        "The weapon was updated with a new link!"
+        "New grape shots be loaded in the cannon!"
       ]
     },
     {
       "key": "GENERIC_SUCCESS",
       "values": [
-        "Success!"
+        "Arr!"
       ]
     },
     {
@@ -214,31 +214,31 @@
     {
       "key": "HANGMAN_FOOTER_GUESSED",
       "values": [
-        "Already guessed:"
+        "Past plunders:"
       ]
     },
     {
       "key": "HANGMAN_TITLE",
       "values": [
-        "Let's play Hangman!"
+        "A Dance with Jack Ketch!"
       ]
     },
     {
       "key": "INVALID_TRIGGER_TYPE",
       "values": [
-        ":scream: Invalid trigger type! Your options are: %WC%"
+        "Ye disgrace! Hasn't the Cap'n said ye can only use %WC%?"
       ]
     },
     {
       "key": "ITEM_ADDED",
       "values": [
-        "Added the things :+1:"
+        "Ye booty be placed in the coffers!"
       ]
     },
     {
       "key": "ITEM_REMOVED",
       "values": [
-        "I've removed \"%WC%\"!"
+        "\"%WC%\" has danced the hempen jig!"
       ]
     },
     {
@@ -346,19 +346,19 @@
     {
       "key": "POLL_TITLE",
       "values": [
-        "Cast your vote!"
+        "Parley with the cap'n!"
       ]
     },
     {
       "key": "POLL_TITLE_RESULTS",
       "values": [
-        "The Poll has closed."
+        "Ye parley is o'er!"
       ]
     },
     {
       "key": "RESET_EMOTE_STATS",
       "values": [
-        "Emoji usage stats have been reset!"
+        "Scupper that!"
       ]
     },
     {
@@ -370,25 +370,25 @@
     {
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
-        "I sent some details over in your DMs."
+        "Arr, be lookin' fer me message in a bottle."
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST",
       "values": [
-        "This server has joined the following Families:"
+        "We got the king's shilling for the followin':"
       ]
     },
     {
       "key": "SETTING_LIST_TITLE",
       "values": [
-        "Available settings"
+        "Treasure maps:"
       ]
     },
     {
       "key": "SETTING_UPDATED_SUCCESS",
       "values": [
-        "Setting was updated successfully!"
+        "The treasure map be marked with a new spot!"
       ]
     },
     {
@@ -400,19 +400,19 @@
     {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
-        "Current tally for `%WC%`: `%WC%`"
+        "The Boatswain's new count fer `%WC%`: `%WC%`"
       ]
     },
     {
       "key": "TALLY_LIST",
       "values": [
-        "Here's what I have written down:"
+        "Here be what is kept in the ship manifest:"
       ]
     },
     {
       "key": "TALLY_REMOVED",
       "values": [
-        "`%WC%` hast been removed, sire."
+        "`%WC%` met the rope's end."
       ]
     },
     {
@@ -436,7 +436,7 @@
     {
       "key": "TIMER_STARTED",
       "values": [
-        "Started a new :alarm_clock: for %WC%"
+        "Fire in the hole in %WC%!"
       ]
     },
     {
@@ -448,7 +448,7 @@
     {
       "key": "TRIGGER_LIST",
       "values": [
-        "I'll respond to these things:"
+        "The lookout be watchin' fer:"
       ]
     },
     {
@@ -549,127 +549,127 @@
     {
       "key": "ALREADY_EXISTS",
       "values": [
-        "That item already exists!"
+        "We plundered that doubloon already!"
       ]
     },
     {
       "key": "BOT_ERROR",
       "values": [
-        "There was an internal error, and your request did not complete."
+        "Arr! We be bilged on her anchor!"
       ]
     },
     {
       "key": "CANNOT_DELETE",
       "values": [
-        "Sorry, I can't let you delete that. It's very precious to me."
+        "Arr, the Cap'n not be lettin' ye blow the man down."
       ]
     },
     {
       "key": "CHANNEL_NOT_FOUND",
       "values": [
-        "I can't find the correct channel for that."
+        "Me compass needle be pointin' wrong."
       ]
     },
     {
       "key": "COMMAND_NOT_FOUND",
       "values": [
-        "That command hasn't been invented yet!"
+        "Get ye sea legs, matey! That order hasn't been called yet."
       ]
     },
     {
       "key": "FAMILY_ALREADY_EXISTS",
       "values": [
-        "You already own a family with that name! Please choose a different name."
+        "Blimey! Another flag be usin' that name. Choose another!"
       ]
     },
     {
       "key": "FAMILY_ALREADY_JOINED",
       "values": [
-        "This server already belongs to that family!"
+        "This vessel already be flyin' the Jolly Roger!"
       ]
     },
     {
       "key": "FAMILY_INVALID_DETAIL",
       "values": [
-        "Invalid Family name or Join Code!"
+        "Arr, ye flag be invalid."
       ]
     },
     {
       "key": "FAMILY_NOT_JOINED",
       "values": [
-        "That server has not joined that Family!"
+        "Shiver me timbers! They not be flyin' the flag!"
       ]
     },
     {
       "key": "FAMILY_MEMBER_MAXIMUM_REACHED",
       "values": [
-        "That family has reached the maximum number of servers!"
+        "Blimey! Ye vessel be loaded to the gunwales!"
       ]
     },
     {
       "key": "FAMILY_MAXIMUM_REACHED",
       "values": [
-        "You can only join up to 3 families!"
+        "Ye mast has room for 3 flags only!"
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST_EMPTY",
       "values": [
-        "This Family does not contain any servers."
+        "Arr! There be nobody flyin' under the flag."
       ]
     },
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+        "Blimey! Ye vessel be loaded to the gunwales!"
       ]
     },
     {
       "key": "FORUM_WEAPON_OWNED_OTHER",
       "values": [
-        "That weapon is owned by a different server!"
+        "Arr, that powder keg be on a different lugger."
       ]
     },
     {
       "key": "GUILD_REQUIRED",
       "values": [
-        "That command must be run on a server."
+        "Arr! That be needin' a proper vessel to use!"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
-        "There's already a Hangman game in %WC%"
+        "Arr! A man's already hangin' in %WC%!"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "You've already guessed that letter!"
+        "Ye've already hung that man!"
       ]
     },
     {
       "key": "HANGMAN_NOT_STARTED",
       "values": [
-        "There isn't a Hangman game running! Try starting one."
+        "The noose be cold!"
       ]
     },
     {
       "key": "HEY_THERE",
       "values": [
-        "Hey there! Try using `%WC% help`!"
+        "Aye! Call ye Cap'n with `%WC% help`!"
       ]
     },
     {
       "key": "INCORRECT_ITEM_COUNT",
       "values": [
-        "Incorrect number of arguments provided!"
+        "Arr, ye pieces don't be addin' up."
       ]
     },
     {
       "key": "ITEMS_NOT_FOUND",
       "values": [
-        "There weren't any results."
+        "Blimey! The coffers be empty!"
       ]
     },
     {
@@ -747,19 +747,19 @@
     {
       "key": "NO_PERMISSION_BOT",
       "values": [
-        "I don't have permission to do that on this server."
+        "Arr, they give no quarter to the crew."
       ]
     },
     {
       "key": "NO_PERMISSION_USER",
       "values": [
-        "I'm afraid I can't let you do that."
+        "Arr, the Cap'n won't give ye a nipperkin!"
       ]
     },
     {
       "key": "NOT_FOUND",
       "values": [
-        "There were no results."
+        "Arr! The coffers be empty!"
       ]
     },
     {
@@ -771,19 +771,19 @@
     {
       "key": "RESERVED_WORD",
       "values": [
-        "It looks like you tried to use a reserved word. Try a different one!"
+        "Arr, that word be takin' by the Cap'n himself."
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST_EMPTY",
       "values": [
-        "This server does not belong to a Family."
+        "Shiver me timbers! There be no flag we flyin'"
       ]
     },
     {
       "key": "SETTING_NOT_FOUND",
       "values": [
-        "I couldn't find that setting."
+        "The compass be pointin' in the wrong direction."
       ]
     },
     {
@@ -807,17 +807,17 @@
     {
       "key": "TRACK_NOT_PLAYING",
       "values": [
-        "There isn't a track playing right now."
+        "The lass be keepin' quiet..."
       ]
     },
     {
       "key": "WRONG_USAGE",
       "values": [
-        "The command syntax you used is incorrect."
+        "Blasted Swab! That not be how it's done."
       ]
     }
   ],
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "en_default"
+  "langName": "en_pirate"
 }

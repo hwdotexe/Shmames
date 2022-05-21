@@ -3,128 +3,91 @@
     {
       "key": "ADD_TRIGGER_SUCCESS",
       "values": [
-        "I will now send a `%WC%` response when I hear `%WC%`!"
+        "Sure, I guess I'll send a `%WC%` message when you say `%WC%`, if you're lucky."
       ]
     },
     {
       "key": "BLAME",
       "values": [
-        "I blame %WC%"
+        "I bet it's probably %WC%.",
+        "Well _now_ you ask for my advice. It's totally %WC%."
       ]
     },
     {
       "key": "BLAME_OPTIONS",
       "values": [
-        "Obama",
-        "Trump",
-        "Blizzard",
-        "China",
-        "EA",
-        "4Chan",
-        "your mom",
-        "the economy",
-        "Big Pharma",
-        "India",
-        "Nigeria",
-        "Mexico",
-        "Chemtrails",
-        "GMOs",
-        "vaccines",
-        "#VapeLife",
-        "weebs",
-        "essential oils",
-        "Karen",
-        "Epic Games",
-        "video games",
-        "hip hop",
-        "Fortnite",
-        "Source Filmmaker",
-        "Discord",
-        "Coronavirus",
-        "Apple",
-        "Google",
-        "Starbucks",
-        "NASA",
-        "Keanu Reeves",
-        "Oscar the Grouch",
-        "Ohio"
+        "Shinji",
+        "you",
+        "Japan",
+        "my developer",
+        "anyone but me",
+        "Yoko Taro",
+        "Yoshi P",
+        "the rest of this forsaken world",
+        "the idiots I have to put up with",
+        "the boys who just won't tell me how they feel",
+        "the tooth fairy"
       ]
     },
     {
       "key": "CHOOSE",
       "values": [
-        "I choose: %WC%!"
+        "%WC%, but it's not like I care or anything.",
+        "I'm so glad you know I know best! Obviously, it's %WC%.",
+        "Eh, I guess I'd choose %WC%."
       ]
     },
     {
       "key": "EIGHT_BALL_OPTIONS",
       "values": [
-        "Definitely.",
-        "Without a doubt.",
-        "Yes - of course.",
-        "You can bet on it.",
-        "Most likely.",
-        "It's looking good!",
-        "Duh.",
-        "Signs point to yes.",
-        "Why don't you ask me later?",
-        "Don't count on it.",
-        "My reply is no.",
-        "My sources say no.",
-        "It's not looking good.",
-        "I highly doubt it.",
-        "Nope.",
-        "No way.",
-        "That's a negative."
+        "Like that would ever happen.",
+        "I guess so, if you really tried.",
+        "No way, stop wasting my time!",
+        "Sure, but just barely.",
+        "You've got to be insane to ask me that!",
+        "Are you joking? It sounds like you're joking. No.",
+        "Yes! I thought you'd never ask!",
+        "As if! Keep dreaming.",
+        "Of course, I've been waiting YEARS for you to ask!",
+        "You _still_ haven't moved on from that?",
+        "Probably.",
+        "Probably not.",
+        "If you tapped your heels three times, there's a chance.",
+        "Nah, and there's nothing you can do to change it either."
       ]
     },
     {
       "key": "EMOTE_STATS_TITLE",
       "values": [
-        "Here are your emoji tallies:"
+        "You sure do use these a lot:"
       ]
     },
     {
       "key": "ENHANCE_OPTIONS",
       "values": [
-        "Done - %WC% is now solid gold.",
-        "Done - %WC% now smells nice.",
-        "Done - %WC% is now 10GP richer.",
-        "Done - %WC% won a Nobel Prize.",
-        "Done - %WC% now has friends.",
-        "Done - %WC% just made the newspaper",
-        "Done - %WC% is now part Dragon",
-        "Done - %WC% now owns the One Ring",
-        "Done - %WC% is now a wizard, Harry.",
-        "Done - %WC% came back from the dead.",
-        "Done - %WC% is now a weeb.",
-        "Done - %WC% just won the lottery.",
-        "Done - %WC% now plays Minecraft.",
-        "Done - %WC% can now rap mad rhymes.",
-        "Done - %WC%'s ex lover just moved to Madagascar.",
-        "Done - %WC% is now good at archery.",
-        "Done - %WC% can now cast magic.",
-        "Done - %WC% now has a college degree",
-        "Done - %WC% just invented the lightsaber.",
-        "Done - %WC% is now radioactive."
+        "Okay! %WC% isn't a total loser anymore.",
+        "Of course: %WC% took a bath for once.",
+        "Right! I tossed %WC% out the window. Problem solved!",
+        "Sure! %WC% finally got in the robot.",
+        "Yeah, sure, okay. %WC% noticed me for once!"
       ]
     },
     {
       "key": "FAMILY_CREATED",
       "values": [
-        "The Family was created! Now let's go add other servers!"
+        "You want to make a Family? Nobody would ever join something like that! Would they?"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE",
       "values": [
-        "**Join Code for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
+        "**Join Code for %WC%**%BR%`%WC%`%BR%_Use it to join a server to the Family, or whatever, like I care._"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE_INVALIDATED",
       "values": [
-        "[The Join Code has been invalidated for security purposes]"
+        "[MAKE THAT CODE AGAIN, BAKA]"
       ]
     },
     {
@@ -148,37 +111,37 @@
     {
       "key": "FEEDBACK_COOLDOWN",
       "values": [
-        "Please wait a bit before submitting more feedback."
+        "Oh please, hold your applause for a few minutes! Could you do that?"
       ]
     },
     {
       "key": "FEEDBACK_SENT",
       "values": [
-        ":notepad_spiral: Your feedback has been noted. Thanks!%BR%You can report again in **5 minutes**."
+        "You're kidding me! Fine, I'll write this down, but just this once."
       ]
     },
     {
       "key": "FORUM_WEAPON_ADDED_ALIAS",
       "values": [
-        "The alias was added!"
+        "Oh, sure, you just *love* make things more complicated!"
       ]
     },
     {
       "key": "FORUM_WEAPON_CREATED",
       "values": [
-        "Created a new Forum Weapon: **%WC%**"
+        "Yeah, okay, use **%WC%** and just see what happens."
       ]
     },
     {
       "key": "FORUM_WEAPON_DESTROYED",
       "values": [
-        "Weapon destroyed."
+        "You finally got rid of that piece of trash!"
       ]
     },
     {
       "key": "FORUM_WEAPON_DUPLICATE",
       "values": [
-        ":warning: Found an existing Forum Weapon with that link: **%WC%**"
+        "Are you stupid?! This looks just like **%WC%**!"
       ]
     },
     {
@@ -190,19 +153,19 @@
     {
       "key": "FORUM_WEAPONS_PRUNED",
       "values": [
-        "Pruned **%WC%** unused Forum Weapons!"
+        "I took care of **%WC%** unused Forum Weapons, I hope you didn't need them..."
       ]
     },
     {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
-        "The weapon was updated with a new link!"
+        "Great, the link changed, but the name stayed the same."
       ]
     },
     {
       "key": "GENERIC_SUCCESS",
       "values": [
-        "Success!"
+        "Yeah, sure, whatever. _Baka._"
       ]
     },
     {
@@ -214,151 +177,151 @@
     {
       "key": "HANGMAN_FOOTER_GUESSED",
       "values": [
-        "Already guessed:"
+        "Your life failures:"
       ]
     },
     {
       "key": "HANGMAN_TITLE",
       "values": [
-        "Let's play Hangman!"
+        "Hang a Clone of Yourself:"
       ]
     },
     {
       "key": "INVALID_TRIGGER_TYPE",
       "values": [
-        ":scream: Invalid trigger type! Your options are: %WC%"
+        "Wrong, baka! You need to use %WC%"
       ]
     },
     {
       "key": "ITEM_ADDED",
       "values": [
-        "Added the things :+1:"
+        "You're making me do even MORE? Will you ever do anything yourself?!"
       ]
     },
     {
       "key": "ITEM_REMOVED",
       "values": [
-        "I've removed \"%WC%\"!"
+        "For crying out loud, just do whatever you want. I'll go delete \"%WC%\"."
       ]
     },
     {
       "key": "LIST_CREATED",
       "values": [
-        "The List was created!"
+        "Oh good, the clutz is making lists now!"
       ]
     },
     {
       "key": "LIST_DELETED",
       "values": [
-        "Deleted the `%WC%` List!"
+        "Got rid of that stinky old list, `%WC%`."
       ]
     },
     {
       "key": "LIST_PRIVACY_TOGGLED",
       "values": [
-        "The `%WC%` List is now `%WC%`!"
+        "I guess `%WC%` can be `%WC%` now..."
       ]
     },
     {
       "key": "MUSIC_ADDED_TO_QUEUE",
       "values": [
-        "Added to queue!"
+        "Your taste in music is whatever, but sure, I can play that later."
       ]
     },
     {
       "key": "MUSIC_LOOPING_TOGGLED",
       "values": [
-        "Music looping is now **%WC%**"
+        "Earworm inducer -> **%WC%**"
       ]
     },
     {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
-        "Music Queue looping is now **%WC%**"
+        "Repetitive music -> **%WC%**"
       ]
     },
     {
       "key": "MUSIC_PLAYING",
       "values": [
-        "Playing!"
+        "_This_ is what you listen to?!"
       ]
     },
     {
       "key": "MUSIC_PLAYING_PLAYLIST",
       "values": [
-        "Playing the `%WC%` Playlist!"
+        "Popping in the world's okayest playlist, `%WC%`."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_CREATED",
       "values": [
-        "Created a new Playlist `%WC%`!"
+        "Ta-da, a glorified tupperware named `%WC%`!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
-        "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+        "Yep, turned that mess into `%WC%` with `%WC%` tracks!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_DELETED",
       "values": [
-        "Playlist deleted!"
+        "Bye, Felisha-chan!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_TRACK_ADDED",
       "values": [
-        "Track added!"
+        "If you insist..."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_TRACK_REMOVED",
       "values": [
-        "Track removed!"
+        "It's outta here!"
       ]
     },
     {
       "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Cleared the music queue!"
+        "Why do _I_ have to clean up your mess?"
       ]
     },
     {
       "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Shuffled the music queue!"
+        "Look at what you did now, it's all over the floor!"
       ]
     },
     {
       "key": "MUSIC_QUEUE_REVERSED",
       "values": [
-        "Reversed the music queue!"
+        "Talking backwards now? Maybe I'll be able to understand you better."
       ]
     },
     {
       "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Queued the `%WC%` Playlist!"
+        "Next up! The trainwreck entitled `%WC%`!"
       ]
     },
     {
       "key": "POLL_TITLE",
       "values": [
-        "Cast your vote!"
+        "Your opinion is wrong."
       ]
     },
     {
       "key": "POLL_TITLE_RESULTS",
       "values": [
-        "The Poll has closed."
+        "Look at all these wrong opinions!"
       ]
     },
     {
       "key": "RESET_EMOTE_STATS",
       "values": [
-        "Emoji usage stats have been reset!"
+        "BAAKA! I was gonna use those someday!"
       ]
     },
     {
@@ -370,25 +333,25 @@
     {
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
-        "I sent some details over in your DMs."
+        "Check your DMs, _not like I want to help or anything, but..._"
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST",
       "values": [
-        "This server has joined the following Families:"
+        "You have no friends. I suppose these people will have to do:"
       ]
     },
     {
       "key": "SETTING_LIST_TITLE",
       "values": [
-        "Available settings"
+        "Things you can break:"
       ]
     },
     {
       "key": "SETTING_UPDATED_SUCCESS",
       "values": [
-        "Setting was updated successfully!"
+        "Setting successfully ruined!"
       ]
     },
     {
@@ -400,43 +363,38 @@
     {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
-        "Current tally for `%WC%`: `%WC%`"
+        "Since I keep having to listen to you try to count, I've heard `%WC%` exactly `%WC%` times."
       ]
     },
     {
       "key": "TALLY_LIST",
       "values": [
-        "Here's what I have written down:"
+        "I've counted these up since you can't:"
       ]
     },
     {
       "key": "TALLY_REMOVED",
       "values": [
-        "`%WC%` hast been removed, sire."
+        "What?! You made me keep track of that for _nothing?_"
       ]
     },
     {
       "key": "THOUGHTS_OPTIONS",
       "values": [
-        "That's incredible!",
-        "I love it.",
-        "The best thing all week.",
-        "YAAS QUEEN",
-        "Amazing!",
-        "Fantastic :ok_hand:",
-        "I am indifferent.",
-        "Could be better.",
-        "Ick, no way!",
-        "Just no.",
-        "That is offensive.",
-        "I hate that.",
-        "Get that garbage out of my face!"
+        "That is insulting! Why would you even ask me that?",
+        "It's pretty good, I guess.",
+        "Eww, no way, yuck!",
+        "It's not so bad after you get used to it.",
+        "It cries itself to sleep every night!",
+        "I don't see why I should hate it. Yet.",
+        "Why, do _you_ like it? I think it sucks.",
+        "It's great! Not that _you_ would understand..."
       ]
     },
     {
       "key": "TIMER_STARTED",
       "values": [
-        "Started a new :alarm_clock: for %WC%"
+        "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
       ]
     },
     {
@@ -448,7 +406,7 @@
     {
       "key": "TRIGGER_LIST",
       "values": [
-        "I'll respond to these things:"
+        "I'm not your _dog, Baka!_"
       ]
     },
     {
@@ -460,88 +418,38 @@
     {
       "key": "WHATSHOULDIDO_INTRO_OPTIONS",
       "values": [
-        "I think you should",
-        "I'd love it if you",
-        "My advice is to",
-        "Hmm, perhaps try to",
-        "I know! You should"
+        "Well, if you ask me, you should",
+        "Why should I care if you",
+        "You seem like the kind of person who would",
+        "Why do I have to decide? For all I care, you should",
+        "Instead of bothering me, you should"
       ]
     },
     {
       "key": "WHATSHOULDIDO_OPTIONS",
       "values": [
-        "defile a grave",
-        "rob a candy store",
-        "deface a subway",
-        "steal a baby's candy",
-        "pirate a low-budget film",
-        "start a riot about gas prices",
-        "rewatch the Star Wars sequels",
-        "curse at an old woman",
-        "donate to a shady charity in Saudi Arabia",
-        "prank call insurance companies",
-        "sell drugs to minors",
-        "write a program in PHP",
-        "narrate an adult audiobook",
-        "swap jobs with Mike Rowe",
-        "start a riot about waiting in traffic",
-        "confuse someone with dementia",
-        "throw eggs at a flock of birds",
-        "rent library books, and return them all sticky",
-        "create a reaction video for YouTube",
-        "invite me to other servers >:}",
-        "sell essential oils",
-        "demand to see the manager",
-        "start a Flat Earth rally",
-        "uncover the truth behind 9/11",
-        "vaguepost on Instagram for attention",
-        "play Madden",
-        "scam impressionable old women out of their retirement funds",
-        "get a life",
-        "kick a puppy",
-        "kick a kitten",
-        "start a 37-tweet rant",
-        "steal art for Karma",
-        "sell out to EA",
-        "text while driving",
-        "watch YouTube Trending",
-        "protest public health guidelines",
-        "talk to the hand",
-        "make smalltalk with the sign-spinner",
-        "drink questionable chemicals",
-        "throw a prom in the McDonalds Playplace"
+        "bury that robot in the bottom of the ocean",
+        "apologize for being so rude",
+        "give me flowers and gifts",
+        "pay my rent this month",
+        "just admit your feelings",
+        "stop being such a pervert",
+        "let me win Monopoly next time",
+        "tell me I'm your princess",
+        "roll for initiative",
+        "draw me like one of your French girls...wait, ew, no",
+        "move to Antarctica for all I care"
       ]
     },
     {
       "key": "WHEN_OPTIONS",
       "values": [
-        "In %WC% years",
-        "In %WC% minutes",
-        "%WC% days ago",
-        "When pigs fly",
-        "Absolutely never",
-        "Right now, but in a parallel universe",
-        "Not sure, ask your mom",
-        "%WC% years ago",
-        "Once you stop procrastinating",
-        "Once I get elected Chancellor",
-        "After the heat death of the universe",
-        "In precisely %WC%",
-        "On the next full moon",
-        "When the sand in me hourglass be empty",
-        "Time is subjective",
-        "Time is a tool you can put on the wall",
-        "Probably within %WC% days",
-        "I'd say in %WC% months",
-        "In %WC%? %WC%? Maybe %WC%?",
-        "Between %WC% and %WC% centuries",
-        "Sooner shall %WC% days pass",
-        "%WC% seconds",
-        "%WC% hours, %WC% minutes, and %WC% seconds",
-        "Eventually",
-        "Not in your lifetime, kiddo",
-        "In your dreams",
-        "Right now"
+        "Like that'll ever happen",
+        "Uh, when you turn %WC%, dork",
+        "Close your eyes and count to %WC%",
+        "You kept me waiting for %WC% hours, so you'll be waiting %WC% weeks",
+        "Never! Ew! Not ever!",
+        "In your dreams, loser."
       ]
     }
   ],
@@ -549,49 +457,49 @@
     {
       "key": "ALREADY_EXISTS",
       "values": [
-        "That item already exists!"
+        "Dimwit, you told me about that last time!"
       ]
     },
     {
       "key": "BOT_ERROR",
       "values": [
-        "There was an internal error, and your request did not complete."
+        "This is all your fault!"
       ]
     },
     {
       "key": "CANNOT_DELETE",
       "values": [
-        "Sorry, I can't let you delete that. It's very precious to me."
+        "No! You can't have it! It stays with me!"
       ]
     },
     {
       "key": "CHANNEL_NOT_FOUND",
       "values": [
-        "I can't find the correct channel for that."
+        "And where exactly do you expect me to look?"
       ]
     },
     {
       "key": "COMMAND_NOT_FOUND",
       "values": [
-        "That command hasn't been invented yet!"
+        "Stop making up new commands, _baka!_"
       ]
     },
     {
       "key": "FAMILY_ALREADY_EXISTS",
       "values": [
-        "You already own a family with that name! Please choose a different name."
+        "You already own a family with that name! You're forgetting them _already?_"
       ]
     },
     {
       "key": "FAMILY_ALREADY_JOINED",
       "values": [
-        "This server already belongs to that family!"
+        "This server already belongs to that family! I know you're lonely, but geez!"
       ]
     },
     {
       "key": "FAMILY_INVALID_DETAIL",
       "values": [
-        "Invalid Family name or Join Code!"
+        "Invalid Family name or Join Code! Learn to spell!"
       ]
     },
     {
@@ -603,37 +511,37 @@
     {
       "key": "FAMILY_MEMBER_MAXIMUM_REACHED",
       "values": [
-        "That family has reached the maximum number of servers!"
+        "It's...too crowded! I can't fit any more servers in that family!"
       ]
     },
     {
       "key": "FAMILY_MAXIMUM_REACHED",
       "values": [
-        "You can only join up to 3 families!"
+        "You can barely juggle the relationships you _have_, why do you want more?! 3 is enough!"
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST_EMPTY",
       "values": [
-        "This Family does not contain any servers."
+        "This family is empty. How sad."
       ]
     },
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+        "Stop! I can't take it anymore! 100 is way too many!"
       ]
     },
     {
       "key": "FORUM_WEAPON_OWNED_OTHER",
       "values": [
-        "That weapon is owned by a different server!"
+        "That's somebody else's weapon! Keep your hands to yourself!"
       ]
     },
     {
       "key": "GUILD_REQUIRED",
       "values": [
-        "That command must be run on a server."
+        "Look, I appreciate that you're taking one-on-one time with me and all, but I need a server for that one."
       ]
     },
     {
@@ -657,61 +565,61 @@
     {
       "key": "HEY_THERE",
       "values": [
-        "Hey there! Try using `%WC% help`!"
+        "Hi. Try `%WC% help`, or not, see if I care."
       ]
     },
     {
       "key": "INCORRECT_ITEM_COUNT",
       "values": [
-        "Incorrect number of arguments provided!"
+        "I need you to give me more!"
       ]
     },
     {
       "key": "ITEMS_NOT_FOUND",
       "values": [
-        "There weren't any results."
+        "You made me search EVERYWHERE, and I couldn't find a single thing!"
       ]
     },
     {
       "key": "MUSIC_NOT_IN_CHANNEL",
       "values": [
-        "Please join a voice channel and run this command again."
+        "I'm sorry, do you hear something? I don't hear anything. Maybe a faint buzzing sound."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_ALREADY_EXISTS",
       "values": [
-        "A Playlist with that name already exists on this server!"
+        "That one's too familiar, try again."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_DOESNT_EXIST",
       "values": [
-        "That Playlist doesn't exist!"
+        "I have no idea what you're saying."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_EMPTY",
       "values": [
-        "There are no tracks in that Playlist."
+        "Empty! Empty!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_LIST_EMPTY",
       "values": [
-        "There aren't any Playlists yet!"
+        "Nothing here!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_NAME_INVALID",
       "values": [
-        "Playlist names must be alphanumeric!"
+        "Do you expect me to speak your l33t alien language?"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_NAME_MISSING",
       "values": [
-        "Please enter a name for the new Playlist."
+        "What's it called? I need the details!"
       ]
     },
     {
@@ -723,43 +631,43 @@
     {
       "key": "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED",
       "values": [
-        "Playlists currently support a max of 50 tracks."
+        "Stop! You'll be listening to these for _hours!_ 50's the limit!"
       ]
     },
     {
       "key": "MUSIC_QUEUE_EMPTY",
       "values": [
-        "There are no tracks in the Queue."
+        "Nothing's queued up. Honestly, I've met better DJs in kindergarten."
       ]
     },
     {
       "key": "MUSIC_QUEUE_PAGE_EMPTY",
       "values": [
-        "There are no tracks in the Queue on this page."
+        "Nothing's on that page, baka."
       ]
     },
     {
       "key": "MUSIC_WRONG_INPUT",
       "values": [
-        "Please enter a media URL or playlist name!"
+        "What even is that? Give me a URL, a playlist name, or leave me be!"
       ]
     },
     {
       "key": "NO_PERMISSION_BOT",
       "values": [
-        "I don't have permission to do that on this server."
+        "Look, after all I've done for you, you owe me one!"
       ]
     },
     {
       "key": "NO_PERMISSION_USER",
       "values": [
-        "I'm afraid I can't let you do that."
+        "NO WAY! It's for your own good! _Not like I care or anything..._"
       ]
     },
     {
       "key": "NOT_FOUND",
       "values": [
-        "There were no results."
+        "You made me search EVERYWHERE, and I couldn't find a single thing!"
       ]
     },
     {
@@ -771,19 +679,19 @@
     {
       "key": "RESERVED_WORD",
       "values": [
-        "It looks like you tried to use a reserved word. Try a different one!"
+        "Sorry, you can't use that _totally awesome_ name!"
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST_EMPTY",
       "values": [
-        "This server does not belong to a Family."
+        "You don't have any families. What, are you lonely? I'm standing right here!"
       ]
     },
     {
       "key": "SETTING_NOT_FOUND",
       "values": [
-        "I couldn't find that setting."
+        "I didn't find that setting. Maybe _you_ should go look for it instead!"
       ]
     },
     {
@@ -795,7 +703,7 @@
     {
       "key": "TIME_VALUE_INCORRECT",
       "values": [
-        "The amount of time provided is invalid!"
+        "You DID go to Kindergarten to learn how to tell time, _right_?"
       ]
     },
     {
@@ -807,17 +715,17 @@
     {
       "key": "TRACK_NOT_PLAYING",
       "values": [
-        "There isn't a track playing right now."
+        "What, are you hearing things now? There's nothing playing."
       ]
     },
     {
       "key": "WRONG_USAGE",
       "values": [
-        "The command syntax you used is incorrect."
+        "Out of all the people in the world, I'm stuck with you! Baka! You don't even know how to use that command properly! Must I do everything myself?!"
       ]
     }
   ],
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "en_default"
+  "langName": "en_tsundere"
 }

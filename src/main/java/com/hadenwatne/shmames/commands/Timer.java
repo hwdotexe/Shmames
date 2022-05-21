@@ -5,8 +5,8 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.tasks.AlarmTask;
@@ -62,16 +62,16 @@ public class Timer extends Command {
 
 			// Schedule the task.
 			String messageID = executingCommand.hasMessage() ? executingCommand.getMessage().getId() : null;
-			AlarmTask t = new AlarmTask(executingCommand.getChannel().getIdLong(), messageID, seconds, msg, executingCommand.getLanguage().getMsg(Langs.TIMER_ALERT, new String[]{author.getAsMention()}));
+			AlarmTask t = new AlarmTask(executingCommand.getChannel().getIdLong(), messageID, seconds, msg, executingCommand.getLanguage().getMsg(LanguageKeys.TIMER_ALERT, new String[]{author.getAsMention()}));
 			String timeMsg = (f_day > 0 ? f_day + "d " : "") + (f_hour > 0 ? f_hour + "h " : "") + (f_min > 0 ? f_min + "m " : "") + (f_sec > 0 ? f_sec + "s" : "");
 
 			executingCommand.getBrain().getTimers().add(t);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(executingCommand.getLanguage().getMsg(Langs.TIMER_STARTED, new String[]{"**" + timeMsg + "**"}));
+					.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.TIMER_STARTED, new String[]{"**" + timeMsg + "**"}));
 		} else {
-			return response(EmbedType.ERROR, Errors.TIMER_LENGTH_INCORRECT.name())
-					.setDescription(executingCommand.getLanguage().getError(Errors.TIMER_LENGTH_INCORRECT));
+			return response(EmbedType.ERROR, ErrorKeys.TIMER_LENGTH_INCORRECT.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.TIMER_LENGTH_INCORRECT));
 		}
 	}
 }

@@ -6,13 +6,13 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.game.HangmanDictionary;
 import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -62,21 +62,21 @@ public class Hangman extends Command {
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
 		Brain brain = executingCommand.getBrain();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 
 		switch(subCommand) {
 			case "start":
-				return cmdStart(brain, lang, executingCommand.getServer(), executingCommand);
+				return cmdStart(brain, language, executingCommand.getServer(), executingCommand);
 			case "guess":
-				return cmdGuess(brain, lang, executingCommand.getServer(), executingCommand);
+				return cmdGuess(brain, language, executingCommand.getServer(), executingCommand);
 			case "list":
-				return cmdList(lang);
+				return cmdList(language);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdList(Lang lang) {
+	private EmbedBuilder cmdList(Language language) {
 		StringBuilder sb = new StringBuilder();
 
 		for(HangmanDictionary hd : dictionaries){
@@ -87,16 +87,16 @@ public class Hangman extends Command {
 		}
 
 		return response(EmbedType.INFO)
-				.setDescription(lang.getMsg(Langs.HANGMAN_DICTIONARIES, new String[] {sb.toString()}));
+				.setDescription(language.getMsg(LanguageKeys.HANGMAN_DICTIONARIES, new String[] {sb.toString()}));
 	}
 
-	private EmbedBuilder cmdStart(Brain brain, Lang lang, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdStart(Brain brain, Language language, Guild server, ExecutingCommand executingCommand) {
 		if(brain.getHangmanGame() != null) {
 			TextChannel tc = server.getTextChannelById(brain.getHangmanGame().getChannelID());
 
 			if(tc != null) {
-				return response(EmbedType.ERROR, Errors.HANGMAN_ALREADY_STARTED.name())
-						.setDescription(lang.getError(Errors.HANGMAN_ALREADY_STARTED, new String[]{tc.getAsMention()}));
+				return response(EmbedType.ERROR, ErrorKeys.HANGMAN_ALREADY_STARTED.name())
+						.setDescription(language.getError(ErrorKeys.HANGMAN_ALREADY_STARTED, new String[]{tc.getAsMention()}));
 			} else {
 				brain.setHangmanGame(null);
 			}
@@ -115,34 +115,34 @@ public class Hangman extends Command {
 		newGame.setChannel(executingCommand.getChannel().getIdLong());
 		brain.setHangmanGame(newGame);
 
-		EmbedBuilder embedBuilder = buildHangmanEmbed(lang, newGame);
+		EmbedBuilder embedBuilder = buildHangmanEmbed(language, newGame);
 		Message message = MessageService.SendMessageBlocking(executingCommand.getChannel(), embedBuilder);
 
 		newGame.setMessage(message.getIdLong());
 
 		if(executingCommand.hasInteractionHook()) {
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
+					.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdGuess(Brain brain, Lang lang, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdGuess(Brain brain, Language language, Guild server, ExecutingCommand executingCommand) {
 		String guess = executingCommand.getCommandArguments().getAsString("guess").toLowerCase();
 		HangmanGame game = brain.getHangmanGame();
 
 		if (game == null) {
-			return response(EmbedType.ERROR, Errors.HANGMAN_NOT_STARTED.name())
-					.setDescription(lang.getError(Errors.HANGMAN_NOT_STARTED));
+			return response(EmbedType.ERROR, ErrorKeys.HANGMAN_NOT_STARTED.name())
+					.setDescription(language.getError(ErrorKeys.HANGMAN_NOT_STARTED));
 		}
 
 		// Process the guess.
 		if(guess.length() == 1){
 			// Avoid re-guesses.
 			if(game.getCorrectGuesses().contains(guess.charAt(0)) || game.getIncorrectGuesses().contains(guess.charAt(0))){
-				return response(EmbedType.ERROR, Errors.HANGMAN_ALREADY_GUESSED.name())
-						.setDescription(lang.getError(Errors.HANGMAN_ALREADY_GUESSED));
+				return response(EmbedType.ERROR, ErrorKeys.HANGMAN_ALREADY_GUESSED.name())
+						.setDescription(language.getError(ErrorKeys.HANGMAN_ALREADY_GUESSED));
 			}
 
 			// Process their letter guess.
@@ -173,7 +173,7 @@ public class Hangman extends Command {
 		}
 
 		// Send an updated game board.
-		game.updateMessage(server,buildHangmanEmbed(lang, game));
+		game.updateMessage(server,buildHangmanEmbed(language, game));
 
 		// If the game is over, clean up.
 		if(game.isFinished()) {
@@ -182,7 +182,7 @@ public class Hangman extends Command {
 
 		if(executingCommand.hasInteractionHook()) {
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.GENERIC_SUCCESS));
+					.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
 		}
 
 		return null;
@@ -216,8 +216,8 @@ public class Hangman extends Command {
 		return RandomService.GetRandomObjectFromList(dictionaries);
 	}
 
-	private EmbedBuilder buildHangmanEmbed(Lang lang, HangmanGame g){
-		EmbedBuilder eBuilder = response(EmbedType.INFO, lang.getMsg(Langs.HANGMAN_TITLE));
+	private EmbedBuilder buildHangmanEmbed(Language language, HangmanGame g){
+		EmbedBuilder eBuilder = response(EmbedType.INFO, language.getMsg(LanguageKeys.HANGMAN_TITLE));
 
 		if(g.isFinished()) {
 			if(g.didWin()) {
@@ -227,7 +227,7 @@ public class Hangman extends Command {
 			}
 		}
 
-		eBuilder.setFooter(lang.getMsg(Langs.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
+		eBuilder.setFooter(language.getMsg(LanguageKeys.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
 
 		eBuilder.addField(g.getDictionary()+" » "+g.getHint(), getHangmanASCII(g.getLivesRemaining())+"\n"+getWordProgressEmotes(g), false);
 

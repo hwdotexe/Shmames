@@ -6,7 +6,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.SubCommandGroup;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
@@ -27,6 +27,8 @@ public class CommandHandler {
 	private final List<Command> commands;
 
 	public CommandHandler() {
+		LoggingService.Log(LogType.SYSTEM, "Loading commands...");
+
 		commands = new ArrayList<>();
 
 		commands.add(new Blame());
@@ -67,6 +69,8 @@ public class CommandHandler {
 
 		// Send Discord the syntax we plan to use for slash commands.
 		updateSlashCommands();
+
+		LoggingService.Log(LogType.SYSTEM, "Command loading complete!");
 	}
 
 	/**
@@ -104,8 +108,8 @@ public class CommandHandler {
 		if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
 			// If this command requires a server, but none is accessible, throw an error.
 			if(command.requiresGuild() && executingCommand.getServer() == null) {
-				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.GUILD_REQUIRED.name())
-						.setDescription(executingCommand.getLanguage().getError(Errors.GUILD_REQUIRED));
+				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.GUILD_REQUIRED.name())
+						.setDescription(executingCommand.getLanguage().getError(ErrorKeys.GUILD_REQUIRED));
 
 				executingCommand.reply(embed);
 
@@ -115,8 +119,8 @@ public class CommandHandler {
 			App.Shmames.getCommandHandler().ParseCommand(command, commandText, executingCommand);
 			App.Shmames.getCommandHandler().ExecuteCommand(command, executingCommand);
 		} else {
-			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, Errors.WRONG_USAGE.name())
-					.setDescription(executingCommand.getLanguage().getError(Errors.WRONG_USAGE));
+			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.WRONG_USAGE.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.WRONG_USAGE));
 
 			for(MessageEmbed.Field field : command.getHelpFields()) {
 				embed.addField(field);
@@ -244,7 +248,7 @@ public class CommandHandler {
 				.thenAccept(executingCommand::reply)
 				.exceptionally(exception -> {
 					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error");
-					embedBuilder.addField(Errors.BOT_ERROR.name(), executingCommand.getLanguage().getError(Errors.BOT_ERROR), false);
+					embedBuilder.addField(ErrorKeys.BOT_ERROR.name(), executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR), false);
 
 					executingCommand.reply(embedBuilder);
 					LoggingService.LogException(exception);

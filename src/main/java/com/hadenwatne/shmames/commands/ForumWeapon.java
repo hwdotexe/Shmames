@@ -11,7 +11,7 @@ import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -106,41 +106,41 @@ public class ForumWeapon extends Command {
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
 		Brain brain = executingCommand.getBrain();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Guild server = executingCommand.getServer();
 
 		switch (subCommand) {
 			case "create":
-				return cmdCreate(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdCreate(language, brain, server, executingCommand.getCommandArguments());
 			case "update":
-				return cmdUpdate(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdUpdate(language, brain, server, executingCommand.getCommandArguments());
 			case "destroy":
 			case "remove":
-				return cmdRemove(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdRemove(language, brain, server, executingCommand.getCommandArguments());
 			case "list":
-				return cmdList(lang, brain, server, executingCommand);
+				return cmdList(language, brain, server, executingCommand);
 			case "search":
-				return cmdSearch(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdSearch(language, brain, server, executingCommand.getCommandArguments());
 			case "alias":
-				return cmdAlias(lang, brain, server, executingCommand.getCommandArguments());
+				return cmdAlias(language, brain, server, executingCommand.getCommandArguments());
 			case "prune":
-				return cmdPrune(lang, brain, server, executingCommand);
+				return cmdPrune(language, brain, server, executingCommand);
 			case "send":
-				return cmdSend(lang, brain, server, executingCommand);
+				return cmdSend(language, brain, server, executingCommand);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdCreate(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdCreate(Language language, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
 
 		if (getFWCount(brain) < 100) {
 				if (weaponName.equals("create") || weaponName.equals("update") || weaponName.equals("remove")
 						|| weaponName.equals("list") || weaponName.equals("search") || weaponName.equals("prune")) {
-					return response(EmbedType.ERROR, Errors.RESERVED_WORD.name())
-							.setDescription(lang.getError(Errors.RESERVED_WORD));
+					return response(EmbedType.ERROR, ErrorKeys.RESERVED_WORD.name())
+							.setDescription(language.getError(ErrorKeys.RESERVED_WORD));
 				}
 
 				if (FindForumWeapon(weaponName, brain, server) == null) {
@@ -150,24 +150,24 @@ public class ForumWeapon extends Command {
 					brain.getForumWeapons().add(newWeapon);
 
 					EmbedBuilder response = response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.FORUM_WEAPON_CREATED, new String[]{weaponName}));
+							.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_CREATED, new String[]{weaponName}));
 
 					if(existingUrl != null) {
-						response.addField("Duplicate Found", lang.getMsg(Langs.FORUM_WEAPON_DUPLICATE, new String[]{existingUrl.getItemName()}), false);
+						response.addField("Duplicate Found", language.getMsg(LanguageKeys.FORUM_WEAPON_DUPLICATE, new String[]{existingUrl.getItemName()}), false);
 					}
 
 					return response;
 				} else {
-					return response(EmbedType.ERROR, Errors.ALREADY_EXISTS.name())
-							.setDescription(lang.getError(Errors.ALREADY_EXISTS));
+					return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
+							.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
 				}
 		} else {
-			return response(EmbedType.ERROR, Errors.FORUM_WEAPON_MAXIMUM_REACHED.name())
-					.setDescription(lang.getError(Errors.FORUM_WEAPON_MAXIMUM_REACHED));
+			return response(EmbedType.ERROR, ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED.name())
+					.setDescription(language.getError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED));
 		}
 	}
 
-	private EmbedBuilder cmdUpdate(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdUpdate(Language language, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
 		ForumWeaponObj forumWeapon = FindForumWeapon(weaponName, brain, server);
@@ -177,18 +177,18 @@ public class ForumWeapon extends Command {
 				forumWeapon.setItemLink(weaponURL);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(lang.getMsg(Langs.FORUM_WEAPON_UPDATED));
+						.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_UPDATED));
 			} else {
-				return response(EmbedType.ERROR, Errors.FORUM_WEAPON_OWNED_OTHER.name())
-						.setDescription(lang.getError(Errors.FORUM_WEAPON_OWNED_OTHER));
+				return response(EmbedType.ERROR, ErrorKeys.FORUM_WEAPON_OWNED_OTHER.name())
+						.setDescription(language.getError(ErrorKeys.FORUM_WEAPON_OWNED_OTHER));
 			}
 		} else {
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdRemove(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdRemove(Language language, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		ForumWeaponObj fwr = FindForumWeapon(weaponName, brain, server);
 
@@ -197,18 +197,18 @@ public class ForumWeapon extends Command {
 				brain.getForumWeapons().remove(fwr);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(lang.getMsg(Langs.FORUM_WEAPON_DESTROYED));
+						.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_DESTROYED));
 			} else {
-				return response(EmbedType.ERROR, Errors.FORUM_WEAPON_OWNED_OTHER.name())
-						.setDescription(lang.getError(Errors.FORUM_WEAPON_OWNED_OTHER));
+				return response(EmbedType.ERROR, ErrorKeys.FORUM_WEAPON_OWNED_OTHER.name())
+						.setDescription(language.getError(ErrorKeys.FORUM_WEAPON_OWNED_OTHER));
 			}
 		} else {
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdList(Language language, Brain brain, Guild server, ExecutingCommand executingCommand) {
 		boolean all = executingCommand.getCommandArguments().getAsBoolean("all");
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
 		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "fw-list", all ? "Y" : "N");
@@ -260,10 +260,10 @@ public class ForumWeapon extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.FORUM_WEAPON_LIST), Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKeys.FORUM_WEAPON_LIST), Color.ORANGE, language);
 	}
 
-	private EmbedBuilder cmdSearch(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdSearch(Language language, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String searchTerm = args.getAsString("searchTerm");
 		int page = args.getAsInteger("page");
 		List<String> forumWeaponList = new ArrayList<>();
@@ -291,10 +291,10 @@ public class ForumWeapon extends Command {
 
 		PaginatedList paginatedList = PaginationService.GetPaginatedList(forumWeaponList, 15, -1, false);
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.FORUM_WEAPON_LIST), Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKeys.FORUM_WEAPON_LIST), Color.ORANGE, language);
 	}
 
-	private EmbedBuilder cmdAlias(Lang lang, Brain brain, Guild server, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdAlias(Language language, Brain brain, Guild server, ExecutingCommandArguments args) {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String aliasName = args.getAsString("newAlias");
 		ForumWeaponObj forumWeapon = FindForumWeapon(weaponName, brain, server);
@@ -307,28 +307,28 @@ public class ForumWeapon extends Command {
 					forumWeapon.getAliases().add(aliasName);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.FORUM_WEAPON_ADDED_ALIAS));
+							.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_ADDED_ALIAS));
 				} else {
-					return response(EmbedType.ERROR, Errors.ALREADY_EXISTS.name())
-							.setDescription(lang.getError(Errors.ALREADY_EXISTS));
+					return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
+							.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
 				}
 			} else {
-				return response(EmbedType.ERROR, Errors.ALREADY_EXISTS.name())
-						.setDescription(lang.getError(Errors.ALREADY_EXISTS));
+				return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
+						.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
 			}
 		} else {
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdPrune(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdPrune(Language language, Brain brain, Guild server, ExecutingCommand executingCommand) {
 		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.PRUNE_FW), executingCommand.getAuthorMember())) {
 			List<ForumWeaponObj> unused = getServerUnusedFWs(brain);
 			File file = buildPrunedWeaponFile(server.getName(), unused);
 
 			EmbedBuilder response = response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.FORUM_WEAPONS_PRUNED, new String[]{Integer.toString(unused.size())}));
+					.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPONS_PRUNED, new String[]{Integer.toString(unused.size())}));
 			executingCommand.replyFile(file, response);
 
 			for (ForumWeaponObj fw : unused) {
@@ -337,12 +337,12 @@ public class ForumWeapon extends Command {
 
 			return null;
 		} else {
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 	}
 
-	private EmbedBuilder cmdSend(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdSend(Language language, Brain brain, Guild server, ExecutingCommand executingCommand) {
 		String weaponName = executingCommand.getCommandArguments().getAsString("weaponName");
 		ForumWeaponObj fws = FindForumWeapon(weaponName, brain, server);
 
@@ -353,8 +353,8 @@ public class ForumWeapon extends Command {
 			return null;
 		} else {
 			// Couldn't find one
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 

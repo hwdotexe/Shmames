@@ -4,7 +4,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.services.TextFormatService;
 import com.hadenwatne.shmames.tasks.PollTask;
@@ -44,9 +44,9 @@ public class PollListener extends ListenerAdapter {
 
                         // Don't bother updating if the reaction isn't an option.
                         if(this.pollModel.getOptions().size() >= alphabetNumber) {
-                            Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+                            Language language = App.Shmames.getLanguageService().getLangFor(message.getGuild());
 
-                            this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                            this.pollModel.updateMessageEmbed(language, e.getChannel().getName(), message);
                         }
                     }
                 }
@@ -64,9 +64,9 @@ public class PollListener extends ListenerAdapter {
                     // Don't bother updating if the reaction isn't an option.
                     if(this.pollModel.getOptions().size() >= alphabetNumber) {
                         Message message = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
-                        Lang lang = App.Shmames.getLanguageService().getLangFor(message.getGuild());
+                        Language language = App.Shmames.getLanguageService().getLangFor(message.getGuild());
 
-                        this.pollModel.updateMessageEmbed(lang, e.getChannel().getName(), message);
+                        this.pollModel.updateMessageEmbed(language, e.getChannel().getName(), message);
                     }
                 }
             }

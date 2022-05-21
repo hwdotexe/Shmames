@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -31,6 +31,6 @@ public class Thoughts extends Command {
 		String item = executingCommand.getCommandArguments().getAsString("item");
 
 		return response(EmbedType.INFO)
-				.addField(item, executingCommand.getLanguage().getMsg(Langs.THOUGHTS_OPTIONS), false);
+				.addField(item, executingCommand.getLanguage().getMsg(LanguageKeys.THOUGHTS_OPTIONS), false);
 	}
 }

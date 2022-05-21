@@ -16,7 +16,7 @@ import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 public class CringeThat extends Command {
@@ -64,7 +64,7 @@ public class CringeThat extends Command {
 			ex.printStackTrace();
 
 			return response(EmbedType.ERROR)
-					.addField(Errors.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(Errors.NO_PERMISSION_BOT), false);
+					.addField(ErrorKeys.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_BOT), false);
 		}
 	}
 

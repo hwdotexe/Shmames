@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -109,8 +109,8 @@ public class ReactListener extends ListenerAdapter {
 		final String commandText = "tally add " + tallyValue;
 
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
-		Lang lang = App.Shmames.getLanguageService().getLangFor(brain);
-		ExecutingCommand executingCommand = new ExecutingCommand(lang, brain);
+		Language language = App.Shmames.getLanguageService().getLangFor(brain);
+		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
 		if (command != null) {
 			executingCommand.setCommandName(command.getCommandStructure().getName());

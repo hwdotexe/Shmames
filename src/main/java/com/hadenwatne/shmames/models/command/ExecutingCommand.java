@@ -2,7 +2,7 @@ package com.hadenwatne.shmames.models.command;
 
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 public class ExecutingCommand {
-    private final Lang language;
+    private final Language language;
     private final @Nullable Brain brain;
 
     private String commandName;
@@ -25,7 +25,7 @@ public class ExecutingCommand {
     private InteractionHook hook;
     private Message message;
 
-    public ExecutingCommand(Lang language, @Nullable Brain brain) {
+    public ExecutingCommand(Language language, @Nullable Brain brain) {
         this.language = language;
         this.brain = brain;
     }
@@ -38,7 +38,7 @@ public class ExecutingCommand {
         this.commandName = commandName;
     }
 
-    public Lang getLanguage() {
+    public Language getLanguage() {
         return this.language;
     }
 

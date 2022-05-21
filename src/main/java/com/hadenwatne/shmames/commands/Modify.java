@@ -7,13 +7,13 @@ import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -61,7 +61,7 @@ public class Modify extends Command {
 
 	@Override
 	public EmbedBuilder run(ExecutingCommand executingCommand) {
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 		BotSetting canModify = brain.getSettingFor(BotSettingName.ALLOW_MODIFY);
 		Member member = executingCommand.getAuthorMember();
@@ -70,15 +70,15 @@ public class Modify extends Command {
 
 		// Disallow users if they don't have permission.
 		if(!ShmamesService.CheckUserPermission(server, canModify, member)) {
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(executingCommand.getLanguage().getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 
 		switch (subCommand) {
 			case "set":
-				return cmdSet(lang, brain, server, executingCommand);
+				return cmdSet(language, brain, server, executingCommand);
 			case "view":
-				return cmdView(lang, brain, server);
+				return cmdView(language, brain, server);
 			case "help":
 				return cmdHelp(brain, server, executingCommand.getCommandArguments());
 		}
@@ -86,8 +86,8 @@ public class Modify extends Command {
 		return null;
 	}
 
-	private EmbedBuilder cmdView(Lang lang, Brain brain, Guild server) {
-		EmbedBuilder embedBuilder = response(EmbedType.INFO, lang.getMsg(Langs.SETTING_LIST_TITLE));
+	private EmbedBuilder cmdView(Language language, Brain brain, Guild server) {
+		EmbedBuilder embedBuilder = response(EmbedType.INFO, language.getMsg(LanguageKeys.SETTING_LIST_TITLE));
 
 		for(BotSetting botSetting : brain.getSettings()) {
 			embedBuilder.addField(getFormattedSettingField(botSetting, server));
@@ -110,7 +110,7 @@ public class Modify extends Command {
 		return embedBuilder;
 	}
 
-	private EmbedBuilder cmdSet(Lang lang, Brain brain, Guild server, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdSet(Language language, Brain brain, Guild server, ExecutingCommand executingCommand) {
 		String settingName = executingCommand.getCommandArguments().getAsString("setting").toUpperCase();
 		String settingValue = executingCommand.getCommandArguments().getAsString("value");
 		BotSettingName botSettingName = BotSettingName.valueOf(settingName);
@@ -121,8 +121,8 @@ public class Modify extends Command {
 			Member member = executingCommand.getAuthorMember();
 
 			if (!member.hasPermission(Permission.ADMINISTRATOR) && !App.IsDebug) {
-				return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-						.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+				return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 			}
 		}
 
@@ -130,7 +130,7 @@ public class Modify extends Command {
 		if (botSettingName == BotSettingName.SERVER_LANG) {
 			boolean found = false;
 
-			for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
+			for(Language l : App.Shmames.getLanguageService().getAllLangs()) {
 				if (l.getLangName().equalsIgnoreCase(settingValue)) {
 					found = true;
 					break;
@@ -138,8 +138,8 @@ public class Modify extends Command {
 			}
 
 			if(!found) {
-				return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-						.setDescription(lang.getError(Errors.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 			}
 		}
 
@@ -180,12 +180,12 @@ public class Modify extends Command {
 		// Set the value and return a success message if complete.
 		if (botSetting.setValue(settingValue, brain)) {
 			return response(EmbedType.SUCCESS, botSettingName.name())
-					.setDescription(lang.getMsg(Langs.SETTING_UPDATED_SUCCESS))
+					.setDescription(language.getMsg(LanguageKeys.SETTING_UPDATED_SUCCESS))
 					.addField(getFormattedSettingField(botSetting, server));
 		} else {
 			// Not successful
-			return response(EmbedType.ERROR, Errors.SETTING_VALUE_INVALID.name())
-					.setDescription(lang.getError(Errors.SETTING_VALUE_INVALID));
+			return response(EmbedType.ERROR, ErrorKeys.SETTING_VALUE_INVALID.name())
+					.setDescription(language.getError(ErrorKeys.SETTING_VALUE_INVALID));
 		}
 	}
 
@@ -194,7 +194,7 @@ public class Modify extends Command {
 			StringBuilder sb = new StringBuilder();
 			List<String> langs = new ArrayList<>();
 
-			for(Lang l : App.Shmames.getLanguageService().getAllLangs()) {
+			for(Language l : App.Shmames.getLanguageService().getAllLangs()) {
 				langs.add(l.getLangName());
 			}
 

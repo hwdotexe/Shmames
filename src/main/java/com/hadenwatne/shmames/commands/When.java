@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -30,7 +30,7 @@ public class When extends Command {
 
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String msg = executingCommand.getLanguage().getMsg(Langs.WHEN_OPTIONS);
+		String msg = executingCommand.getLanguage().getMsg(LanguageKeys.WHEN_OPTIONS);
 		Matcher m = Pattern.compile(executingCommand.getLanguage().wildcard).matcher(msg);
 		String question = executingCommand.getCommandArguments().getAsString("event");
 

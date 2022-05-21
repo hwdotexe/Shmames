@@ -3,15 +3,15 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
@@ -95,39 +95,39 @@ public class FamilyCmd extends Command {
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		String subCommand = executingCommand.getSubCommand();
 		String subCommandGroup = executingCommand.getSubCommandGroup();
-		Lang lang = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 		Guild server = executingCommand.getServer();
 		Member author = executingCommand.getAuthorMember();
 
 		switch (subCommandGroup) {
 			case "code":
-				return cmdCode(lang, brain, server, author, executingCommand);
+				return cmdCode(language, brain, server, author, executingCommand);
 			case "view":
-				return cmdView(lang, brain, server, author, executingCommand);
+				return cmdView(language, brain, server, author, executingCommand);
 		}
 
 		switch(subCommand) {
 			case "create":
-				return cmdCreate(lang, brain, server, author, executingCommand.getCommandArguments());
+				return cmdCreate(language, brain, server, author, executingCommand.getCommandArguments());
 			case "leave":
-				return cmdLeave(lang, brain, server, author, executingCommand.getCommandArguments());
+				return cmdLeave(language, brain, server, author, executingCommand.getCommandArguments());
 			case "kick":
-				return cmdKick(lang, brain, author, executingCommand.getCommandArguments());
+				return cmdKick(language, brain, author, executingCommand.getCommandArguments());
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdCreate(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdCreate(Language language, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
 			for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 				if (f.getFamilyOwner() == author.getIdLong()) {
 					if (f.getFamName().equals(familyName)) {
-						return response(EmbedType.ERROR, Errors.FAMILY_ALREADY_EXISTS.name())
-								.setDescription(lang.getError(Errors.FAMILY_ALREADY_EXISTS));
+						return response(EmbedType.ERROR, ErrorKeys.FAMILY_ALREADY_EXISTS.name())
+								.setDescription(language.getError(ErrorKeys.FAMILY_ALREADY_EXISTS));
 					}
 				}
 			}
@@ -142,14 +142,14 @@ public class FamilyCmd extends Command {
 			brain.getFamilies().add(newFam.getFamID());
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(lang.getMsg(Langs.FAMILY_CREATED));
+					.setDescription(language.getMsg(LanguageKeys.FAMILY_CREATED));
 		} else {
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 	}
 
-	private EmbedBuilder cmdLeave(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdLeave(Language language, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
@@ -165,19 +165,19 @@ public class FamilyCmd extends Command {
 					}
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.FAMILY_REMOVED_SERVER, new String[]{server.getName(), f.getFamName()}));
+							.setDescription(language.getMsg(LanguageKeys.FAMILY_REMOVED_SERVER, new String[]{server.getName(), f.getFamName()}));
 				}
 			}
 
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		} else {
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 	}
 
-	private EmbedBuilder cmdKick(Lang lang, Brain brain, Member author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdKick(Language language, Brain brain, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 		int serverIndex = args.getAsInteger("serverNumber")-1;
 
@@ -204,57 +204,57 @@ public class FamilyCmd extends Command {
 					}
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.FAMILY_REMOVED_SERVER, new String[]{gName, f.getFamName()}));
+							.setDescription(language.getMsg(LanguageKeys.FAMILY_REMOVED_SERVER, new String[]{gName, f.getFamName()}));
 				} else {
-					return response(EmbedType.ERROR, Errors.FAMILY_NOT_JOINED.name())
-							.setDescription(lang.getError(Errors.FAMILY_NOT_JOINED));
+					return response(EmbedType.ERROR, ErrorKeys.FAMILY_NOT_JOINED.name())
+							.setDescription(language.getError(ErrorKeys.FAMILY_NOT_JOINED));
 				}
 			}
 		}
 
-		return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-				.setDescription(lang.getError(Errors.NOT_FOUND));
+		return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+				.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 	}
 
-	private EmbedBuilder cmdCode(Lang lang, Brain brain, Guild server, Member author, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdCode(Language language, Brain brain, Guild server, Member author, ExecutingCommand executingCommand) {
 		ExecutingCommandArguments args = executingCommand.getCommandArguments();
 		String subCommand = executingCommand.getSubCommand();
 
 		switch (subCommand) {
 			case "create":
-				return cmdCodeCreate(lang, author.getUser(), args);
+				return cmdCodeCreate(language, author.getUser(), args);
 			case "redeem":
-				return cmdCodeRedeem(lang, brain, server, author, args);
+				return cmdCodeRedeem(language, brain, server, author, args);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdCodeCreate(Lang lang, User author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdCodeCreate(Language language, User author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 			if (f.getFamilyOwner() == author.getIdLong() && f.getFamName().equalsIgnoreCase(familyName)) {
 				if (f.getMemberGuilds().size() < 7) {
-					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, Langs.FAMILY_JOIN_CODE.name())
-									.setDescription(lang.getMsg(Langs.FAMILY_JOIN_CODE, new String[]{f.getFamName(), f.getNewJoinCode()}));
+					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, LanguageKeys.FAMILY_JOIN_CODE.name())
+									.setDescription(language.getMsg(LanguageKeys.FAMILY_JOIN_CODE, new String[]{f.getFamName(), f.getNewJoinCode()}));
 
 					MessageService.SendDirectMessage(author, embedBuilder);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(lang.getMsg(Langs.SENT_PRIVATE_MESSAGE));
+							.setDescription(language.getMsg(LanguageKeys.SENT_PRIVATE_MESSAGE));
 				} else {
-					return response(EmbedType.ERROR, Errors.FAMILY_MEMBER_MAXIMUM_REACHED.name())
-							.setDescription(lang.getError(Errors.FAMILY_MEMBER_MAXIMUM_REACHED));
+					return response(EmbedType.ERROR, ErrorKeys.FAMILY_MEMBER_MAXIMUM_REACHED.name())
+							.setDescription(language.getError(ErrorKeys.FAMILY_MEMBER_MAXIMUM_REACHED));
 				}
 			}
 		}
 
-		return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-				.setDescription(lang.getError(Errors.NOT_FOUND));
+		return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+				.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 	}
 
-	private EmbedBuilder cmdCodeRedeem(Lang lang, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdCodeRedeem(Language language, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String joinCode = args.getAsString("joinCode").toLowerCase();
 
 		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
@@ -268,49 +268,49 @@ public class FamilyCmd extends Command {
 							brain.getFamilies().add(f.getFamID());
 
 							return response(EmbedType.SUCCESS)
-									.setDescription(lang.getMsg(Langs.FAMILY_JOINED, new String[]{server.getName(), f.getFamName()}));
+									.setDescription(language.getMsg(LanguageKeys.FAMILY_JOINED, new String[]{server.getName(), f.getFamName()}));
 						} else {
-							return response(EmbedType.ERROR, Errors.FAMILY_ALREADY_JOINED.name())
-									.setDescription(lang.getError(Errors.FAMILY_ALREADY_JOINED))
+							return response(EmbedType.ERROR, ErrorKeys.FAMILY_ALREADY_JOINED.name())
+									.setDescription(language.getError(ErrorKeys.FAMILY_ALREADY_JOINED))
 									.appendDescription(System.lineSeparator())
-									.appendDescription(lang.getMsg(Langs.FAMILY_JOIN_CODE_INVALIDATED));
+									.appendDescription(language.getMsg(LanguageKeys.FAMILY_JOIN_CODE_INVALIDATED));
 						}
 					} else {
-						return response(EmbedType.ERROR, Errors.FAMILY_MAXIMUM_REACHED.name())
-								.setDescription(lang.getError(Errors.FAMILY_MAXIMUM_REACHED))
+						return response(EmbedType.ERROR, ErrorKeys.FAMILY_MAXIMUM_REACHED.name())
+								.setDescription(language.getError(ErrorKeys.FAMILY_MAXIMUM_REACHED))
 								.appendDescription(System.lineSeparator())
-								.appendDescription(lang.getMsg(Langs.FAMILY_JOIN_CODE_INVALIDATED));
+								.appendDescription(language.getMsg(LanguageKeys.FAMILY_JOIN_CODE_INVALIDATED));
 					}
 				} else {
-					return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-							.setDescription(lang.getError(Errors.NO_PERMISSION_USER))
+					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER))
 							.appendDescription(System.lineSeparator())
-							.appendDescription(lang.getMsg(Langs.FAMILY_JOIN_CODE_INVALIDATED));
+							.appendDescription(language.getMsg(LanguageKeys.FAMILY_JOIN_CODE_INVALIDATED));
 				}
 			}
 		}
 
-		return response(EmbedType.ERROR, Errors.FAMILY_INVALID_DETAIL.name())
-				.setDescription(lang.getError(Errors.FAMILY_INVALID_DETAIL));
+		return response(EmbedType.ERROR, ErrorKeys.FAMILY_INVALID_DETAIL.name())
+				.setDescription(language.getError(ErrorKeys.FAMILY_INVALID_DETAIL));
 	}
 
-	private EmbedBuilder cmdView(Lang lang, Brain brain, Guild server, Member author, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdView(Language language, Brain brain, Guild server, Member author, ExecutingCommand executingCommand) {
 		ExecutingCommandArguments args = executingCommand.getCommandArguments();
 		String subCommand = executingCommand.getSubCommand();
 
 		switch (subCommand) {
 			case "servers":
-				return cmdViewServers(lang, brain, author, args);
+				return cmdViewServers(language, brain, author, args);
 			case "emotes":
 				return cmdViewEmotes(brain, server, executingCommand);
 			case "families":
-				return cmdViewFamilies(lang, brain, author);
+				return cmdViewFamilies(language, brain, author);
 		}
 
 		return null;
 	}
 
-	private EmbedBuilder cmdViewServers(Lang lang, Brain brain, Member author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdViewServers(Language language, Brain brain, Member author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
@@ -334,16 +334,16 @@ public class FamilyCmd extends Command {
 				if(memberGuilds.size() > 0) {
 					serverList = PaginationService.GenerateList(memberGuilds, 1, true, false);
 				} else {
-					serverList = lang.getError(Errors.FAMILY_SERVER_LIST_EMPTY);
+					serverList = language.getError(ErrorKeys.FAMILY_SERVER_LIST_EMPTY);
 				}
 
 				return response(EmbedType.INFO)
-						.addField(lang.getMsg(Langs.FAMILY_SERVER_LIST, new String[]{f.getFamName()}), serverList, false);
+						.addField(language.getMsg(LanguageKeys.FAMILY_SERVER_LIST, new String[]{f.getFamName()}), serverList, false);
 			}
 		}
 
-		return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-				.setDescription(lang.getError(Errors.NOT_FOUND));
+		return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+				.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 	}
 
 	private EmbedBuilder cmdViewEmotes(Brain brain, Guild server, ExecutingCommand executingCommand) {
@@ -361,7 +361,7 @@ public class FamilyCmd extends Command {
 		return embed;
 	}
 
-	private EmbedBuilder cmdViewFamilies(Lang lang, Brain brain, Member author) {
+	private EmbedBuilder cmdViewFamilies(Language language, Brain brain, Member author) {
 		if(author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
 			List<String> families = new ArrayList<String>();
 
@@ -378,14 +378,14 @@ public class FamilyCmd extends Command {
 			if(families.size() > 0) {
 				familyList = PaginationService.GenerateList(families, 1, true, false);
 			} else {
-				familyList = lang.getError(Errors.SERVER_FAMILY_LIST_EMPTY);
+				familyList = language.getError(ErrorKeys.SERVER_FAMILY_LIST_EMPTY);
 			}
 
 			return response(EmbedType.INFO)
-					.addField(lang.getMsg(Langs.SERVER_FAMILY_LIST), familyList, false);
+					.addField(language.getMsg(LanguageKeys.SERVER_FAMILY_LIST), familyList, false);
 		}else{
-			return response(EmbedType.ERROR, Errors.NO_PERMISSION_USER.name())
-					.setDescription(lang.getError(Errors.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
 		}
 	}
 

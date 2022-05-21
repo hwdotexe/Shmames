@@ -6,14 +6,14 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Errors;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -68,7 +68,7 @@ public class Trigger extends Command {
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		String nameOrGroup = executingCommand.getSubCommand();
-		Lang language = executingCommand.getLanguage();
+		Language language = executingCommand.getLanguage();
 		Brain brain = executingCommand.getBrain();
 
 		switch (nameOrGroup) {
@@ -83,45 +83,45 @@ public class Trigger extends Command {
 		return null;
 	}
 
-	private EmbedBuilder cmdAdd(Lang lang, Brain brain, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdAdd(Language language, Brain brain, ExecutingCommandArguments args) {
 		String triggerType = args.getAsString("triggerType");
 		String triggerWord = args.getAsString("triggerWord");
 
 		if (!brain.getTriggers().containsKey(triggerWord)) {
 			brain.getTriggers().put(triggerWord, TriggerType.byName(triggerType));
 
-			String response = lang.getMsg(Langs.ADD_TRIGGER_SUCCESS, new String[]{triggerType, triggerWord});
+			String response = language.getMsg(LanguageKeys.ADD_TRIGGER_SUCCESS, new String[]{triggerType, triggerWord});
 
 			return response(EmbedType.SUCCESS)
 					.setDescription(response);
 		} else {
-			return response(EmbedType.ERROR, Errors.ALREADY_EXISTS.name())
-					.setDescription(lang.getError(Errors.ALREADY_EXISTS));
+			return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
+					.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
 		}
 	}
 
-	private EmbedBuilder cmdDrop(Lang lang, Brain brain, ExecutingCommandArguments args)  {
+	private EmbedBuilder cmdDrop(Language language, Brain brain, ExecutingCommandArguments args)  {
 		String triggerWord = args.getAsString("triggerWord");
 
 		if(triggerWord.equalsIgnoreCase(App.Shmames.getBotName())) {
-			return response(EmbedType.ERROR, Errors.CANNOT_DELETE.name())
-					.setDescription(lang.getError(Errors.CANNOT_DELETE));
+			return response(EmbedType.ERROR, ErrorKeys.CANNOT_DELETE.name())
+					.setDescription(language.getError(ErrorKeys.CANNOT_DELETE));
 		}
 
 		if (brain.getTriggers().containsKey(triggerWord)) {
 			brain.getTriggers().remove(triggerWord);
 
-			String response =  lang.getMsg(Langs.ITEM_REMOVED, new String[]{ triggerWord });
+			String response =  language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{ triggerWord });
 
 			return response(EmbedType.SUCCESS)
 					.setDescription(response);
 		} else {
-			return response(EmbedType.ERROR, Errors.NOT_FOUND.name())
-					.setDescription(lang.getError(Errors.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
 		}
 	}
 
-	private EmbedBuilder cmdList(Lang lang, Brain brain, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdList(Language language, Brain brain, ExecutingCommand executingCommand) {
 		int page = executingCommand.getCommandArguments().getAsInteger("page");
 		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "trigger-list");
 		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
@@ -141,7 +141,7 @@ public class Trigger extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), lang.getMsg(Langs.TRIGGER_LIST), Color.ORANGE, lang);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKeys.TRIGGER_LIST), Color.ORANGE, language);
 	}
 
 	private List<String> formatTriggersToStringList(HashMap<String, TriggerType> triggers) {

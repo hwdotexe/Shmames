@@ -1,10 +1,10 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.Errors;
+import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.HTTPVerb;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -76,7 +76,7 @@ public class HTTPService {
      * @return The API's response.
      */
     public static String GetWolfram(String search) {
-        Lang lang = App.Shmames.getLanguageService().getDefaultLang();
+        Language language = App.Shmames.getLanguageService().getDefaultLang();
 
         try {
             String searchFormatted = URLEncoder.encode(search, "UTF-8");
@@ -85,10 +85,10 @@ public class HTTPService {
             if (result != null) {
                 return result.trim();
             } else {
-                return lang.getError(Errors.ITEMS_NOT_FOUND);
+                return language.getError(ErrorKeys.ITEMS_NOT_FOUND);
             }
         } catch (Exception e) {
-            return lang.getError(Errors.BOT_ERROR);
+            return language.getError(ErrorKeys.BOT_ERROR);
         }
     }
 

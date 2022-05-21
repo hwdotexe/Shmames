@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.Langs;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.tasks.ReportCooldownTask;
@@ -44,10 +44,10 @@ public class Report extends Command {
 			new ReportCooldownTask(brain);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(executingCommand.getLanguage().getMsg(Langs.FEEDBACK_SENT));
+					.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.FEEDBACK_SENT));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(executingCommand.getLanguage().getMsg(Langs.FEEDBACK_COOLDOWN));
+					.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.FEEDBACK_COOLDOWN));
 		}
 	}
 }

@@ -4,7 +4,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Lang;
+import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -15,14 +15,14 @@ public class PollTask extends TimerTask {
 	private final PollModel pollModel;
 	private final TextChannel channel;
 	private Message message;
-	private Lang lang;
+	private Language language;
 
 	public PollTask(PollModel pollModel) {
 		this.pollModel = pollModel;
 		this.channel = App.Shmames.getJDA().getTextChannelById(this.pollModel.getChannelID());
 
 		if (this.channel != null) {
-			this.lang = App.Shmames.getLanguageService().getLangFor(this.channel.getGuild());
+			this.language = App.Shmames.getLanguageService().getLangFor(this.channel.getGuild());
 
 			if(this.pollModel.isActive()) {
 				this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
@@ -33,7 +33,7 @@ public class PollTask extends TimerTask {
 						this.tryPinPollMessage(this.message);
 						this.populatePollVoteOptions(this.message);
 
-						this.pollModel.updateMessageEmbed(lang, this.channel.getName(), this.message);
+						this.pollModel.updateMessageEmbed(language, this.channel.getName(), this.message);
 						this.pollModel.setHasStarted(true);
 					}
 				});
@@ -49,7 +49,7 @@ public class PollTask extends TimerTask {
 			pollModel.setActive(false);
 
 			this.channel.retrieveMessageById(this.pollModel.getMessageID()).queue(success -> {
-				this.pollModel.updateMessageEmbed(this.lang, this.channel.getName(), success);
+				this.pollModel.updateMessageEmbed(this.language, this.channel.getName(), success);
 
 				Brain brain = App.Shmames.getStorageService().getBrain(message.getGuild().getId());
 				brain.getActivePolls().remove(pollModel);

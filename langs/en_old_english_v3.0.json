@@ -3,513 +3,457 @@
     {
       "key": "ADD_TRIGGER_SUCCESS",
       "values": [
-        "I will now send a `%WC%` response when I hear `%WC%`!"
+        "Ever shall my lips reply `%WC%` when thou speakest the phrase `%WC%`."
       ]
     },
     {
       "key": "BLAME",
       "values": [
-        "I blame %WC%"
+        "Most assuredly it is %WC%",
+        "Thine answer mayhap be %WC%"
       ]
     },
     {
       "key": "BLAME_OPTIONS",
       "values": [
-        "Obama",
-        "Trump",
-        "Blizzard",
-        "China",
-        "EA",
-        "4Chan",
-        "your mom",
-        "the economy",
-        "Big Pharma",
-        "India",
-        "Nigeria",
-        "Mexico",
-        "Chemtrails",
-        "GMOs",
-        "vaccines",
-        "#VapeLife",
-        "weebs",
-        "essential oils",
-        "Karen",
-        "Epic Games",
-        "video games",
-        "hip hop",
-        "Fortnite",
-        "Source Filmmaker",
-        "Discord",
-        "Coronavirus",
-        "Apple",
-        "Google",
-        "Starbucks",
-        "NASA",
-        "Keanu Reeves",
-        "Oscar the Grouch",
-        "Ohio"
+        "The Crown",
+        "The peasants",
+        "The Black Death",
+        "Witches who dwelleth among us",
+        "The Ether",
+        "Heretics",
+        "The Emperor",
+        "Lord Zeus"
       ]
     },
     {
       "key": "CHOOSE",
       "values": [
-        "I choose: %WC%!"
+        "Mine preference shall be known as %WC%",
+        "Thou asketh, and thus I reply %WC%"
       ]
     },
     {
       "key": "EIGHT_BALL_OPTIONS",
       "values": [
-        "Definitely.",
-        "Without a doubt.",
-        "Yes - of course.",
-        "You can bet on it.",
-        "Most likely.",
-        "It's looking good!",
-        "Duh.",
-        "Signs point to yes.",
-        "Why don't you ask me later?",
-        "Don't count on it.",
-        "My reply is no.",
-        "My sources say no.",
-        "It's not looking good.",
-        "I highly doubt it.",
-        "Nope.",
-        "No way.",
-        "That's a negative."
+        "Most assuredly.",
+        "Indeed it shall be so.",
+        "You speakest the truth.",
+        "It is most certain to come to pass.",
+        "The likelihood is plain.",
+        "Undoubtedly so.",
+        "Mine efforts to perceive what shall come to pass are unclear. Pray make thine supplication anew.",
+        "It is not certain.",
+        "It shall not be so.",
+        "Mine study suggests otherwise.",
+        "Thou speakest only in falsehood.",
+        "I shall be taken aback in surprise should thy petition succeed.",
+        "Nay, it shall not occur.",
+        "Thy prompting is doubtful.",
+        "Indeed not even in slight."
       ]
     },
     {
       "key": "EMOTE_STATS_TITLE",
       "values": [
-        "Here are your emoji tallies:"
+        "Thy depictions are counted thusly:",
+        "I hath counted thy scrawlings thus:"
       ]
     },
     {
       "key": "ENHANCE_OPTIONS",
       "values": [
-        "Done - %WC% is now solid gold.",
-        "Done - %WC% now smells nice.",
-        "Done - %WC% is now 10GP richer.",
-        "Done - %WC% won a Nobel Prize.",
-        "Done - %WC% now has friends.",
-        "Done - %WC% just made the newspaper",
-        "Done - %WC% is now part Dragon",
-        "Done - %WC% now owns the One Ring",
-        "Done - %WC% is now a wizard, Harry.",
-        "Done - %WC% came back from the dead.",
-        "Done - %WC% is now a weeb.",
-        "Done - %WC% just won the lottery.",
-        "Done - %WC% now plays Minecraft.",
-        "Done - %WC% can now rap mad rhymes.",
-        "Done - %WC%'s ex lover just moved to Madagascar.",
-        "Done - %WC% is now good at archery.",
-        "Done - %WC% can now cast magic.",
-        "Done - %WC% now has a college degree",
-        "Done - %WC% just invented the lightsaber.",
-        "Done - %WC% is now radioactive."
+        "Finished - %WC% now lay fine gold.",
+        "Finished - %WC% now praises the sun.",
+        "Finished - %WC% hast been cured of the Black Death.",
+        "Finished - %WC% hast attained a fair maiden's favor.",
+        "Finished - %WC% hast attained a fine lord's favor.",
+        "Finished - %WC% is to be wed",
+        "Finished - %WC% did inherit seven years' wages"
       ]
     },
     {
       "key": "FAMILY_CREATED",
       "values": [
-        "The Family was created! Now let's go add other servers!"
+        "Thy company has been established, but is yet lacking in membership."
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE",
       "values": [
-        "**Join Code for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
+        "**Thy company's secret phrase for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
       ]
     },
     {
       "key": "FAMILY_JOIN_CODE_INVALIDATED",
       "values": [
-        "[The Join Code has been invalidated for security purposes]"
+        "[Thy secret phrase hast been invalidated by command of the King]"
       ]
     },
     {
       "key": "FAMILY_JOINED",
       "values": [
-        "Added **%WC%** to the **%WC%** Family!"
+        "Behold! **%WC%** hast pledged loyalty to the great company **%WC%**!"
       ]
     },
     {
       "key": "FAMILY_REMOVED_SERVER",
       "values": [
-        "Removed **%WC%** from the **%WC%** Family!"
+        "Woe is me! **%WC%** hast betrayed **%WC%**!"
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST",
       "values": [
-        "The \"%WC%\" Family contains the following servers:"
+        "Thy company \"%WC%\" is beholden to the patriots:"
       ]
     },
     {
       "key": "FEEDBACK_COOLDOWN",
       "values": [
-        "Please wait a bit before submitting more feedback."
+        "Pray halt thy requests but for a moment."
       ]
     },
     {
       "key": "FEEDBACK_SENT",
       "values": [
-        ":notepad_spiral: Your feedback has been noted. Thanks!%BR%You can report again in **5 minutes**."
+        ":notepad_spiral: Thy request hast been made known. Thou may proceed anew upon the passage of **5 minutes**."
       ]
     },
     {
       "key": "FORUM_WEAPON_ADDED_ALIAS",
       "values": [
-        "The alias was added!"
+        "Thy alias hast been recorded."
       ]
     },
     {
       "key": "FORUM_WEAPON_CREATED",
       "values": [
-        "Created a new Forum Weapon: **%WC%**"
+        "Thou hast summoned a new Forum Weapon: **%WC%**"
       ]
     },
     {
       "key": "FORUM_WEAPON_DESTROYED",
       "values": [
-        "Weapon destroyed."
+        "Thy weapon destroyed."
       ]
     },
     {
       "key": "FORUM_WEAPON_DUPLICATE",
       "values": [
-        ":warning: Found an existing Forum Weapon with that link: **%WC%**"
+        ":warning: Pray examine thy request, for a Forum Weapon with that link doth already exist: **%WC%**"
       ]
     },
     {
       "key": "FORUM_WEAPON_LIST",
       "values": [
-        "These are the weapons I found:"
+        "Thy strength in the forum doth outnumber all others:"
       ]
     },
     {
       "key": "FORUM_WEAPONS_PRUNED",
       "values": [
-        "Pruned **%WC%** unused Forum Weapons!"
+        "**%WC%** Forum Weapons hast been expelled."
       ]
     },
     {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
-        "The weapon was updated with a new link!"
+        "Thy weapon hast been updated with a new link!"
       ]
     },
     {
       "key": "GENERIC_SUCCESS",
       "values": [
-        "Success!"
+        "Thy command is fulfilled.",
+        "It hath been made so."
       ]
     },
     {
       "key": "HANGMAN_DICTIONARIES",
       "values": [
-        "Available dictionaries: **%WC%** (or leave blank to use all of them)"
+        "Thy tomes include thusly: **%WC%** (or leavest the field blank to use all of them)"
       ]
     },
     {
       "key": "HANGMAN_FOOTER_GUESSED",
       "values": [
-        "Already guessed:"
+        "Thy failed attempts:"
       ]
     },
     {
       "key": "HANGMAN_TITLE",
       "values": [
-        "Let's play Hangman!"
+        "An execution at the gallows."
       ]
     },
     {
       "key": "INVALID_TRIGGER_TYPE",
       "values": [
-        ":scream: Invalid trigger type! Your options are: %WC%"
+        "Thine choice doth not befit the command. Thou must chooseth from: %WC%"
       ]
     },
     {
       "key": "ITEM_ADDED",
       "values": [
-        "Added the things :+1:"
+        "Thine request hath been heard."
       ]
     },
     {
       "key": "ITEM_REMOVED",
       "values": [
-        "I've removed \"%WC%\"!"
+        "\"%WC%\" hast been removed.",
+        "Mine hands hath removed \"%WC%\"."
       ]
     },
     {
       "key": "LIST_CREATED",
       "values": [
-        "The List was created!"
+        "Thy ledger hast been created."
       ]
     },
     {
       "key": "LIST_DELETED",
       "values": [
-        "Deleted the `%WC%` List!"
+        "Thy ledger `%WC%` hast been deleted."
       ]
     },
     {
       "key": "LIST_PRIVACY_TOGGLED",
       "values": [
-        "The `%WC%` List is now `%WC%`!"
+        "At thy request, the ledger `%WC%` may now be considered `%WC%`."
       ]
     },
     {
       "key": "MUSIC_ADDED_TO_QUEUE",
       "values": [
-        "Added to queue!"
+        "The bard has taken thy request."
       ]
     },
     {
       "key": "MUSIC_LOOPING_TOGGLED",
       "values": [
-        "Music looping is now **%WC%**"
+        "The bard shall replay their song: **%WC%**"
       ]
     },
     {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
-        "Music Queue looping is now **%WC%**"
+        "The bard shall replay their set: **%WC%**"
       ]
     },
     {
       "key": "MUSIC_PLAYING",
       "values": [
-        "Playing!"
+        "The bard hath begun playing."
       ]
     },
     {
       "key": "MUSIC_PLAYING_PLAYLIST",
       "values": [
-        "Playing the `%WC%` Playlist!"
+        "The bard shall perform thy `%WC%` set."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_CREATED",
       "values": [
-        "Created a new Playlist `%WC%`!"
+        "Thou hast created a new set `%WC%`."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
-        "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+        "Converted the bard's list into a new set `%WC%` with `%WC%` pieces."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_DELETED",
       "values": [
-        "Playlist deleted!"
+        "Thy set hast been deleted!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_TRACK_ADDED",
       "values": [
-        "Track added!"
+        "The musical piece hast been added!"
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_TRACK_REMOVED",
       "values": [
-        "Track removed!"
+        "The musical piece hast been removed!"
       ]
     },
     {
       "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Cleared the music queue!"
+        "Cleared the bard's set."
       ]
     },
     {
       "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Shuffled the music queue!"
+        "Rearranged the bard's set!"
       ]
     },
     {
       "key": "MUSIC_QUEUE_REVERSED",
       "values": [
-        "Reversed the music queue!"
+        "Reversed the bard's set!"
       ]
     },
     {
       "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Queued the `%WC%` Playlist!"
+        "The bard shall remember to play the `%WC%` set!"
       ]
     },
     {
       "key": "POLL_TITLE",
       "values": [
-        "Cast your vote!"
+        "Make heard thy voice."
       ]
     },
     {
       "key": "POLL_TITLE_RESULTS",
       "values": [
-        "The Poll has closed."
+        "The Crown hath noted thy supplication."
       ]
     },
     {
       "key": "RESET_EMOTE_STATS",
       "values": [
-        "Emoji usage stats have been reset!"
+        "Thy scrawlings' numbers hast been reset!"
       ]
     },
     {
       "key": "SEARCH_RESULTS",
       "values": [
-        "Search results:"
+        "I hath researched thusly:"
       ]
     },
     {
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
-        "I sent some details over in your DMs."
+        "Pray inspect thine letterbox."
       ]
     },
     {
       "key": "SERVER_FAMILY_LIST",
       "values": [
-        "This server has joined the following Families:"
+        "Thine company hath pledged to these:"
       ]
     },
     {
       "key": "SETTING_LIST_TITLE",
       "values": [
-        "Available settings"
+        "Constraints"
       ]
     },
     {
       "key": "SETTING_UPDATED_SUCCESS",
       "values": [
-        "Setting was updated successfully!"
+        "Thy constraint hast been changed."
       ]
     },
     {
       "key": "STORY_INTRO",
       "values": [
-        "Let's read a story!"
+        "Pray, let us recount a tale."
       ]
     },
     {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
-        "Current tally for `%WC%`: `%WC%`"
+        "The scholar's abacus has raised `%WC%` to `%WC%`"
       ]
     },
     {
       "key": "TALLY_LIST",
       "values": [
-        "Here's what I have written down:"
+        "The scholar's abacus doth record:"
       ]
     },
     {
       "key": "TALLY_REMOVED",
       "values": [
-        "`%WC%` hast been removed, sire."
+        "Removed is `%WC%` from thine abacus."
       ]
     },
     {
       "key": "THOUGHTS_OPTIONS",
       "values": [
-        "That's incredible!",
-        "I love it.",
-        "The best thing all week.",
-        "YAAS QUEEN",
-        "Amazing!",
-        "Fantastic :ok_hand:",
-        "I am indifferent.",
-        "Could be better.",
-        "Ick, no way!",
-        "Just no.",
-        "That is offensive.",
-        "I hate that.",
-        "Get that garbage out of my face!"
+        "By the Crown, I am taken with awe!",
+        "It is a manifestation of beauty and of grace.",
+        "Gazing upon its glory inspires one to weep.",
+        "I am unable to express mine favor.",
+        "It is neither great nor foul.",
+        "I find thy object of request lacking in the extreme.",
+        "Foul and rancid is its presence.",
+        "Its visage offends even the common dogs.",
+        "Truly, this creation colors ill the legacy of its maker.",
+        "I find mineself wanting relief.",
+        "Pray remove this wretched thing from mine presence at once.",
+        "Clearest as daylight, it hath ne'ery a wench.",
+        "Far better is it to die, I reason."
       ]
     },
     {
       "key": "TIMER_STARTED",
       "values": [
-        "Started a new :alarm_clock: for %WC%"
+        ":bell: The cathedral's bells shall toll upon the count of the timekeepers %WC%"
       ]
     },
     {
       "key": "TIMER_ALERT",
       "values": [
-        ":alarm_clock: (%WC%): The timer you set is finished!"
+        ":bell: (%WC%): The timekeepers hath counted thy measure!"
       ]
     },
     {
       "key": "TRIGGER_LIST",
       "values": [
-        "I'll respond to these things:"
+        "Mine ears listen dearly for thus:"
       ]
     },
     {
       "key": "WHAT_ARE_THE_ODDS",
       "values": [
-        "About %WC%"
+        "I calculate it is %WC%",
+        "Mayhap it shall be close to %WC%"
       ]
     },
     {
       "key": "WHATSHOULDIDO_INTRO_OPTIONS",
       "values": [
-        "I think you should",
-        "I'd love it if you",
-        "My advice is to",
-        "Hmm, perhaps try to",
-        "I know! You should"
+        "Mine advice is",
+        "Pray",
+        "Truly, thou best",
+        "Thou hath best",
+        "Indeed, it wouldst bring glory to the Crown should thee"
       ]
     },
     {
       "key": "WHATSHOULDIDO_OPTIONS",
       "values": [
-        "defile a grave",
-        "rob a candy store",
-        "deface a subway",
-        "steal a baby's candy",
-        "pirate a low-budget film",
-        "start a riot about gas prices",
-        "rewatch the Star Wars sequels",
-        "curse at an old woman",
-        "donate to a shady charity in Saudi Arabia",
-        "prank call insurance companies",
-        "sell drugs to minors",
-        "write a program in PHP",
-        "narrate an adult audiobook",
-        "swap jobs with Mike Rowe",
-        "start a riot about waiting in traffic",
-        "confuse someone with dementia",
-        "throw eggs at a flock of birds",
-        "rent library books, and return them all sticky",
-        "create a reaction video for YouTube",
-        "invite me to other servers >:}",
-        "sell essential oils",
-        "demand to see the manager",
-        "start a Flat Earth rally",
-        "uncover the truth behind 9/11",
-        "vaguepost on Instagram for attention",
-        "play Madden",
-        "scam impressionable old women out of their retirement funds",
-        "get a life",
-        "kick a puppy",
-        "kick a kitten",
-        "start a 37-tweet rant",
-        "steal art for Karma",
-        "sell out to EA",
-        "text while driving",
-        "watch YouTube Trending",
-        "protest public health guidelines",
-        "talk to the hand",
-        "make smalltalk with the sign-spinner",
-        "drink questionable chemicals",
-        "throw a prom in the McDonalds Playplace"
+        "unseal a tomb",
+        "conduct theft of a sundry merchant",
+        "repaint a well-traveled road",
+        "consume the food of an infant",
+        "re-enact the plot of a foreign play",
+        "begin a crusade to attain justice for horse prices",
+        "hail curses at an old crone",
+        "donate to a charity of low repute",
+        "compose false letters to a noble house",
+        "market tonics and salves to children",
+        "petition a lowly merchant to trade responsibilities",
+        "exploit the elderly and stir confusion",
+        "hurl eggs at a flock of birds",
+        "borrow a tome, bathe it in the sap of a pine tree, and return it to its owner",
+        "erect signage in the public square regarding thy deepest insecurities",
+        "engage in a rousing game of lots",
+        "leave thy house and acquire a maiden",
+        "abandon thy village and seek a young lord"
       ]
     },
     {
@@ -518,30 +462,18 @@
         "In %WC% years",
         "In %WC% minutes",
         "%WC% days ago",
-        "When pigs fly",
         "Absolutely never",
-        "Right now, but in a parallel universe",
-        "Not sure, ask your mom",
         "%WC% years ago",
-        "Once you stop procrastinating",
-        "Once I get elected Chancellor",
-        "After the heat death of the universe",
         "In precisely %WC%",
         "On the next full moon",
-        "When the sand in me hourglass be empty",
+        "When the sand in thy hourglass fall empty",
         "Time is subjective",
-        "Time is a tool you can put on the wall",
-        "Probably within %WC% days",
-        "I'd say in %WC% months",
-        "In %WC%? %WC%? Maybe %WC%?",
         "Between %WC% and %WC% centuries",
         "Sooner shall %WC% days pass",
         "%WC% seconds",
         "%WC% hours, %WC% minutes, and %WC% seconds",
         "Eventually",
-        "Not in your lifetime, kiddo",
-        "In your dreams",
-        "Right now"
+        "In your dreams"
       ]
     }
   ],
@@ -549,31 +481,31 @@
     {
       "key": "ALREADY_EXISTS",
       "values": [
-        "That item already exists!"
+        "Alas, thy requested item exists already."
       ]
     },
     {
       "key": "BOT_ERROR",
       "values": [
-        "There was an internal error, and your request did not complete."
+        "Mine humblest apologies, for thy request did cause an unforeseen catastrophe."
       ]
     },
     {
       "key": "CANNOT_DELETE",
       "values": [
-        "Sorry, I can't let you delete that. It's very precious to me."
+        "Should I answer thy request, I would find myself distraught and unable to carry out further duties."
       ]
     },
     {
       "key": "CHANNEL_NOT_FOUND",
       "values": [
-        "I can't find the correct channel for that."
+        "Nay, a forum with such a name cannot be found."
       ]
     },
     {
       "key": "COMMAND_NOT_FOUND",
       "values": [
-        "That command hasn't been invented yet!"
+        "Nay, a command with such a name hast not yet been decreed."
       ]
     },
     {
@@ -639,25 +571,25 @@
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
-        "There's already a Hangman game in %WC%"
+        "Alas, the gallows are already hung in the %WC% square"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "You've already guessed that letter!"
+        "The executioner hath heard thy cry once before."
       ]
     },
     {
       "key": "HANGMAN_NOT_STARTED",
       "values": [
-        "There isn't a Hangman game running! Try starting one."
+        "The gallows stand unbloodied. Mayhap ye summon the executioner."
       ]
     },
     {
       "key": "HEY_THERE",
       "values": [
-        "Hey there! Try using `%WC% help`!"
+        "Hail to the crown! Makest thy request with `%WC% help`"
       ]
     },
     {
@@ -747,19 +679,19 @@
     {
       "key": "NO_PERMISSION_BOT",
       "values": [
-        "I don't have permission to do that on this server."
+        "Behold, I am wont to complete thy request, yet the laws forbid me."
       ]
     },
     {
       "key": "NO_PERMISSION_USER",
       "values": [
-        "I'm afraid I can't let you do that."
+        "Behold, I have been tasked to forbid thee this access."
       ]
     },
     {
       "key": "NOT_FOUND",
       "values": [
-        "There were no results."
+        "An item of such title could not be uncovered."
       ]
     },
     {
@@ -813,11 +745,11 @@
     {
       "key": "WRONG_USAGE",
       "values": [
-        "The command syntax you used is incorrect."
+        "Alas, I have heard thy request, and I declare it improper. Pray make thine attempt anew."
       ]
     }
   ],
   "wildcard": "%WC%",
   "linebreak": "%BR%",
-  "langName": "en_default"
+  "langName": "en_old_english"
 }
