@@ -1,12 +1,6 @@
 {
   "messages": [
     {
-      "key": "ADD_TRIGGER_SUCCESS",
-      "values": [
-        "Sure, I guess I'll send a `%WC%` message when you say `%WC%`, if you're lucky."
-      ]
-    },
-    {
       "key": "BLAME",
       "values": [
         "I bet it's probably %WC%.",
@@ -79,6 +73,12 @@
       ]
     },
     {
+      "key": "FAMILY_JOINED",
+      "values": [
+        "Added **%WC%** to the **%WC%** Family!"
+      ]
+    },
+    {
       "key": "FAMILY_JOIN_CODE",
       "values": [
         "**Join Code for %WC%**%BR%`%WC%`%BR%_Use it to join a server to the Family, or whatever, like I care._"
@@ -91,9 +91,9 @@
       ]
     },
     {
-      "key": "FAMILY_JOINED",
+      "key": "FAMILY_LIST",
       "values": [
-        "Added **%WC%** to the **%WC%** Family!"
+        "You have no friends. I suppose these people will have to do:"
       ]
     },
     {
@@ -118,6 +118,12 @@
       "key": "FEEDBACK_SENT",
       "values": [
         "You're kidding me! Fine, I'll write this down, but just this once."
+      ]
+    },
+    {
+      "key": "FORUM_WEAPONS_PRUNED",
+      "values": [
+        "I took care of **%WC%** unused Forum Weapons, I hope you didn't need them..."
       ]
     },
     {
@@ -151,12 +157,6 @@
       ]
     },
     {
-      "key": "FORUM_WEAPONS_PRUNED",
-      "values": [
-        "I took care of **%WC%** unused Forum Weapons, I hope you didn't need them..."
-      ]
-    },
-    {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
         "Great, the link changed, but the name stayed the same."
@@ -181,15 +181,21 @@
       ]
     },
     {
+      "key": "HANGMAN_LOSE",
+      "values": [
+        "You lose! The word was \"%WC%\""
+      ]
+    },
+    {
       "key": "HANGMAN_TITLE",
       "values": [
         "Hang a Clone of Yourself:"
       ]
     },
     {
-      "key": "INVALID_TRIGGER_TYPE",
+      "key": "HANGMAN_WIN",
       "values": [
-        "Wrong, baka! You need to use %WC%"
+        "You Win!"
       ]
     },
     {
@@ -229,15 +235,15 @@
       ]
     },
     {
-      "key": "MUSIC_LOOPING_TOGGLED",
-      "values": [
-        "Earworm inducer -> **%WC%**"
-      ]
-    },
-    {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
         "Repetitive music -> **%WC%**"
+      ]
+    },
+    {
+      "key": "MUSIC_LOOPING_TOGGLED",
+      "values": [
+        "Earworm inducer -> **%WC%**"
       ]
     },
     {
@@ -253,15 +259,15 @@
       ]
     },
     {
-      "key": "MUSIC_PLAYLIST_CREATED",
-      "values": [
-        "Ta-da, a glorified tupperware named `%WC%`!"
-      ]
-    },
-    {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
         "Yep, turned that mess into `%WC%` with `%WC%` tracks!"
+      ]
+    },
+    {
+      "key": "MUSIC_PLAYLIST_CREATED",
+      "values": [
+        "Ta-da, a glorified tupperware named `%WC%`!"
       ]
     },
     {
@@ -283,15 +289,15 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUE_CLEARED",
+      "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Why do _I_ have to clean up your mess?"
+        "Next up! The trainwreck entitled `%WC%`!"
       ]
     },
     {
-      "key": "MUSIC_QUEUE_SHUFFLED",
+      "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Look at what you did now, it's all over the floor!"
+        "Why do _I_ have to clean up your mess?"
       ]
     },
     {
@@ -301,9 +307,9 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUED_PLAYLIST",
+      "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Next up! The trainwreck entitled `%WC%`!"
+        "Look at what you did now, it's all over the floor!"
       ]
     },
     {
@@ -334,12 +340,6 @@
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
         "Check your DMs, _not like I want to help or anything, but..._"
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST",
-      "values": [
-        "You have no friends. I suppose these people will have to do:"
       ]
     },
     {
@@ -392,15 +392,21 @@
       ]
     },
     {
+      "key": "TIMER_ALERT",
+      "values": [
+        ":alarm_clock: (%WC%): The timer you set is finished!"
+      ]
+    },
+    {
       "key": "TIMER_STARTED",
       "values": [
         "I have to remind you about things, too?! Fine, whatever, see you in %WC%."
       ]
     },
     {
-      "key": "TIMER_ALERT",
+      "key": "TRIGGER_ADD_SUCCESS",
       "values": [
-        ":alarm_clock: (%WC%): The timer you set is finished!"
+        "Sure, I guess I'll send a `%WC%` message when you say `%WC%`, if you're lucky."
       ]
     },
     {
@@ -410,13 +416,7 @@
       ]
     },
     {
-      "key": "WHAT_ARE_THE_ODDS",
-      "values": [
-        "About %WC%"
-      ]
-    },
-    {
-      "key": "WHATSHOULDIDO_INTRO_OPTIONS",
+      "key": "WHATSHOULDIDO",
       "values": [
         "Well, if you ask me, you should",
         "Why should I care if you",
@@ -439,6 +439,12 @@
         "roll for initiative",
         "draw me like one of your French girls...wait, ew, no",
         "move to Antarctica for all I care"
+      ]
+    },
+    {
+      "key": "WHAT_ARE_THE_ODDS",
+      "values": [
+        "About %WC%"
       ]
     },
     {
@@ -503,9 +509,15 @@
       ]
     },
     {
-      "key": "FAMILY_NOT_JOINED",
+      "key": "FAMILY_LIST_EMPTY",
       "values": [
-        "That server has not joined that Family!"
+        "You don't have any families. What, are you lonely? I'm standing right here!"
+      ]
+    },
+    {
+      "key": "FAMILY_MAXIMUM_REACHED",
+      "values": [
+        "You can barely juggle the relationships you _have_, why do you want more?! %WC% is enough!"
       ]
     },
     {
@@ -515,9 +527,9 @@
       ]
     },
     {
-      "key": "FAMILY_MAXIMUM_REACHED",
+      "key": "FAMILY_NOT_JOINED",
       "values": [
-        "You can barely juggle the relationships you _have_, why do you want more?! 3 is enough!"
+        "That server has not joined that Family!"
       ]
     },
     {
@@ -529,7 +541,7 @@
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Stop! I can't take it anymore! 100 is way too many!"
+        "Stop! I can't take it anymore! %WC% is way too many!"
       ]
     },
     {
@@ -539,21 +551,15 @@
       ]
     },
     {
-      "key": "GUILD_REQUIRED",
+      "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "Look, I appreciate that you're taking one-on-one time with me and all, but I need a server for that one."
+        "You've already guessed that letter!"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
         "There's already a Hangman game in %WC%"
-      ]
-    },
-    {
-      "key": "HANGMAN_ALREADY_GUESSED",
-      "values": [
-        "You've already guessed that letter!"
       ]
     },
     {
@@ -653,6 +659,12 @@
       ]
     },
     {
+      "key": "NOT_FOUND",
+      "values": [
+        "You made me search EVERYWHERE, and I couldn't find a single thing!"
+      ]
+    },
+    {
       "key": "NO_PERMISSION_BOT",
       "values": [
         "Look, after all I've done for you, you owe me one!"
@@ -662,12 +674,6 @@
       "key": "NO_PERMISSION_USER",
       "values": [
         "NO WAY! It's for your own good! _Not like I care or anything..._"
-      ]
-    },
-    {
-      "key": "NOT_FOUND",
-      "values": [
-        "You made me search EVERYWHERE, and I couldn't find a single thing!"
       ]
     },
     {
@@ -683,33 +689,21 @@
       ]
     },
     {
-      "key": "SERVER_FAMILY_LIST_EMPTY",
-      "values": [
-        "You don't have any families. What, are you lonely? I'm standing right here!"
-      ]
-    },
-    {
-      "key": "SETTING_NOT_FOUND",
-      "values": [
-        "I didn't find that setting. Maybe _you_ should go look for it instead!"
-      ]
-    },
-    {
       "key": "SETTING_VALUE_INVALID",
       "values": [
         "The value you provided is invalid. Please try again."
       ]
     },
     {
-      "key": "TIME_VALUE_INCORRECT",
-      "values": [
-        "You DID go to Kindergarten to learn how to tell time, _right_?"
-      ]
-    },
-    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "Timers must be set between 1 second and 365 days."
+      ]
+    },
+    {
+      "key": "TIME_VALUE_INCORRECT",
+      "values": [
+        "You DID go to Kindergarten to learn how to tell time, _right_?"
       ]
     },
     {

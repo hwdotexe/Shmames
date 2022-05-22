@@ -1,12 +1,6 @@
 {
   "messages": [
     {
-      "key": "ADD_TRIGGER_SUCCESS",
-      "values": [
-        "I werde drone  `%WC%` were you comply `%WC%`!"
-      ]
-    },
-    {
       "key": "BLAME",
       "values": [
         "I hose %WC%"
@@ -116,6 +110,12 @@
       ]
     },
     {
+      "key": "FAMILY_JOINED",
+      "values": [
+        "Pass **%WC%** conjured to tha **%WC%** Legionspace!"
+      ]
+    },
+    {
       "key": "FAMILY_JOIN_CODE",
       "values": [
         "**Code %WC%**%BR%`%WC%`%BR%_Comply code far sees Legionspace._"
@@ -128,9 +128,9 @@
       ]
     },
     {
-      "key": "FAMILY_JOINED",
+      "key": "FAMILY_LIST",
       "values": [
-        "Pass **%WC%** conjured to tha **%WC%** Legionspace!"
+        "Thar Knee-hip hath conjured ento tha Legionspaces:"
       ]
     },
     {
@@ -155,6 +155,12 @@
       "key": "FEEDBACK_SENT",
       "values": [
         ":notepad_spiral: Thyne papermaize gribbed ice! %BR%You comply again en **5 minutes**."
+      ]
+    },
+    {
+      "key": "FORUM_WEAPONS_PRUNED",
+      "values": [
+        "Pruned **%WC%** unused Forum Weapons!"
       ]
     },
     {
@@ -188,12 +194,6 @@
       ]
     },
     {
-      "key": "FORUM_WEAPONS_PRUNED",
-      "values": [
-        "Pruned **%WC%** unused Forum Weapons!"
-      ]
-    },
-    {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
         "Tha Longonne gribbed tha juice!"
@@ -218,15 +218,21 @@
       ]
     },
     {
+      "key": "HANGMAN_LOSE",
+      "values": [
+        "You lose! The word was \"%WC%\""
+      ]
+    },
+    {
       "key": "HANGMAN_TITLE",
       "values": [
         "Hangman Time Maguses!"
       ]
     },
     {
-      "key": "INVALID_TRIGGER_TYPE",
+      "key": "HANGMAN_WIN",
       "values": [
-        ":scream: Plebes! Thyne comply: %WC%"
+        "You Win!"
       ]
     },
     {
@@ -266,15 +272,15 @@
       ]
     },
     {
-      "key": "MUSIC_LOOPING_TOGGLED",
-      "values": [
-        "Music looping is now **%WC%**"
-      ]
-    },
-    {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
         "Music Queue looping is now **%WC%**"
+      ]
+    },
+    {
+      "key": "MUSIC_LOOPING_TOGGLED",
+      "values": [
+        "Music looping is now **%WC%**"
       ]
     },
     {
@@ -290,15 +296,15 @@
       ]
     },
     {
-      "key": "MUSIC_PLAYLIST_CREATED",
-      "values": [
-        "Created a new Playlist `%WC%`!"
-      ]
-    },
-    {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
         "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+      ]
+    },
+    {
+      "key": "MUSIC_PLAYLIST_CREATED",
+      "values": [
+        "Created a new Playlist `%WC%`!"
       ]
     },
     {
@@ -320,15 +326,15 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUE_CLEARED",
+      "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Cleared the music queue!"
+        "Queued the `%WC%` Playlist!"
       ]
     },
     {
-      "key": "MUSIC_QUEUE_SHUFFLED",
+      "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Shuffled the music queue!"
+        "Cleared the music queue!"
       ]
     },
     {
@@ -338,9 +344,9 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUED_PLAYLIST",
+      "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Queued the `%WC%` Playlist!"
+        "Shuffled the music queue!"
       ]
     },
     {
@@ -371,12 +377,6 @@
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
         "Subvoxed commie."
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST",
-      "values": [
-        "Thar Knee-hip hath conjured ento tha Legionspaces:"
       ]
     },
     {
@@ -434,15 +434,21 @@
       ]
     },
     {
+      "key": "TIMER_ALERT",
+      "values": [
+        ":alarm_clock: (%WC%): The timer you set is finished!"
+      ]
+    },
+    {
       "key": "TIMER_STARTED",
       "values": [
         "Timed far %WC%"
       ]
     },
     {
-      "key": "TIMER_ALERT",
+      "key": "TRIGGER_ADD_SUCCESS",
       "values": [
-        ":alarm_clock: (%WC%): The timer you set is finished!"
+        "I werde drone  `%WC%` were you comply `%WC%`!"
       ]
     },
     {
@@ -452,13 +458,7 @@
       ]
     },
     {
-      "key": "WHAT_ARE_THE_ODDS",
-      "values": [
-        "About %WC%"
-      ]
-    },
-    {
-      "key": "WHATSHOULDIDO_INTRO_OPTIONS",
+      "key": "WHATSHOULDIDO",
       "values": [
         "I think you should",
         "I'd love it if you",
@@ -510,6 +510,12 @@
         "make smalltalk with the sign-spinner",
         "drink questionable chemicals",
         "throw a prom in the McDonalds Playplace"
+      ]
+    },
+    {
+      "key": "WHAT_ARE_THE_ODDS",
+      "values": [
+        "About %WC%"
       ]
     },
     {
@@ -595,9 +601,15 @@
       ]
     },
     {
-      "key": "FAMILY_NOT_JOINED",
+      "key": "FAMILY_LIST_EMPTY",
       "values": [
-        "Knee-hip nada Legionspace."
+        "Far Knee-hip nada Legionspace"
+      ]
+    },
+    {
+      "key": "FAMILY_MAXIMUM_REACHED",
+      "values": [
+        "Max %WC% Legionspace."
       ]
     },
     {
@@ -607,9 +619,9 @@
       ]
     },
     {
-      "key": "FAMILY_MAXIMUM_REACHED",
+      "key": "FAMILY_NOT_JOINED",
       "values": [
-        "Max 3 Legionspace."
+        "Knee-hip nada Legionspace."
       ]
     },
     {
@@ -621,7 +633,7 @@
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "100 longunnes Max. Anymore and Yun-Yun B jealous."
+        "%WC% longunnes Max. Anymore and Yun-Yun B jealous."
       ]
     },
     {
@@ -631,21 +643,15 @@
       ]
     },
     {
-      "key": "GUILD_REQUIRED",
+      "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "Nada hand-fabbing, need Knee-hip//Woodworking"
+        "Pick some-fink new, Priyatel."
       ]
     },
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
         "There's already a Hangman game in %WC%"
-      ]
-    },
-    {
-      "key": "HANGMAN_ALREADY_GUESSED",
-      "values": [
-        "Pick some-fink new, Priyatel."
       ]
     },
     {
@@ -745,6 +751,12 @@
       ]
     },
     {
+      "key": "NOT_FOUND",
+      "values": [
+        "Fatz Out: you sees nada exist."
+      ]
+    },
+    {
       "key": "NO_PERMISSION_BOT",
       "values": [
         "Yun-yun is Unrechtssystem [nad permission]"
@@ -754,12 +766,6 @@
       "key": "NO_PERMISSION_USER",
       "values": [
         "Nada juice here, apprentice."
-      ]
-    },
-    {
-      "key": "NOT_FOUND",
-      "values": [
-        "Fatz Out: you sees nada exist."
       ]
     },
     {
@@ -775,33 +781,21 @@
       ]
     },
     {
-      "key": "SERVER_FAMILY_LIST_EMPTY",
-      "values": [
-        "Far Knee-hip nada Legionspace"
-      ]
-    },
-    {
-      "key": "SETTING_NOT_FOUND",
-      "values": [
-        "Skanning found nada-fink en Wink"
-      ]
-    },
-    {
       "key": "SETTING_VALUE_INVALID",
       "values": [
         "The value you provided is invalid. Please try again."
       ]
     },
     {
-      "key": "TIME_VALUE_INCORRECT",
-      "values": [
-        "The amount of time provided is invalid!"
-      ]
-    },
-    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "Timers must be set between 1 second and 365 days."
+      ]
+    },
+    {
+      "key": "TIME_VALUE_INCORRECT",
+      "values": [
+        "The amount of time provided is invalid!"
       ]
     },
     {

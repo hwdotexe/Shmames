@@ -21,7 +21,7 @@ public class WhatShouldIDo extends Command {
 
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String randomIntro = executingCommand.getLanguage().getMsg(LanguageKeys.WHATSHOULDIDO_INTRO_OPTIONS);
+		String randomIntro = executingCommand.getLanguage().getMsg(LanguageKeys.WHATSHOULDIDO);
 		String randomAnswer = executingCommand.getLanguage().getMsg(LanguageKeys.WHATSHOULDIDO_OPTIONS);
 
 		return response(EmbedType.INFO)

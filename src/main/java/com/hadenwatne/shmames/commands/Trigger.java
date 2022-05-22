@@ -90,7 +90,7 @@ public class Trigger extends Command {
 		if (!brain.getTriggers().containsKey(triggerWord)) {
 			brain.getTriggers().put(triggerWord, TriggerType.byName(triggerType));
 
-			String response = language.getMsg(LanguageKeys.ADD_TRIGGER_SUCCESS, new String[]{triggerType, triggerWord});
+			String response = language.getMsg(LanguageKeys.TRIGGER_ADD_SUCCESS, new String[]{triggerType, triggerWord});
 
 			return response(EmbedType.SUCCESS)
 					.setDescription(response);

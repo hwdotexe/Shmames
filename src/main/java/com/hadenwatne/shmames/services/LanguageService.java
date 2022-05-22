@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LanguageService {
@@ -151,6 +152,9 @@ public class LanguageService {
 					language.errors.add(new LanguageError(key, message.getValues()));
 				}
 			}
+
+			Collections.sort(language.messages);
+			Collections.sort(language.errors);
 		}
 	}
 }

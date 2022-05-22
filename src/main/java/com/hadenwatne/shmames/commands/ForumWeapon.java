@@ -25,6 +25,8 @@ import java.util.List;
 
 
 public class ForumWeapon extends Command {
+	private final int MAX_WEAPON_COUNT = 100;
+
 	public ForumWeapon() {
 		super(true);
 	}
@@ -136,34 +138,34 @@ public class ForumWeapon extends Command {
 		String weaponName = args.getAsString("weaponName").toLowerCase();
 		String weaponURL = args.getAsString("weaponURL");
 
-		if (getFWCount(brain) < 100) {
-				if (weaponName.equals("create") || weaponName.equals("update") || weaponName.equals("remove")
-						|| weaponName.equals("list") || weaponName.equals("search") || weaponName.equals("prune")) {
-					return response(EmbedType.ERROR, ErrorKeys.RESERVED_WORD.name())
-							.setDescription(language.getError(ErrorKeys.RESERVED_WORD));
+		if (getFWCount(brain) < MAX_WEAPON_COUNT) {
+			if (weaponName.equals("create") || weaponName.equals("update") || weaponName.equals("remove")
+					|| weaponName.equals("list") || weaponName.equals("search") || weaponName.equals("prune")) {
+				return response(EmbedType.ERROR, ErrorKeys.RESERVED_WORD.name())
+						.setDescription(language.getError(ErrorKeys.RESERVED_WORD));
+			}
+
+			if (FindForumWeapon(weaponName, brain, server) == null) {
+				ForumWeaponObj newWeapon = new ForumWeaponObj(weaponName, weaponURL, server.getId());
+				ForumWeaponObj existingUrl = findFWByURL(weaponURL, brain, server);
+
+				brain.getForumWeapons().add(newWeapon);
+
+				EmbedBuilder response = response(EmbedType.SUCCESS)
+						.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_CREATED, new String[]{weaponName}));
+
+				if (existingUrl != null) {
+					response.addField("Duplicate Found", language.getMsg(LanguageKeys.FORUM_WEAPON_DUPLICATE, new String[]{existingUrl.getItemName()}), false);
 				}
 
-				if (FindForumWeapon(weaponName, brain, server) == null) {
-					ForumWeaponObj newWeapon = new ForumWeaponObj(weaponName, weaponURL, server.getId());
-					ForumWeaponObj existingUrl = findFWByURL(weaponURL, brain, server);
-
-					brain.getForumWeapons().add(newWeapon);
-
-					EmbedBuilder response = response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.FORUM_WEAPON_CREATED, new String[]{weaponName}));
-
-					if(existingUrl != null) {
-						response.addField("Duplicate Found", language.getMsg(LanguageKeys.FORUM_WEAPON_DUPLICATE, new String[]{existingUrl.getItemName()}), false);
-					}
-
-					return response;
-				} else {
-					return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
-							.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
-				}
+				return response;
+			} else {
+				return response(EmbedType.ERROR, ErrorKeys.ALREADY_EXISTS.name())
+						.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
+			}
 		} else {
 			return response(EmbedType.ERROR, ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED.name())
-					.setDescription(language.getError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED));
+					.setDescription(language.getError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{Integer.toString(MAX_WEAPON_COUNT)}));
 		}
 	}
 

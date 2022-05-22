@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class FamilyCmd extends Command {
+	private final int MAX_FAMILIES = 3;
+
 	public FamilyCmd() {
 		super(true);
 	}
@@ -257,12 +259,12 @@ public class FamilyCmd extends Command {
 	private EmbedBuilder cmdCodeRedeem(Language language, Brain brain, Guild server, Member author, ExecutingCommandArguments args) {
 		String joinCode = args.getAsString("joinCode").toLowerCase();
 
-		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
+		for (Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
 			if (f.validateCode(joinCode)) {
 				f.clearCode();
 
 				if (author.hasPermission(Permission.ADMINISTRATOR) || App.IsDebug) {
-					if (brain.getFamilies().size() < 3) {
+					if (brain.getFamilies().size() < MAX_FAMILIES) {
 						if (!brain.getFamilies().contains(f.getFamID())) {
 							f.addToFamily(server.getIdLong());
 							brain.getFamilies().add(f.getFamID());
@@ -277,7 +279,7 @@ public class FamilyCmd extends Command {
 						}
 					} else {
 						return response(EmbedType.ERROR, ErrorKeys.FAMILY_MAXIMUM_REACHED.name())
-								.setDescription(language.getError(ErrorKeys.FAMILY_MAXIMUM_REACHED))
+								.setDescription(language.getError(ErrorKeys.FAMILY_MAXIMUM_REACHED, new String[]{Integer.toString(MAX_FAMILIES)}))
 								.appendDescription(System.lineSeparator())
 								.appendDescription(language.getMsg(LanguageKeys.FAMILY_JOIN_CODE_INVALIDATED));
 					}
@@ -378,11 +380,11 @@ public class FamilyCmd extends Command {
 			if(families.size() > 0) {
 				familyList = PaginationService.GenerateList(families, 1, true, false);
 			} else {
-				familyList = language.getError(ErrorKeys.SERVER_FAMILY_LIST_EMPTY);
+				familyList = language.getError(ErrorKeys.FAMILY_LIST_EMPTY);
 			}
 
 			return response(EmbedType.INFO)
-					.addField(language.getMsg(LanguageKeys.SERVER_FAMILY_LIST), familyList, false);
+					.addField(language.getMsg(LanguageKeys.FAMILY_LIST), familyList, false);
 		}else{
 			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
 					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));

@@ -220,10 +220,10 @@ public class Hangman extends Command {
 		EmbedBuilder eBuilder = response(EmbedType.INFO, language.getMsg(LanguageKeys.HANGMAN_TITLE));
 
 		if(g.isFinished()) {
-			if(g.didWin()) {
-				eBuilder.setDescription("You win!");
+			if (g.didWin()) {
+				eBuilder.setDescription(language.getMsg(LanguageKeys.HANGMAN_WIN));
 			} else {
-				eBuilder.setDescription("You lose! The word was \""+g.getWord()+"\"");
+				eBuilder.setDescription(language.getMsg(LanguageKeys.HANGMAN_LOSE, new String[]{g.getWord()}));
 			}
 		}
 

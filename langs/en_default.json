@@ -1,12 +1,6 @@
 {
   "messages": [
     {
-      "key": "ADD_TRIGGER_SUCCESS",
-      "values": [
-        "I will now send a `%WC%` response when I hear `%WC%`!"
-      ]
-    },
-    {
       "key": "BLAME",
       "values": [
         "I blame %WC%"
@@ -116,6 +110,12 @@
       ]
     },
     {
+      "key": "FAMILY_JOINED",
+      "values": [
+        "Added **%WC%** to the **%WC%** Family!"
+      ]
+    },
+    {
       "key": "FAMILY_JOIN_CODE",
       "values": [
         "**Join Code for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
@@ -128,9 +128,9 @@
       ]
     },
     {
-      "key": "FAMILY_JOINED",
+      "key": "FAMILY_LIST",
       "values": [
-        "Added **%WC%** to the **%WC%** Family!"
+        "This server has joined the following Families:"
       ]
     },
     {
@@ -155,6 +155,12 @@
       "key": "FEEDBACK_SENT",
       "values": [
         ":notepad_spiral: Your feedback has been noted. Thanks!%BR%You can report again in **5 minutes**."
+      ]
+    },
+    {
+      "key": "FORUM_WEAPONS_PRUNED",
+      "values": [
+        "Pruned **%WC%** unused Forum Weapons!"
       ]
     },
     {
@@ -188,12 +194,6 @@
       ]
     },
     {
-      "key": "FORUM_WEAPONS_PRUNED",
-      "values": [
-        "Pruned **%WC%** unused Forum Weapons!"
-      ]
-    },
-    {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
         "The weapon was updated with a new link!"
@@ -218,15 +218,21 @@
       ]
     },
     {
+      "key": "HANGMAN_LOSE",
+      "values": [
+        "You lose! The word was \"%WC%\""
+      ]
+    },
+    {
       "key": "HANGMAN_TITLE",
       "values": [
         "Let's play Hangman!"
       ]
     },
     {
-      "key": "INVALID_TRIGGER_TYPE",
+      "key": "HANGMAN_WIN",
       "values": [
-        ":scream: Invalid trigger type! Your options are: %WC%"
+        "You Win!"
       ]
     },
     {
@@ -266,15 +272,15 @@
       ]
     },
     {
-      "key": "MUSIC_LOOPING_TOGGLED",
-      "values": [
-        "Music looping is now **%WC%**"
-      ]
-    },
-    {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
         "Music Queue looping is now **%WC%**"
+      ]
+    },
+    {
+      "key": "MUSIC_LOOPING_TOGGLED",
+      "values": [
+        "Music looping is now **%WC%**"
       ]
     },
     {
@@ -290,15 +296,15 @@
       ]
     },
     {
-      "key": "MUSIC_PLAYLIST_CREATED",
-      "values": [
-        "Created a new Playlist `%WC%`!"
-      ]
-    },
-    {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
         "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+      ]
+    },
+    {
+      "key": "MUSIC_PLAYLIST_CREATED",
+      "values": [
+        "Created a new Playlist `%WC%`!"
       ]
     },
     {
@@ -320,15 +326,15 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUE_CLEARED",
+      "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Cleared the music queue!"
+        "Queued the `%WC%` Playlist!"
       ]
     },
     {
-      "key": "MUSIC_QUEUE_SHUFFLED",
+      "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Shuffled the music queue!"
+        "Cleared the music queue!"
       ]
     },
     {
@@ -338,9 +344,9 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUED_PLAYLIST",
+      "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Queued the `%WC%` Playlist!"
+        "Shuffled the music queue!"
       ]
     },
     {
@@ -371,12 +377,6 @@
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
         "I sent some details over in your DMs."
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST",
-      "values": [
-        "This server has joined the following Families:"
       ]
     },
     {
@@ -434,15 +434,21 @@
       ]
     },
     {
+      "key": "TIMER_ALERT",
+      "values": [
+        ":alarm_clock: (%WC%): The timer you set is finished!"
+      ]
+    },
+    {
       "key": "TIMER_STARTED",
       "values": [
         "Started a new :alarm_clock: for %WC%"
       ]
     },
     {
-      "key": "TIMER_ALERT",
+      "key": "TRIGGER_ADD_SUCCESS",
       "values": [
-        ":alarm_clock: (%WC%): The timer you set is finished!"
+        "I will now send a `%WC%` response when I hear `%WC%`!"
       ]
     },
     {
@@ -452,13 +458,7 @@
       ]
     },
     {
-      "key": "WHAT_ARE_THE_ODDS",
-      "values": [
-        "About %WC%"
-      ]
-    },
-    {
-      "key": "WHATSHOULDIDO_INTRO_OPTIONS",
+      "key": "WHATSHOULDIDO",
       "values": [
         "I think you should",
         "I'd love it if you",
@@ -510,6 +510,12 @@
         "make smalltalk with the sign-spinner",
         "drink questionable chemicals",
         "throw a prom in the McDonalds Playplace"
+      ]
+    },
+    {
+      "key": "WHAT_ARE_THE_ODDS",
+      "values": [
+        "About %WC%"
       ]
     },
     {
@@ -595,9 +601,15 @@
       ]
     },
     {
-      "key": "FAMILY_NOT_JOINED",
+      "key": "FAMILY_LIST_EMPTY",
       "values": [
-        "That server has not joined that Family!"
+        "This server does not belong to a Family."
+      ]
+    },
+    {
+      "key": "FAMILY_MAXIMUM_REACHED",
+      "values": [
+        "You can only join up to %WC% families!"
       ]
     },
     {
@@ -607,9 +619,9 @@
       ]
     },
     {
-      "key": "FAMILY_MAXIMUM_REACHED",
+      "key": "FAMILY_NOT_JOINED",
       "values": [
-        "You can only join up to 3 families!"
+        "That server has not joined that Family!"
       ]
     },
     {
@@ -621,7 +633,7 @@
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+        "Sorry! I can only keep up to %WC% weapons. Please remove some existing weapons before creating more."
       ]
     },
     {
@@ -631,21 +643,15 @@
       ]
     },
     {
-      "key": "GUILD_REQUIRED",
+      "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "That command must be run on a server."
+        "You've already guessed that letter!"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
         "There's already a Hangman game in %WC%"
-      ]
-    },
-    {
-      "key": "HANGMAN_ALREADY_GUESSED",
-      "values": [
-        "You've already guessed that letter!"
       ]
     },
     {
@@ -745,6 +751,12 @@
       ]
     },
     {
+      "key": "NOT_FOUND",
+      "values": [
+        "There were no results."
+      ]
+    },
+    {
       "key": "NO_PERMISSION_BOT",
       "values": [
         "I don't have permission to do that on this server."
@@ -754,12 +766,6 @@
       "key": "NO_PERMISSION_USER",
       "values": [
         "I'm afraid I can't let you do that."
-      ]
-    },
-    {
-      "key": "NOT_FOUND",
-      "values": [
-        "There were no results."
       ]
     },
     {
@@ -775,33 +781,21 @@
       ]
     },
     {
-      "key": "SERVER_FAMILY_LIST_EMPTY",
-      "values": [
-        "This server does not belong to a Family."
-      ]
-    },
-    {
-      "key": "SETTING_NOT_FOUND",
-      "values": [
-        "I couldn't find that setting."
-      ]
-    },
-    {
       "key": "SETTING_VALUE_INVALID",
       "values": [
         "The value you provided is invalid. Please try again."
       ]
     },
     {
-      "key": "TIME_VALUE_INCORRECT",
-      "values": [
-        "The amount of time provided is invalid!"
-      ]
-    },
-    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "Timers must be set between 1 second and 365 days."
+      ]
+    },
+    {
+      "key": "TIME_VALUE_INCORRECT",
+      "values": [
+        "The amount of time provided is invalid!"
       ]
     },
     {

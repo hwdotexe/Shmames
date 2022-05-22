@@ -119,21 +119,32 @@ public class Language {
     }
 
     private void populateDefaultValues() {
+        // TODO need: "page empty" / "nothing here" error (list+listemotestats)
+        // TODO merge MUSIC_QUEUE_PAGE_EMPTY and MUSIC_PLAYLIST_PAGE_EMPTY?
+
+        /*Already exists*/
         errors.add(new LanguageError(ErrorKeys.ALREADY_EXISTS, new String[]{"That item already exists!"}));
+
         errors.add(new LanguageError(ErrorKeys.BOT_ERROR, new String[]{"There was an internal error, and your request did not complete."}));
         errors.add(new LanguageError(ErrorKeys.CANNOT_DELETE, new String[]{"Sorry, I can't let you delete that. It's very precious to me."}));
+
+        /*Not found*/
         errors.add(new LanguageError(ErrorKeys.CHANNEL_NOT_FOUND, new String[]{"I can't find the correct channel for that."}));
         errors.add(new LanguageError(ErrorKeys.COMMAND_NOT_FOUND, new String[]{"That command hasn't been invented yet!"}));
+
+        /*Already exists*/
         errors.add(new LanguageError(ErrorKeys.FAMILY_ALREADY_EXISTS, new String[]{"You already own a family with that name! Please choose a different name."}));
         errors.add(new LanguageError(ErrorKeys.FAMILY_ALREADY_JOINED, new String[]{"This server already belongs to that family!"}));
         errors.add(new LanguageError(ErrorKeys.FAMILY_INVALID_DETAIL, new String[]{"Invalid Family name or Join Code!"}));
-        errors.add(new LanguageError(ErrorKeys.FAMILY_NOT_JOINED, new String[]{"That server has not joined that Family!"}));
+        errors.add(new LanguageError(ErrorKeys.FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."}));
         errors.add(new LanguageError(ErrorKeys.FAMILY_MEMBER_MAXIMUM_REACHED, new String[]{"That family has reached the maximum number of servers!"}));
-        errors.add(new LanguageError(ErrorKeys.FAMILY_MAXIMUM_REACHED, new String[]{"You can only join up to 3 families!"}));
+        errors.add(new LanguageError(ErrorKeys.FAMILY_MAXIMUM_REACHED, new String[]{"You can only join up to " + wildcard + " families!"}));
+        errors.add(new LanguageError(ErrorKeys.FAMILY_NOT_JOINED, new String[]{"That server has not joined that Family!"}));
         errors.add(new LanguageError(ErrorKeys.FAMILY_SERVER_LIST_EMPTY, new String[]{"This Family does not contain any servers."}));
-        errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."}));
+        errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to " + wildcard + " weapons. Please remove some existing weapons before creating more."}));
         errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_OWNED_OTHER, new String[]{"That weapon is owned by a different server!"}));
-        errors.add(new LanguageError(ErrorKeys.GUILD_REQUIRED, new String[]{"That command must be run on a server."}));
+
+        /*Already exists*/
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_STARTED, new String[]{"There's already a Hangman game in " + wildcard}));
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_GUESSED, new String[]{"You've already guessed that letter!"}));
         errors.add(new LanguageError(ErrorKeys.HANGMAN_NOT_STARTED, new String[]{"There isn't a Hangman game running! Try starting one."}));
@@ -141,7 +152,11 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.INCORRECT_ITEM_COUNT, new String[]{"Incorrect number of arguments provided!"}));
         errors.add(new LanguageError(ErrorKeys.ITEMS_NOT_FOUND, new String[]{"There weren't any results."}));
         errors.add(new LanguageError(ErrorKeys.MUSIC_NOT_IN_CHANNEL, new String[]{"Please join a voice channel and run this command again."}));
+
+        /*Already exists*/
         errors.add(new LanguageError(ErrorKeys.MUSIC_PLAYLIST_ALREADY_EXISTS, new String[]{"A Playlist with that name already exists on this server!"}));
+
+        /*Not found*/
         errors.add(new LanguageError(ErrorKeys.MUSIC_PLAYLIST_DOESNT_EXIST, new String[]{"That Playlist doesn't exist!"}));
         errors.add(new LanguageError(ErrorKeys.MUSIC_PLAYLIST_EMPTY, new String[]{"There are no tracks in that Playlist."}));
         errors.add(new LanguageError(ErrorKeys.MUSIC_PLAYLIST_LIST_EMPTY, new String[]{"There aren't any Playlists yet!"}));
@@ -154,18 +169,21 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.MUSIC_WRONG_INPUT, new String[]{"Please enter a media URL or playlist name!"}));
         errors.add(new LanguageError(ErrorKeys.NO_PERMISSION_BOT, new String[]{"I don't have permission to do that on this server."}));
         errors.add(new LanguageError(ErrorKeys.NO_PERMISSION_USER, new String[]{"I'm afraid I can't let you do that."}));
+
+        /*Not found*/
         errors.add(new LanguageError(ErrorKeys.NOT_FOUND, new String[]{"There were no results."}));
+
+        /*Page Empty*/
         errors.add(new LanguageError(ErrorKeys.PAGE_NOT_FOUND, new String[]{"The page you requested is empty or does not exist."}));
         errors.add(new LanguageError(ErrorKeys.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"}));
-        errors.add(new LanguageError(ErrorKeys.SERVER_FAMILY_LIST_EMPTY, new String[]{"This server does not belong to a Family."}));
-        errors.add(new LanguageError(ErrorKeys.SETTING_NOT_FOUND, new String[]{"I couldn't find that setting."}));
+
         errors.add(new LanguageError(ErrorKeys.SETTING_VALUE_INVALID, new String[]{"The value you provided is invalid. Please try again."}));
         errors.add(new LanguageError(ErrorKeys.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"}));
         errors.add(new LanguageError(ErrorKeys.TIMER_LENGTH_INCORRECT, new String[]{"Timers must be set between 1 second and 365 days."}));
         errors.add(new LanguageError(ErrorKeys.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."}));
         errors.add(new LanguageError(ErrorKeys.WRONG_USAGE, new String[]{"The command syntax you used is incorrect."}));
 
-        messages.add(new LanguageMessage(LanguageKeys.ADD_TRIGGER_SUCCESS, new String[]{"I will now send a `" + wildcard + "` response when I hear `" + wildcard + "`!"}));
+        messages.add(new LanguageMessage(LanguageKeys.TRIGGER_ADD_SUCCESS, new String[]{"I will now send a `" + wildcard + "` response when I hear `" + wildcard + "`!"}));
         messages.add(new LanguageMessage(LanguageKeys.BLAME, new String[]{"I blame " + wildcard}));
         messages.add(new LanguageMessage(LanguageKeys.BLAME_OPTIONS, new String[]{"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom", "the economy", "Big Pharma", "India", "Nigeria", "Mexico", "Chemtrails", "GMOs", "vaccines", "#VapeLife", "weebs", "essential oils", "Karen", "Epic Games", "video games", "hip hop", "Fortnite", "Source Filmmaker", "Discord", "Coronavirus", "Apple", "Google", "Starbucks", "NASA", "Keanu Reeves", "Oscar the Grouch", "Ohio"}));
         messages.add(new LanguageMessage(LanguageKeys.CHOOSE, new String[]{"I choose: " + wildcard + "!"}));
@@ -190,13 +208,20 @@ public class Language {
         messages.add(new LanguageMessage(LanguageKeys.GENERIC_SUCCESS, new String[]{"Success!"}));
         messages.add(new LanguageMessage(LanguageKeys.HANGMAN_DICTIONARIES, new String[]{"Available dictionaries: **" + wildcard + "** (or leave blank to use all of them)"}));
         messages.add(new LanguageMessage(LanguageKeys.HANGMAN_FOOTER_GUESSED, new String[]{"Already guessed:"}));
+        messages.add(new LanguageMessage(LanguageKeys.HANGMAN_LOSE, new String[]{"You lose! The word was \"" + wildcard + "\""}));
         messages.add(new LanguageMessage(LanguageKeys.HANGMAN_TITLE, new String[]{"Let's play Hangman!"}));
-        messages.add(new LanguageMessage(LanguageKeys.INVALID_TRIGGER_TYPE, new String[]{":scream: Invalid trigger type! Your options are: " + wildcard}));
+        messages.add(new LanguageMessage(LanguageKeys.HANGMAN_WIN, new String[]{"You Win!"}));
         messages.add(new LanguageMessage(LanguageKeys.ITEM_ADDED, new String[]{"Added the things :+1:"}));
+
+        /*Removal*/
         messages.add(new LanguageMessage(LanguageKeys.ITEM_REMOVED, new String[]{"I've removed \"" + wildcard + "\"!"}));
+
+        /*Creation*/
         messages.add(new LanguageMessage(LanguageKeys.LIST_CREATED, new String[]{"The List was created!"}));
         messages.add(new LanguageMessage(LanguageKeys.LIST_DELETED, new String[]{"Deleted the `" + wildcard + "` List!"}));
         messages.add(new LanguageMessage(LanguageKeys.LIST_PRIVACY_TOGGLED, new String[]{"The `" + wildcard + "` List is now `" + wildcard + "`!"}));
+
+        /*Added*/
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_ADDED_TO_QUEUE, new String[]{"Added to queue!"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_LOOPING_TOGGLED, new String[]{"Music looping is now **" + wildcard + "**"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{"Music Queue looping is now **" + wildcard + "**"}));
@@ -205,7 +230,11 @@ public class Language {
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_PLAYLIST_CREATED, new String[]{"Created a new Playlist `" + wildcard + "`!"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_PLAYLIST_CONVERTED, new String[]{"Converted the queue into a new Playlist `" + wildcard + "` with `" + wildcard + "` tracks!"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_PLAYLIST_DELETED, new String[]{"Playlist deleted!"}));
+
+        /*Added*/
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_PLAYLIST_TRACK_ADDED, new String[]{"Track added!"}));
+
+        /*Removal*/
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_PLAYLIST_TRACK_REMOVED, new String[]{"Track removed!"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_QUEUE_CLEARED, new String[]{"Cleared the music queue!"}));
         messages.add(new LanguageMessage(LanguageKeys.MUSIC_QUEUE_SHUFFLED, new String[]{"Shuffled the music queue!"}));
@@ -216,7 +245,7 @@ public class Language {
         messages.add(new LanguageMessage(LanguageKeys.RESET_EMOTE_STATS, new String[]{"Emoji usage stats have been reset!"}));
         messages.add(new LanguageMessage(LanguageKeys.SEARCH_RESULTS, new String[]{"Search results:"}));
         messages.add(new LanguageMessage(LanguageKeys.SENT_PRIVATE_MESSAGE, new String[]{"I sent some details over in your DMs."}));
-        messages.add(new LanguageMessage(LanguageKeys.SERVER_FAMILY_LIST, new String[]{"This server has joined the following Families:"}));
+        messages.add(new LanguageMessage(LanguageKeys.FAMILY_LIST, new String[]{"This server has joined the following Families:"}));
         messages.add(new LanguageMessage(LanguageKeys.SETTING_LIST_TITLE, new String[]{"Available settings"}));
         messages.add(new LanguageMessage(LanguageKeys.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"}));
         messages.add(new LanguageMessage(LanguageKeys.STORY_INTRO, new String[]{"Let's read a story!"}));
@@ -228,8 +257,8 @@ public class Language {
         messages.add(new LanguageMessage(LanguageKeys.TIMER_ALERT, new String[]{":alarm_clock: (" + wildcard + "): The timer you set is finished!"}));
         messages.add(new LanguageMessage(LanguageKeys.TRIGGER_LIST, new String[]{"I'll respond to these things:"}));
         messages.add(new LanguageMessage(LanguageKeys.WHAT_ARE_THE_ODDS, new String[]{"About " + wildcard}));
-        messages.add(new LanguageMessage(LanguageKeys.WHATSHOULDIDO_INTRO_OPTIONS, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"}));
+        messages.add(new LanguageMessage(LanguageKeys.WHATSHOULDIDO, new String[]{"I think you should", "I'd love it if you", "My advice is to", "Hmm, perhaps try to", "I know! You should"}));
         messages.add(new LanguageMessage(LanguageKeys.WHATSHOULDIDO_OPTIONS, new String[]{"defile a grave", "rob a candy store", "deface a subway", "steal a baby's candy", "pirate a low-budget film", "start a riot about gas prices", "rewatch the Star Wars sequels", "curse at an old woman", "donate to a shady charity in Saudi Arabia", "prank call insurance companies", "sell drugs to minors", "write a program in PHP", "narrate an adult audiobook", "swap jobs with Mike Rowe", "start a riot about waiting in traffic", "confuse someone with dementia", "throw eggs at a flock of birds", "rent library books, and return them all sticky", "create a reaction video for YouTube", "invite me to other servers >:}", "sell essential oils", "demand to see the manager", "start a Flat Earth rally", "uncover the truth behind 9/11", "vaguepost on Instagram for attention", "play Madden", "scam impressionable old women out of their retirement funds", "get a life", "kick a puppy", "kick a kitten", "start a 37-tweet rant", "steal art for Karma", "sell out to EA", "text while driving", "watch YouTube Trending", "protest public health guidelines", "talk to the hand", "make smalltalk with the sign-spinner", "drink questionable chemicals", "throw a prom in the McDonalds Playplace"}));
-        messages.add(new LanguageMessage(LanguageKeys.WHEN_OPTIONS, new String[]{"In "+wildcard+" years", "In "+wildcard+" minutes", ""+wildcard+" days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe", "Not sure, ask your mom", ""+wildcard+" years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe", "In precisely "+wildcard+"", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall", "Probably within "+wildcard+" days", "I'd say in "+wildcard+" months", "In "+wildcard+"? "+wildcard+"? Maybe "+wildcard+"?", "Between "+wildcard+" and "+wildcard+" centuries", "Sooner shall "+wildcard+" days pass", ""+wildcard+" seconds", ""+wildcard+" hours, "+wildcard+" minutes, and "+wildcard+" seconds", "Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"}));
+        messages.add(new LanguageMessage(LanguageKeys.WHEN_OPTIONS, new String[]{"In " + wildcard + " years", "In " + wildcard + " minutes", "" + wildcard + " days ago", "When pigs fly", "Absolutely never", "Right now, but in a parallel universe", "Not sure, ask your mom", "" + wildcard + " years ago", "Once you stop procrastinating", "Once I get elected Chancellor", "After the heat death of the universe", "In precisely " + wildcard + "", "On the next full moon", "When the sand in me hourglass be empty", "Time is subjective", "Time is a tool you can put on the wall", "Probably within " + wildcard + " days", "I'd say in " + wildcard + " months", "In " + wildcard + "? " + wildcard + "? Maybe " + wildcard + "?", "Between " + wildcard + " and " + wildcard + " centuries", "Sooner shall " + wildcard + " days pass", "" + wildcard + " seconds", "" + wildcard + " hours, " + wildcard + " minutes, and " + wildcard + " seconds", "Eventually", "Not in your lifetime, kiddo", "In your dreams", "Right now"}));
     }
 }

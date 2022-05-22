@@ -7,6 +7,7 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
@@ -76,7 +77,7 @@ public class Pin extends Command {
 					MessageService.SendMessage(channelToSendPin, file, "profile.png", response);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription("Pinned!");
+							.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.GENERIC_SUCCESS));
 				} else {
 					return response(EmbedType.ERROR, ErrorKeys.CHANNEL_NOT_FOUND.name())
 							.setDescription(executingCommand.getLanguage().getError(ErrorKeys.CHANNEL_NOT_FOUND));

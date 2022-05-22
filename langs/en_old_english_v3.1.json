@@ -1,12 +1,6 @@
 {
   "messages": [
     {
-      "key": "ADD_TRIGGER_SUCCESS",
-      "values": [
-        "Ever shall my lips reply `%WC%` when thou speakest the phrase `%WC%`."
-      ]
-    },
-    {
       "key": "BLAME",
       "values": [
         "Most assuredly it is %WC%",
@@ -79,6 +73,12 @@
       ]
     },
     {
+      "key": "FAMILY_JOINED",
+      "values": [
+        "Behold! **%WC%** hast pledged loyalty to the great company **%WC%**!"
+      ]
+    },
+    {
       "key": "FAMILY_JOIN_CODE",
       "values": [
         "**Thy company's secret phrase for %WC%**%BR%`%WC%`%BR%_Use this one-time code to join a server to the Family._"
@@ -91,9 +91,9 @@
       ]
     },
     {
-      "key": "FAMILY_JOINED",
+      "key": "FAMILY_LIST",
       "values": [
-        "Behold! **%WC%** hast pledged loyalty to the great company **%WC%**!"
+        "Thine company hath pledged to these:"
       ]
     },
     {
@@ -118,6 +118,12 @@
       "key": "FEEDBACK_SENT",
       "values": [
         ":notepad_spiral: Thy request hast been made known. Thou may proceed anew upon the passage of **5 minutes**."
+      ]
+    },
+    {
+      "key": "FORUM_WEAPONS_PRUNED",
+      "values": [
+        "**%WC%** Forum Weapons hast been expelled."
       ]
     },
     {
@@ -151,12 +157,6 @@
       ]
     },
     {
-      "key": "FORUM_WEAPONS_PRUNED",
-      "values": [
-        "**%WC%** Forum Weapons hast been expelled."
-      ]
-    },
-    {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
         "Thy weapon hast been updated with a new link!"
@@ -182,15 +182,21 @@
       ]
     },
     {
+      "key": "HANGMAN_LOSE",
+      "values": [
+        "Thou hath lost! Thine word was \"%WC%\""
+      ]
+    },
+    {
       "key": "HANGMAN_TITLE",
       "values": [
         "An execution at the gallows."
       ]
     },
     {
-      "key": "INVALID_TRIGGER_TYPE",
+      "key": "HANGMAN_WIN",
       "values": [
-        "Thine choice doth not befit the command. Thou must chooseth from: %WC%"
+        "Thou hath claimed victory!"
       ]
     },
     {
@@ -231,15 +237,15 @@
       ]
     },
     {
-      "key": "MUSIC_LOOPING_TOGGLED",
-      "values": [
-        "The bard shall replay their song: **%WC%**"
-      ]
-    },
-    {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
         "The bard shall replay their set: **%WC%**"
+      ]
+    },
+    {
+      "key": "MUSIC_LOOPING_TOGGLED",
+      "values": [
+        "The bard shall replay their song: **%WC%**"
       ]
     },
     {
@@ -255,15 +261,15 @@
       ]
     },
     {
-      "key": "MUSIC_PLAYLIST_CREATED",
-      "values": [
-        "Thou hast created a new set `%WC%`."
-      ]
-    },
-    {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
         "Converted the bard's list into a new set `%WC%` with `%WC%` pieces."
+      ]
+    },
+    {
+      "key": "MUSIC_PLAYLIST_CREATED",
+      "values": [
+        "Thou hast created a new set `%WC%`."
       ]
     },
     {
@@ -285,15 +291,15 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUE_CLEARED",
+      "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Cleared the bard's set."
+        "The bard shall remember to play the `%WC%` set!"
       ]
     },
     {
-      "key": "MUSIC_QUEUE_SHUFFLED",
+      "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Rearranged the bard's set!"
+        "Cleared the bard's set."
       ]
     },
     {
@@ -303,9 +309,9 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUED_PLAYLIST",
+      "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "The bard shall remember to play the `%WC%` set!"
+        "Rearranged the bard's set!"
       ]
     },
     {
@@ -336,12 +342,6 @@
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
         "Pray inspect thine letterbox."
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST",
-      "values": [
-        "Thine company hath pledged to these:"
       ]
     },
     {
@@ -399,15 +399,21 @@
       ]
     },
     {
+      "key": "TIMER_ALERT",
+      "values": [
+        ":bell: (%WC%): The timekeepers hath counted thy measure!"
+      ]
+    },
+    {
       "key": "TIMER_STARTED",
       "values": [
         ":bell: The cathedral's bells shall toll upon the count of the timekeepers %WC%"
       ]
     },
     {
-      "key": "TIMER_ALERT",
+      "key": "TRIGGER_ADD_SUCCESS",
       "values": [
-        ":bell: (%WC%): The timekeepers hath counted thy measure!"
+        "Ever shall my lips reply `%WC%` when thou speakest the phrase `%WC%`."
       ]
     },
     {
@@ -417,14 +423,7 @@
       ]
     },
     {
-      "key": "WHAT_ARE_THE_ODDS",
-      "values": [
-        "I calculate it is %WC%",
-        "Mayhap it shall be close to %WC%"
-      ]
-    },
-    {
-      "key": "WHATSHOULDIDO_INTRO_OPTIONS",
+      "key": "WHATSHOULDIDO",
       "values": [
         "Mine advice is",
         "Pray",
@@ -454,6 +453,13 @@
         "engage in a rousing game of lots",
         "leave thy house and acquire a maiden",
         "abandon thy village and seek a young lord"
+      ]
+    },
+    {
+      "key": "WHAT_ARE_THE_ODDS",
+      "values": [
+        "I calculate it is %WC%",
+        "Mayhap it shall be close to %WC%"
       ]
     },
     {
@@ -511,73 +517,73 @@
     {
       "key": "FAMILY_ALREADY_EXISTS",
       "values": [
-        "You already own a family with that name! Please choose a different name."
+        "Thou hath established said company ere before. Pray consider another title."
       ]
     },
     {
       "key": "FAMILY_ALREADY_JOINED",
       "values": [
-        "This server already belongs to that family!"
+        "This great land is already beholden to said company."
       ]
     },
     {
       "key": "FAMILY_INVALID_DETAIL",
       "values": [
-        "Invalid Family name or Join Code!"
+        "Thine company sigil is most incorrect."
       ]
     },
     {
-      "key": "FAMILY_NOT_JOINED",
+      "key": "FAMILY_LIST_EMPTY",
       "values": [
-        "That server has not joined that Family!"
-      ]
-    },
-    {
-      "key": "FAMILY_MEMBER_MAXIMUM_REACHED",
-      "values": [
-        "That family has reached the maximum number of servers!"
+        "The bitter taste of lonliness both pervade this forlorn realm."
       ]
     },
     {
       "key": "FAMILY_MAXIMUM_REACHED",
       "values": [
-        "You can only join up to 3 families!"
+        "You can only join up to %WC% families!"
+      ]
+    },
+    {
+      "key": "FAMILY_MEMBER_MAXIMUM_REACHED",
+      "values": [
+        "Praise be, for yon company hath not the capacity for additional members."
+      ]
+    },
+    {
+      "key": "FAMILY_NOT_JOINED",
+      "values": [
+        "The realm you speakest of hath not yet bestowed its loyalty to the company."
       ]
     },
     {
       "key": "FAMILY_SERVER_LIST_EMPTY",
       "values": [
-        "This Family does not contain any servers."
+        "Alas, the company hath not any members."
       ]
     },
     {
       "key": "FORUM_WEAPON_MAXIMUM_REACHED",
       "values": [
-        "Sorry! I can only keep up to 100 weapons. Please remove some existing weapons before creating more."
+        "Mine sincerest regrets, for thine ammunition hath grown so great it cannot beareth the burden of another. Pray reduce thine numbers to below %WC%."
       ]
     },
     {
       "key": "FORUM_WEAPON_OWNED_OTHER",
       "values": [
-        "That weapon is owned by a different server!"
-      ]
-    },
-    {
-      "key": "GUILD_REQUIRED",
-      "values": [
-        "That command must be run on a server."
-      ]
-    },
-    {
-      "key": "HANGMAN_ALREADY_STARTED",
-      "values": [
-        "Alas, the gallows are already hung in the %WC% square"
+        "Thy chosen blade doth belong to another."
       ]
     },
     {
       "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
         "The executioner hath heard thy cry once before."
+      ]
+    },
+    {
+      "key": "HANGMAN_ALREADY_STARTED",
+      "values": [
+        "Alas, the gallows are already hung in the %WC% square"
       ]
     },
     {
@@ -595,85 +601,91 @@
     {
       "key": "INCORRECT_ITEM_COUNT",
       "values": [
-        "Incorrect number of arguments provided!"
+        "Thine request hath been found lacking."
       ]
     },
     {
       "key": "ITEMS_NOT_FOUND",
       "values": [
-        "There weren't any results."
+        "The tome cometh up empty."
       ]
     },
     {
       "key": "MUSIC_NOT_IN_CHANNEL",
       "values": [
-        "Please join a voice channel and run this command again."
+        "Relishing thy music doth require one to enter first a chamber of song."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_ALREADY_EXISTS",
       "values": [
-        "A Playlist with that name already exists on this server!"
+        "Thy musical set doth exist already."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_DOESNT_EXIST",
       "values": [
-        "That Playlist doesn't exist!"
+        "Thy named musical set doth not exist."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_EMPTY",
       "values": [
-        "There are no tracks in that Playlist."
+        "The likeness of thy musical set is a tome with empty pages."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_LIST_EMPTY",
       "values": [
-        "There aren't any Playlists yet!"
+        "The bard hath not prepared any sets."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_NAME_INVALID",
       "values": [
-        "Playlist names must be alphanumeric!"
+        "Thy chosen name doth include mysterious glyphs."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_NAME_MISSING",
       "values": [
-        "Please enter a name for the new Playlist."
+        "Pray bestow thine musical set with a title befitting its honor."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_PAGE_EMPTY",
       "values": [
-        "There are no tracks in that Playlist on this page."
+        "Thine musical page contains no sound."
       ]
     },
     {
       "key": "MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED",
       "values": [
-        "Playlists currently support a max of 50 tracks."
+        "Thy musical set doth contain too great a number of songs."
       ]
     },
     {
       "key": "MUSIC_QUEUE_EMPTY",
       "values": [
-        "There are no tracks in the Queue."
+        "Alas, music hath not been planned beyond this."
       ]
     },
     {
       "key": "MUSIC_QUEUE_PAGE_EMPTY",
       "values": [
-        "There are no tracks in the Queue on this page."
+        "Thine musical page contains no sound."
       ]
     },
     {
       "key": "MUSIC_WRONG_INPUT",
       "values": [
-        "Please enter a media URL or playlist name!"
+        "Pray speakest thine desired song."
+      ]
+    },
+    {
+      "key": "NOT_FOUND",
+      "values": [
+        "An item of such title could not be uncovered."
       ]
     },
     {
@@ -689,63 +701,45 @@
       ]
     },
     {
-      "key": "NOT_FOUND",
-      "values": [
-        "An item of such title could not be uncovered."
-      ]
-    },
-    {
       "key": "PAGE_NOT_FOUND",
       "values": [
-        "The page you requested is empty or does not exist."
+        "The tomes doth not include thy request."
       ]
     },
     {
       "key": "RESERVED_WORD",
       "values": [
-        "It looks like you tried to use a reserved word. Try a different one!"
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST_EMPTY",
-      "values": [
-        "This server does not belong to a Family."
-      ]
-    },
-    {
-      "key": "SETTING_NOT_FOUND",
-      "values": [
-        "I couldn't find that setting."
+        "Thou speakest words both familiar and sacred."
       ]
     },
     {
       "key": "SETTING_VALUE_INVALID",
       "values": [
-        "The value you provided is invalid. Please try again."
-      ]
-    },
-    {
-      "key": "TIME_VALUE_INCORRECT",
-      "values": [
-        "The amount of time provided is invalid!"
+        "Thine constraint doth not accept thy bid."
       ]
     },
     {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
-        "Timers must be set between 1 second and 365 days."
+        "The bells doth toll a year's time or less."
+      ]
+    },
+    {
+      "key": "TIME_VALUE_INCORRECT",
+      "values": [
+        "The bells doth not know thy time."
       ]
     },
     {
       "key": "TRACK_NOT_PLAYING",
       "values": [
-        "There isn't a track playing right now."
+        "Thine musical halls are barren."
       ]
     },
     {
       "key": "WRONG_USAGE",
       "values": [
-        "Alas, I have heard thy request, and I declare it improper. Pray make thine attempt anew."
+        "Alas, I hath heard thy request, and I declare it improper. Pray make thine attempt anew."
       ]
     }
   ],

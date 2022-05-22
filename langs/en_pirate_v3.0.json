@@ -1,12 +1,6 @@
 {
   "messages": [
     {
-      "key": "ADD_TRIGGER_SUCCESS",
-      "values": [
-        "I be singin' a `%WC%` shanty when the Lookout calls `%WC%`!"
-      ]
-    },
-    {
       "key": "BLAME",
       "values": [
         "Arr, it be because of %WC%"
@@ -116,6 +110,12 @@
       ]
     },
     {
+      "key": "FAMILY_JOINED",
+      "values": [
+        "Recruited **%WC%** to the Jolly Boat **%WC%**!"
+      ]
+    },
+    {
       "key": "FAMILY_JOIN_CODE",
       "values": [
         "**Arr, yer Join Code for the S.S. %WC% is:**%BR%`%WC%`%BR%_Use it wisely, it only works once!_"
@@ -128,9 +128,9 @@
       ]
     },
     {
-      "key": "FAMILY_JOINED",
+      "key": "FAMILY_LIST",
       "values": [
-        "Recruited **%WC%** to the Jolly Boat **%WC%**!"
+        "We got the king's shilling for the followin':"
       ]
     },
     {
@@ -155,6 +155,12 @@
       "key": "FEEDBACK_SENT",
       "values": [
         "The Cap'n has received yer request. Ye best wait a few ticks o' ye pocketwatch."
+      ]
+    },
+    {
+      "key": "FORUM_WEAPONS_PRUNED",
+      "values": [
+        "Pruned **%WC%** unused Forum Weapons!"
       ]
     },
     {
@@ -188,12 +194,6 @@
       ]
     },
     {
-      "key": "FORUM_WEAPONS_PRUNED",
-      "values": [
-        "Pruned **%WC%** unused Forum Weapons!"
-      ]
-    },
-    {
       "key": "FORUM_WEAPON_UPDATED",
       "values": [
         "New grape shots be loaded in the cannon!"
@@ -218,15 +218,21 @@
       ]
     },
     {
+      "key": "HANGMAN_LOSE",
+      "values": [
+        "You lose! The word was \"%WC%\""
+      ]
+    },
+    {
       "key": "HANGMAN_TITLE",
       "values": [
         "A Dance with Jack Ketch!"
       ]
     },
     {
-      "key": "INVALID_TRIGGER_TYPE",
+      "key": "HANGMAN_WIN",
       "values": [
-        "Ye disgrace! Hasn't the Cap'n said ye can only use %WC%?"
+        "You Win!"
       ]
     },
     {
@@ -266,15 +272,15 @@
       ]
     },
     {
-      "key": "MUSIC_LOOPING_TOGGLED",
-      "values": [
-        "Music looping is now **%WC%**"
-      ]
-    },
-    {
       "key": "MUSIC_LOOPING_QUEUE_TOGGLED",
       "values": [
         "Music Queue looping is now **%WC%**"
+      ]
+    },
+    {
+      "key": "MUSIC_LOOPING_TOGGLED",
+      "values": [
+        "Music looping is now **%WC%**"
       ]
     },
     {
@@ -290,15 +296,15 @@
       ]
     },
     {
-      "key": "MUSIC_PLAYLIST_CREATED",
-      "values": [
-        "Created a new Playlist `%WC%`!"
-      ]
-    },
-    {
       "key": "MUSIC_PLAYLIST_CONVERTED",
       "values": [
         "Converted the queue into a new Playlist `%WC%` with `%WC%` tracks!"
+      ]
+    },
+    {
+      "key": "MUSIC_PLAYLIST_CREATED",
+      "values": [
+        "Created a new Playlist `%WC%`!"
       ]
     },
     {
@@ -320,15 +326,15 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUE_CLEARED",
+      "key": "MUSIC_QUEUED_PLAYLIST",
       "values": [
-        "Cleared the music queue!"
+        "Queued the `%WC%` Playlist!"
       ]
     },
     {
-      "key": "MUSIC_QUEUE_SHUFFLED",
+      "key": "MUSIC_QUEUE_CLEARED",
       "values": [
-        "Shuffled the music queue!"
+        "Cleared the music queue!"
       ]
     },
     {
@@ -338,9 +344,9 @@
       ]
     },
     {
-      "key": "MUSIC_QUEUED_PLAYLIST",
+      "key": "MUSIC_QUEUE_SHUFFLED",
       "values": [
-        "Queued the `%WC%` Playlist!"
+        "Shuffled the music queue!"
       ]
     },
     {
@@ -371,12 +377,6 @@
       "key": "SENT_PRIVATE_MESSAGE",
       "values": [
         "Arr, be lookin' fer me message in a bottle."
-      ]
-    },
-    {
-      "key": "SERVER_FAMILY_LIST",
-      "values": [
-        "We got the king's shilling for the followin':"
       ]
     },
     {
@@ -434,15 +434,21 @@
       ]
     },
     {
+      "key": "TIMER_ALERT",
+      "values": [
+        ":alarm_clock: (%WC%): The timer you set is finished!"
+      ]
+    },
+    {
       "key": "TIMER_STARTED",
       "values": [
         "Fire in the hole in %WC%!"
       ]
     },
     {
-      "key": "TIMER_ALERT",
+      "key": "TRIGGER_ADD_SUCCESS",
       "values": [
-        ":alarm_clock: (%WC%): The timer you set is finished!"
+        "I be singin' a `%WC%` shanty when the Lookout calls `%WC%`!"
       ]
     },
     {
@@ -452,13 +458,7 @@
       ]
     },
     {
-      "key": "WHAT_ARE_THE_ODDS",
-      "values": [
-        "About %WC%"
-      ]
-    },
-    {
-      "key": "WHATSHOULDIDO_INTRO_OPTIONS",
+      "key": "WHATSHOULDIDO",
       "values": [
         "I think you should",
         "I'd love it if you",
@@ -510,6 +510,12 @@
         "make smalltalk with the sign-spinner",
         "drink questionable chemicals",
         "throw a prom in the McDonalds Playplace"
+      ]
+    },
+    {
+      "key": "WHAT_ARE_THE_ODDS",
+      "values": [
+        "About %WC%"
       ]
     },
     {
@@ -595,9 +601,15 @@
       ]
     },
     {
-      "key": "FAMILY_NOT_JOINED",
+      "key": "FAMILY_LIST_EMPTY",
       "values": [
-        "Shiver me timbers! They not be flyin' the flag!"
+        "Shiver me timbers! There be no flag we flyin'"
+      ]
+    },
+    {
+      "key": "FAMILY_MAXIMUM_REACHED",
+      "values": [
+        "Ye mast has room for %WC% flags only!"
       ]
     },
     {
@@ -607,9 +619,9 @@
       ]
     },
     {
-      "key": "FAMILY_MAXIMUM_REACHED",
+      "key": "FAMILY_NOT_JOINED",
       "values": [
-        "Ye mast has room for 3 flags only!"
+        "Shiver me timbers! They not be flyin' the flag!"
       ]
     },
     {
@@ -631,21 +643,15 @@
       ]
     },
     {
-      "key": "GUILD_REQUIRED",
+      "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
-        "Arr! That be needin' a proper vessel to use!"
+        "Ye've already hung that man!"
       ]
     },
     {
       "key": "HANGMAN_ALREADY_STARTED",
       "values": [
         "Arr! A man's already hangin' in %WC%!"
-      ]
-    },
-    {
-      "key": "HANGMAN_ALREADY_GUESSED",
-      "values": [
-        "Ye've already hung that man!"
       ]
     },
     {
@@ -745,6 +751,12 @@
       ]
     },
     {
+      "key": "NOT_FOUND",
+      "values": [
+        "Arr! The coffers be empty!"
+      ]
+    },
+    {
       "key": "NO_PERMISSION_BOT",
       "values": [
         "Arr, they give no quarter to the crew."
@@ -754,12 +766,6 @@
       "key": "NO_PERMISSION_USER",
       "values": [
         "Arr, the Cap'n won't give ye a nipperkin!"
-      ]
-    },
-    {
-      "key": "NOT_FOUND",
-      "values": [
-        "Arr! The coffers be empty!"
       ]
     },
     {
@@ -775,33 +781,21 @@
       ]
     },
     {
-      "key": "SERVER_FAMILY_LIST_EMPTY",
-      "values": [
-        "Shiver me timbers! There be no flag we flyin'"
-      ]
-    },
-    {
-      "key": "SETTING_NOT_FOUND",
-      "values": [
-        "The compass be pointin' in the wrong direction."
-      ]
-    },
-    {
       "key": "SETTING_VALUE_INVALID",
       "values": [
         "The value you provided is invalid. Please try again."
       ]
     },
     {
-      "key": "TIME_VALUE_INCORRECT",
-      "values": [
-        "The amount of time provided is invalid!"
-      ]
-    },
-    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "Timers must be set between 1 second and 365 days."
+      ]
+    },
+    {
+      "key": "TIME_VALUE_INCORRECT",
+      "values": [
+        "The amount of time provided is invalid!"
       ]
     },
     {

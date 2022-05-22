@@ -1,7 +1,8 @@
 package com.hadenwatne.shmames.enums;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum LanguageKeys {
-    ADD_TRIGGER_SUCCESS,
     BLAME,
     BLAME_OPTIONS,
     CHOOSE,
@@ -12,6 +13,8 @@ public enum LanguageKeys {
     FAMILY_JOIN_CODE,
     FAMILY_JOIN_CODE_INVALIDATED,
     FAMILY_JOINED,
+    @SerializedName(value = "FAMILY_LIST", alternate = "SERVER_FAMILY_LIST")
+    FAMILY_LIST,
     FAMILY_REMOVED_SERVER,
     FAMILY_SERVER_LIST,
     FEEDBACK_COOLDOWN,
@@ -25,9 +28,10 @@ public enum LanguageKeys {
     FORUM_WEAPONS_PRUNED,
     GENERIC_SUCCESS,
     HANGMAN_DICTIONARIES,
-    HANGMAN_TITLE,
     HANGMAN_FOOTER_GUESSED,
-    INVALID_TRIGGER_TYPE,
+    HANGMAN_LOSE,
+    HANGMAN_TITLE,
+    HANGMAN_WIN,
     ITEM_ADDED,
     ITEM_REMOVED,
     LIST_CREATED,
@@ -52,7 +56,6 @@ public enum LanguageKeys {
     RESET_EMOTE_STATS,
     SEARCH_RESULTS,
     SENT_PRIVATE_MESSAGE,
-    SERVER_FAMILY_LIST,
     SETTING_LIST_TITLE,
     SETTING_UPDATED_SUCCESS,
     STORY_INTRO,
@@ -62,9 +65,12 @@ public enum LanguageKeys {
     THOUGHTS_OPTIONS,
     TIMER_STARTED,
     TIMER_ALERT,
+    @SerializedName(value = "TRIGGER_ADD_SUCCESS", alternate = "ADD_TRIGGER_SUCCESS")
+    TRIGGER_ADD_SUCCESS,
     TRIGGER_LIST,
     WHAT_ARE_THE_ODDS,
-    WHATSHOULDIDO_INTRO_OPTIONS,
+    @SerializedName(value = "WHATSHOULDIDO", alternate = "WHATSHOULDIDO_INTRO_OPTIONS")
+    WHATSHOULDIDO,
     WHATSHOULDIDO_OPTIONS,
     WHEN_OPTIONS
 }
