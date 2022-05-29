@@ -8,16 +8,14 @@ import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LanguageKeys;
-import com.hadenwatne.shmames.models.game.HangmanDictionary;
-import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
-import com.hadenwatne.shmames.services.MessageService;
+import com.hadenwatne.shmames.models.game.HangmanDictionary;
+import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.ArrayList;
@@ -116,14 +114,12 @@ public class Hangman extends Command {
 		brain.setHangmanGame(newGame);
 
 		EmbedBuilder embedBuilder = buildHangmanEmbed(language, newGame);
-		Message message = MessageService.SendMessageBlocking(executingCommand.getChannel(), embedBuilder);
 
-		newGame.setMessage(message.getIdLong());
 
-		if(executingCommand.hasInteractionHook()) {
-			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
-		}
+
+		executingCommand.reply(embedBuilder, false, onSuccess -> {
+			newGame.setMessage(onSuccess.getIdLong());
+		});
 
 		return null;
 	}
