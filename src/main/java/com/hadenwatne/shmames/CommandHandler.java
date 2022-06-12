@@ -55,6 +55,7 @@ public class CommandHandler {
 		commands.add(new Report());
 		commands.add(new ResetEmoteStats());
 		commands.add(new Response());
+		commands.add(new Roles());
 		commands.add(new Roll());
 		commands.add(new Say());
 		commands.add(new Storytime());

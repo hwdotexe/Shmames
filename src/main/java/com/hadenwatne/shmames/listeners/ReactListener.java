@@ -3,16 +3,15 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.ShmamesService;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
@@ -36,10 +35,23 @@ public class ReactListener extends ListenerAdapter {
 						// Begin processing.
 						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
 
+						// Handle role reactions first.
+						for (RoleMessage roleMessage : brain.getRoleMessages()) {
+							if (e.getMessageId().equals(roleMessage.getMessageID())) {
+								Role role = server.getRoleById(roleMessage.getRoleEmoteMap().get(emote.getId()));
+
+								if (role != null) {
+									server.addRoleToMember(e.getMember(), role).queue();
+								}
+
+								return;
+							}
+						}
+
 						// Regardless of emote used, tally up the usage for this server.
 						ShmamesService.IncrementEmoteTally(brain, emote.getId());
 
-						if(brain.getSettingFor(BotSettingName.TALLY_REACTIONS).getAsBoolean()) {
+						if (brain.getSettingFor(BotSettingName.TALLY_REACTIONS).getAsBoolean()) {
 							String removalEmoteID = brain.getSettingFor(BotSettingName.REMOVAL_EMOTE).getAsString();
 							String approvalEmoteID = brain.getSettingFor(BotSettingName.APPROVAL_EMOTE).getAsString();
 
@@ -54,6 +66,36 @@ public class ReactListener extends ListenerAdapter {
 										tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
 									});
 								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
+		if(!e.getUser().isBot()) {
+			if(e.isFromGuild()) {
+				ReactionEmote emote = e.getReaction().getReactionEmote();
+
+				if (emote.isEmote()) {
+					Guild server = e.getGuild();
+
+					if (server.getEmotes().contains(emote.getEmote())) {
+						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+
+						// Handle role reactions.
+						for (RoleMessage roleMessage : brain.getRoleMessages()) {
+							if (e.getMessageId().equals(roleMessage.getMessageID())) {
+								Role role = server.getRoleById(roleMessage.getRoleEmoteMap().get(emote.getId()));
+
+								if (role != null) {
+									server.removeRoleFromMember(e.getMember(), role).queue();
+								}
+
+								return;
 							}
 						}
 					}

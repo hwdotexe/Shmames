@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commandbuilder;
 
+import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.services.LoggingService;
 
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class CommandParameter implements Cloneable {
                 this.matchPattern = Pattern.compile("(?<" + this.regexName + ">\\d+)");
                 break;
             case DISCORD_ROLE:
-                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><@&(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">(\\d+))");
                 break;
             case DISCORD_CHANNEL:
                 this.matchPattern = Pattern.compile("(?<" + this.regexName + "><#(\\d+)>)");
@@ -138,7 +139,7 @@ public class CommandParameter implements Cloneable {
                 this.matchPattern = Pattern.compile("(?<" + this.regexName + "><@!(\\d+)>)");
                 break;
             case DISCORD_EMOTE:
-                this.matchPattern = Pattern.compile("(?<" + this.regexName + "><:[a-zA-Z0-9_]:(\\d+)>)");
+                this.matchPattern = Pattern.compile("(?<" + this.regexName + ">" + RegexPatterns.EMOTE + ")");
                 break;
             default:
                 this.matchPattern = Pattern.compile("(?<" + this.regexName + ">.+)");

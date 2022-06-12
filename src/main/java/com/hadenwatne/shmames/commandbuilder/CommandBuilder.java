@@ -460,8 +460,6 @@ public class CommandBuilder {
                 return OptionType.ROLE;
             case DISCORD_USER:
                 return OptionType.USER;
-            case DISCORD_EMOTE:
-                return OptionType.MENTIONABLE;
             case DISCORD_CHANNEL:
                 return OptionType.CHANNEL;
             default:

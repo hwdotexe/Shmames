@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.models.data;
 
-import com.google.gson.annotations.SerializedName;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.TriggerType;
@@ -17,7 +16,7 @@ public class Brain {
 	private final HashMap<String, Integer> tallies;
 	private final HashMap<String, Integer> emoteStats;
 	private final HashMap<String, TriggerType> triggers;
-	@SerializedName(value = "userLists", alternate = "userListsv2")
+	private List<RoleMessage> roleMessages;
 	private List<UserCustomList> userLists;
 	private final List<Response> triggerResponses;
 	private final List<BotSetting> settings;
@@ -35,6 +34,7 @@ public class Brain {
 	public Brain(String gid) {
 		guildID = gid;
 		tallies = new HashMap<>();
+		roleMessages = new ArrayList<>();
 		emoteStats = new HashMap<>();
 		triggers = new HashMap<>();
 		userLists = new ArrayList<>();
@@ -144,6 +144,24 @@ public class Brain {
 	
 	public HashMap<String, TriggerType> getTriggers(){
 		return triggers;
+	}
+
+	public List<RoleMessage> getRoleMessages() {
+		if(this.roleMessages == null) {
+			this.roleMessages = new ArrayList<>();
+		}
+
+		return roleMessages;
+	}
+
+	public RoleMessage getRoleMessageByID(String id) {
+		for(RoleMessage roleMessage : getRoleMessages()) {
+			if(roleMessage.getRoleMessageID().equalsIgnoreCase(id)) {
+				return roleMessage;
+			}
+		}
+
+		return null;
 	}
 
 	public List<UserCustomList> getUserLists() {
