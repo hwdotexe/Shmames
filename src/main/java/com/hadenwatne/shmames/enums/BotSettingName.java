@@ -14,6 +14,7 @@ public enum BotSettingName {
 	REMOVAL_EMOTE("The Emote to use as a \"Dislike\" button."),
 	REMOVAL_THRESHOLD("The number of Dislikes a post must get to be removed and increase the user's bad tally."),
 	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts."),
+	ROLES_CONFIGURE("Sets the role (other than Administrator) allowed to create and configure Role Assignment posts."),
 	SERVER_LANG("Sets which Lang preset to use on this server."),
 	TALLY_REACTIONS("Whether reaction tallies are enabled.");
 

@@ -4,16 +4,15 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
-import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.RandomService;
+import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -54,14 +53,19 @@ public class Roles extends Command {
 		Brain brain = executingCommand.getBrain();
 		Language language = executingCommand.getLanguage();
 
-		switch(subCommand) {
-			case "new":
-				return cmdNew(brain, language,executingCommand);
-			case "add":
-				return cmdAdd(brain, language, executingCommand);
-		}
+		if (ShmamesService.CheckUserPermission(executingCommand.getServer(), brain.getSettingFor(BotSettingName.ROLES_CONFIGURE), executingCommand.getAuthorMember())) {
+			switch (subCommand) {
+				case "new":
+					return cmdNew(brain, language, executingCommand);
+				case "add":
+					return cmdAdd(brain, language, executingCommand);
+			}
 
-		return null;
+			return null;
+		} else {
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+		}
 	}
 
 	public EmbedBuilder cmdNew(Brain brain, Language language, ExecutingCommand executingCommand) {
