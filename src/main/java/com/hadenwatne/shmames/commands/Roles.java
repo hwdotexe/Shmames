@@ -37,10 +37,16 @@ public class Roles extends Command {
 										new CommandParameter("postid", "The post ID to update.", ParameterType.STRING)
 												.setExample("ABC456"),
 										new CommandParameter("role", "The role to add.", ParameterType.DISCORD_ROLE)
-												.setExample("@Weebs"),
+												.setExample("@CoolKids"),
 										new CommandParameter("emote", "The emote others can react with.", ParameterType.DISCORD_EMOTE)
-												.setExample(":flag_jp:")
+												.setExample(":emote:")
 												.setPattern(RegexPatterns.EMOTE.getPattern())
+								)
+								.build(),
+						CommandBuilder.Create("delete", "Delete an existing post.")
+								.addParameters(
+										new CommandParameter("postid", "The post ID to update.", ParameterType.STRING)
+												.setExample("ABC456")
 								)
 								.build()
 				)
@@ -59,6 +65,8 @@ public class Roles extends Command {
 					return cmdNew(brain, language, executingCommand);
 				case "add":
 					return cmdAdd(brain, language, executingCommand);
+				case "delete":
+					return cmdDelete(brain, language, executingCommand);
 			}
 
 			return null;
@@ -112,6 +120,23 @@ public class Roles extends Command {
 		}
 	}
 
+	public EmbedBuilder cmdDelete(Brain brain, Language language, ExecutingCommand executingCommand) {
+		String postID = executingCommand.getCommandArguments().getAsString("postid");
+		RoleMessage roleMessage = brain.getRoleMessageByID(postID);
+
+		if(roleMessage != null) {
+			getMessagePost(roleMessage,executingCommand).queue(success -> {
+				success.delete().queue();
+			});
+
+			return response(EmbedType.SUCCESS)
+					.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED));
+		} else {
+			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+		}
+	}
+
 	private void updateEmbed(RoleMessage roleMessage, ExecutingCommand executingCommand) {
 		EmbedBuilder response = buildRoleMessageEmbed(roleMessage, executingCommand.getServer());
 
@@ -124,7 +149,7 @@ public class Roles extends Command {
 		EmbedBuilder response = EmbedFactory.GetEmbed(EmbedType.INFO, "Role Assignment");
 
 		response.setDescription(roleMessage.getInfoMessage());
-		response.addField("How to use", "To get a new role, react to this message with the corresponding emoji.", false);
+		response.addField("How to use", "React below with the emote that matches the role you want.", false);
 		response.addField(buildRolesField(roleMessage, server));
 
 		response.setFooter("ID: " + roleMessage.getRoleMessageID());
@@ -143,6 +168,10 @@ public class Roles extends Command {
 			stringBuilder.append(server.getEmoteById(emoteID).getAsMention());
 			stringBuilder.append(": ");
 			stringBuilder.append(server.getRoleById(roleMessage.getRoleEmoteMap().get(emoteID)).getAsMention());
+		}
+
+		if(stringBuilder.length() == 0) {
+			stringBuilder.append("Use **/roles add** to add roles!");
 		}
 
 		return new MessageEmbed.Field("Roles", stringBuilder.toString(), false);
