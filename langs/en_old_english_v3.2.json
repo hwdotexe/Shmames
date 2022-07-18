@@ -439,10 +439,8 @@
         "conduct theft of a sundry merchant",
         "repaint a well-traveled road",
         "consume the food of an infant",
-        "re-enact the plot of a foreign play",
-        "begin a crusade to attain justice for horse prices",
+        "begin a crusade to attain justice for the value of a horse",
         "hail curses at an old crone",
-        "donate to a charity of low repute",
         "compose false letters to a noble house",
         "market tonics and salves to children",
         "petition a lowly merchant to trade responsibilities",
@@ -452,7 +450,12 @@
         "erect signage in the public square regarding thy deepest insecurities",
         "engage in a rousing game of lots",
         "leave thy house and acquire a maiden",
-        "abandon thy village and seek a young lord"
+        "abandon thy village and seek a young lord",
+		"summon back the betrayer gods",
+		"undertake the noxious rites to become a lich",
+		"seek ye a pleasant holiday stay within the Underdark",
+		"wed a young noble whose body contains a dormant hag",
+		"construct ye a fest hall and permit naught thine parents' entry"
       ]
     },
     {
