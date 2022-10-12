@@ -89,7 +89,10 @@ public class LoggingService {
     }
 
     private static String getDateTime() {
-        int minute = cal.get(Calendar.MINUTE);
-        return getDate()+" "+cal.get(Calendar.HOUR_OF_DAY)+":"+(minute < 10 ? "0"+minute : minute);
+        String date = getDate();
+        int minuteInt = cal.get(Calendar.MINUTE);
+        String minute = minuteInt < 10 ? ("0" + minuteInt) : Integer.toString(minuteInt);
+
+        return date + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + minute;
     }
 }
