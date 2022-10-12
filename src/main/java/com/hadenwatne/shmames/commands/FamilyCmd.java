@@ -223,8 +223,8 @@ public class FamilyCmd extends Command {
 		String subCommand = executingCommand.getSubCommand();
 
 		switch (subCommand) {
-			case "create":
-				return cmdCodeCreate(language, author.getUser(), args);
+			case "generate":
+				return cmdCodeGenerate(language, author.getUser(), args);
 			case "redeem":
 				return cmdCodeRedeem(language, brain, server, author, args);
 		}
@@ -232,7 +232,7 @@ public class FamilyCmd extends Command {
 		return null;
 	}
 
-	private EmbedBuilder cmdCodeCreate(Language language, User author, ExecutingCommandArguments args) {
+	private EmbedBuilder cmdCodeGenerate(Language language, User author, ExecutingCommandArguments args) {
 		String familyName = args.getAsString("familyName").toLowerCase();
 
 		for(Family f : App.Shmames.getStorageService().getMotherBrain().getServerFamilies()) {
