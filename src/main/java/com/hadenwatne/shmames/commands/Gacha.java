@@ -279,6 +279,14 @@ public class Gacha extends Command {
 
 			for (GachaCharacter gc : brain.getGachaCharacters()) {
 				if (gc.getGachaCharacterID().equals(id)) {
+
+					// Remove ownership.
+					for(GachaUser gu : brain.getGachaUsers()) {
+						if(gu.getUserGachaInventory().containsKey(gc.getGachaCharacterID())) {
+							gu.getUserGachaInventory().remove(gc.getGachaCharacterID());
+						}
+					}
+
 					brain.getGachaCharacters().remove(gc);
 
 					return response(EmbedType.SUCCESS)
