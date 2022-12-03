@@ -64,4 +64,8 @@ public class GachaUser {
 
         this.userGachaInventory.put(character.getGachaCharacterID(), rolls + 1);
     }
+
+    public boolean hasCharacter(GachaCharacter character) {
+        return this.getUserGachaInventory().containsKey(character.getGachaCharacterID());
+    }
 }

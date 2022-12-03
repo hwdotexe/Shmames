@@ -1,26 +1,35 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
 import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.GachaCharacter;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Gacha extends Command {
-	private static final int PITY_THRESHOLD = 5;
+	private static final int PITY_THRESHOLD = 50;
+	private static final int ROLL_COST = 5;
 
 	public Gacha() {
 		super(true);
@@ -39,8 +48,8 @@ public class Gacha extends Command {
 						CommandBuilder.Create("roll", "Exchange your points for a chance at a prize!")
 								.addAlias("r")
 								.build(),
-						CommandBuilder.Create("view", "View your Gacha Inventory.")
-								.addAlias("v")
+						CommandBuilder.Create("profile", "View your Gacha stats!")
+								.addAlias("p")
 								.build(),
 						CommandBuilder.Create("list", "Browse a list of all possible prizes.")
 								.addAlias("v")
@@ -76,8 +85,8 @@ public class Gacha extends Command {
 		switch (subCommand) {
 			case "roll":
 				return cmdRoll(server, language, brain, executingCommand);
-			case "view":
-				return cmdView(server, language, brain, executingCommand);
+			case "profile":
+				return cmdProfile(server, language, brain, executingCommand);
 			case "list":
 				return cmdList(server, language, brain, executingCommand);
 			case "create":
@@ -90,74 +99,122 @@ public class Gacha extends Command {
 	private EmbedBuilder cmdRoll(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
 		GachaUser user = getGachaUser(brain, executingCommand.getAuthorUser());
 
-		double roll = RandomService.GetRandom();
+		if (user.getUserPoints() >= ROLL_COST) {
+			user.subtractUserPoints(ROLL_COST);
 
-		// Increase the roll if triggering pity system.
-		if(user.getPityCounter() > PITY_THRESHOLD) {
-			roll += (user.getPityCounter() - PITY_THRESHOLD) * 0.05;
-		}
+			double roll = RandomService.GetRandom();
 
-		GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
-		List<GachaCharacter> possibleCharacters = new ArrayList<>();
+			// Increase the roll if triggering pity system.
+			if (user.getPityCounter() > PITY_THRESHOLD) {
+				roll += (user.getPityCounter() - PITY_THRESHOLD) * 0.05;
+			}
 
-		// Option A: Build a pool of possible characters, and pull from it at random.
+			GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
+			List<GachaCharacter> possibleCharacters = new ArrayList<>();
+
+			// Option A: Build a pool of possible characters, and pull from it at random.
 //		for(GachaCharacter gc : brain.getGachaCharacters()) {
 //			if(gc.getGachaCharacterRarity().getRarityValue() <= rolledRarity.getRarityValue()) {
 //				possibleCharacters.add(gc);
 //			}
 //		}
 
-		// Option B: Pull from a pool of characters within the rolled rarity category.
-		for(GachaCharacter gc : brain.getGachaCharacters()) {
-			if(gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
-				possibleCharacters.add(gc);
+			// Option B: Pull from a pool of characters within the rolled rarity category.
+			for (GachaCharacter gc : brain.getGachaCharacters()) {
+				if (gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
+					possibleCharacters.add(gc);
+				}
 			}
-		}
 
-		GachaCharacter rolledCharacter = RandomService.GetRandomObjectFromList(possibleCharacters);
+			GachaCharacter rolledCharacter = RandomService.GetRandomObjectFromList(possibleCharacters);
 
-		user.addCharacterToInventory(rolledCharacter);
+			boolean isNew = !user.hasCharacter(rolledCharacter);
+			user.addCharacterToInventory(rolledCharacter);
 
-		if(rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.RARE.getRarityValue()) {
-			user.incrementPityCounter();
+			if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.RARE.getRarityValue()) {
+				user.incrementPityCounter();
+			} else {
+				user.resetPityCounter();
+			}
+
+			String rarityEmote = getRarityEmoji(rolledCharacter.getGachaCharacterRarity());
+
+			return response(EmbedType.SUCCESS)
+					.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
+					.setDescription((rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + System.lineSeparator())
+							+ System.lineSeparator()
+							+ (isNew ? ":sparkles:【NEW】" : "")
+							+ " **" + rolledCharacter.getGachaCharacterName() + "**"
+							+ System.lineSeparator()
+							+ (System.lineSeparator() + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote))
+					.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID()))
+					.addField("You got " + rolledCharacter.getGachaCharacterName() + "!", "> " + rolledCharacter.getGachaCharacterDescription(), false);
 		} else {
-			user.resetPityCounter();
+			return response(EmbedType.ERROR, "TOO_POOR")
+					.setDescription("You're too poor to roll the gacha.");
 		}
-
-		return response(EmbedType.SUCCESS)
-				.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
-				.setDescription("**Rarity: **"+rolledCharacter.getGachaCharacterRarity().name())
-				.addField("You rolled "+rolledCharacter.getGachaCharacterName()+"!", rolledCharacter.getGachaCharacterDescription(), false);
 	}
 
-	private EmbedBuilder cmdView(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
+	private EmbedBuilder cmdProfile(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
 		GachaUser user = getGachaUser(brain, executingCommand.getAuthorUser());
 		StringBuilder sb = new StringBuilder();
 
-		for(String gckey : user.getUserGachaInventory().keySet()) {
+		for (String gckey : user.getUserGachaInventory().keySet()) {
 			List<GachaCharacter> characters = brain.getGachaCharacters();
 
-			for(GachaCharacter gc : characters) {
-				if(gc.getGachaCharacterID().equals(gckey)) {
-					if(sb.length() > 0) {
+			for (GachaCharacter gc : characters) {
+				if (gc.getGachaCharacterID().equals(gckey)) {
+					if (sb.length() > 0) {
 						sb.append(System.lineSeparator());
 					}
 
+					String rarityEmote = getRarityEmoji(gc.getGachaCharacterRarity());
+
+					sb.append(rarityEmote);
+					sb.append(" **");
 					sb.append(gc.getGachaCharacterName());
-					sb.append(" • [rolled **");
+					sb.append("** x");
 					sb.append(user.getUserGachaInventory().get(gckey));
-					sb.append("** times]");
 
 					break;
 				}
 			}
 		}
 
-		return response(EmbedType.INFO)
-				.addField("Your Collection", sb.toString(), false);
+		if (sb.length() == 0) {
+			sb.append(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
+		}
+
+		try {
+			InputStream file = new URL(executingCommand.getAuthorUser().getEffectiveAvatarUrl()).openStream();
+			List<String> gachaList = PaginationService.SplitString(sb.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+
+			EmbedBuilder response = response(EmbedType.INFO)
+					.addField(App.Shmames.getBotName() + "Coin:tm: Balance", ":coin: " + user.getUserPoints(), false)
+					.setThumbnail("attachment://profile.png")
+					.setFooter("@" + executingCommand.getAuthorUser().getAsTag());
+
+			for(String field : gachaList) {
+				if(response.getFields().size() == 1) {
+					response.addField("Your Collection", field, false);
+				} else {
+					response.addField("", field, false);
+				}
+			}
+
+			executingCommand.replyFile(file, "profile.png", response);
+
+			return null;
+		}catch (Exception e) {
+			LoggingService.LogException(e);
+
+			return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR));
+		}
 	}
 
 	private EmbedBuilder cmdList(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
+		boolean showID = ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember());
 		StringBuilder sb = new StringBuilder();
 
 		for(GachaCharacter gc : brain.getGachaCharacters()) {
@@ -165,23 +222,54 @@ public class Gacha extends Command {
 				sb.append(System.lineSeparator());
 			}
 
+			String rarityEmote = getRarityEmoji(gc.getGachaCharacterRarity());
+
+			sb.append(rarityEmote);
+			sb.append(" **");
 			sb.append(gc.getGachaCharacterName());
+			sb.append("**");
+
+			if(showID) {
+				sb.append(" [_");
+				sb.append(gc.getGachaCharacterID());
+				sb.append("_]");
+			}
 		}
 
-		return response(EmbedType.INFO)
-				.addField("Possible Prizes", sb.toString(), false);
+		List<String> gachaList = PaginationService.SplitString(sb.toString(), MessageEmbed.VALUE_MAX_LENGTH);
+
+		EmbedBuilder response = response(EmbedType.INFO);
+
+		if(showID) {
+			response.setFooter("Admin Mode: IDs are displayed");
+		}
+
+		for(String field : gachaList) {
+			if(response.getFields().size() == 0) {
+				response.addField("Possible Prizes", field, false);
+			} else {
+				response.addField("", field, false);
+			}
+		}
+
+		return response;
 	}
 
 	private EmbedBuilder cmdCreate(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
 		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
-			brain.getGachaCharacters().add(new GachaCharacter("Popukar", "Test desc", "https://cdn.discordapp.com/avatars/528078229161115671/fe4d4eeb070ea9746691807d54e7026b.png", GachaRarity.COMMON));
-			brain.getGachaCharacters().add(new GachaCharacter("Toxic Sludge", "Test desc", "https://cdn.discordapp.com/avatars/528078229161115671/fe4d4eeb070ea9746691807d54e7026b.png", GachaRarity.UNCOMMON));
-			brain.getGachaCharacters().add(new GachaCharacter("Nuclear Sludge", "Test desc", "https://cdn.discordapp.com/avatars/528078229161115671/fe4d4eeb070ea9746691807d54e7026b.png", GachaRarity.RARE));
-			brain.getGachaCharacters().add(new GachaCharacter("Platinum Sludge", "Test desc", "https://cdn.discordapp.com/avatars/528078229161115671/fe4d4eeb070ea9746691807d54e7026b.png", GachaRarity.VERY_RARE));
-			brain.getGachaCharacters().add(new GachaCharacter("Broca via Recruitment", "Test desc", "https://cdn.discordapp.com/avatars/528078229161115671/fe4d4eeb070ea9746691807d54e7026b.png", GachaRarity.LEGENDARY));
+			ExecutingCommandArguments args = executingCommand.getCommandArguments();
+			String name = args.getAsString("name");
+			String image = args.getAsString("image");
+			String description = args.getAsString("description");
+			String rarityString = args.getAsString("rarity");
+			GachaRarity rarity = rarityString != null ? GachaRarity.valueOf(rarityString) : GachaRarity.COMMON;
+
+			brain.getGachaCharacters().add(new GachaCharacter(name, description, image, rarity));
+
+			Collections.sort(brain.getGachaCharacters());
 
 			return response(EmbedType.SUCCESS)
-					.setDescription("It worked :D:D:D");
+					.setDescription("`"+name+"` was created successfully.");
 		}else {
 			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
 					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
@@ -197,8 +285,26 @@ public class Gacha extends Command {
 
 		GachaUser ngu = new GachaUser(user.getIdLong());
 
+		// New users get 10 free rolls. Yay!
+		ngu.addUserPoints(ROLL_COST * 10);
+
 		brain.getGachaUsers().add(ngu);
 
 		return ngu;
+	}
+
+	private String getRarityEmoji(GachaRarity rarity) {
+		switch (rarity) {
+			case UNCOMMON:
+				return ":green_circle:";
+			case RARE:
+				return ":blue_circle:";
+			case VERY_RARE:
+				return ":purple_circle:";
+			case LEGENDARY:
+				return ":orange_circle:";
+			default:
+				return ":white_circle:";
+		}
 	}
 }

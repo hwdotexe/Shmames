@@ -4,7 +4,7 @@ import com.hadenwatne.shmames.enums.GachaRarity;
 
 import java.util.UUID;
 
-public class GachaCharacter {
+public class GachaCharacter implements Comparable<GachaCharacter> {
     private String gachaCharacterID;
     private String gachaCharacterName;
     private String gachaCharacterDescription;
@@ -37,5 +37,14 @@ public class GachaCharacter {
 
     public GachaRarity getGachaCharacterRarity() {
         return gachaCharacterRarity;
+    }
+
+    @Override
+    public int compareTo(GachaCharacter o) {
+        if(this.gachaCharacterRarity == o.gachaCharacterRarity) {
+            return this.getGachaCharacterName().compareTo(o.gachaCharacterName);
+        } else {
+            return this.gachaCharacterRarity.compareTo(o.gachaCharacterRarity);
+        }
     }
 }
