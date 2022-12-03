@@ -643,6 +643,12 @@
       ]
     },
     {
+      "key": "GACHA_NO_COINS",
+      "values": [
+        "You don't have enough coins to roll again!"
+      ]
+    },
+    {
       "key": "HANGMAN_ALREADY_GUESSED",
       "values": [
         "Pick some-fink new, Priyatel."

@@ -8,6 +8,7 @@ import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class Brain {
 	private List<GachaCharacter> gachaCharacters;
 	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
+	private Date gachaUserCreditDate;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -54,6 +56,7 @@ public class Brain {
 		isReportCooldown = false;
 		sentWelcome = false;
 		hangmanGame = null;
+		gachaUserCreditDate = new Date();
 		
 		loadFirstRunDefaults();
 	}
@@ -210,6 +213,18 @@ public class Brain {
 		}
 
 		return gachaUsers;
+	}
+
+	public Date getGachaUserCreditDate() {
+		if(this.gachaUserCreditDate == null) {
+			updateGachaUserCreditDate();
+		}
+
+		return gachaUserCreditDate;
+	}
+
+	public void updateGachaUserCreditDate() {
+		this.gachaUserCreditDate = new Date();
 	}
 
 	/**

@@ -144,6 +144,8 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to " + wildcard + " weapons. Please remove some existing weapons before creating more."}));
         errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_OWNED_OTHER, new String[]{"That weapon is owned by a different server!"}));
 
+        errors.add(new LanguageError(ErrorKeys.GACHA_NO_COINS, new String[]{"You don't have enough coins to roll again!"}));
+
         /*Already exists*/
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_STARTED, new String[]{"There's already a Hangman game in " + wildcard}));
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_GUESSED, new String[]{"You've already guessed that letter!"}));
