@@ -11,6 +11,7 @@ import com.hadenwatne.shmames.models.ForumWeaponObj;
 import com.hadenwatne.shmames.models.Response;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -71,6 +72,24 @@ public class ChatListener extends ListenerAdapter {
 				if(!didTrigger) {
 					if (RandomService.GetRandom(175) == 0) {
 						sendRandom(e.getMessage(), TriggerType.RANDOM, brain);
+					}
+
+					// Gacha points!
+					int messageLength = messageText.split("\\s").length;
+					int randomPoints = 0;
+
+					if(messageLength > 50) {
+						randomPoints = RandomService.GetRandom(15) + 1;
+					}else if(messageLength > 30) {
+						randomPoints = RandomService.GetRandom(10) + 1;
+					} else if(messageLength > 10) {
+						randomPoints = RandomService.GetRandom(5) + 1;
+					}
+
+					if(randomPoints > 0) {
+						GachaUser gachaUser = GachaService.GetGachaUser(brain, e.getAuthor());
+
+						gachaUser.addUserPoints(randomPoints);
 					}
 				}
 			} else {

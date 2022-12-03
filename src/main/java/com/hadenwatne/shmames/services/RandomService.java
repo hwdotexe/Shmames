@@ -32,6 +32,14 @@ public class RandomService {
     }
 
     /**
+     * Creates a random double between 0 and 1.
+     * @return A random double.
+     */
+    public static double GetRandom() {
+        return r.nextDouble();
+    }
+
+    /**
      * Returns a random value from a Set input.
      * @param set The unordered list to use.
      * @return A random item from the Set.

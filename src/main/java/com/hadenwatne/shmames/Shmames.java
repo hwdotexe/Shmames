@@ -5,6 +5,7 @@ import com.hadenwatne.shmames.listeners.*;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.services.*;
+import com.hadenwatne.shmames.tasks.GachaTask;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -99,6 +100,7 @@ public class Shmames {
 
 		// Start automated tasks.
 		new SaveDataTask();
+		new GachaTask();
 
 		// Set the bot name and avatar URL.
 		this.botName = getJDA().getSelfUser().getName();

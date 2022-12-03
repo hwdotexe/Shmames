@@ -451,11 +451,11 @@
         "engage in a rousing game of lots",
         "leave thy house and acquire a maiden",
         "abandon thy village and seek a young lord",
-		"summon back the betrayer gods",
-		"undertake the noxious rites to become a lich",
-		"seek ye a pleasant holiday stay within the Underdark",
-		"wed a young noble whose body contains a dormant hag",
-		"construct ye a fest hall and permit naught thine parents' entry"
+        "summon back the betrayer gods",
+        "undertake the noxious rites to become a lich",
+        "seek ye a pleasant holiday stay within the Underdark",
+        "wed a young noble whose body contains a dormant hag",
+        "construct ye a fest hall and permit naught thine parents' entry"
       ]
     },
     {
@@ -575,6 +575,12 @@
       "key": "FORUM_WEAPON_OWNED_OTHER",
       "values": [
         "Thy chosen blade doth belong to another."
+      ]
+    },
+    {
+      "key": "GACHA_NO_COINS",
+      "values": [
+        "You don't have enough coins to roll again!"
       ]
     },
     {

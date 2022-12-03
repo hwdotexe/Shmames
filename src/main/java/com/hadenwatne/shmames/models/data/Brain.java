@@ -8,6 +8,7 @@ import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,7 +27,10 @@ public class Brain {
 	private final List<ForumWeaponObj> forumWeapons;
 	private final List<AlarmTask> timers;
 	private final List<Playlist> playlists;
+	private List<GachaCharacter> gachaCharacters;
+	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
+	private Date gachaUserCreditDate;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -46,10 +50,13 @@ public class Brain {
 		forumWeapons = new ArrayList<>();
 		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
+		gachaCharacters = new ArrayList<>();
+		gachaUsers = new ArrayList<>();
 		talliedMessages = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
 		hangmanGame = null;
+		gachaUserCreditDate = new Date();
 		
 		loadFirstRunDefaults();
 	}
@@ -190,6 +197,34 @@ public class Brain {
 		}
 
 		return this.talliedMessages;
+	}
+
+	public List<GachaCharacter> getGachaCharacters() {
+		if(this.gachaCharacters == null) {
+			this.gachaCharacters = new ArrayList<>();
+		}
+
+		return gachaCharacters;
+	}
+
+	public List<GachaUser> getGachaUsers() {
+		if(this.gachaUsers == null) {
+			this.gachaUsers = new ArrayList<>();
+		}
+
+		return gachaUsers;
+	}
+
+	public Date getGachaUserCreditDate() {
+		if(this.gachaUserCreditDate == null) {
+			updateGachaUserCreditDate();
+		}
+
+		return gachaUserCreditDate;
+	}
+
+	public void updateGachaUserCreditDate() {
+		this.gachaUserCreditDate = new Date();
 	}
 
 	/**

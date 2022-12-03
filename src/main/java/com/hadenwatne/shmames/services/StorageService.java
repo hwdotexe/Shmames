@@ -64,6 +64,7 @@ public class StorageService {
         settings.add(new BotSetting(BotSettingName.ALLOW_PIN, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.APPROVAL_EMOTE, BotSettingType.EMOTE, "notset"));
         settings.add(new BotSetting(BotSettingName.APPROVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
+        settings.add(new BotSetting(BotSettingName.MANAGE_GACHA, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.MANAGE_MUSIC, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
         settings.add(new BotSetting(BotSettingName.POLL_CLOSE, BotSettingType.ROLE, "administrator"));
