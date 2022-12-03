@@ -26,6 +26,8 @@ public class Brain {
 	private final List<ForumWeaponObj> forumWeapons;
 	private final List<AlarmTask> timers;
 	private final List<Playlist> playlists;
+	private List<GachaCharacter> gachaCharacters;
+	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
@@ -46,6 +48,8 @@ public class Brain {
 		forumWeapons = new ArrayList<>();
 		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
+		gachaCharacters = new ArrayList<>();
+		gachaUsers = new ArrayList<>();
 		talliedMessages = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
@@ -190,6 +194,22 @@ public class Brain {
 		}
 
 		return this.talliedMessages;
+	}
+
+	public List<GachaCharacter> getGachaCharacters() {
+		if(this.gachaCharacters == null) {
+			this.gachaCharacters = new ArrayList<>();
+		}
+
+		return gachaCharacters;
+	}
+
+	public List<GachaUser> getGachaUsers() {
+		if(this.gachaUsers == null) {
+			this.gachaUsers = new ArrayList<>();
+		}
+
+		return gachaUsers;
 	}
 
 	/**
