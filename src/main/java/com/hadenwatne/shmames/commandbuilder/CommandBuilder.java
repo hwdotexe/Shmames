@@ -3,7 +3,6 @@ package com.hadenwatne.shmames.commandbuilder;
 import com.hadenwatne.shmames.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
-import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -13,11 +12,14 @@ public class CommandBuilder {
         return new CommandStructure(name, description);
     }
 
-    public static CommandData BuildSlashCommandData(Command command) {
+    public static SlashCommandData BuildSlashCommandData(Command command) {
         CommandStructure structure = command.getCommandStructure();
         String description = structure.getDescription();
         String shortDesc = description.length() > 100 ? (description.substring(0, 96) + "...") : description;
-        CommandDataImpl data = new CommandDataImpl(structure.getName(), shortDesc);
+        SlashCommandData data = Commands.slash(structure.getName(), shortDesc);
+
+        data.setGuildOnly(command.requiresGuild());
+        data.setNSFW(command.isNSFW());
 
         // If there are subcommands, add these instead.
         if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
