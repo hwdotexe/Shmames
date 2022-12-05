@@ -6,7 +6,10 @@ import com.hadenwatne.shmames.models.Family;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,9 +106,9 @@ public class ShmamesService {
 	 * @param server The server.
 	 * @return An Emote, or null if one cannot be found.
 	 */
-	public static Emote GetFamilyEmote(String emoteName, Brain serverBrain, Guild server) {
+	public static RichCustomEmoji GetFamilyEmote(String emoteName, Brain serverBrain, Guild server) {
 		// Check the server passed in first.
-		List<Emote> serverEmotes = server.getEmotesByName(emoteName, true);
+		List<RichCustomEmoji> serverEmotes = server.getEmojisByName(emoteName, true);
 
 		if (serverEmotes.size() > 0) {
 			return serverEmotes.get(0);
@@ -114,7 +117,7 @@ public class ShmamesService {
 			List<Guild> familyServers = GetConnectedFamilyGuilds(serverBrain, server);
 
 			for(Guild familyServer : familyServers) {
-				List<Emote> familyEmotes = familyServer.getEmotesByName(emoteName, true);
+				List<RichCustomEmoji> familyEmotes = familyServer.getEmojisByName(emoteName, true);
 
 				if (familyEmotes.size() > 0) {
 					return familyEmotes.get(0);

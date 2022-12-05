@@ -1,8 +1,12 @@
 package com.hadenwatne.shmames.models.command;
 
-import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.DataService;
-import net.dv8tion.jda.api.entities.*;
+import com.hadenwatne.shmames.services.LoggingService;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
@@ -117,13 +121,13 @@ public class ExecutingCommandArguments {
         return null;
     }
 
-    public Emote getAsEmote(String key, Guild server) {
+    public CustomEmoji getAsEmote(String key, Guild server) {
         if(this.arguments.containsKey(key)) {
             try {
                 String id = stripID(getAsString(key));
 
                 if (DataService.IsLong(id)) {
-                    return server.getEmoteById(id);
+                    return server.getEmojiById(id);
                 }
             } catch (Exception e) {
                 LoggingService.LogException(e);

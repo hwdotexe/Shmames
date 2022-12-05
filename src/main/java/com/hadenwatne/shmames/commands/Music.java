@@ -14,9 +14,9 @@ import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -1,17 +1,16 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.factories.EmbedFactory;
-import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -67,7 +66,7 @@ public class FirstJoinListener extends ListenerAdapter {
 		brain.setSentWelcome();
 	}
 
-	private void setDefaultChannelSettings(Brain brain, BaseGuildMessageChannel channel) {
+	private void setDefaultChannelSettings(Brain brain, TextChannel channel) {
 		if(channel != null){
 			BotSetting pin = brain.getSettingFor(BotSettingName.PIN_CHANNEL);
 

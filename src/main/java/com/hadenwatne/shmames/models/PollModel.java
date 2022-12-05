@@ -177,7 +177,7 @@ public class PollModel {
 
 		// Count the votes.
 		for (MessageReaction r : message.getReactions()) {
-			int voteOption = TextFormatService.LetterToNumber(r.getReactionEmote().getName());
+			int voteOption = TextFormatService.LetterToNumber(r.getEmoji().getName());
 
 			if (voteOption > 0) {
 				// Remove 1 because the bot adds a default reaction.

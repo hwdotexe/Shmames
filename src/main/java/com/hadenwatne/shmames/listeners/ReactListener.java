@@ -9,7 +9,8 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -25,13 +26,14 @@ public class ReactListener extends ListenerAdapter {
 		// Ignore bot reactions and reactions in private channels.
 		if (!e.getUser().isBot()) {
 			if (e.isFromGuild()) {
-				ReactionEmote emote = e.getReaction().getReactionEmote();
+				EmojiUnion emoteUnion = e.getReaction().getEmoji();
 
 				// Make sure that the reacted emote is a custom emoji from this server (ignore Nitro reactions).
-				if (emote.isEmote()) {
+				try {
+					CustomEmoji emote = emoteUnion.asCustom();
 					Guild server = e.getGuild();
 
-					if (server.getEmotes().contains(emote.getEmote())) {
+					if (server.getEmojiById(emote.getId()) != null) {
 						// Begin processing.
 						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
 
@@ -68,7 +70,10 @@ public class ReactListener extends ListenerAdapter {
 								}
 							}
 						}
+
 					}
+				} catch (IllegalStateException ignored) {
+					// Don't do anything if this is not a custom emote.
 				}
 			}
 		}
@@ -76,14 +81,15 @@ public class ReactListener extends ListenerAdapter {
 
 	@Override
 	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
-		if(!e.getUser().isBot()) {
-			if(e.isFromGuild()) {
-				ReactionEmote emote = e.getReaction().getReactionEmote();
+		if (!e.getUser().isBot()) {
+			if (e.isFromGuild()) {
+				EmojiUnion emoteUnion = e.getReaction().getEmoji();
 
-				if (emote.isEmote()) {
+				try {
+					CustomEmoji emote = emoteUnion.asCustom();
 					Guild server = e.getGuild();
 
-					if (server.getEmotes().contains(emote.getEmote())) {
+					if (server.getEmojiById(emote.getId()) != null) {
 						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
 
 						// Handle role reactions.
@@ -99,6 +105,8 @@ public class ReactListener extends ListenerAdapter {
 							}
 						}
 					}
+				} catch (IllegalStateException ignored) {
+					// Do nothing
 				}
 			}
 		}
@@ -110,8 +118,8 @@ public class ReactListener extends ListenerAdapter {
 
 		// Set the votes variable to this emote's count on the message.
 		for (MessageReaction r : message.getReactions()) {
-			if (r.getReactionEmote().isEmote()) {
-				if (r.getReactionEmote().getId().equalsIgnoreCase(emoteID)) {
+			if (message.getGuild().getEmojiById(emoteID) != null) {
+				if (r.getEmoji().asCustom().getId().equalsIgnoreCase(emoteID)) {
 					votes = r.getCount();
 
 					break;

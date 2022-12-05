@@ -30,7 +30,7 @@ public class PollListener extends ListenerAdapter {
                 if (this.pollModel.isActive()) {
                     Message message = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
 
-                    if(e.getReaction().getReactionEmote().getName().equals(TextFormatService.EMOJI_RED_X)) {
+                    if(e.getEmoji().getName().equals(TextFormatService.EMOJI_RED_X)) {
                         Brain brain = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
 
                         // Allow the author OR a user with permission to close the poll. Other reactions will be ignored.
@@ -40,7 +40,7 @@ public class PollListener extends ListenerAdapter {
                             App.Shmames.getJDA().removeEventListener(this);
                         }
                     } else {
-                        int alphabetNumber = TextFormatService.LetterToNumber(e.getReactionEmote().getName());
+                        int alphabetNumber = TextFormatService.LetterToNumber(e.getEmoji().getName());
 
                         // Don't bother updating if the reaction isn't an option.
                         if(this.pollModel.getOptions().size() >= alphabetNumber) {
@@ -59,7 +59,7 @@ public class PollListener extends ListenerAdapter {
         if(e.getMessageId().equals(this.pollModel.getMessageID())) {
             if(!e.getUser().isBot()) {
                 if (this.pollModel.isActive()) {
-                    int alphabetNumber = TextFormatService.LetterToNumber(e.getReactionEmote().getName());
+                    int alphabetNumber = TextFormatService.LetterToNumber(e.getEmoji().getName());
 
                     // Don't bother updating if the reaction isn't an option.
                     if(this.pollModel.getOptions().size() >= alphabetNumber) {

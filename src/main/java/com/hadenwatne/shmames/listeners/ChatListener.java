@@ -15,7 +15,11 @@ import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -125,8 +129,8 @@ public class ChatListener extends ListenerAdapter {
 	}
 
 	private void tallyServerEmotes(Message message, Guild server, Brain brain) {
-		for (Emote emo : message.getEmotes()) {
-			if (server.getEmotes().contains(emo)) {
+		for (CustomEmoji emo : message.getMentions().getCustomEmojis()) {
+			if (server.getEmojiById(emo.getId()) != null) {
 				String id = Long.toString(emo.getIdLong());
 
 				ShmamesService.IncrementEmoteTally(brain, id);

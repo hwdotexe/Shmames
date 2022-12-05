@@ -4,7 +4,10 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.BotSettingType;
 import com.hadenwatne.shmames.services.DataService;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 public class BotSetting {
 	private BotSettingName name;
@@ -61,9 +64,9 @@ public class BotSetting {
 		return null;
 	}
 
-	public Emote getAsEmote(Guild server) {
+	public RichCustomEmoji getAsEmote(Guild server) {
 		if(DataService.IsLong(value)) {
-			return server.getEmoteById(value);
+			return server.getEmojiById(value);
 		}
 
 		return null;
@@ -116,7 +119,7 @@ public class BotSetting {
 			return false;
 		case EMOTE:
 			if(DataService.IsLong(v)) {
-				Emote emote = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmoteById(v);
+				RichCustomEmoji emote = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmojiById(v);
 
 				if (emote != null) {
 					value = v;

@@ -7,7 +7,8 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.util.TimerTask;
 
@@ -63,10 +64,10 @@ public class PollTask extends TimerTask {
 		for (int i = 0; i < pollModel.getOptions().size(); i++) {
 			String emoji = TextFormatService.NumberToLetter(i + 1);
 
-			message.addReaction(emoji).queue();
+			message.addReaction(Emoji.fromUnicode(emoji)).queue();
 		}
 
-		message.addReaction(TextFormatService.EMOJI_RED_X).queue();
+		message.addReaction(Emoji.fromUnicode(TextFormatService.EMOJI_RED_X)).queue();
 	}
 
 	private void tryPinPollMessage(Message message) {

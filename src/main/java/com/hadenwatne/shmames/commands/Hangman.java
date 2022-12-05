@@ -16,7 +16,7 @@ import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

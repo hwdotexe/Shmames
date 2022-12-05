@@ -8,9 +8,9 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,7 +37,7 @@ public class ListEmoteStats extends Command {
 		HashMap<String, Integer> emStats = new HashMap<String, Integer>(executingCommand.getBrain().getEmoteStats());
 
 		// Add emotes without any uses
-		for (Emote e : server.getEmotes()) {
+		for (CustomEmoji e : server.getEmojis()) {
 			if (!emStats.containsKey(Long.toString(e.getIdLong()))) {
 				emStats.put(Long.toString(e.getIdLong()), 0);
 			}
@@ -51,7 +51,7 @@ public class ListEmoteStats extends Command {
 			int i = 0;
 
 			for (String em : emotes.keySet()) {
-				Emote emote = server.getEmoteById(em);
+				CustomEmoji emote = server.getEmojiById(em);
 
 				if (emote != null) {
 					i++;

@@ -12,6 +12,7 @@ import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.util.ArrayList;
@@ -62,12 +63,12 @@ public class React extends Command {
 				String l = TextFormatService.DuplicateLetterToEmoji(letter);
 
 				if (l != null)
-					toReact.addReaction(l).queue();
+					toReact.addReaction(Emoji.fromUnicode(l)).queue();
 
 				continue;
 			}
 
-			toReact.addReaction(TextFormatService.LetterToEmoji(letter)).queue();
+			toReact.addReaction(Emoji.fromUnicode(TextFormatService.LetterToEmoji(letter))).queue();
 			chars.add(letter);
 		}
 	}

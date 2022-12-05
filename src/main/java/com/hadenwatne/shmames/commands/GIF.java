@@ -10,9 +10,9 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.HTTPService;
 import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.io.InputStream;
 import java.net.URL;
