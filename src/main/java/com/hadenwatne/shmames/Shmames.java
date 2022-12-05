@@ -13,6 +13,8 @@ import com.hadenwatne.shmames.tasks.SaveDataTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Shmames {
 	private JDA jda;
@@ -123,7 +125,9 @@ public class Shmames {
 
 	private void configureJDA(String apiKey, MotherBrain motherBrain) {
 		try {
-			this.jda = JDABuilder.createDefault(apiKey).build();
+			this.jda = JDABuilder.createDefault(apiKey)
+					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
+					.enableCache(CacheFlag.EMOJI).build();
 
 			this.jda.awaitReady();
 		} catch (InvalidTokenException e) {

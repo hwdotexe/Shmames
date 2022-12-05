@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Gacha extends Command {
 	public Gacha() {
-		super(true);
+		super(true, false, true);
 	}
 
 	@Override

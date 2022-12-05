@@ -115,7 +115,7 @@ public class ChatListener extends ListenerAdapter {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
-		if(command != null) {
+		if(command != null && !command.isSlashOnly()) {
 			executingCommand.setCommandName(command.getCommandStructure().getName());
 			executingCommand.setMessage(message);
 
