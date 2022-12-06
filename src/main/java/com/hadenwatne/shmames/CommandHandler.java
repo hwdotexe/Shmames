@@ -287,7 +287,7 @@ public class CommandHandler {
 		// Update command syntax on individual test servers.
 		if(App.IsDebug) {
 			for(Guild g : App.Shmames.getJDA().getGuilds()) {
-				CommandListUpdateAction cUpdate = App.Shmames.getJDA().getGuildById(g.getId()).updateCommands();
+				CommandListUpdateAction cUpdate = g.updateCommands();
 
 				issueSlashCommandUpdate(cUpdate);
 			}
@@ -297,6 +297,16 @@ public class CommandHandler {
 
 		// Update command syntax on Discord if configured to do so.
 		if(App.Shmames.getStorageService().getMotherBrain().doUpdateDiscordSlashCommands()) {
+			// Delete guild-specific commands.
+			for(Guild g : App.Shmames.getJDA().getGuilds()) {
+				g.retrieveCommands().queue(success -> {
+					for(net.dv8tion.jda.api.interactions.commands.Command c : success) {
+						g.deleteCommandById(c.getId()).queue();
+					}
+				});
+			}
+
+			// Update global commands.
 			CommandListUpdateAction cUpdate = App.Shmames.getJDA().updateCommands();
 
 			issueSlashCommandUpdate(cUpdate);

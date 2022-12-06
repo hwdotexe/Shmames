@@ -21,6 +21,8 @@ public class CommandBuilder {
         data.setGuildOnly(command.requiresGuild());
         data.setNSFW(command.isNSFW());
 
+        // TODO: data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
+
         // If there are subcommands, add these instead.
         if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
             // Add SubCommands.
