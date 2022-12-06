@@ -111,6 +111,10 @@ public class ExecutingCommand {
         return this.hook != null;
     }
 
+    public InteractionHook getHook() {
+        return this.hook;
+    }
+
     public User getAuthorUser() {
         if(hook != null) {
             return hook.getInteraction().getUser();

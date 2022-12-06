@@ -51,8 +51,9 @@ public class Pin extends Command {
 				TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getAsString());
 
 				if (channelToSendPin != null) {
+
 					EmbedBuilder response = response(EmbedType.INFO);
-					InputStream file = new URL(toPin.getAuthor().getEffectiveAvatarUrl()).openStream();
+					InputStream file = new URL(toPin.getMember().getEffectiveAvatarUrl()).openStream();
 					Calendar c = Calendar.getInstance();
 
 					c.setTime(new Date());

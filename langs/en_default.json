@@ -669,7 +669,7 @@
     {
       "key": "HEY_THERE",
       "values": [
-        "Hey there! Try using `%WC% help`!"
+        "Hey there! Try using `/help`!"
       ]
     },
     {
@@ -790,6 +790,12 @@
       "key": "SETTING_VALUE_INVALID",
       "values": [
         "The value you provided is invalid. Please try again."
+      ]
+    },
+    {
+      "key": "SLASH_ONLY",
+      "values": [
+        "That command can only be run as a Slash Command! Please try again."
       ]
     },
     {

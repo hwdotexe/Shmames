@@ -728,6 +728,12 @@
       ]
     },
     {
+      "key": "SLASH_ONLY",
+      "values": [
+        "That command can only be run as a Slash Command! Please try again."
+      ]
+    },
+    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "The bells doth toll a year's time or less."

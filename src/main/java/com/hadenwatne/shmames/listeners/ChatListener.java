@@ -115,11 +115,18 @@ public class ChatListener extends ListenerAdapter {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
-		if(command != null && !command.isSlashOnly()) {
-			executingCommand.setCommandName(command.getCommandStructure().getName());
-			executingCommand.setMessage(message);
+		if(command != null) {
+			if(!command.isSlashOnly()){
+				executingCommand.setCommandName(command.getCommandStructure().getName());
+				executingCommand.setMessage(message);
 
-			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
+				App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
+			}else{
+				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.SLASH_ONLY.name())
+						.setDescription(language.getError(ErrorKeys.SLASH_ONLY));
+
+				MessageService.ReplyToMessage(message, embed, false);
+			}
 		} else {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
 					.setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));

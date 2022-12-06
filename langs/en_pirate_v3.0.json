@@ -793,6 +793,12 @@
       ]
     },
     {
+      "key": "SLASH_ONLY",
+      "values": [
+        "That command can only be run as a Slash Command! Please try again."
+      ]
+    },
+    {
       "key": "TIMER_LENGTH_INCORRECT",
       "values": [
         "Timers must be set between 1 second and 365 days."
