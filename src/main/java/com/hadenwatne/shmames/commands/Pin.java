@@ -16,7 +16,7 @@ import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.io.InputStream;
@@ -51,8 +51,9 @@ public class Pin extends Command {
 				TextChannel channelToSendPin = executingCommand.getServer().getTextChannelById(executingCommand.getBrain().getSettingFor(BotSettingName.PIN_CHANNEL).getAsString());
 
 				if (channelToSendPin != null) {
+
 					EmbedBuilder response = response(EmbedType.INFO);
-					InputStream file = new URL(toPin.getAuthor().getEffectiveAvatarUrl()).openStream();
+					InputStream file = new URL(toPin.getMember().getEffectiveAvatarUrl()).openStream();
 					Calendar c = Calendar.getInstance();
 
 					c.setTime(new Date());

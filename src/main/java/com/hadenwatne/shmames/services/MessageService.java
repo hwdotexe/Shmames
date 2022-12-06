@@ -4,10 +4,11 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.File;
 import java.io.InputStream;
@@ -85,7 +86,9 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, File file, EmbedBuilder response, boolean mention) {
-        hook.sendFile(file).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
+        FileUpload fileUpload = FileUpload.fromData(file);
+
+        hook.sendFiles(fileUpload).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -99,7 +102,9 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(InteractionHook hook, InputStream file, String name, EmbedBuilder response, boolean mention) {
-        hook.sendFile(file, name).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
+        FileUpload fileUpload = FileUpload.fromData(file, name);
+
+        hook.sendFiles(fileUpload).addEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -137,7 +142,9 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, File file, EmbedBuilder response, boolean mention) {
-        message.reply(file).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
+        FileUpload fileUpload = FileUpload.fromData(file);
+
+        message.replyFiles(fileUpload).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> { file.delete(); }, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -151,7 +158,9 @@ public class MessageService {
      * @param response The embed to include with this file.
      */
     public static void ReplyToMessage(Message message, InputStream file, String name, EmbedBuilder response, boolean mention) {
-        message.reply(file, name).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
+        FileUpload fileUpload = FileUpload.fromData(file, name);
+
+        message.replyFiles(fileUpload).setEmbeds(response.build()).mentionRepliedUser(mention).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });
@@ -201,7 +210,9 @@ public class MessageService {
      * @param message The message to send.
      */
     public static void SendMessage(MessageChannel channel, InputStream file, String name, EmbedBuilder message) {
-        channel.sendFile(file, name).mentionRepliedUser(false).setEmbeds(message.build()).queue(success -> {}, error -> {
+        FileUpload fileUpload = FileUpload.fromData(file, name);
+
+        channel.sendFiles(fileUpload).mentionRepliedUser(false).setEmbeds(message.build()).queue(success -> {}, error -> {
             LoggingService.Log(LogType.ERROR, "Could not send a message in channel "+channel.getId());
             LoggingService.Log(LogType.ERROR, error.getMessage());
         });

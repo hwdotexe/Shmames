@@ -61,7 +61,7 @@ public class Help extends Command {
 			embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Help");
 
 			embedBuilder.addField("All Commands", list, false);
-			embedBuilder.addField("Information", "View additional information for each command by using `"+App.Shmames.getBotName()+" help <command>`!", false);
+			embedBuilder.addField("Information", "View additional information for each command by using `/help <command>`!", false);
 
 			embedBuilder.setFooter(App.Shmames.getBotName() + (App.IsDebug ? " **Debug Mode**" : ""));
 

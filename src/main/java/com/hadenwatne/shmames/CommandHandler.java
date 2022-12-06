@@ -108,6 +108,12 @@ public class CommandHandler {
 	 */
 	public void HandleCommand(Command command, ExecutingCommand executingCommand, String commandText) {
 		if(App.Shmames.getCommandHandler().ValidateCommand(command, commandText)) {
+			// Log command usage & method
+			String commandName = command.getCommandStructure().getName() + (executingCommand.hasInteractionHook() ? "-[slash]" : "-[text]").toLowerCase();
+			int count = App.Shmames.getStorageService().getMotherBrain().getCommandStats().getOrDefault(commandName, 0);
+
+			App.Shmames.getStorageService().getMotherBrain().getCommandStats().put(commandName, count + 1);
+
 			// If this command requires a server, but none is accessible, throw an error.
 			if(command.requiresGuild() && executingCommand.getServer() == null) {
 				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, "GUILD_REQUIRED")

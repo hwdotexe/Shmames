@@ -18,6 +18,7 @@ import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -396,7 +397,7 @@ public class FamilyCmd extends Command {
 		final int emotesPerLine = 10;
 		int tempCounter = 0;
 
-		for(Emote e : g.getEmotes()) {
+		for(CustomEmoji e : g.getEmojis()) {
 			if(guildEmotes.length() > 0)
 				guildEmotes.append(" ");
 

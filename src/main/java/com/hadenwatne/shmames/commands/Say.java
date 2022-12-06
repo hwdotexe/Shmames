@@ -11,7 +11,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import java.util.regex.Matcher;
@@ -58,7 +58,7 @@ public class Say extends Command {
 
 			while (m.find()) {
 				String eName = m.group(1);
-				Emote emote = ShmamesService.GetFamilyEmote(eName, brain, executingCommand.getServer());
+				RichCustomEmoji emote = ShmamesService.GetFamilyEmote(eName, brain, executingCommand.getServer());
 
 				if(emote != null) {
 					// Replace the emote name with the emote mention.

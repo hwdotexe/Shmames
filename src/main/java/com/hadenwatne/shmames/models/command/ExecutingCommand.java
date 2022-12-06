@@ -6,17 +6,22 @@ import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
 public class ExecutingCommand {
     private final Language language;
-    private final @Nullable Brain brain;
+    private final @Nullable
+    Brain brain;
 
     private String commandName;
     private String subCommandGroup;
@@ -104,6 +109,10 @@ public class ExecutingCommand {
 
     public boolean hasInteractionHook() {
         return this.hook != null;
+    }
+
+    public InteractionHook getHook() {
+        return this.hook;
     }
 
     public User getAuthorUser() {

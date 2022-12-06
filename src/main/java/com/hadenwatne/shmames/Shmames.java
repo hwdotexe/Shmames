@@ -1,7 +1,10 @@
 package com.hadenwatne.shmames;
 
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.listeners.*;
+import com.hadenwatne.shmames.listeners.ChatListener;
+import com.hadenwatne.shmames.listeners.FirstJoinListener;
+import com.hadenwatne.shmames.listeners.ReactListener;
+import com.hadenwatne.shmames.listeners.SlashCommandListener;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.services.*;
@@ -9,8 +12,9 @@ import com.hadenwatne.shmames.tasks.GachaTask;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-
-import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Shmames {
 	private JDA jda;
@@ -121,10 +125,12 @@ public class Shmames {
 
 	private void configureJDA(String apiKey, MotherBrain motherBrain) {
 		try {
-			this.jda = JDABuilder.createDefault(apiKey).build();
+			this.jda = JDABuilder.createDefault(apiKey)
+					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
+					.enableCache(CacheFlag.EMOJI).build();
 
 			this.jda.awaitReady();
-		} catch (LoginException e) {
+		} catch (InvalidTokenException e) {
 			if(apiKey.equals("API_KEY_HERE")) {
 				// Retrieve all keys to generate default values.
 				motherBrain.getTenorAPIKey();

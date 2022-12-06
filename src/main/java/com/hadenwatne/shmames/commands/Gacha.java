@@ -21,11 +21,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Gacha extends Command {
 	public Gacha() {
-		super(true);
+		super(true, false, true);
 	}
 
 	@Override
@@ -153,27 +154,23 @@ public class Gacha extends Command {
 
 	private EmbedBuilder cmdProfile(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
 		GachaUser user = GachaService.GetGachaUser(brain, executingCommand.getAuthorUser());
+		List<GachaCharacter> characters = brain.getGachaCharacters();
+		HashMap<String, Integer> userInventory = user.getUserGachaInventory();
 		StringBuilder sb = new StringBuilder();
 
-		for (String gckey : user.getUserGachaInventory().keySet()) {
-			List<GachaCharacter> characters = brain.getGachaCharacters();
-
-			for (GachaCharacter gc : characters) {
-				if (gc.getGachaCharacterID().equals(gckey)) {
-					if (sb.length() > 0) {
-						sb.append(System.lineSeparator());
-					}
-
-					String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
-
-					sb.append(rarityEmote);
-					sb.append(" **");
-					sb.append(gc.getGachaCharacterName());
-					sb.append("** x");
-					sb.append(user.getUserGachaInventory().get(gckey));
-
-					break;
+		for (GachaCharacter gc : characters) {
+			if(userInventory.containsKey(gc.getGachaCharacterID())) {
+				if (sb.length() > 0) {
+					sb.append(System.lineSeparator());
 				}
+
+				String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+
+				sb.append(rarityEmote);
+				sb.append(" **");
+				sb.append(gc.getGachaCharacterName());
+				sb.append("** x");
+				sb.append(userInventory.get(gc.getGachaCharacterID()));
 			}
 		}
 
@@ -263,6 +260,7 @@ public class Gacha extends Command {
 			brain.getGachaCharacters().add(new GachaCharacter(name, description, image, rarity));
 
 			Collections.sort(brain.getGachaCharacters());
+			Collections.reverse(brain.getGachaCharacters());
 
 			return response(EmbedType.SUCCESS)
 					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));

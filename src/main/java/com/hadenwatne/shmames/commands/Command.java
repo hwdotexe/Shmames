@@ -16,13 +16,41 @@ import java.util.List;
 public abstract class Command {
     private final CommandStructure commandStructure;
     private final boolean requiresGuild;
+    private final boolean isNSFW;
+    private final boolean slashOnly;
     private final List<MessageEmbed.Field> helpFields;
 
     Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
         this.requiresGuild = requiresGuild;
+        this.isNSFW = false;
+        this.slashOnly = false;
         this.helpFields = new ArrayList<>();
 
+        configureCommand();
+    }
+
+    Command(boolean requiresGuild, boolean isNSFW) {
+        this.commandStructure = this.buildCommandStructure();
+        this.requiresGuild = requiresGuild;
+        this.isNSFW = isNSFW;
+        this.slashOnly = false;
+        this.helpFields = new ArrayList<>();
+
+        configureCommand();
+    }
+
+    Command(boolean requiresGuild, boolean isNSFW, boolean slashOnly) {
+        this.commandStructure = this.buildCommandStructure();
+        this.requiresGuild = requiresGuild;
+        this.isNSFW = isNSFW;
+        this.slashOnly = slashOnly;
+        this.helpFields = new ArrayList<>();
+
+        configureCommand();
+    }
+
+    private void configureCommand() {
         // Build our command's Help fields.
         String list = PaginationService.GenerateList(this.commandStructure.getAliases(), -1, false, false);
         list = list.length() == 0 ? "None" : list;
@@ -54,6 +82,14 @@ public abstract class Command {
 
     public boolean requiresGuild() {
         return this.requiresGuild;
+    }
+
+    public boolean isSlashOnly() {
+        return this.slashOnly;
+    }
+
+    public boolean isNSFW() {
+        return this.isNSFW;
     }
 
     public List<MessageEmbed.Field> getHelpFields() {

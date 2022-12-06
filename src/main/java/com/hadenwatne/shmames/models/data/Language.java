@@ -150,7 +150,7 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_STARTED, new String[]{"There's already a Hangman game in " + wildcard}));
         errors.add(new LanguageError(ErrorKeys.HANGMAN_ALREADY_GUESSED, new String[]{"You've already guessed that letter!"}));
         errors.add(new LanguageError(ErrorKeys.HANGMAN_NOT_STARTED, new String[]{"There isn't a Hangman game running! Try starting one."}));
-        errors.add(new LanguageError(ErrorKeys.HEY_THERE, new String[]{"Hey there! Try using `" + wildcard + " help`!"}));
+        errors.add(new LanguageError(ErrorKeys.HEY_THERE, new String[]{"Hey there! Try using `/help`!"}));
         errors.add(new LanguageError(ErrorKeys.INCORRECT_ITEM_COUNT, new String[]{"Incorrect number of arguments provided!"}));
         errors.add(new LanguageError(ErrorKeys.ITEMS_NOT_FOUND, new String[]{"There weren't any results."}));
         errors.add(new LanguageError(ErrorKeys.MUSIC_NOT_IN_CHANNEL, new String[]{"Please join a voice channel and run this command again."}));
@@ -180,6 +180,7 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"}));
 
         errors.add(new LanguageError(ErrorKeys.SETTING_VALUE_INVALID, new String[]{"The value you provided is invalid. Please try again."}));
+        errors.add(new LanguageError(ErrorKeys.SLASH_ONLY, new String[]{"That command can only be run as a Slash Command! Please try again."}));
         errors.add(new LanguageError(ErrorKeys.TIME_VALUE_INCORRECT, new String[]{"The amount of time provided is invalid!"}));
         errors.add(new LanguageError(ErrorKeys.TIMER_LENGTH_INCORRECT, new String[]{"Timers must be set between 1 second and 365 days."}));
         errors.add(new LanguageError(ErrorKeys.TRACK_NOT_PLAYING, new String[]{"There isn't a track playing right now."}));

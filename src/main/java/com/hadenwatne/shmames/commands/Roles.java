@@ -15,6 +15,7 @@ import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.requests.RestAction;
 
 public class Roles extends Command {
@@ -99,7 +100,7 @@ public class Roles extends Command {
 		String postID = executingCommand.getCommandArguments().getAsString("postid");
 		RoleMessage roleMessage = brain.getRoleMessageByID(postID);
 		Role roleToAdd = executingCommand.getCommandArguments().getAsRole("role", executingCommand.getServer());
-		Emote emote = executingCommand.getCommandArguments().getAsEmote("emote", executingCommand.getServer());
+		CustomEmoji emote = executingCommand.getCommandArguments().getAsEmote("emote", executingCommand.getServer());
 
 		if(roleToAdd != null && emote != null && roleMessage != null) {
 			roleMessage.getRoleEmoteMap().put(emote.getId(), roleToAdd.getId());
@@ -165,7 +166,7 @@ public class Roles extends Command {
 				stringBuilder.append(System.lineSeparator());
 			}
 
-			stringBuilder.append(server.getEmoteById(emoteID).getAsMention());
+			stringBuilder.append(server.getEmojiById(emoteID).getAsMention());
 			stringBuilder.append(": ");
 			stringBuilder.append(server.getRoleById(roleMessage.getRoleEmoteMap().get(emoteID)).getAsMention());
 		}

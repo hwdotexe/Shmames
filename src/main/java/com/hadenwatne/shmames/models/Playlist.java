@@ -1,6 +1,5 @@
 package com.hadenwatne.shmames.models;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,6 @@ public class Playlist {
         return false;
     }
 
-    @Nullable
     public String getMemo(String url) {
         if(urls.contains(url)) {
             return memos.get(urls.indexOf(url));
