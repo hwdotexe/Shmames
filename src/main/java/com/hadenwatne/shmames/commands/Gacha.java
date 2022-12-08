@@ -42,7 +42,7 @@ public class Gacha extends Command {
 						CommandBuilder.Create("roll", "Exchange your points for a chance at a prize!")
 								.addAlias("r")
 								.addParameters(
-										new CommandParameter("times", "Roll multiple times with one command", ParameterType.INTEGER)
+										new CommandParameter("times", "Roll multiple times with one command", ParameterType.INTEGER, false)
 												.setExample("5")
 								)
 								.build(),
@@ -162,20 +162,22 @@ public class Gacha extends Command {
 					}
 
 					response.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
-							.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID()))
+							.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID())+" • "+user.getUserPoints()+" Coins remaining")
 							.addField("You got " + rolledCharacter.getGachaCharacterName() + "!", "> " + rolledCharacter.getGachaCharacterDescription(), false);
 				} else {
 					if(result.length() > 0) {
 						result.append(System.lineSeparator());
 					}
 
-					result.append(isNew ? ":sparkles:【NEW】" : "");
+					result.append(isNew ? ":sparkles:" : "");
+					result.append(" ");
+					result.append(rarityEmote);
 					result.append(" **" + rolledCharacter.getGachaCharacterName() + "**");
 				}
 			}
 
 			if(rollTimes > 1) {
-				response.setFooter("Rolled x"+rollTimes);
+				response.setFooter("Rolled x"+rollTimes+" • "+user.getUserPoints()+" Coins remaining");
 			}
 
 			response.setDescription(result.toString());
