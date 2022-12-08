@@ -41,6 +41,10 @@ public class Gacha extends Command {
 				.addSubCommands(
 						CommandBuilder.Create("roll", "Exchange your points for a chance at a prize!")
 								.addAlias("r")
+								.addParameters(
+										new CommandParameter("times", "Roll multiple times with one command", ParameterType.INTEGER)
+												.setExample("5")
+								)
 								.build(),
 						CommandBuilder.Create("profile", "View your Gacha stats!")
 								.addAlias("p")
@@ -98,54 +102,85 @@ public class Gacha extends Command {
 
 	private EmbedBuilder cmdRoll(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
 		GachaUser user = GachaService.GetGachaUser(brain, executingCommand.getAuthorUser());
+		int rollTimes = Math.max(1, executingCommand.getCommandArguments().getAsInteger("times"));
 
-		if (user.getUserPoints() >= GachaService.ROLL_COST) {
-			user.subtractUserPoints(GachaService.ROLL_COST);
+		if (user.getUserPoints() >= (GachaService.ROLL_COST * rollTimes)) {
+			user.subtractUserPoints(GachaService.ROLL_COST * rollTimes);
 
-			double roll = RandomService.GetRandom();
+			StringBuilder result = new StringBuilder();
+			EmbedBuilder response = response(EmbedType.SUCCESS);
 
-			// Increase the roll if triggering pity system.
-			if (user.getPityCounter() > GachaService.PITY_THRESHOLD) {
-				roll += (user.getPityCounter() - GachaService.PITY_THRESHOLD) * 0.05;
-			}
+			for (int i = 0; i < rollTimes; i++) {
+				double roll = RandomService.GetRandom();
 
-			GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
-			List<GachaCharacter> possibleCharacters = new ArrayList<>();
+				// Increase the roll if triggering pity system.
+				if (user.getPityCounter() > GachaService.PITY_THRESHOLD) {
+					roll += (user.getPityCounter() - GachaService.PITY_THRESHOLD) * 0.05;
+				}
 
-			for (GachaCharacter gc : brain.getGachaCharacters()) {
-				if (gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
-					possibleCharacters.add(gc);
+				GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
+				List<GachaCharacter> possibleCharacters = new ArrayList<>();
+
+				for (GachaCharacter gc : brain.getGachaCharacters()) {
+					if (gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
+						possibleCharacters.add(gc);
+					}
+				}
+
+				GachaCharacter rolledCharacter = RandomService.GetRandomObjectFromList(possibleCharacters);
+
+				boolean isNew = !user.hasCharacter(rolledCharacter);
+				user.addCharacterToInventory(rolledCharacter);
+
+				// Refund a little if this is not a new character.
+				if (!isNew) {
+					user.addUserPoints(GachaService.GetRarityDuplicateRefund(rolledCharacter.getGachaCharacterRarity()));
+				}
+
+				if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.RARE.getRarityValue()) {
+					user.incrementPityCounter();
+				} else {
+					user.resetPityCounter();
+				}
+
+				String rarityEmote = GachaService.GetRarityEmoji(rolledCharacter.getGachaCharacterRarity());
+
+				if (rollTimes == 1) {
+					for(int emote=0; emote<10; emote++) {
+						result.append(rarityEmote);
+					}
+
+					result.append(System.lineSeparator());
+					result.append(System.lineSeparator());
+					result.append(isNew ? ":sparkles:【NEW】" : "");
+					result.append(" **" + rolledCharacter.getGachaCharacterName() + "**");
+					result.append(System.lineSeparator());
+					result.append(System.lineSeparator());
+
+					for(int emote=0; emote<10; emote++) {
+						result.append(rarityEmote);
+					}
+
+					response.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
+							.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID()))
+							.addField("You got " + rolledCharacter.getGachaCharacterName() + "!", "> " + rolledCharacter.getGachaCharacterDescription(), false);
+				} else {
+					if(result.length() > 0) {
+						result.append(System.lineSeparator());
+					}
+
+					result.append(isNew ? ":sparkles:【NEW】" : "");
+					result.append(" **" + rolledCharacter.getGachaCharacterName() + "**");
 				}
 			}
 
-			GachaCharacter rolledCharacter = RandomService.GetRandomObjectFromList(possibleCharacters);
-
-			boolean isNew = !user.hasCharacter(rolledCharacter);
-			user.addCharacterToInventory(rolledCharacter);
-
-			// Refund a little if this is not a new character.
-			if(!isNew) {
-				user.addUserPoints(GachaService.GetRarityDuplicateRefund(rolledCharacter.getGachaCharacterRarity()));
+			if(rollTimes > 1) {
+				response.setFooter("Rolled x"+rollTimes);
 			}
 
-			if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.RARE.getRarityValue()) {
-				user.incrementPityCounter();
-			} else {
-				user.resetPityCounter();
-			}
+			response.setDescription(result.toString());
 
-			String rarityEmote = GachaService.GetRarityEmoji(rolledCharacter.getGachaCharacterRarity());
-
-			return response(EmbedType.SUCCESS)
-					.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
-					.setDescription((rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + System.lineSeparator())
-							+ System.lineSeparator()
-							+ (isNew ? ":sparkles:【NEW】" : "")
-							+ " **" + rolledCharacter.getGachaCharacterName() + "**"
-							+ System.lineSeparator()
-							+ (System.lineSeparator() + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote + rarityEmote))
-					.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID()))
-					.addField("You got " + rolledCharacter.getGachaCharacterName() + "!", "> " + rolledCharacter.getGachaCharacterDescription(), false);
+			return response;
 		} else {
 			return response(EmbedType.ERROR, ErrorKeys.GACHA_NO_COINS.name())
 					.setDescription(language.getError(ErrorKeys.GACHA_NO_COINS));
