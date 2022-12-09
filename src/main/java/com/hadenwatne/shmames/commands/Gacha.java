@@ -19,10 +19,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Gacha extends Command {
 	public Gacha() {
@@ -72,6 +69,9 @@ public class Gacha extends Command {
 										new CommandParameter("id", "The ID of the Gacha prize to delete.", ParameterType.STRING)
 												.setExample("id")
 								)
+								.build(),
+						CommandBuilder.Create("banner", "View the current RATE UP prizes.")
+								.addAlias("b")
 								.build()
 				)
 				.build();
@@ -95,6 +95,8 @@ public class Gacha extends Command {
 				return cmdCreate(server, language, brain, executingCommand);
 			case "delete":
 				return cmdDelete(server, language, brain, executingCommand);
+			case "banner":
+				return cmdBanner(server, language, brain, executingCommand);
 		}
 
 		return null;
@@ -124,6 +126,11 @@ public class Gacha extends Command {
 				for (GachaCharacter gc : brain.getGachaCharacters()) {
 					if (gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
 						possibleCharacters.add(gc);
+
+						// Add this character again if they are on the banner.
+						if (brain.getGachaBanner().contains(gc.getGachaCharacterID())) {
+							possibleCharacters.add(gc);
+						}
 					}
 				}
 
@@ -146,7 +153,7 @@ public class Gacha extends Command {
 				String rarityEmote = GachaService.GetRarityEmoji(rolledCharacter.getGachaCharacterRarity());
 
 				if (rollTimes == 1) {
-					for(int emote=0; emote<10; emote++) {
+					for (int emote = 0; emote < 10; emote++) {
 						result.append(rarityEmote);
 					}
 
@@ -157,15 +164,15 @@ public class Gacha extends Command {
 					result.append(System.lineSeparator());
 					result.append(System.lineSeparator());
 
-					for(int emote=0; emote<10; emote++) {
+					for (int emote = 0; emote < 10; emote++) {
 						result.append(rarityEmote);
 					}
 
 					response.setThumbnail(rolledCharacter.getGachaCharacterImageURL())
-							.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID())+" • "+user.getUserPoints()+" Coins remaining")
+							.setFooter(rolledCharacter.getGachaCharacterRarity().name() + " • Owned x" + user.getUserGachaInventory().get(rolledCharacter.getGachaCharacterID()) + " • " + user.getUserPoints() + " Coins remaining")
 							.addField("You got " + rolledCharacter.getGachaCharacterName() + "!", "> " + rolledCharacter.getGachaCharacterDescription(), false);
 				} else {
-					if(result.length() > 0) {
+					if (result.length() > 0) {
 						result.append(System.lineSeparator());
 					}
 
@@ -176,8 +183,8 @@ public class Gacha extends Command {
 				}
 			}
 
-			if(rollTimes > 1) {
-				response.setFooter("Rolled x"+rollTimes+" • "+user.getUserPoints()+" Coins remaining");
+			if (rollTimes > 1) {
+				response.setFooter("Rolled x" + rollTimes + " • " + user.getUserPoints() + " Coins remaining");
 			}
 
 			response.setDescription(result.toString());
@@ -334,6 +341,42 @@ public class Gacha extends Command {
 		} else {
 			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
 					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+		}
+	}
+
+	private EmbedBuilder cmdBanner(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
+		StringBuilder sb = new StringBuilder();
+
+		if(brain.getGachaBanner().size() > 0) {
+			for(String gcid : brain.getGachaBanner()) {
+				for(GachaCharacter gc : brain.getGachaCharacters()){
+					if(gc.getGachaCharacterID().equals(gcid)) {
+						String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+
+						if(sb.length() > 0) {
+							sb.append(System.lineSeparator());
+						}
+
+						sb.append(rarityEmote);
+						sb.append(" ");
+						sb.append(gc.getGachaCharacterName());
+
+						break;
+					}
+				}
+			}
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(brain.getGachaUserCreditDate());
+
+			String endTime = TextFormatService.GetFriendlyDateTime(c);
+
+			return response(EmbedType.SUCCESS)
+					.setFooter("Until " + endTime)
+					.addField("Rate Up Characters", sb.toString(), false);
+		} else {
+			return response(EmbedType.INFO, ErrorKeys.GACHA_NO_BANNER.name())
+					.setDescription(language.getError(ErrorKeys.GACHA_NO_BANNER));
 		}
 	}
 }

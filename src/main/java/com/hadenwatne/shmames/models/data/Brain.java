@@ -31,6 +31,7 @@ public class Brain {
 	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
 	private Date gachaUserCreditDate;
+	private List<String> gachaBanner;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -57,6 +58,7 @@ public class Brain {
 		sentWelcome = false;
 		hangmanGame = null;
 		gachaUserCreditDate = new Date();
+		gachaBanner = new ArrayList<>();
 		
 		loadFirstRunDefaults();
 	}
@@ -221,6 +223,14 @@ public class Brain {
 		}
 
 		return gachaUserCreditDate;
+	}
+
+	public List<String> getGachaBanner() {
+		if(this.gachaBanner == null) {
+			this.gachaBanner = new ArrayList<>();
+		}
+
+		return gachaBanner;
 	}
 
 	public void updateGachaUserCreditDate() {
