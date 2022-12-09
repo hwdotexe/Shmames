@@ -35,7 +35,6 @@ public class CommandHandler {
 		commands.add(new Cactpot());
 		commands.add(new Choose());
 		commands.add(new CringeThat());
-		commands.add(new Dev());
 		commands.add(new EightBall());
 		commands.add(new Enhance());
 		commands.add(new FamilyCmd());
