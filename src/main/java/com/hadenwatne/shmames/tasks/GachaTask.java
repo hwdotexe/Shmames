@@ -1,20 +1,19 @@
 package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.enums.GachaRarity;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.GachaCharacter;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.services.GachaService;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
- * Gives existing Gacha users a random amount of daily credit, up to a limit if not redeemed.
+ * Gives existing Gacha users a random amount of daily credit, up to a limit if not redeemed, and adjusts the banner.
  */
 public class GachaTask extends TimerTask {
 
@@ -35,12 +34,49 @@ public class GachaTask extends TimerTask {
 			long last = b.getGachaUserCreditDate().getTime();
 
 			if(now - last >= hours24) {
+				// Give users free credits.
 				for (GachaUser gu : b.getGachaUsers()) {
 					// Don't give points to users who have more than a certain amount.
 					if(gu.getUserPoints() < GachaService.AUTOMATIC_MAXIMUM) {
 						int randomCredit = RandomService.GetRandom(15) + 1;
 
 						gu.addUserPoints(randomCredit);
+					}
+				}
+
+				// Adjust the daily banner.
+				List<String> banner = b.getGachaBanner();
+
+				banner.clear();
+
+				// 1/3 chance to have a banner today.
+				if(RandomService.GetRandom(3) == 0) {
+					List<GachaCharacter> poolVR = new ArrayList<>();
+					List<GachaCharacter> poolL = new ArrayList<>();
+
+					for (GachaCharacter gc : b.getGachaCharacters()) {
+						if (gc.getGachaCharacterRarity() == GachaRarity.VERY_RARE) {
+							poolVR.add(gc);
+						} else if (gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY) {
+							poolL.add(gc);
+						}
+					}
+
+					// Select 2 Very Rare characters.
+					if (poolVR.size() >= 2) {
+						for (int i = 0; i < 2; i++) {
+							GachaCharacter r = RandomService.GetRandomObjectFromList(poolVR);
+
+							banner.add(r.getGachaCharacterID());
+							poolVR.remove(r);
+						}
+					}
+
+					// Select 1 Legendary character.
+					if (poolVR.size() >= 1) {
+						GachaCharacter r = RandomService.GetRandomObjectFromList(poolL);
+
+						banner.add(r.getGachaCharacterID());
 					}
 				}
 
