@@ -40,7 +40,7 @@ public class ReactListener extends ListenerAdapter {
 						// Handle role reactions first.
 						for (RoleMessage roleMessage : brain.getRoleMessages()) {
 							if (e.getMessageId().equals(roleMessage.getMessageID())) {
-								Role role = server.getRoleById(roleMessage.getRoleEmoteMap().get(emote.getId()));
+								Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
 
 								if (role != null) {
 									server.addRoleToMember(e.getMember(), role).queue();
@@ -95,7 +95,7 @@ public class ReactListener extends ListenerAdapter {
 						// Handle role reactions.
 						for (RoleMessage roleMessage : brain.getRoleMessages()) {
 							if (e.getMessageId().equals(roleMessage.getMessageID())) {
-								Role role = server.getRoleById(roleMessage.getRoleEmoteMap().get(emote.getId()));
+								Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
 
 								if (role != null) {
 									server.removeRoleFromMember(e.getMember(), role).queue();
