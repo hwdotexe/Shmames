@@ -1,5 +1,7 @@
 package com.hadenwatne.shmames.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class RoleMessage {
@@ -7,6 +9,7 @@ public class RoleMessage {
     private String channelID;
     private String messageID;
     private String infoMessage;
+    @SerializedName(value = "emoteRoleMap", alternate = "roleEmoteMap")
     private HashMap<String, String> emoteRoleMap;
     private HashMap<String, String> emoteTextMap;
 
