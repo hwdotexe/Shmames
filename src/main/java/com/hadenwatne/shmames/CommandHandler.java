@@ -284,8 +284,15 @@ public class CommandHandler {
 	}
 
 	private void updateSlashCommands() {
-		// Update command syntax on individual test servers.
 		if(App.IsDebug) {
+			// Delete global commands.
+			App.Shmames.getJDA().retrieveCommands().queue(success -> {
+				for(net.dv8tion.jda.api.interactions.commands.Command c : success) {
+					App.Shmames.getJDA().deleteCommandById(c.getId()).queue();
+				}
+			});
+
+			// Update guild commands.
 			for(Guild g : App.Shmames.getJDA().getGuilds()) {
 				CommandListUpdateAction cUpdate = g.updateCommands();
 

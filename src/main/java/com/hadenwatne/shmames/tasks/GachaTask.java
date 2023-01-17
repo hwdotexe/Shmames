@@ -49,34 +49,32 @@ public class GachaTask extends TimerTask {
 
 				banner.clear();
 
-				// 1/3 chance to have a banner today.
-				if(RandomService.GetRandom(3) == 0) {
-					List<GachaCharacter> poolVR = new ArrayList<>();
-					List<GachaCharacter> poolL = new ArrayList<>();
+				// Create a banner.
+				List<GachaCharacter> poolVR = new ArrayList<>();
+				List<GachaCharacter> poolL = new ArrayList<>();
 
-					for (GachaCharacter gc : b.getGachaCharacters()) {
-						if (gc.getGachaCharacterRarity() == GachaRarity.VERY_RARE) {
-							poolVR.add(gc);
-						} else if (gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY) {
-							poolL.add(gc);
-						}
+				for (GachaCharacter gc : b.getGachaCharacters()) {
+					if (gc.getGachaCharacterRarity() == GachaRarity.VERY_RARE) {
+						poolVR.add(gc);
+					} else if (gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY) {
+						poolL.add(gc);
 					}
+				}
 
-					// Select 2 Very Rare characters.
-					if (poolVR.size() >= 2) {
-						for (int i = 0; i < 2; i++) {
-							GachaCharacter r = RandomService.GetRandomObjectFromList(poolVR);
+				// Select 1 Legendary character.
+				if (poolL.size() >= 1) {
+					GachaCharacter r = RandomService.GetRandomObjectFromList(poolL);
 
-							banner.add(r.getGachaCharacterID());
-							poolVR.remove(r);
-						}
-					}
+					banner.add(r.getGachaCharacterID());
+				}
 
-					// Select 1 Legendary character.
-					if (poolVR.size() >= 1) {
-						GachaCharacter r = RandomService.GetRandomObjectFromList(poolL);
+				// Select 1 Very Rare character.
+				if (poolVR.size() >= 1) {
+					for (int i = 0; i < 1; i++) {
+						GachaCharacter r = RandomService.GetRandomObjectFromList(poolVR);
 
 						banner.add(r.getGachaCharacterID());
+						poolVR.remove(r);
 					}
 				}
 

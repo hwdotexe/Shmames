@@ -551,6 +551,12 @@
       ]
     },
     {
+      "key": "GACHA_NO_BANNER",
+      "values": [
+        "There isn't a banner active for today."
+      ]
+    },
+    {
       "key": "GACHA_NO_COINS",
       "values": [
         "You don't have enough coins to roll again!"
