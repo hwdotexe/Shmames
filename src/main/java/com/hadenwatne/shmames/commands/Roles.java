@@ -257,6 +257,8 @@ public class Roles extends Command {
 				success.delete().queue();
 			});
 
+			brain.getRoleMessages().remove(roleMessage);
+
 			return response(EmbedType.SUCCESS)
 					.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED));
 		} else {
