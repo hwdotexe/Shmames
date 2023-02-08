@@ -361,6 +361,12 @@
       ]
     },
     {
+      "key": "TALLIES_CLEARED",
+      "values": [
+        "Cleared **%WC%** tallies!"
+      ]
+    },
+    {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
         "Since I keep having to listen to you try to count, I've heard `%WC%` exactly `%WC%` times."

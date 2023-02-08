@@ -398,6 +398,12 @@
       ]
     },
     {
+      "key": "TALLIES_CLEARED",
+      "values": [
+        "Cleared **%WC%** tallies!"
+      ]
+    },
+    {
       "key": "TALLY_CURRENT_VALUE",
       "values": [
         "Current tally for `%WC%`: `%WC%`"

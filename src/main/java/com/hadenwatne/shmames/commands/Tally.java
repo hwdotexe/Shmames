@@ -237,15 +237,15 @@ public class Tally extends Command {
 		StringBuilder pruned = new StringBuilder("Pruned Tallies\n");
 
 		pruned.append("=======================\n");
-		pruned.append("= Name:\t\tCount =\n");
+		pruned.append("= Count:\t\tName =\n");
 		pruned.append("=======================\n");
 
 		// Build list.
 		for(String tally : tallies.keySet()) {
 			pruned.append("\n");
-			pruned.append(tally);
-			pruned.append(":\t\t");
 			pruned.append(tallies.get(tally));
+			pruned.append(":\t");
+			pruned.append(tally);
 		}
 
 		// Save to file.
