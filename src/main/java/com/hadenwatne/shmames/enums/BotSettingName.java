@@ -12,6 +12,7 @@ public enum BotSettingName {
 	POLL_CREATE("Sets the role (other than Administrator) allowed to start Polls."),
 	POLL_PIN("Whether to pin Polls to the current channel."),
 	PRUNE_FW("Sets the role (other than Administrator) allowed to prune Forum Weapons."),
+	RESET_TALLIES("Sets the role (other than Administrator) allowed to reset tallies."),
 	REMOVAL_EMOTE("The Emote to use as a \"Dislike\" button."),
 	REMOVAL_THRESHOLD("The number of Dislikes a post must get to be removed and increase the user's bad tally."),
 	RESET_EMOTE_STATS("Sets the role (other than Administrator) allowed to reset the emoji counts."),

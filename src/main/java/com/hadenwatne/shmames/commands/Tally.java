@@ -4,6 +4,7 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LanguageKeys;
@@ -12,13 +13,14 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
-import com.hadenwatne.shmames.services.CacheService;
-import com.hadenwatne.shmames.services.DataService;
-import com.hadenwatne.shmames.services.PaginationService;
+import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -70,6 +72,8 @@ public class Tally extends Command {
 											.setPattern("[\\w\\d\\s]{3,}")
 											.setExample("tally")
 							)
+							.build(),
+					CommandBuilder.Create("reset", "Export current tallies and clear them out.")
 							.build()
 				)
 				.build();
@@ -92,6 +96,8 @@ public class Tally extends Command {
 				return cmdList(language, brain, executingCommand);
 			case "search":
 				return cmdSearch(language, brain, executingCommand.getCommandArguments());
+			case "reset":
+				return cmdReset(language, brain, executingCommand);
 		}
 
 		return null;
@@ -193,6 +199,26 @@ public class Tally extends Command {
 		return eBuilder;
 	}
 
+	private EmbedBuilder cmdReset(Language language, Brain brain, ExecutingCommand executingCommand) {
+		Guild server = executingCommand.getServer();
+
+		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.RESET_TALLIES), executingCommand.getAuthorMember())) {
+			HashMap<String, Integer> tallies = brain.getTallies();
+			File file = buildTalliesList(server.getName(), tallies);
+
+			EmbedBuilder response = response(EmbedType.SUCCESS)
+					.setDescription(language.getMsg(LanguageKeys.TALLIES_CLEARED, new String[]{Integer.toString(tallies.size())}));
+			executingCommand.replyFile(file, response);
+
+			tallies.clear();
+
+			return null;
+		} else {
+			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+		}
+	}
+
 	private List<String> formatTalliesToStringList(LinkedHashMap<String, Integer> tallies) {
 		List<String> tallyList = new ArrayList<>();
 
@@ -205,5 +231,24 @@ public class Tally extends Command {
 
 	private String formatTally(String rawTally) {
 		return rawTally.trim().replaceAll("\\s", "_").replaceAll("\\W", "").toLowerCase();
+	}
+
+	private File buildTalliesList(String guildName, HashMap<String, Integer> tallies) {
+		StringBuilder pruned = new StringBuilder("Pruned Tallies\n");
+
+		pruned.append("=======================\n");
+		pruned.append("= Name:\t\tCount =\n");
+		pruned.append("=======================\n");
+
+		// Build list.
+		for(String tally : tallies.keySet()) {
+			pruned.append("\n");
+			pruned.append(tally);
+			pruned.append(":\t\t");
+			pruned.append(tallies.get(tally));
+		}
+
+		// Save to file.
+		return FileService.SaveBytesToFile("reports", guildName+".txt", pruned.toString().getBytes());
 	}
 }

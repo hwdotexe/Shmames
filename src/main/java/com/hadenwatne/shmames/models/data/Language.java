@@ -253,6 +253,7 @@ public class Language {
         messages.add(new LanguageMessage(LanguageKeys.SETTING_LIST_TITLE, new String[]{"Available settings"}));
         messages.add(new LanguageMessage(LanguageKeys.SETTING_UPDATED_SUCCESS, new String[]{"Setting was updated successfully!"}));
         messages.add(new LanguageMessage(LanguageKeys.STORY_INTRO, new String[]{"Let's read a story!"}));
+        messages.add(new LanguageMessage(LanguageKeys.TALLIES_CLEARED, new String[]{"Cleared **" + wildcard + "** tallies!"}));
         messages.add(new LanguageMessage(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{"Current tally for `" + wildcard + "`: `" + wildcard + "`"}));
         messages.add(new LanguageMessage(LanguageKeys.TALLY_LIST, new String[]{"Here's what I have written down:"}));
         messages.add(new LanguageMessage(LanguageKeys.TALLY_REMOVED, new String[]{"`" + wildcard + "` hast been removed, sire."}));

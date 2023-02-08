@@ -71,6 +71,7 @@ public class StorageService {
         settings.add(new BotSetting(BotSettingName.POLL_CREATE, BotSettingType.ROLE, "everyone"));
         settings.add(new BotSetting(BotSettingName.POLL_PIN, BotSettingType.BOOLEAN, "false"));
         settings.add(new BotSetting(BotSettingName.PRUNE_FW, BotSettingType.ROLE, "administrator"));
+        settings.add(new BotSetting(BotSettingName.RESET_TALLIES, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "notset"));
         settings.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
         settings.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
