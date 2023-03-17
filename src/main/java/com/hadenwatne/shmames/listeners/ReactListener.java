@@ -23,93 +23,98 @@ public class ReactListener extends ListenerAdapter {
 
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
-		// Ignore bot reactions and reactions in private channels.
-		if (!e.getUser().isBot()) {
-			if (e.isFromGuild()) {
-				EmojiUnion emoteUnion = e.getReaction().getEmoji();
+		e.retrieveUser().queue(user -> {
+			// Ignore bot reactions and reactions in private channels.
+			if (!user.isBot()) {
+				if (e.isFromGuild()) {
+					EmojiUnion emoteUnion = e.getReaction().getEmoji();
 
-				// Make sure that the reacted emote is a custom emoji from this server (ignore Nitro reactions).
-				try {
-					CustomEmoji emote = emoteUnion.asCustom();
-					Guild server = e.getGuild();
+					// Make sure that the reacted emote is a custom emoji from this server (ignore Nitro reactions).
+					try {
+						CustomEmoji emote = emoteUnion.asCustom();
+						Guild server = e.getGuild();
 
-					if (server.getEmojiById(emote.getId()) != null) {
-						// Begin processing.
-						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+						if (server.getEmojiById(emote.getId()) != null) {
+							// Begin processing.
+							Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
 
-						// Handle role reactions first.
-						for (RoleMessage roleMessage : brain.getRoleMessages()) {
-							if (e.getMessageId().equals(roleMessage.getMessageID())) {
-								Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
+							// Handle role reactions first.
+							for (RoleMessage roleMessage : brain.getRoleMessages()) {
+								if (e.getMessageId().equals(roleMessage.getMessageID())) {
+									Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
 
-								if (role != null) {
-									server.addRoleToMember(e.getMember(), role).queue();
-								}
+									if (role != null) {
+										server.addRoleToMember(server.getMemberById(user.getIdLong()), role).queue();
+									}
 
-								return;
-							}
-						}
-
-						// Regardless of emote used, tally up the usage for this server.
-						ShmamesService.IncrementEmoteTally(brain, emote.getId());
-
-						if (brain.getSettingFor(BotSettingName.TALLY_REACTIONS).getAsBoolean()) {
-							String removalEmoteID = brain.getSettingFor(BotSettingName.REMOVAL_EMOTE).getAsString();
-							String approvalEmoteID = brain.getSettingFor(BotSettingName.APPROVAL_EMOTE).getAsString();
-
-							// If the emote was an "approval" or "removal" emote, react accordingly.
-							if (!brain.getTalliedMessages().contains(e.getMessageId())) {
-								if (emote.getId().equals(removalEmoteID)) {
-									e.retrieveMessage().queue(success -> {
-										tallyMessage(removalEmoteID, success, brain, BotSettingName.REMOVAL_THRESHOLD);
-									});
-								} else if (emote.getId().equals(approvalEmoteID)) {
-									e.retrieveMessage().queue(success -> {
-										tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
-									});
+									return;
 								}
 							}
-						}
 
+							// Regardless of emote used, tally up the usage for this server.
+							ShmamesService.IncrementEmoteTally(brain, emote.getId());
+
+							// Handle tally reactions
+							if (brain.getSettingFor(BotSettingName.TALLY_REACTIONS).getAsBoolean()) {
+								String removalEmoteID = brain.getSettingFor(BotSettingName.REMOVAL_EMOTE).getAsString();
+								String approvalEmoteID = brain.getSettingFor(BotSettingName.APPROVAL_EMOTE).getAsString();
+
+								// If the emote was an "approval" or "removal" emote, react accordingly.
+								if (!brain.getTalliedMessages().contains(e.getMessageId())) {
+									if (emote.getId().equals(removalEmoteID)) {
+										e.retrieveMessage().queue(success -> {
+											tallyMessage(removalEmoteID, success, brain, BotSettingName.REMOVAL_THRESHOLD);
+										});
+									} else if (emote.getId().equals(approvalEmoteID)) {
+										e.retrieveMessage().queue(success -> {
+											tallyMessage(approvalEmoteID, success, brain, BotSettingName.APPROVAL_THRESHOLD);
+										});
+									}
+								}
+							}
+
+						}
+					} catch (IllegalStateException ignored) {
+						// Don't do anything if this is not a custom emote.
 					}
-				} catch (IllegalStateException ignored) {
-					// Don't do anything if this is not a custom emote.
 				}
 			}
-		}
+		});
 	}
 
 	@Override
 	public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
-		if (!e.getUser().isBot()) {
-			if (e.isFromGuild()) {
-				EmojiUnion emoteUnion = e.getReaction().getEmoji();
+		e.retrieveUser().queue(user -> {
+			if (!user.isBot()) {
+				if (e.isFromGuild()) {
+					EmojiUnion emoteUnion = e.getReaction().getEmoji();
 
-				try {
-					CustomEmoji emote = emoteUnion.asCustom();
-					Guild server = e.getGuild();
+					try {
+						CustomEmoji emote = emoteUnion.asCustom();
+						Guild server = e.getGuild();
 
-					if (server.getEmojiById(emote.getId()) != null) {
-						Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+						if (server.getEmojiById(emote.getId()) != null) {
+							Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
 
-						// Handle role reactions.
-						for (RoleMessage roleMessage : brain.getRoleMessages()) {
-							if (e.getMessageId().equals(roleMessage.getMessageID())) {
-								Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
+							// Handle role reactions.
+							for (RoleMessage roleMessage : brain.getRoleMessages()) {
+								if (e.getMessageId().equals(roleMessage.getMessageID())) {
+									Role role = server.getRoleById(roleMessage.getEmoteRoleMap().get(emote.getId()));
 
-								if (role != null) {
-									server.removeRoleFromMember(e.getMember(), role).queue();
+									if (role != null) {
+										server.removeRoleFromMember(server.getMemberById(user.getIdLong()), role).queue();
+									}
+
+									return;
 								}
-
-								return;
 							}
 						}
+					} catch (IllegalStateException ignored) {
+						// Do nothing
 					}
-				} catch (IllegalStateException ignored) {
-					// Do nothing
 				}
 			}
-		}
+		});
 	}
 
 	private void tallyMessage(String emoteID, Message message, Brain brain, BotSettingName setting) {
