@@ -182,6 +182,20 @@ public class MessageService {
         });
     }
 
+    public static void ReplyToMessage(InteractionHook hook, String response, boolean mention) {
+        hook.sendMessage(response).mentionRepliedUser(mention).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to interaction hook "+hook.getInteraction().getId()+" in channel "+ hook.getInteraction().getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
+        });
+    }
+
+    public static void ReplyToMessage(Message message, String response, boolean mention) {
+        message.reply(response).mentionRepliedUser(mention).queue(success -> {}, error -> {
+            LoggingService.Log(LogType.ERROR, "Could not reply to message "+message.getId()+" in channel "+ message.getChannel().getId());
+            LoggingService.Log(LogType.ERROR, error.getMessage());
+        });
+    }
+
     /**
      * Sends the provided message to the user via Direct Message.
      * @param user The user to send a Direct Message to.

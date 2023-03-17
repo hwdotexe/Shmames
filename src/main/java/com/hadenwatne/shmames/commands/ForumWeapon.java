@@ -351,7 +351,7 @@ public class ForumWeapon extends Command {
 		if (fws != null) {
 			fws.IncreaseUse();
 
-			MessageService.SendSimpleMessage(executingCommand.getChannel(), fws.getItemLink());
+			executingCommand.reply(fws.getItemLink());
 			return null;
 		} else {
 			// Couldn't find one

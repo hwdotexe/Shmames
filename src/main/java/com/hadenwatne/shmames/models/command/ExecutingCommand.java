@@ -155,6 +155,16 @@ public class ExecutingCommand {
         }
     }
 
+    public void reply(String simpleReply) {
+        if (hook != null) {
+            MessageService.ReplyToMessage(hook, simpleReply, false);
+        } else if (message != null) {
+            MessageService.ReplyToMessage(message, simpleReply, false);
+        } else {
+            LoggingService.Log(LogType.ERROR, "Could not send response for command " + this.commandName);
+        }
+    }
+
     public void reply(EmbedBuilder embedBuilder) {
         if(embedBuilder != null) {
             if (hook != null) {
