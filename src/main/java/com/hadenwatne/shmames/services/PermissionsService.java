@@ -43,7 +43,7 @@ public class PermissionsService {
                 noPerms.append("Please enable these permissions in your server's role settings for the best experience.");
 
                 try {
-                    if(server.getDefaultChannel().getType() == ChannelType.TEXT) {
+                    if(server.getDefaultChannel().getType() == ChannelType.TEXT && server.getDefaultChannel().asTextChannel().canTalk()) {
                         MessageService.SendSimpleMessage(server.getDefaultChannel().asTextChannel(), noPerms.toString());
                     } else {
                         MessageService.SendSimpleMessage(server.getSystemChannel(), noPerms.toString());

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -50,6 +51,7 @@ public class MessageService {
 
             return indicated;
         } catch (PermissionException pe) {
+            MessageService.SendSimpleMessage(executingCommand.getChannel(), App.Shmames.getBotName() + " requires the permission " + pe.getPermission().getName() + ". Please enable this permission in Discord role settings.");
             return null;
         }
     }
