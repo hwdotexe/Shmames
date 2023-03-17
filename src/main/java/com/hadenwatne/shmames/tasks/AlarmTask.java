@@ -9,6 +9,7 @@ import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -83,10 +84,14 @@ public class AlarmTask {
 					} catch (Exception ignored) {}
 				}
 
-				if(originMessage != null) {
-					MessageService.ReplyToMessage(originMessage, response, true);
-				} else {
-					MessageService.SendMessage(channel, response, true);
+				try {
+					if (originMessage != null) {
+						MessageService.ReplyToMessage(originMessage, response, true);
+					} else {
+						MessageService.SendMessage(channel, response, true);
+					}
+				}catch (InsufficientPermissionException exception) {
+					MessageService.SendSimpleMessage(channel, App.Shmames.getBotName() + " requires the permission " + exception.getPermission().getName() + ". Please enable this permission in Discord role settings.");
 				}
 
 				String serverID = channel.getGuild().getId();

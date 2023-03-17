@@ -39,7 +39,11 @@ public class Shmames {
 	 * @return The Discord application name.
 	 */
 	public String getBotName() {
-		return this.botName;
+		if (this.botName != null) {
+			return this.botName;
+		} else {
+			return "Shmames";
+		}
 	}
 
 	/**
@@ -121,13 +125,17 @@ public class Shmames {
 
 		// Prepare music playing functionality.
 		this.musicManager = new MusicManager();
+
+		// Check server permissions.
+		PermissionsService.AuditServerPermissions(this.jda);
 	}
 
 	private void configureJDA(String apiKey, MotherBrain motherBrain) {
 		try {
 			this.jda = JDABuilder.createDefault(apiKey)
 					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
-					.enableCache(CacheFlag.EMOJI).build();
+					.enableCache(CacheFlag.EMOJI)
+					.build();
 
 			this.jda.awaitReady();
 		} catch (InvalidTokenException e) {
