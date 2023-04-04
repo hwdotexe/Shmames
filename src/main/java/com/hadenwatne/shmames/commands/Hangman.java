@@ -15,6 +15,7 @@ import com.hadenwatne.shmames.models.game.HangmanDictionary;
 import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
@@ -29,6 +30,11 @@ public class Hangman extends Command {
 		super(true);
 
 		dictionaries = App.Shmames.getStorageService().getBrainController().getHangmanDictionaries().getDictionaries();
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override

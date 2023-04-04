@@ -15,12 +15,14 @@ import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.InputStream;
@@ -115,13 +117,50 @@ public class ChatListener extends ListenerAdapter {
 		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
 		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
-		if(command != null) {
-			if(!command.isSlashOnly()){
-				executingCommand.setCommandName(command.getCommandStructure().getName());
-				executingCommand.setMessage(message);
+		if (command != null) {
+			executingCommand.setCommandName(command.getCommandStructure().getName());
+			executingCommand.setMessage(message);
 
+			// Check that the bot has the necessary Discord permissions to process this command.
+			if (executingCommand.getServer() != null) {
+				Guild server = executingCommand.getServer();
+				StringBuilder noPerms = new StringBuilder();
+
+				for (Permission p : command.getRequiredPermissions()) {
+					if (!server.getSelfMember().hasPermission(message.getGuildChannel(), p)) {
+						if (noPerms.length() > 0) {
+							noPerms.append(System.lineSeparator());
+						}
+
+						noPerms.append(p.getName());
+					}
+				}
+
+				if (noPerms.length() > 0) {
+					EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.PERMISSION_MISSING.name())
+							.setDescription(language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}));
+
+					try {
+						MessageService.ReplyToMessage(message, embed, false);
+					} catch (InsufficientPermissionException e) {
+						if (message.getChannel().canTalk()) {
+							try {
+								MessageService.ReplyToMessage(message, language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}), false);
+							} catch (InsufficientPermissionException ex) {
+								MessageService.SendSimpleMessage(message.getChannel(), language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}));
+							}
+						}
+					} catch (Exception e) {
+						LoggingService.LogException(e);
+					}
+
+					return;
+				}
+			}
+
+			if (!command.isSlashOnly()) {
 				App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
-			}else{
+			} else {
 				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.SLASH_ONLY.name())
 						.setDescription(language.getError(ErrorKeys.SLASH_ONLY));
 
@@ -131,7 +170,19 @@ public class ChatListener extends ListenerAdapter {
 			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
 					.setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));
 
-			MessageService.ReplyToMessage(message, embed, false);
+			try {
+				MessageService.ReplyToMessage(message, embed, false);
+			} catch (InsufficientPermissionException e) {
+				if (message.getChannel().canTalk()) {
+					try {
+						MessageService.ReplyToMessage(message, language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), e.getPermission().getName()}), false);
+					} catch (InsufficientPermissionException ex) {
+						MessageService.SendSimpleMessage(message.getChannel(), language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), ex.getPermission().getName()}));
+					}
+				}
+			} catch (Exception e) {
+				LoggingService.LogException(e);
+			}
 		}
 	}
 

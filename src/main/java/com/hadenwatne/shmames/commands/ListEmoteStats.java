@@ -8,6 +8,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -19,6 +20,11 @@ import java.util.List;
 public class ListEmoteStats extends Command {
 	public ListEmoteStats() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override

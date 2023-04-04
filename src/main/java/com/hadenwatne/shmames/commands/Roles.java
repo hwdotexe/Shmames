@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -21,6 +22,11 @@ import net.dv8tion.jda.api.requests.RestAction;
 public class Roles extends Command {
 	public Roles() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MANAGE_ROLES};
 	}
 
 	@Override

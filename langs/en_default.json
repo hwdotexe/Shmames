@@ -793,6 +793,12 @@
       ]
     },
     {
+      "key": "PERMISSION_MISSING",
+      "values": [
+        "%WC% requires the following permissions in order to process that command: %BR%%WC%"
+      ]
+    },
+    {
       "key": "RESERVED_WORD",
       "values": [
         "It looks like you tried to use a reserved word. Try a different one!"

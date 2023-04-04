@@ -11,6 +11,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class Timer extends Command {
 	public Timer() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override

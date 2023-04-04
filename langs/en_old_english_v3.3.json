@@ -736,6 +736,12 @@
       ]
     },
     {
+      "key": "PERMISSION_MISSING",
+      "values": [
+        "%WC% requires the following permissions in order to proces that command: %BR%%WC%"
+      ]
+    },
+    {
       "key": "RESERVED_WORD",
       "values": [
         "Thou speakest words both familiar and sacred."

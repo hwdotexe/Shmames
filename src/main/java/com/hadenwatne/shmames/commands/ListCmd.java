@@ -4,7 +4,10 @@ import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
 import com.hadenwatne.shmames.commandbuilder.ParameterType;
-import com.hadenwatne.shmames.enums.*;
+import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.enums.UserListType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.UserCustomList;
@@ -16,6 +19,7 @@ import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
@@ -26,6 +30,11 @@ import java.util.List;
 public class ListCmd extends Command {
 	public ListCmd() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override
@@ -107,9 +116,9 @@ public class ListCmd extends Command {
 			case "create":
 				return cmdCreate(brain, language, authorID, executingCommand.getCommandArguments());
 			case "add":
-				return cmdAdd(brain, language, authorID, executingCommand.getCommandArguments());
+				return cmdAdd(brain, language, authorID, executingCommand);
 			case "remove":
-				return cmdRemove(brain, language, authorID, executingCommand.getCommandArguments());
+				return cmdRemove(brain, language, authorID, executingCommand);
 			case "delete":
 				return cmdDelete(brain, language, authorID, executingCommand.getCommandArguments());
 			case "toggle":
@@ -142,13 +151,16 @@ public class ListCmd extends Command {
 		}
 	}
 
-	private EmbedBuilder cmdAdd(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("listName").toLowerCase();
-		String item = subCmdArgs.getAsString("item");
+	private EmbedBuilder cmdAdd(Brain brain, Language language, String userID, ExecutingCommand executingCommand) {
+		String listName = executingCommand.getCommandArguments().getAsString("listName").toLowerCase();
+		String item = executingCommand.getCommandArguments().getAsString("item");
 		UserCustomList existingList = getList(userID, listName, brain);
 
 		if (existingList != null) {
 			existingList.getValues().add(item);
+
+			final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "list-list", listName);
+			CacheService.RemoveItem(cacheKey);
 
 			return response(EmbedType.SUCCESS)
 					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
@@ -158,15 +170,18 @@ public class ListCmd extends Command {
 		}
 	}
 
-	private EmbedBuilder cmdRemove(Brain brain, Language language, String userID, ExecutingCommandArguments subCmdArgs) {
-		String listName = subCmdArgs.getAsString("listName").toLowerCase();
-		int index = subCmdArgs.getAsInteger("index") - 1;
+	private EmbedBuilder cmdRemove(Brain brain, Language language, String userID, ExecutingCommand executingCommand) {
+		String listName = executingCommand.getCommandArguments().getAsString("listName").toLowerCase();
+		int index = executingCommand.getCommandArguments().getAsInteger("index") - 1;
 		UserCustomList existingList = getList(userID, listName, brain);
 
 		if (existingList != null && index >= 0) {
 			if (existingList.getValues().size() > index) {
 				String removed = existingList.getValues().get(index);
 				existingList.getValues().remove(index);
+
+				final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "list-list", listName);
+				CacheService.RemoveItem(cacheKey);
 
 				return response(EmbedType.SUCCESS)
 						.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{removed}));

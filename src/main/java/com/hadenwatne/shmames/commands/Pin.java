@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -27,6 +28,11 @@ import java.util.Date;
 public class Pin extends Command {
 	public Pin() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES};
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.entities.Guild;
@@ -31,6 +32,11 @@ import java.util.regex.Pattern;
 public class Dev extends Command {
 	public Dev() {
 		super(false);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES};
 	}
 
 	@Override

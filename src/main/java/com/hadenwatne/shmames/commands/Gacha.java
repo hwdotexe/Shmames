@@ -14,9 +14,11 @@ import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
@@ -24,6 +26,11 @@ import java.util.*;
 public class Gacha extends Command {
 	public Gacha() {
 		super(true, false, true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override
@@ -242,7 +249,7 @@ public class Gacha extends Command {
 			executingCommand.replyFile(file, "profile.png", response);
 
 			return null;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LoggingService.LogException(e);
 
 			return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())

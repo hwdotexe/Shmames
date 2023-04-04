@@ -1,11 +1,5 @@
 package com.hadenwatne.shmames.commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -15,9 +9,14 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CringeThat extends Command {
 	private final String[] creepyAsterisks = new String[]{"*nuzzles*", "*soft*", "*nosebleed*", "*sobs*", "*meows*", "*smiles*", "*boops*", "*shy*", "*sniffs*", "*pounces*", "*cuddles*", "*hugs*", "*poke*", "*purr*",
@@ -34,6 +33,11 @@ public class CringeThat extends Command {
 		cringeDict.put("and", "an");
 		cringeDict.put("stupid", "stoopi");
 		cringeDict.put("dumb", "no smart");
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_HISTORY};
 	}
 
 	@Override
@@ -55,17 +59,10 @@ public class CringeThat extends Command {
 		int times = executingCommand.getCommandArguments().getAsInteger("times");
 		int iterations = times > 0 ? times : 1;
 
-		try {
-			Message toCringe = MessageService.GetMessageIndicated(executingCommand, messages);
-			String cringe = toCringe.getContentDisplay();
+		Message toCringe = MessageService.GetMessageIndicated(executingCommand, messages);
+		String cringe = toCringe.getContentDisplay();
 
-			return response(EmbedType.INFO).setDescription(runCringeProcess(cringe, iterations));
-		} catch (InsufficientPermissionException ex) {
-			ex.printStackTrace();
-
-			return response(EmbedType.ERROR)
-					.addField(ErrorKeys.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_BOT), false);
-		}
+		return response(EmbedType.INFO).setDescription(runCringeProcess(cringe, iterations));
 	}
 
 	private String runCringeProcess(String cringe, int iterations) {

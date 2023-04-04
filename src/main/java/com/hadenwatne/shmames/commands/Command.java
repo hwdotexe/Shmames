@@ -8,6 +8,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public abstract class Command {
     private final CommandStructure commandStructure;
+    private final Permission[] botPermissions;
     private final boolean requiresGuild;
     private final boolean isNSFW;
     private final boolean slashOnly;
@@ -22,6 +24,7 @@ public abstract class Command {
 
     Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
+        this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = false;
         this.slashOnly = false;
@@ -32,6 +35,7 @@ public abstract class Command {
 
     Command(boolean requiresGuild, boolean isNSFW) {
         this.commandStructure = this.buildCommandStructure();
+        this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.slashOnly = false;
@@ -42,6 +46,7 @@ public abstract class Command {
 
     Command(boolean requiresGuild, boolean isNSFW, boolean slashOnly) {
         this.commandStructure = this.buildCommandStructure();
+        this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.slashOnly = slashOnly;
@@ -66,6 +71,8 @@ public abstract class Command {
 
     protected abstract CommandStructure buildCommandStructure();
 
+    protected abstract Permission[] configureRequiredBotPermissions();
+
     protected EmbedBuilder response(EmbedType type) {
         return EmbedFactory.GetEmbed(type, this.commandStructure.getName());
     }
@@ -78,6 +85,10 @@ public abstract class Command {
 
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
+    }
+
+    public Permission[] getRequiredPermissions() {
+        return this.botPermissions;
     }
 
     public boolean requiresGuild() {

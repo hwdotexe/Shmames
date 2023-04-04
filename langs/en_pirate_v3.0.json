@@ -793,6 +793,12 @@
       ]
     },
     {
+      "key": "PERMISSION_MISSING",
+      "values": [
+        "%WC% requires the following permissions in order to proces that command: %BR%%WC%"
+      ]
+    },
+    {
       "key": "RESERVED_WORD",
       "values": [
         "Arr, that word be takin' by the Cap'n himself."

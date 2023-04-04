@@ -10,16 +10,23 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.HTTPService;
 import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 public class GIF extends Command {
 	public GIF() {
 		super(false);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES};
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class GIF extends Command {
 			executingCommand.replyFile(file, "result.gif", response);
 
 			return null;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LoggingService.LogException(e);
 
 			return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())

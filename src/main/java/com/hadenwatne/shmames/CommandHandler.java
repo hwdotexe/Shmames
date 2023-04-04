@@ -15,6 +15,7 @@ import com.hadenwatne.shmames.services.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.ArrayList;
@@ -256,10 +257,17 @@ public class CommandHandler {
 				.thenAccept(executingCommand::reply)
 				.exceptionally(exception -> {
 					EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.ERROR, "Error");
-					embedBuilder.addField(ErrorKeys.BOT_ERROR.name(), executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR), false);
+
+					if (exception.getCause() instanceof InsufficientPermissionException) {
+						InsufficientPermissionException ex = (InsufficientPermissionException) exception.getCause();
+						embedBuilder.addField(ErrorKeys.PERMISSION_MISSING.name(), executingCommand.getLanguage().getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), ex.getPermission().getName()}), false);
+					} else {
+						embedBuilder.addField(ErrorKeys.BOT_ERROR.name(), executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR), false);
+
+						LoggingService.LogException(exception.getCause());
+					}
 
 					executingCommand.reply(embedBuilder);
-					LoggingService.LogException(exception);
 
 					return null;
 				});

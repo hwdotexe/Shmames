@@ -11,6 +11,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
@@ -20,6 +21,11 @@ import java.util.regex.Pattern;
 public class Say extends Command {
 	public Say() {
 		super(false);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_EXT_EMOJI};
 	}
 
 	@Override

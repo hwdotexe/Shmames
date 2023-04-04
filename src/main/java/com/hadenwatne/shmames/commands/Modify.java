@@ -35,6 +35,11 @@ public class Modify extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		CommandParameter setting = new CommandParameter("setting", "The setting to view or update", ParameterType.SELECTION);
 

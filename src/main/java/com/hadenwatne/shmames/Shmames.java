@@ -125,9 +125,6 @@ public class Shmames {
 
 		// Prepare music playing functionality.
 		this.musicManager = new MusicManager();
-
-		// Check server permissions.
-		PermissionsService.AuditServerPermissions(this.jda);
 	}
 
 	private void configureJDA(String apiKey, MotherBrain motherBrain) {

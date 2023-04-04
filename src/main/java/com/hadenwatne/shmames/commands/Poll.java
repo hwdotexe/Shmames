@@ -15,6 +15,7 @@ import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
@@ -23,6 +24,11 @@ import java.util.List;
 public class Poll extends Command {
 	public Poll() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ADD_REACTION};
 	}
 
 	@Override

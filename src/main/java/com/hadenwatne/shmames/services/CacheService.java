@@ -36,6 +36,12 @@ public class CacheService {
         cache.put(cacheKey, new CacheItem(object));
     }
 
+    public static void RemoveItem(String cacheKey) {
+        if(cache.containsKey(cacheKey)) {
+            cache.remove(cacheKey);
+        }
+    }
+
     public static String GenerateCacheKey(long serverID, long channelID, long userID, String ...criteria) {
         StringBuilder key = new StringBuilder();
 

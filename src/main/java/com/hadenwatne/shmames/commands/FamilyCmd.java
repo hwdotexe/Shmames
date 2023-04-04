@@ -32,6 +32,11 @@ public class FamilyCmd extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("family", "Create and manage server families.")
 				.addSubCommands(

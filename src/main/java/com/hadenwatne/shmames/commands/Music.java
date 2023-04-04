@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
@@ -30,6 +31,11 @@ public class Music extends Command {
 
 	public Music() {
 		super(true);
+	}
+
+	@Override
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK};
 	}
 
 	@Override
@@ -286,7 +292,12 @@ public class Music extends Command {
 				if (member.getVoiceState() != null && member.getVoiceState().inAudioChannel()) {
 					AudioChannel channel = member.getVoiceState().getChannel();
 
-					ocarina.connect(channel, executingCommand.getChannel());
+					if(executingCommand.getServer().getSelfMember().hasPermission(channel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK)) {
+						ocarina.connect(channel, executingCommand.getChannel());
+					}else {
+						return response(EmbedType.ERROR, ErrorKeys.PERMISSION_MISSING.name())
+								.setDescription(language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), Permission.VOICE_SPEAK.getName() + System.lineSeparator() + Permission.VOICE_CONNECT.getName()}));
+					}
 				} else {
 					return response(EmbedType.ERROR, ErrorKeys.MUSIC_NOT_IN_CHANNEL.name())
 							.setDescription(language.getError(ErrorKeys.MUSIC_NOT_IN_CHANNEL));

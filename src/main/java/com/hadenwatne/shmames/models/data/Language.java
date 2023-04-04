@@ -173,11 +173,9 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.NO_PERMISSION_BOT, new String[]{"I don't have permission to do that on this server."}));
         errors.add(new LanguageError(ErrorKeys.NO_PERMISSION_USER, new String[]{"I'm afraid I can't let you do that."}));
 
-        /*Not found*/
         errors.add(new LanguageError(ErrorKeys.NOT_FOUND, new String[]{"There were no results."}));
-
-        /*Page Empty*/
         errors.add(new LanguageError(ErrorKeys.PAGE_NOT_FOUND, new String[]{"The page you requested is empty or does not exist."}));
+        errors.add(new LanguageError(ErrorKeys.PERMISSION_MISSING, new String[]{wildcard+" requires the following permissions in order to process that command: "+linebreak+wildcard}));
         errors.add(new LanguageError(ErrorKeys.RESERVED_WORD, new String[]{"It looks like you tried to use a reserved word. Try a different one!"}));
 
         errors.add(new LanguageError(ErrorKeys.SETTING_VALUE_INVALID, new String[]{"The value you provided is invalid. Please try again."}));

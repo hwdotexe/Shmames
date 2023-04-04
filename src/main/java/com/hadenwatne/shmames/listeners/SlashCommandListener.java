@@ -8,9 +8,13 @@ import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -62,16 +66,40 @@ public class SlashCommandListener extends ListenerAdapter {
         Language language = App.Shmames.getLanguageService().getLangFor(brain);
         ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
-        if(command != null) {
-            executingCommand.setCommandName(command.getCommandStructure().getName());
-            executingCommand.setInteractionHook(hook);
+        executingCommand.setCommandName(command.getCommandStructure().getName());
+        executingCommand.setInteractionHook(hook);
 
-            App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
-        } else {
-            EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
-                    .setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));
+        // Check that the bot has the necessary Discord permissions to process this command.
+        if(executingCommand.getServer() != null) {
+            Guild server = executingCommand.getServer();
+            StringBuilder noPerms = new StringBuilder();
 
-            MessageService.ReplyToMessage(hook, embed, false);
+            for (Permission p : command.getRequiredPermissions()) {
+                if (!server.getSelfMember().hasPermission(hook.getInteraction().getGuildChannel(), p)) {
+                    if (noPerms.length() > 0) {
+                        noPerms.append(System.lineSeparator());
+                    }
+
+                    noPerms.append(p.getName());
+                }
+            }
+
+            if (noPerms.length() > 0) {
+                EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.PERMISSION_MISSING.name())
+                        .setDescription(language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}));
+
+                try {
+                    MessageService.ReplyToMessage(hook, embed, false);
+                } catch (InsufficientPermissionException e) {
+                    MessageService.ReplyToMessage(hook, language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}), false);
+                } catch (Exception e) {
+                    LoggingService.LogException(e);
+                }
+
+                return;
+            }
         }
+
+        App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
     }
 }
