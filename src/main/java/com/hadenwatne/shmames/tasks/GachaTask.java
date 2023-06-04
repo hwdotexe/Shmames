@@ -1,19 +1,20 @@
 package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.GachaRarity;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.GachaCharacter;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.services.GachaService;
 import com.hadenwatne.shmames.services.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * Gives existing Gacha users a random amount of daily credit, up to a limit if not redeemed, and adjusts the banner.
+ * Gives existing Gacha users a random amount of daily credit, up to a limit if not redeemed.
  */
 public class GachaTask extends TimerTask {
 
@@ -41,40 +42,6 @@ public class GachaTask extends TimerTask {
 						int randomCredit = RandomService.GetRandom(15) + 1;
 
 						gu.addUserPoints(randomCredit);
-					}
-				}
-
-				// Adjust the daily banner.
-				List<String> banner = b.getGachaBanner();
-
-				banner.clear();
-
-				// Create a banner.
-				List<GachaCharacter> poolVR = new ArrayList<>();
-				List<GachaCharacter> poolL = new ArrayList<>();
-
-				for (GachaCharacter gc : b.getGachaCharacters()) {
-					if (gc.getGachaCharacterRarity() == GachaRarity.VERY_RARE) {
-						poolVR.add(gc);
-					} else if (gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY) {
-						poolL.add(gc);
-					}
-				}
-
-				// Select 1 Legendary character.
-				if (poolL.size() >= 1) {
-					GachaCharacter r = RandomService.GetRandomObjectFromList(poolL);
-
-					banner.add(r.getGachaCharacterID());
-				}
-
-				// Select 1 Very Rare character.
-				if (poolVR.size() >= 1) {
-					for (int i = 0; i < 1; i++) {
-						GachaCharacter r = RandomService.GetRandomObjectFromList(poolVR);
-
-						banner.add(r.getGachaCharacterID());
-						poolVR.remove(r);
 					}
 				}
 

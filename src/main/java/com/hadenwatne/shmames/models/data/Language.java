@@ -144,7 +144,7 @@ public class Language {
         errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_MAXIMUM_REACHED, new String[]{"Sorry! I can only keep up to " + wildcard + " weapons. Please remove some existing weapons before creating more."}));
         errors.add(new LanguageError(ErrorKeys.FORUM_WEAPON_OWNED_OTHER, new String[]{"That weapon is owned by a different server!"}));
 
-        errors.add(new LanguageError(ErrorKeys.GACHA_NO_BANNER, new String[]{"There isn't a banner active for today."}));
+        errors.add(new LanguageError(ErrorKeys.GACHA_NO_BANNER, new String[]{"There isn't a banner active!"}));
         errors.add(new LanguageError(ErrorKeys.GACHA_NO_COINS, new String[]{"You don't have enough coins to roll again!"}));
 
         /*Already exists*/

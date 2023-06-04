@@ -1,10 +1,7 @@
 package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
-import com.hadenwatne.shmames.commandbuilder.CommandParameter;
-import com.hadenwatne.shmames.commandbuilder.CommandStructure;
-import com.hadenwatne.shmames.commandbuilder.ParameterType;
+import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
@@ -76,10 +73,35 @@ public class Gacha extends Command {
 										new CommandParameter("id", "The ID of the Gacha prize to delete.", ParameterType.STRING)
 												.setExample("id")
 								)
-								.build(),
-						CommandBuilder.Create("banner", "View the current RATE UP prizes.")
-								.addAlias("b")
 								.build()
+				)
+				.addSubCommandGroups(
+						new SubCommandGroup("banner", "View the current RATE UP prizes.")
+								.addAlias("b")
+								.addSubCommands(
+										new CommandStructure("view", "View the current RATE UP banner.")
+												.addAlias("v")
+												.build(),
+										new CommandStructure("add", "Add a new prize to the banner.")
+												.addAlias("a")
+												.addParameters(
+														new CommandParameter("id", "The ID of the prize to add", ParameterType.STRING)
+																.setExample("abc123")
+												)
+												.build(),
+										new CommandStructure("image", "Sets the banner's optional display image.")
+												.addAlias("i")
+												.addParameters(
+														new CommandParameter("url", "A URL of the image to use.", ParameterType.STRING)
+																.setPattern(RegexPatterns.URL.getPattern())
+																.setExample("//image.jpg")
+												)
+												.build(),
+										new CommandStructure("clear", "Clear the current banner.")
+												.addAlias("c")
+												.build()
+
+								)
 				)
 				.build();
 	}
@@ -90,6 +112,12 @@ public class Gacha extends Command {
 		Brain brain = executingCommand.getBrain();
 		Language language = executingCommand.getLanguage();
 		String subCommand = executingCommand.getSubCommand();
+		String subCommandGroup = executingCommand.getSubCommandGroup();
+
+		switch(subCommandGroup){
+			case "banner":
+				return cmdBanner(server, language, brain, executingCommand);
+		}
 
 		switch (subCommand) {
 			case "roll":
@@ -102,8 +130,6 @@ public class Gacha extends Command {
 				return cmdCreate(server, language, brain, executingCommand);
 			case "delete":
 				return cmdDelete(server, language, brain, executingCommand);
-			case "banner":
-				return cmdBanner(server, language, brain, executingCommand);
 		}
 
 		return null;
@@ -135,7 +161,7 @@ public class Gacha extends Command {
 						possibleCharacters.add(gc);
 
 						// Add this character again if they are on the banner.
-						if (brain.getGachaBanner().contains(gc.getGachaCharacterID())) {
+						if (brain.getGachaBanner().getCharacters().contains(gc.getGachaCharacterID())) {
 							possibleCharacters.add(gc);
 						}
 					}
@@ -352,38 +378,88 @@ public class Gacha extends Command {
 	}
 
 	private EmbedBuilder cmdBanner(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
-		StringBuilder sb = new StringBuilder();
+		ExecutingCommandArguments args = executingCommand.getCommandArguments();
+		String subCommand = executingCommand.getSubCommand();
 
-		if(brain.getGachaBanner().size() > 0) {
-			for(String gcid : brain.getGachaBanner()) {
-				for(GachaCharacter gc : brain.getGachaCharacters()){
-					if(gc.getGachaCharacterID().equals(gcid)) {
-						String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+		switch (subCommand) {
+			case "view":
+				if (brain.getGachaBanner().getCharacters().size() > 0) {
+					StringBuilder sb = new StringBuilder();
 
-						if(sb.length() > 0) {
-							sb.append(System.lineSeparator());
+					for (String gcid : brain.getGachaBanner().getCharacters()) {
+						for (GachaCharacter gc : brain.getGachaCharacters()) {
+							if (gc.getGachaCharacterID().equals(gcid)) {
+								String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+
+								if (sb.length() > 0) {
+									sb.append(System.lineSeparator());
+								}
+
+								sb.append(rarityEmote);
+								sb.append(" ");
+								sb.append(gc.getGachaCharacterName());
+
+								break;
+							}
 						}
-
-						sb.append(rarityEmote);
-						sb.append(" ");
-						sb.append(gc.getGachaCharacterName());
-
-						break;
 					}
+
+					EmbedBuilder response = response(EmbedType.SUCCESS);
+
+					if (brain.getGachaBanner().getURL() != null) {
+						response.setImage(brain.getGachaBanner().getURL());
+					}
+
+					response.addField("Rate Up Characters", sb.toString(), false);
+
+					return response;
+				} else {
+					return response(EmbedType.INFO, ErrorKeys.GACHA_NO_BANNER.name())
+							.setDescription(language.getError(ErrorKeys.GACHA_NO_BANNER));
 				}
-			}
+			case "add":
+				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
+					String id = executingCommand.getCommandArguments().getAsString("id");
 
-			Calendar c = Calendar.getInstance();
-			c.setTime(brain.getGachaUserCreditDate());
+					for (GachaCharacter gc : brain.getGachaCharacters()) {
+						if (gc.getGachaCharacterID().equals(id)) {
+							brain.getGachaBanner().addCharacter(id);
 
-			String endTime = TextFormatService.GetFriendlyDateTime(c);
+							return response(EmbedType.SUCCESS)
+									.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+						}
+					}
 
-			return response(EmbedType.SUCCESS)
-					.setFooter("Until " + endTime)
-					.addField("Rate Up Characters", sb.toString(), false);
-		} else {
-			return response(EmbedType.INFO, ErrorKeys.GACHA_NO_BANNER.name())
-					.setDescription(language.getError(ErrorKeys.GACHA_NO_BANNER));
+					return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
+							.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+				} else {
+					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+				}
+			case "image":
+				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
+					String url = executingCommand.getCommandArguments().getAsString("url");
+
+					brain.getGachaBanner().setURL(url);
+
+					return response(EmbedType.SUCCESS)
+							.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+				} else {
+					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+				}
+			case "clear":
+				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
+					brain.setGachaBanner(null);
+
+					return response(EmbedType.SUCCESS)
+							.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+				} else {
+					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+				}
 		}
+
+		return null;
 	}
 }

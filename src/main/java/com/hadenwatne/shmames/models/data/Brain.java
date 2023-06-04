@@ -31,7 +31,11 @@ public class Brain {
 	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
 	private Date gachaUserCreditDate;
+
+	@Deprecated
 	private List<String> gachaBanner;
+
+	private GachaBanner banner;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
 	private HangmanGame hangmanGame;
@@ -225,12 +229,16 @@ public class Brain {
 		return gachaUserCreditDate;
 	}
 
-	public List<String> getGachaBanner() {
-		if(this.gachaBanner == null) {
-			this.gachaBanner = new ArrayList<>();
+	public GachaBanner getGachaBanner() {
+		if(this.banner == null) {
+			this.banner = new GachaBanner();
 		}
 
-		return gachaBanner;
+		return banner;
+	}
+
+	public void setGachaBanner(GachaBanner banner) {
+		this.banner = banner;
 	}
 
 	public void updateGachaUserCreditDate() {
