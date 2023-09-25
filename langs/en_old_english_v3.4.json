@@ -443,9 +443,6 @@
       "values": [
         "unseal a tomb",
         "conduct theft of a sundry merchant",
-        "repaint a well-traveled road",
-        "consume the food of an infant",
-        "begin a crusade to attain justice for the value of a horse",
         "hail curses at an old crone",
         "compose false letters to a noble house",
         "market tonics and salves to children",
@@ -469,7 +466,17 @@
         "laugh heartily at the fellow in the stocks today",
         "feed thy loyal steed, for you have forgotten to do so once again",
         "pour the contents of thy chamber-pot out into the street",
-        "pledge thy undying servitude to a creature of the night"
+        "pledge thy undying servitude to a creature of the night",
+		"lobbest the coffers of the rich onto the market streets",
+		"draft ye name into the jarl's archery competition",
+		"bathe thy child, for it hath begun to upset thy neighbors",
+		"tip thy bard a handsome sum",
+		"wed thy stableboy and plant a grand orchard",
+		"wed the fairest wench in the laundry and open a haberdashery",
+		"pourest thou a phial o' arsenic into the dough of a bakery",
+		"drench thy tavern in mead and set it ablaze",
+		"pen a missive to the priest and confess a crime thou hath not done",
+		"arrange a coup and frame thy enemy"
       ]
     },
     {
