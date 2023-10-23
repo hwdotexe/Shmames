@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;

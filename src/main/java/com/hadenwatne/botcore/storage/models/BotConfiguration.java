@@ -5,4 +5,5 @@ public class BotConfiguration {
     public String botApiToken;
     public String databaseName;
     public String databaseConnectionString;
+    public boolean updateGlobalSlashCommands;
 }

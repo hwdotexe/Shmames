@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.commandbuilder;
+package com.hadenwatne.botcore.command.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;

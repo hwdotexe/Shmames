@@ -1,8 +1,10 @@
 package com.hadenwatne.botcore;
 
+import com.hadenwatne.botcore.listener.CommandListener;
 import com.hadenwatne.botcore.storage.StorageService;
 import com.hadenwatne.botcore.utility.BotUtility;
-import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.shmames.enums.LogType;
 import net.dv8tion.jda.api.JDA;
 
 import java.util.ArrayList;
@@ -16,13 +18,13 @@ public abstract class Bot {
     private String _botAvatarUrl;
 
     public Bot() {
+        App.getLogger().Log(LogType.SYSTEM, "Bot is initializing!");
+
         // Instantiate
         _commands = new ArrayList<>();
 
         // Services
         _storageService = new StorageService();
-
-        initialize();
 
         // Start JDA
         _jda = BotUtility.authenticate(_storageService.getBotConfiguration().botApiToken);
@@ -31,25 +33,44 @@ public abstract class Bot {
 
         // Commands
         registerCommands();
+        BotUtility.updateSlashCommands(isDebugMode(), this);
+        _jda.addEventListener(new CommandListener());
+
+        // Call optional provided initialize method
+        afterInit();
+
+        App.getLogger().Log(LogType.SYSTEM, "Bot is ready!");
     }
 
-    public boolean isDebugMode() {
+    public final boolean isDebugMode() {
         return App.isDebugMode();
     }
 
-    public String getBotName() {
+    public final String getBotName() {
         return _botName;
     }
 
-    public String getBotAvatarUrl() {
+    public final String getBotAvatarUrl() {
         return _botAvatarUrl;
+    }
+
+    public final JDA getJDA() {
+        return _jda;
+    }
+
+    public final List<Command> getCommands() {
+        return _commands;
+    }
+
+    public final StorageService getStorageService() {
+        return _storageService;
     }
 
     protected final void registerCommand(Command command) {
         _commands.add(command);
     }
 
-    protected abstract void initialize();
+    protected abstract void afterInit();
 
     protected abstract void registerCommands();
 

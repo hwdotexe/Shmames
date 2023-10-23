@@ -18,14 +18,14 @@ public class StorageService {
     private BotConfiguration _botConfiguration;
 
     public StorageService() {
-        App.getLogger().Log(LogType.SYSTEM, "Initializing database...");
+        App.getLogger().Log(LogType.SYSTEM, "Initializing storage...");
         _gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
         loadBotConfig();
 
         _databaseService = new DatabaseService(_botConfiguration.databaseConnectionString, _botConfiguration.databaseName);
 
-        App.getLogger().Log(LogType.SYSTEM, "Database loading finished.");
+        App.getLogger().Log(LogType.SYSTEM, "Storage loading finished.");
     }
 
     public DatabaseService getDatabaseService() {
@@ -34,6 +34,10 @@ public class StorageService {
 
     public BotConfiguration getBotConfiguration() {
         return _botConfiguration;
+    }
+
+    public void writeBotConfiguration() {
+        FileUtility.WriteBytesToFile(LOCAL_STORAGE_FOLDER, LOCAL_STORAGE_FILE, _gson.toJson(_botConfiguration).getBytes());
     }
 
     private void loadBotConfig() {
@@ -46,13 +50,8 @@ public class StorageService {
             _botConfiguration = new BotConfiguration();
 
             getUserInputFirstRun();
-
-            writeBotConfig();
+            writeBotConfiguration();
         }
-    }
-
-    private void writeBotConfig() {
-        FileUtility.WriteBytesToFile(LOCAL_STORAGE_FOLDER, LOCAL_STORAGE_FILE, _gson.toJson(_botConfiguration).getBytes());
     }
 
     private void getUserInputFirstRun() {
@@ -65,6 +64,7 @@ public class StorageService {
         _botConfiguration.botApiToken = getConsoleInput("What is the bot's Discord API Token?");
         _botConfiguration.databaseConnectionString = getConsoleInput("Please paste your MongoDB connection string:");
         _botConfiguration.databaseName = getConsoleInput("What's the name of the database?");
+        _botConfiguration.updateGlobalSlashCommands = false;
 
         System.out.println("========== SETUP COMPLETE ==========");
         System.out.println("You can edit these values later in " + LOCAL_STORAGE_FOLDER + File.separator + LOCAL_STORAGE_FILE);

@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.commandbuilder;
+package com.hadenwatne.botcore.command.builder;
 
 import com.hadenwatne.shmames.enums.RegexPatterns;
 import com.hadenwatne.botcore.service.LoggingService;

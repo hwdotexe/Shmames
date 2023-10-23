@@ -1,7 +1,8 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
-import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.botcore.command.builder.CommandBuilder;
+import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;

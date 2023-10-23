@@ -1,11 +1,11 @@
-package com.hadenwatne.shmames.commands;
+package com.hadenwatne.botcore.command;
 
-import com.hadenwatne.shmames.commandbuilder.CommandStructure;
+import com.hadenwatne.botcore.App;
+import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -13,43 +13,64 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public abstract class Command {
     private final CommandStructure commandStructure;
     private final Permission[] botPermissions;
     private final boolean requiresGuild;
     private final boolean isNSFW;
+    @Deprecated
     private final boolean slashOnly;
+    private final boolean availableByDefault;
+    private final boolean isPro;
     private final List<MessageEmbed.Field> helpFields;
 
-    Command(boolean requiresGuild) {
+    public Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = false;
         this.slashOnly = false;
+        this.availableByDefault = true;
+        this.isPro = false;
         this.helpFields = new ArrayList<>();
 
         configureCommand();
     }
 
-    Command(boolean requiresGuild, boolean isNSFW) {
+    public Command(boolean requiresGuild, boolean isNSFW) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.slashOnly = false;
+        this.availableByDefault = true;
+        this.isPro = false;
         this.helpFields = new ArrayList<>();
 
         configureCommand();
     }
 
-    Command(boolean requiresGuild, boolean isNSFW, boolean slashOnly) {
+    public Command(boolean requiresGuild, boolean isNSFW, boolean slashOnly) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.slashOnly = slashOnly;
+        this.availableByDefault = true;
+        this.isPro = false;
+        this.helpFields = new ArrayList<>();
+
+        configureCommand();
+    }
+
+    public Command(boolean requiresGuild, boolean isNSFW, boolean availableByDefault, boolean isPro) {
+        this.commandStructure = this.buildCommandStructure();
+        this.botPermissions = this.configureRequiredBotPermissions();
+        this.requiresGuild = requiresGuild;
+        this.isNSFW = isNSFW;
+        this.slashOnly = false;
+        this.availableByDefault = availableByDefault;
+        this.isPro = isPro;
         this.helpFields = new ArrayList<>();
 
         configureCommand();
@@ -66,7 +87,7 @@ public abstract class Command {
         this.helpFields.add(new MessageEmbed.Field("Usage", this.commandStructure.getUsage(), true));
         this.helpFields.add(new MessageEmbed.Field("Examples", this.commandStructure.getExamples(), true));
 
-        LoggingService.Log(LogType.SYSTEM, "\tLoaded "+this.commandStructure.getName());
+        App.getLogger().Log(LogType.SYSTEM, "\tLoaded " + this.commandStructure.getName());
     }
 
     protected abstract CommandStructure buildCommandStructure();
@@ -105,5 +126,13 @@ public abstract class Command {
 
     public List<MessageEmbed.Field> getHelpFields() {
         return this.helpFields;
+    }
+
+    public boolean isAvailableByDefault() {
+        return availableByDefault;
+    }
+
+    public boolean isPro() {
+        return isPro;
     }
 }

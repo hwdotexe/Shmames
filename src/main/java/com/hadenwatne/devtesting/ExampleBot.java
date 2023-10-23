@@ -6,8 +6,8 @@ import com.hadenwatne.shmames.enums.LogType;
 
 public class ExampleBot extends Bot {
     @Override
-    protected void initialize() {
-        App.getLogger().Log(LogType.SYSTEM, "initialize was called!");
+    protected void afterInit() {
+        App.getLogger().Log(LogType.SYSTEM, "afterInit was called!");
     }
 
     @Override

@@ -9,5 +9,13 @@ Pro features, admin controls, serial numbers
 ---
 DEV TODO:
 - Get mongodb working
-- CommandHandler implementation
 - LanguageService implementation
+- Listeners implementation
+- Remove command code that is no longer needed
+    - Regex pattern building
+    - Parameter validation
+- Server Settings?
+
+
+Use serial numbers to "unlock" commands not included in the global command list (track servers that have it, and then issue a
+slash command update with varying payloads)

@@ -1,6 +1,6 @@
-package com.hadenwatne.shmames.commandbuilder;
+package com.hadenwatne.botcore.command.builder;
 
-import com.hadenwatne.shmames.commands.Command;
+import com.hadenwatne.botcore.command.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 
