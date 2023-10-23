@@ -8,12 +8,6 @@ Pro features, admin controls, serial numbers
 
 ---
 DEV TODO:
-- Get mongodb working
-- LanguageService implementation
-- Listeners implementation
-- Remove command code that is no longer needed
-    - Regex pattern building
-    - Parameter validation
 - Server Settings?
 
 

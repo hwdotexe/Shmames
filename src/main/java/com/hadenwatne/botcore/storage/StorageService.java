@@ -23,7 +23,11 @@ public class StorageService {
 
         loadBotConfig();
 
-        _databaseService = new DatabaseService(_botConfiguration.databaseConnectionString, _botConfiguration.databaseName);
+        if (_botConfiguration.useDatabase) {
+            _databaseService = new DatabaseService(_botConfiguration.databaseConnectionString, _botConfiguration.databaseName);
+        } else {
+            _databaseService = null;
+        }
 
         App.getLogger().Log(LogType.SYSTEM, "Storage loading finished.");
     }
@@ -62,8 +66,13 @@ public class StorageService {
 
         _botConfiguration.adminDiscordID = getConsoleInput("What is your Discord User ID?");
         _botConfiguration.botApiToken = getConsoleInput("What is the bot's Discord API Token?");
-        _botConfiguration.databaseConnectionString = getConsoleInput("Please paste your MongoDB connection string:");
-        _botConfiguration.databaseName = getConsoleInput("What's the name of the database?");
+        _botConfiguration.useDatabase = getConsoleBoolean("Do you want to use a MongoDB database?");
+
+        if (_botConfiguration.useDatabase) {
+            _botConfiguration.databaseConnectionString = getConsoleInput("Please paste your MongoDB connection string:");
+            _botConfiguration.databaseName = getConsoleInput("What's the name of the database?");
+        }
+
         _botConfiguration.updateGlobalSlashCommands = false;
 
         System.out.println("========== SETUP COMPLETE ==========");
@@ -79,6 +88,27 @@ public class StorageService {
 
             if (!input.isEmpty()) {
                 return input;
+            } else {
+                System.out.println("Value cannot be empty!");
+            }
+        }
+    }
+
+    private boolean getConsoleBoolean(String question) {
+        Scanner in = new Scanner(System.in);
+
+        while (true) {
+            System.out.println(question + " [Y/N]");
+            String input = in.nextLine();
+
+            if (!input.isEmpty()) {
+                if(input.equalsIgnoreCase("y")) {
+                    return true;
+                } else if(input.equalsIgnoreCase("n")) {
+                    return false;
+                } else {
+                    System.out.println("Please type \"Y\" or \"N\"!");
+                }
             } else {
                 System.out.println("Value cannot be empty!");
             }
