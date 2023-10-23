@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.commands;
+package com.hadenwatne.devtesting;
 
 import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.command.Execution;
@@ -7,13 +7,11 @@ import com.hadenwatne.botcore.command.builder.CommandParameter;
 import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.botcore.command.builder.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
-public class Blame extends Command {
-	public Blame() {
+public class ExampleCommand extends Command {
+	public ExampleCommand() {
 		super(false);
 	}
 
@@ -24,22 +22,20 @@ public class Blame extends Command {
 
 	@Override
 	protected CommandStructure buildCommandStructure() {
-		return CommandBuilder.Create("blame", "I'll blame stuff for you.")
-				.addAlias("why")
+		return CommandBuilder.Create("test", "Just a test command")
 				.addParameters(
-						new CommandParameter("item", "The item to blame", ParameterType.STRING)
-								.setExample("cropcircles")
+						new CommandParameter("item", "A test param", ParameterType.STRING)
+								.setExample("potato")
 				)
 				.build();
 	}
 
 	@Override
 	public EmbedBuilder run (Execution execution) {
-		String randomAnswer = executingCommand.getLanguage().getMsg(LanguageKeys.BLAME_OPTIONS);
-		String answerMessage = executingCommand.getLanguage().getMsg(LanguageKeys.BLAME, new String[]{randomAnswer});
+		String answer = execution.getLanguageProvider().getMessageFromKey("test");
 		String question = execution.getArguments().getFirst().getAsString();
 
 		return response(EmbedType.INFO)
-				.addField(question, answerMessage, false);
+				.addField(question, answer, false);
 	}
 }

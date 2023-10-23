@@ -1,5 +1,7 @@
 package com.hadenwatne.botcore.command;
 
+import com.hadenwatne.botcore.Bot;
+import com.hadenwatne.botcore.service.ILanguageProvider;
 import com.hadenwatne.botcore.service.ResponseService;
 import com.hadenwatne.botcore.type.ExecutionFailReason;
 import com.hadenwatne.botcore.type.ExecutionStatus;
@@ -24,6 +26,7 @@ public class Execution {
     // Server
     // User
 
+    private Bot _bot;
     private Command _command;
     private String _subCommandGroup;
     private String _subCommand;
@@ -33,13 +36,18 @@ public class Execution {
     private ExecutionStatus _status;
     private ExecutionFailReason _failureReason;
 
-    public Execution(Command command, SlashCommandInteractionEvent event) {
+    public Execution(Bot bot, Command command, SlashCommandInteractionEvent event) {
+        _bot = bot;
         _command = command;
         _event = event;
         _hook = event.getHook();
         _status = ExecutionStatus.STARTED;
         _failureReason = ExecutionFailReason.NONE;
         _arguments = event.getOptions();
+    }
+
+    public ILanguageProvider getLanguageProvider() {
+        return this._bot.getLanguageProvider();
     }
 
     public List<OptionMapping> getArguments() {

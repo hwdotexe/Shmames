@@ -5,15 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SubCommandGroup {
-    private String name;
-    private String description;
-    private List<String> aliases;
-    private List<CommandStructure> subcommands;
+    private final String name;
+    private final String description;
+    private final List<CommandStructure> subcommands;
 
     public SubCommandGroup(String name, String description) {
         this.name = name;
         this.description = description;
-        this.aliases = new ArrayList<>();
         this.subcommands = new ArrayList<>();
     }
 
@@ -25,18 +23,8 @@ public class SubCommandGroup {
         return this.description;
     }
 
-    public List<String> getAliases() {
-        return this.aliases;
-    }
-
     public List<CommandStructure> getSubCommands() {
         return this.subcommands;
-    }
-
-    public SubCommandGroup addAlias(String alias) {
-        this.aliases.add(alias);
-
-        return this;
     }
 
     public SubCommandGroup addSubCommands(CommandStructure... subCommands){

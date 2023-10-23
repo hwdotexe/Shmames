@@ -49,8 +49,16 @@ public class CommandListener extends ListenerAdapter {
                             // TODO should we have an injectable service for error handling?
                             // TODO error event dispatched, listened to in a listener?
                         }
-                    }).thenAccept(execution::reply)
+                    }).thenAccept(result -> {
+                        if (result != null) {
+                            execution.reply(result);
+                        }
+
+                        execution.setStatus(ExecutionStatus.COMPLETE);
+                    })
                     .exceptionally(exception -> {
+                        execution.setStatus(ExecutionStatus.FAILED);
+                        execution.setFailureReason(ExecutionFailReason.EXCEPTION_CAUGHT);
                         App.getLogger().LogException(exception);
                         return null;
                     });
