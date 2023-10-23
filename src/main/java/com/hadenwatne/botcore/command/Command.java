@@ -5,7 +5,6 @@ import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -18,8 +17,6 @@ public abstract class Command {
     private final Permission[] botPermissions;
     private final boolean requiresGuild;
     private final boolean isNSFW;
-    @Deprecated
-    private final boolean slashOnly;
     private final boolean availableByDefault;
     private final boolean isPro;
     private final List<MessageEmbed.Field> helpFields;
@@ -29,7 +26,6 @@ public abstract class Command {
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = false;
-        this.slashOnly = false;
         this.availableByDefault = true;
         this.isPro = false;
         this.helpFields = new ArrayList<>();
@@ -42,20 +38,6 @@ public abstract class Command {
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
-        this.slashOnly = false;
-        this.availableByDefault = true;
-        this.isPro = false;
-        this.helpFields = new ArrayList<>();
-
-        configureCommand();
-    }
-
-    public Command(boolean requiresGuild, boolean isNSFW, boolean slashOnly) {
-        this.commandStructure = this.buildCommandStructure();
-        this.botPermissions = this.configureRequiredBotPermissions();
-        this.requiresGuild = requiresGuild;
-        this.isNSFW = isNSFW;
-        this.slashOnly = slashOnly;
         this.availableByDefault = true;
         this.isPro = false;
         this.helpFields = new ArrayList<>();
@@ -68,7 +50,6 @@ public abstract class Command {
         this.botPermissions = this.configureRequiredBotPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
-        this.slashOnly = false;
         this.availableByDefault = availableByDefault;
         this.isPro = isPro;
         this.helpFields = new ArrayList<>();
@@ -102,7 +83,7 @@ public abstract class Command {
         return EmbedFactory.GetEmbed(type, this.commandStructure.getName(), subLevel);
     }
 
-    public abstract EmbedBuilder run(ExecutingCommand executingCommand);
+    public abstract EmbedBuilder run(Execution execution);
 
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
@@ -114,10 +95,6 @@ public abstract class Command {
 
     public boolean requiresGuild() {
         return this.requiresGuild;
-    }
-
-    public boolean isSlashOnly() {
-        return this.slashOnly;
     }
 
     public boolean isNSFW() {

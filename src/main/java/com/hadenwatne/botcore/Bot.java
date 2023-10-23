@@ -34,7 +34,7 @@ public abstract class Bot {
         // Commands
         registerCommands();
         BotUtility.updateSlashCommands(isDebugMode(), this);
-        _jda.addEventListener(new CommandListener());
+        _jda.addEventListener(new CommandListener(this));
 
         // Call optional provided initialize method
         afterInit();
