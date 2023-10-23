@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames;
 
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
@@ -26,7 +27,6 @@ public class Shmames {
 	private final StorageService storageService;
 	
 	public Shmames() {
-		LoggingService.Init();
 		RandomService.Init();
 		CacheService.Init();
 

@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.HTTPVerb;

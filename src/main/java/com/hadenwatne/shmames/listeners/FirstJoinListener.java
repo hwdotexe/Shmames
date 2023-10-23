@@ -7,7 +7,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

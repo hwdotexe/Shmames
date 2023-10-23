@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.services;
+package com.hadenwatne.botcore.service;
 
 import com.hadenwatne.shmames.enums.LogType;
 
@@ -9,28 +9,30 @@ import java.util.Date;
 import java.util.List;
 
 public class LoggingService {
-    private static List<String> tempLog;
-    private static Calendar cal;
+    private final String LOGS_FOLDER = "logs";
 
-    public static void Init() {
-        tempLog = new ArrayList<>();
-        cal = Calendar.getInstance();
+    private List<String> _tempLog;
+    private Calendar _cal;
 
-        File logDir = new File("logs");
+    public LoggingService() {
+        _tempLog = new ArrayList<>();
+        _cal = Calendar.getInstance();
 
-        if(!logDir.exists()) {
+        File logDir = new File(LOGS_FOLDER);
+
+        if (!logDir.exists()) {
             logDir.mkdir();
         }
     }
 
-    public static void Log(LogType type, String log) {
-        log = "["+getDateTime()+"] ["+type.name()+"] "+log;
+    public void Log(LogType type, String log) {
+        log = "[" + getDateTime() + "] [" + type.name() + "] " + log;
 
         System.out.println(log);
-        tempLog.add(log);
+        _tempLog.add(log);
     }
 
-    public static void LogException(Throwable e) {
+    public void LogException(Throwable e) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("[");
@@ -44,22 +46,22 @@ public class LoggingService {
         PrintWriter pw = new PrintWriter(sw);
 
         e.printStackTrace(pw);
-        sb.append(sw.toString());
+        sb.append(sw);
 
         pw.close();
 
         String log = sb.toString();
 
         System.out.println(log);
-        tempLog.add(log);
+        _tempLog.add(log);
     }
 
-    public static void Write() {
+    public void Write() {
         try {
-            File logFile = new File("logs/"+getDate()+".log");
+            File logFile = new File(LOGS_FOLDER + File.separator + getDate() + ".log");
             FileWriter fw;
 
-            if(!logFile.exists()) {
+            if (!logFile.exists()) {
                 logFile.createNewFile();
 
                 fw = new FileWriter(logFile, false);
@@ -69,30 +71,30 @@ public class LoggingService {
 
             PrintWriter pw = new PrintWriter(fw);
 
-            for(String log : tempLog) {
+            for (String log : _tempLog) {
                 pw.println(log);
             }
 
             pw.close();
             fw.close();
 
-            tempLog.clear();
-        }catch (Exception e){
+            _tempLog.clear();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static String getDate() {
-        cal.setTime(new Date());
+    private String getDate() {
+        _cal.setTime(new Date());
 
-        return cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DAY_OF_MONTH);
+        return _cal.get(Calendar.YEAR) + "-" + (_cal.get(Calendar.MONTH) + 1) + "-" + _cal.get(Calendar.DAY_OF_MONTH);
     }
 
-    private static String getDateTime() {
+    private String getDateTime() {
         String date = getDate();
-        int minuteInt = cal.get(Calendar.MINUTE);
+        int minuteInt = _cal.get(Calendar.MINUTE);
         String minute = minuteInt < 10 ? ("0" + minuteInt) : Integer.toString(minuteInt);
 
-        return date + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + minute;
+        return date + " " + _cal.get(Calendar.HOUR_OF_DAY) + ":" + minute;
     }
 }

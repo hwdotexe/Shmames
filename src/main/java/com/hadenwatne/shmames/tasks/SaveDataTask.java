@@ -6,7 +6,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.HTTPService;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;

@@ -2,7 +2,7 @@ package com.hadenwatne.shmames.music;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.LogType;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;

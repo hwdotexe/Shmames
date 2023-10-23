@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.commandbuilder;
 
 import com.hadenwatne.shmames.enums.RegexPatterns;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

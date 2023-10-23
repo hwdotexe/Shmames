@@ -9,7 +9,7 @@ import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.services.TextFormatService;

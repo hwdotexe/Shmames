@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commands.Command;
 import com.hadenwatne.shmames.commands.ForumWeapon;

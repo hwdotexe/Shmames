@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.enums.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.services.GachaService;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.Calendar;

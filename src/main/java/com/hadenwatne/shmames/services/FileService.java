@@ -1,5 +1,7 @@
 package com.hadenwatne.shmames.services;
 
+import com.hadenwatne.botcore.service.LoggingService;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;

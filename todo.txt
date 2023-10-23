@@ -1,0 +1,13 @@
+Shmames v3 Design
+---
+
+Slash-command and Interaction Hook only
+Uses modals and buttons where possible
+Store data in MongoDB
+Pro features, admin controls, serial numbers
+
+---
+DEV TODO:
+- Get mongodb working
+- CommandHandler implementation
+- LanguageService implementation

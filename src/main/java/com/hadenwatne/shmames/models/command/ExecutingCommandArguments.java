@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.models.command;
 
 import com.hadenwatne.shmames.services.DataService;
-import com.hadenwatne.shmames.services.LoggingService;
+import com.hadenwatne.botcore.service.LoggingService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;

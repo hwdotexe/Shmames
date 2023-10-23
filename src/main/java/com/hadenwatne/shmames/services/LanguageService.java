@@ -2,6 +2,7 @@ package com.hadenwatne.shmames.services;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.JSONFileFilter;
 import com.hadenwatne.shmames.enums.BotSettingName;
