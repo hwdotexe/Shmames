@@ -24,7 +24,7 @@ public class CommandBuilder {
         data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.getEnabledUserPermissions()));
 
         // If there are subcommands, add these instead.
-        if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {
+        if (!structure.getSubCommands().isEmpty() || !structure.getSubcommandGroups().isEmpty()) {
             // Add SubCommands.
             for (CommandStructure subCommand : structure.getSubCommands()) {
                 String subShortDesc = subCommand.getDescription().length() > 100 ? (subCommand.getDescription().substring(0, 96) + "...") : subCommand.getDescription();

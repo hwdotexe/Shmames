@@ -1,13 +1,12 @@
 package com.hadenwatne.botcore;
 
-import com.hadenwatne.botcore.command.Execution;
+import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.listener.CommandListener;
 import com.hadenwatne.botcore.service.DefaultLanguageProvider;
 import com.hadenwatne.botcore.service.ILanguageProvider;
+import com.hadenwatne.botcore.service.types.LogType;
 import com.hadenwatne.botcore.storage.BotDataStorageService;
 import com.hadenwatne.botcore.utility.BotUtility;
-import com.hadenwatne.botcore.command.Command;
-import com.hadenwatne.botcore.service.types.LogType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.EventListener;
 
@@ -91,8 +90,6 @@ public abstract class Bot {
     protected abstract void registerCommands();
 
     protected abstract void afterInit();
-
-    public abstract void onCommandFailure(Execution execution);
 
     private void startJDA() {
         try {

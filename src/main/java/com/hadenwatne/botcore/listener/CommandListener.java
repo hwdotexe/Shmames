@@ -41,7 +41,9 @@ public class CommandListener extends ListenerAdapter {
                             boolean parametersMatch = matchParameterRegex(execution);
 
                             if (parametersMatch) {
-                                return command.run(execution);
+                                command.run(execution);
+
+                                return true;
                             } else {
                                 execution.setFailureReason(ExecutionFailReason.COMMAND_USAGE_INCORRECT);
                             }
@@ -50,13 +52,11 @@ public class CommandListener extends ListenerAdapter {
                         }
 
                         execution.setStatus(ExecutionStatus.FAILED);
-                        _bot.onCommandFailure(execution);
+                        command.onCommandFailure(execution);
 
-                        return null;
+                        return false;
                     }).thenAccept(result -> {
-                        if (result != null) {
-                            // TODO this assumes an embedbuilder - but we want to reply with modals and such too.
-                            execution.reply(result);
+                        if (result) {
                             execution.setStatus(ExecutionStatus.COMPLETE);
                         }
                     })
@@ -64,6 +64,7 @@ public class CommandListener extends ListenerAdapter {
                         execution.setStatus(ExecutionStatus.FAILED);
                         execution.setFailureReason(ExecutionFailReason.EXCEPTION_CAUGHT);
                         App.getLogger().LogException(exception);
+
                         return null;
                     });
         }

@@ -25,14 +25,6 @@ public class App {
         return _loggingService;
     }
 
-    /**
-     * Provided as a convenience for implementing classes that need to access these methods and services.
-     * @return The loaded Bot object.
-     */
-    public static Bot getBot() {
-        return _bot;
-    }
-
     static boolean isDebugMode() {
         return _debugMode;
     }

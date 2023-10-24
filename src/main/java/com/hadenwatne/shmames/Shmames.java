@@ -1,6 +1,7 @@
 package com.hadenwatne.shmames;
 
 import com.hadenwatne.botcore.Bot;
+import com.hadenwatne.botcore.command.Execution;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;

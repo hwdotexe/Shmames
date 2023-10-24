@@ -7,9 +7,13 @@ Store data in MongoDB
 Pro features, admin controls, serial numbers
 
 ---
-DEV TODO:
-- Server Settings?
-
 
 Use serial numbers to "unlock" commands not included in the global command list (track servers that have it, and then issue a
 slash command update with varying payloads)
+
+---
+
+Dev steps:
+- Shmames commands, services, utilities
+- Music manager
+- Clean up, comment core code

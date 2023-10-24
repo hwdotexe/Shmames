@@ -60,31 +60,6 @@ public abstract class Command {
         configureCommand();
     }
 
-    private void configureCommand() {
-        // Build our command's Help fields.
-        this.helpFields.add(new MessageEmbed.Field("Server-only", this.requiresGuild ? "Yes" : "No", true));
-        this.helpFields.add(new MessageEmbed.Field("Description", this.commandStructure.getDescription(), false));
-        this.helpFields.add(new MessageEmbed.Field("Usage", this.commandStructure.getUsage(), true));
-        this.helpFields.add(new MessageEmbed.Field("Examples", this.commandStructure.getExamples(), true));
-
-        App.getLogger().Log(LogType.SYSTEM, "\tLoaded " + this.commandStructure.getName());
-    }
-
-    protected abstract CommandStructure buildCommandStructure();
-
-    protected abstract Permission[] configureRequiredBotPermissions();
-    protected abstract Permission[] configureEnabledUserPermissions();
-
-    protected EmbedBuilder response(EmbedType type) {
-        return EmbedFactory.GetEmbed(type, this.commandStructure.getName());
-    }
-
-    protected EmbedBuilder response(EmbedType type, String subLevel) {
-        return EmbedFactory.GetEmbed(type, this.commandStructure.getName(), subLevel);
-    }
-
-    public abstract EmbedBuilder run(Execution execution);
-
     public CommandStructure getCommandStructure() {
         return this.commandStructure;
     }
@@ -115,5 +90,30 @@ public abstract class Command {
 
     public boolean isPro() {
         return isPro;
+    }
+
+    protected abstract CommandStructure buildCommandStructure();
+    protected abstract Permission[] configureRequiredBotPermissions();
+    protected abstract Permission[] configureEnabledUserPermissions();
+    public abstract void onCommandFailure(Execution execution);
+    public abstract void run(Execution execution);
+
+    // TODO I don't like this anymore
+    protected EmbedBuilder response(EmbedType type) {
+        return EmbedFactory.GetEmbed(type, this.commandStructure.getName());
+    }
+
+    protected EmbedBuilder response(EmbedType type, String subLevel) {
+        return EmbedFactory.GetEmbed(type, this.commandStructure.getName(), subLevel);
+    }
+
+    private void configureCommand() {
+        // Build our command's Help fields.
+        this.helpFields.add(new MessageEmbed.Field("Server-only", this.requiresGuild ? "Yes" : "No", true));
+        this.helpFields.add(new MessageEmbed.Field("Description", this.commandStructure.getDescription(), false));
+        this.helpFields.add(new MessageEmbed.Field("Usage", this.commandStructure.getUsage(), true));
+        this.helpFields.add(new MessageEmbed.Field("Examples", this.commandStructure.getExamples(), true));
+
+        App.getLogger().Log(LogType.SYSTEM, "\tLoaded " + this.commandStructure.getName());
     }
 }
