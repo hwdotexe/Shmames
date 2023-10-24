@@ -1,6 +1,6 @@
 package com.hadenwatne.botcore.service;
 
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 
 import java.io.*;
 import java.util.ArrayList;

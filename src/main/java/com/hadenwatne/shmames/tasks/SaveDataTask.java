@@ -2,7 +2,7 @@ package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.HTTPVerb;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.HTTPService;

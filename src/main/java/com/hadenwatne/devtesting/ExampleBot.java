@@ -2,7 +2,7 @@ package com.hadenwatne.devtesting;
 
 import com.hadenwatne.botcore.App;
 import com.hadenwatne.botcore.Bot;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 
 public class ExampleBot extends Bot {
     @Override

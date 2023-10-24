@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.hadenwatne.botcore.App;
 import com.hadenwatne.botcore.storage.models.BotConfiguration;
 import com.hadenwatne.botcore.utility.FileUtility;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 
 import java.io.File;
 import java.util.Scanner;

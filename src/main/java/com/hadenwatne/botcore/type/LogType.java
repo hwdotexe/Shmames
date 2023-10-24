@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.enums;
+package com.hadenwatne.botcore.type;
 
 public enum LogType {
     COMMAND,

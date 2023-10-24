@@ -73,6 +73,10 @@ public class CommandStructure {
         this.usage = CommandBuilder.BuildUsage(this, false);
         this.examples = CommandBuilder.BuildExample(this);
 
+        for(CommandParameter parameter : this.parameters) {
+            parameter.buildRegexPattern();
+        }
+
         return this;
     }
 }

@@ -6,7 +6,7 @@ import com.hadenwatne.botcore.service.ILanguageProvider;
 import com.hadenwatne.botcore.storage.StorageService;
 import com.hadenwatne.botcore.utility.BotUtility;
 import com.hadenwatne.botcore.command.Command;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.EventListener;
 

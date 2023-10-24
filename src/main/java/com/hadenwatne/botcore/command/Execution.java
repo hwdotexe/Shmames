@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -30,7 +31,7 @@ public class Execution {
     private Command _command;
     private String _subCommandGroup;
     private String _subCommand;
-    private List<OptionMapping> _arguments;
+    private HashMap<String, OptionMapping> _arguments;
     private SlashCommandInteractionEvent _event;
     private InteractionHook _hook;
     private ExecutionStatus _status;
@@ -43,15 +44,25 @@ public class Execution {
         _hook = event.getHook();
         _status = ExecutionStatus.STARTED;
         _failureReason = ExecutionFailReason.NONE;
-        _arguments = event.getOptions();
+        _arguments = buildArgumentList(event.getOptions());
+        _subCommand = event.getSubcommandName();
+        _subCommandGroup = event.getSubcommandGroup();
     }
 
     public ILanguageProvider getLanguageProvider() {
         return this._bot.getLanguageProvider();
     }
 
-    public List<OptionMapping> getArguments() {
+    public HashMap<String, OptionMapping> getArguments() {
         return _arguments;
+    }
+
+    public String getSubCommand() {
+        return _subCommand;
+    }
+
+    public String getSubCommandGroup() {
+        return _subCommandGroup;
     }
 
     public ExecutionStatus getStatus() {
@@ -118,5 +129,15 @@ public class Execution {
 
     public void reply(EmbedBuilder reply, boolean mentionUser, Consumer<? super Message> onSuccess) {
         ResponseService.Reply(this._hook, reply, mentionUser, onSuccess);
+    }
+
+    private HashMap<String, OptionMapping> buildArgumentList(List<OptionMapping> options) {
+        HashMap<String, OptionMapping> mappings = new HashMap<>();
+
+        for(OptionMapping mapping : options) {
+            mappings.put(mapping.getName(), mapping);
+        }
+
+        return mappings;
     }
 }

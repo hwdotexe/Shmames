@@ -1,7 +1,8 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.shmames.App;
 import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
@@ -20,6 +21,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * adding an "approval" or "removal" emote will cause the bot to adjust tallies accordingly.
  */
 public class ReactListener extends ListenerAdapter {
+	private Shmames shmames;
+
+	public ReactListener(Shmames shmames) {
+		this.shmames = shmames;
+	}
 
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent e) {
@@ -36,7 +42,7 @@ public class ReactListener extends ListenerAdapter {
 
 						if (server.getEmojiById(emote.getId()) != null) {
 							// Begin processing.
-							Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+							Brain brain = shmames.getStorageService().getBrain(server.getId());
 
 							// Handle role reactions first.
 							for (RoleMessage roleMessage : brain.getRoleMessages()) {
@@ -94,7 +100,7 @@ public class ReactListener extends ListenerAdapter {
 						Guild server = e.getGuild();
 
 						if (server.getEmojiById(emote.getId()) != null) {
-							Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+							Brain brain = shmames.getStorageService().getBrain(server.getId());
 
 							// Handle role reactions.
 							for (RoleMessage roleMessage : brain.getRoleMessages()) {
@@ -140,7 +146,7 @@ public class ReactListener extends ListenerAdapter {
 			String tallyPrefix = setting == BotSettingName.APPROVAL_THRESHOLD ? "good" : "bad";
 			String toTally;
 
-			if (author.getId().equals(App.Shmames.getJDA().getSelfUser().getId())) {
+			if (author.getId().equals(shmames.getJDA().getSelfUser().getId())) {
 				toTally = tallyPrefix + "bot";
 			} else {
 				String authorName = author.getName().replaceAll("\\s", "_").replaceAll("[\\W]", "").toLowerCase();
@@ -163,15 +169,15 @@ public class ReactListener extends ListenerAdapter {
 	private void runAddTallyCommand(String tallyValue, Brain brain, Message message) {
 		final String commandText = "tally add " + tallyValue;
 
-		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
-		Language language = App.Shmames.getLanguageService().getLangFor(brain);
+		Command command = shmames.getCommandHandler().PreProcessCommand(commandText);
+		Language language = shmames.getLanguageService().getLangFor(brain);
 		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
 
 		if (command != null) {
 			executingCommand.setCommandName(command.getCommandStructure().getName());
 			executingCommand.setMessage(message);
 
-			App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
+			shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
 		}
 	}
 }

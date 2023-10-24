@@ -4,7 +4,7 @@ import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.HTTPVerb;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.hadenwatne.shmames.models.data.Language;
 import org.json.JSONArray;
 import org.json.JSONObject;

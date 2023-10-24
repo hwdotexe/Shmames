@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.botcore.service.LoggingService;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;

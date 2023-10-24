@@ -1,8 +1,9 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.botcore.App;
 import com.hadenwatne.botcore.service.LoggingService;
-import com.hadenwatne.shmames.App;
 import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commands.ForumWeapon;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
@@ -33,186 +34,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatListener extends ListenerAdapter {
+	private Shmames shmames;
+
+	public ChatListener(Shmames shmames) {
+		this.shmames = shmames;
+	}
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if (!e.getAuthor().isBot()) {
 			Message message = e.getMessage();
-			final String messageText = message.getContentRaw();
 
 			// Messages from a Guild may contain additional data or context for the bot.
-			if(e.isFromGuild()) {
+			if (e.isFromGuild()) {
 				Guild server = e.getGuild();
-				Brain brain = App.Shmames.getStorageService().getBrain(server.getId());
+				Brain brain = shmames.getStorageService().getBrain(server.getId());
 
-				// Check if this message is trying to run a command.
-				for (String trigger : brain.getTriggers().keySet()) {
-					if (brain.getTriggers().get(trigger) == TriggerType.COMMAND) {
-						if (messageText.toLowerCase().startsWith(trigger.toLowerCase())) {
-							Language language = App.Shmames.getLanguageService().getLangFor(brain);
-
-							if (messageText.trim().length() == trigger.length()) {
-								EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.INFO)
-										.setDescription(language.getError(ErrorKeys.HEY_THERE, new String[]{App.Shmames.getBotName()}));
-
-								MessageService.ReplyToMessage(message, embed, false);
-
-								return;
-							}
-
-							final String command = messageText.substring(trigger.length()).trim();
-
-							handleCommand(message, command, brain, language);
-
-							return;
-						}
-					}
+				if (RandomService.GetRandom(175) == 0) {
+					sendRandom(e.getMessage(), TriggerType.RANDOM, brain);
 				}
 
-				// A command did not run, so perform other tasks.
-				tallyServerEmotes(message, server, brain);
+				// Gacha points!
+				int randomPoints = RandomService.GetRandom(5) + 1;
+				GachaUser gachaUser = GachaService.GetGachaUser(brain, e.getAuthor());
 
-				// Handle other trigger types.
-				boolean didTrigger = handleResponseTriggers(brain, message);
-
-				// Send a random message. Randomly.
-				if(!didTrigger) {
-					if (RandomService.GetRandom(175) == 0) {
-						sendRandom(e.getMessage(), TriggerType.RANDOM, brain);
-					}
-
-					// Gacha points!
-					int messageLength = messageText.split("\\s").length;
-					int randomPoints = 0;
-
-					if(messageLength > 50) {
-						randomPoints = RandomService.GetRandom(15) + 1;
-					}else if(messageLength > 30) {
-						randomPoints = RandomService.GetRandom(10) + 1;
-					} else if(messageLength > 10) {
-						randomPoints = RandomService.GetRandom(5) + 1;
-					}
-
-					if(randomPoints > 0) {
-						GachaUser gachaUser = GachaService.GetGachaUser(brain, e.getAuthor());
-
-						gachaUser.addUserPoints(randomPoints);
-					}
-				}
-			} else {
-				// Messages sent to the bot directly are limited to basic commands.
-				if (e.getChannelType() == ChannelType.PRIVATE || e.getChannelType() == ChannelType.GROUP) {
-					final String botNameLower = App.Shmames.getBotName().toLowerCase();
-
-					if (messageText.toLowerCase().startsWith(botNameLower)) {
-						final String command = messageText.substring(botNameLower.length()).trim();
-
-						handleCommand(message, command, null, App.Shmames.getLanguageService().getDefaultLang());
-					}
-				}
+				gachaUser.addUserPoints(randomPoints);
 			}
 		}
-	}
-
-	private void handleCommand(Message message, String commandText, Brain brain, Language language) {
-		Command command = App.Shmames.getCommandHandler().PreProcessCommand(commandText);
-		ExecutingCommand executingCommand = new ExecutingCommand(language, brain);
-
-		if (command != null) {
-			executingCommand.setCommandName(command.getCommandStructure().getName());
-			executingCommand.setMessage(message);
-
-			// Check that the bot has the necessary Discord permissions to process this command.
-			if (executingCommand.getServer() != null) {
-				Guild server = executingCommand.getServer();
-				StringBuilder noPerms = new StringBuilder();
-
-				for (Permission p : command.getRequiredPermissions()) {
-					if (!server.getSelfMember().hasPermission(message.getGuildChannel(), p)) {
-						if (noPerms.length() > 0) {
-							noPerms.append(System.lineSeparator());
-						}
-
-						noPerms.append(p.getName());
-					}
-				}
-
-				if (noPerms.length() > 0) {
-					EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.PERMISSION_MISSING.name())
-							.setDescription(language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}));
-
-					try {
-						MessageService.ReplyToMessage(message, embed, false);
-					} catch (InsufficientPermissionException e) {
-						if (message.getChannel().canTalk()) {
-							try {
-								MessageService.ReplyToMessage(message, language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}), false);
-							} catch (InsufficientPermissionException ex) {
-								MessageService.SendSimpleMessage(message.getChannel(), language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), noPerms.toString()}));
-							}
-						}
-					} catch (Exception e) {
-						LoggingService.LogException(e);
-					}
-
-					return;
-				}
-			}
-
-			if (!command.isSlashOnly()) {
-				App.Shmames.getCommandHandler().HandleCommand(command, executingCommand, commandText);
-			} else {
-				EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.SLASH_ONLY.name())
-						.setDescription(language.getError(ErrorKeys.SLASH_ONLY));
-
-				MessageService.ReplyToMessage(message, embed, false);
-			}
-		} else {
-			EmbedBuilder embed = EmbedFactory.GetEmbed(EmbedType.ERROR, ErrorKeys.COMMAND_NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.COMMAND_NOT_FOUND));
-
-			try {
-				MessageService.ReplyToMessage(message, embed, false);
-			} catch (InsufficientPermissionException e) {
-				if (message.getChannel().canTalk()) {
-					try {
-						MessageService.ReplyToMessage(message, language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), e.getPermission().getName()}), false);
-					} catch (InsufficientPermissionException ex) {
-						MessageService.SendSimpleMessage(message.getChannel(), language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), ex.getPermission().getName()}));
-					}
-				}
-			} catch (Exception e) {
-				LoggingService.LogException(e);
-			}
-		}
-	}
-
-	private void tallyServerEmotes(Message message, Guild server, Brain brain) {
-		for (CustomEmoji emo : message.getMentions().getCustomEmojis()) {
-			if (server.getEmojiById(emo.getId()) != null) {
-				String id = Long.toString(emo.getIdLong());
-
-				ShmamesService.IncrementEmoteTally(brain, id);
-			}
-		}
-	}
-
-	private boolean handleResponseTriggers(Brain brain, Message message) {
-		for (String trigger : brain.getTriggers().keySet()) {
-			TriggerType type = brain.getTriggers().get(trigger);
-
-			if(type != TriggerType.COMMAND) {
-				Matcher m = Pattern.compile("(^"+trigger+")|([\\s\\\b]"+trigger+"\\b)", Pattern.CASE_INSENSITIVE).matcher(message.getContentRaw());
-
-				if(m.find()){
-					sendRandom(message, type, brain);
-
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	private void sendRandom(Message message, TriggerType t, Brain brain) {
@@ -222,7 +70,7 @@ public class ChatListener extends ListenerAdapter {
 			String authorName = author.getNickname() != null ? author.getNickname() : author.getEffectiveName();
 			List<Response> responses = brain.getResponsesFor(t);
 
-			if (responses.size() > 0) {
+			if (!responses.isEmpty()) {
 				Response response = RandomService.GetRandomObjectFromList(responses);
 				String responseValue = response.getResponse();
 
@@ -230,7 +78,7 @@ public class ChatListener extends ListenerAdapter {
 
 				EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, t.name() + " Response");
 
-				switch(response.getResponseType()) {
+				switch (response.getResponseType()) {
 					case GIF:
 						try {
 							String gifURL = HTTPService.GetGIF(responseValue, "high");
@@ -239,14 +87,14 @@ public class ChatListener extends ListenerAdapter {
 
 							MessageService.ReplyToMessage(message, file, "result.gif", embedBuilder, false);
 						} catch (Exception e) {
-							LoggingService.LogException(e);
+							App.getLogger().LogException(e);
 						}
 
 						return;
 					case FORUMWEAPON:
 						ForumWeaponObj forumWeapon = ForumWeapon.FindForumWeapon(responseValue, brain, message.getGuild());
 
-						if(forumWeapon != null) {
+						if (forumWeapon != null) {
 							MessageService.ReplySimpleMessage(message, forumWeapon.getItemLink(), false);
 							break;
 						}

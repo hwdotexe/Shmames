@@ -1,13 +1,14 @@
 package com.hadenwatne.shmames.listeners;
 
+import com.hadenwatne.botcore.App;
 import com.hadenwatne.shmames.App;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -16,13 +17,16 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class FirstJoinListener extends ListenerAdapter {
-	final EmbedBuilder welcomeMessage;
+	private final EmbedBuilder welcomeMessage;
+	private Shmames shmames;
 
-	public FirstJoinListener() {
+	public FirstJoinListener(Shmames shmames) {
+		this.shmames = shmames;
+
 		EmbedBuilder embedBuilder = EmbedFactory.GetEmbed(EmbedType.INFO, "Welcome");
-		String name = App.Shmames.getBotName();
+		String name = shmames.getBotName();
 
-		embedBuilder.setThumbnail(App.Shmames.getBotAvatarUrl());
+		embedBuilder.setThumbnail(shmames.getBotAvatarUrl());
 		embedBuilder.setDescription("Welcome to "+name+", a memeable utility bot with lots of customization!");
 
 		embedBuilder.addField(":bulb: Get Started", "To view a list of commands and general information, use  `/help`.\n" +
@@ -45,7 +49,7 @@ public class FirstJoinListener extends ListenerAdapter {
 
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
-		Brain brain = App.Shmames.getStorageService().getBrain(e.getGuild().getId());
+		Brain brain = shmames.getStorageService().getBrain(e.getGuild().getId());
 
 		// Check a setting in the Brain, since this event can fire accidentally if Discord screws up.
 		if(!brain.didSendWelcome()){
@@ -60,7 +64,7 @@ public class FirstJoinListener extends ListenerAdapter {
 		try {
 			MessageService.SendMessage(channel, welcomeMessage, false);
 		} catch (InsufficientPermissionException e) {
-			LoggingService.Log(LogType.ERROR, "Could not send a welcome message to a server.");
+			App.getLogger().Log(LogType.ERROR, "Could not send a welcome message to a server.");
 		}
 
 		brain.setSentWelcome();

@@ -3,7 +3,7 @@ package com.hadenwatne.botcore.command;
 import com.hadenwatne.botcore.App;
 import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.services.PaginationService;
 import net.dv8tion.jda.api.EmbedBuilder;

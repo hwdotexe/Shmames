@@ -1,7 +1,7 @@
 package com.hadenwatne.botcore.storage;
 
 import com.hadenwatne.botcore.App;
-import com.hadenwatne.shmames.enums.LogType;
+import com.hadenwatne.botcore.type.LogType;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -22,7 +22,7 @@ public class DatabaseService {
             CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
             CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                     pojoCodecRegistry);
-            
+
             _mongoDatabase = client.getDatabase(databaseName).withCodecRegistry(codecRegistry);
         } catch (Exception e) {
             _mongoDatabase = null;

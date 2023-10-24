@@ -1,8 +1,11 @@
 package com.hadenwatne.botcore.command.builder;
 
+import com.hadenwatne.shmames.enums.RegexPatterns;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class CommandParameter implements Cloneable {
     private final String name;
@@ -10,6 +13,8 @@ public class CommandParameter implements Cloneable {
     private final String description;
     private final Boolean isRequired;
     private final ParameterType type;
+    private String customPattern;
+    private Pattern matchPattern;
     private final List<String> selectionOptions;
 
     public CommandParameter(String name, String description, ParameterType type) {
@@ -54,6 +59,16 @@ public class CommandParameter implements Cloneable {
         return this.type;
     }
 
+    public Pattern getPattern() {
+        return this.matchPattern;
+    }
+
+    public CommandParameter setPattern(String pattern) {
+        this.customPattern = pattern;
+
+        return this;
+    }
+
     public List<String> getSelectionOptions() {
         return this.selectionOptions;
     }
@@ -62,5 +77,60 @@ public class CommandParameter implements Cloneable {
         this.selectionOptions.addAll(Arrays.asList(options));
 
         return this;
+    }
+
+    public void buildRegexPattern() {
+        if (this.customPattern != null) {
+            this.matchPattern = Pattern.compile("(?<" + this.name + ">" + this.customPattern + ")");
+
+            return;
+        }
+
+        switch (this.type) {
+            case SELECTION:
+                StringBuilder sb = new StringBuilder();
+                StringBuilder psb = new StringBuilder();
+
+                sb.append("(");
+
+                for (String o : this.selectionOptions) {
+                    if (psb.length() > 0) {
+                        psb.append("|");
+                    }
+
+                    psb.append("(");
+                    psb.append(o);
+                    psb.append(")");
+                }
+
+                sb.append(psb);
+                sb.append(")");
+
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">" + sb + ")");
+                break;
+            case BOOLEAN:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">((true)|(false)))");
+                break;
+            case TIMECODE:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">[\\dydhms]+)");
+                break;
+            case INTEGER:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">\\d+)");
+                break;
+            case DISCORD_ROLE:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">(\\d+))");
+                break;
+            case DISCORD_CHANNEL:
+                this.matchPattern = Pattern.compile("(?<" + this.name + "><#(\\d+)>)");
+                break;
+            case DISCORD_USER:
+                this.matchPattern = Pattern.compile("(?<" + this.name + "><@!(\\d+)>)");
+                break;
+            case DISCORD_EMOTE:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">" + RegexPatterns.EMOTE + ")");
+                break;
+            default:
+                this.matchPattern = Pattern.compile("(?<" + this.name + ">.+)");
+        }
     }
 }
