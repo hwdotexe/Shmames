@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.enums;
+package com.hadenwatne.shmames.services.settings.types;
 
 public enum BotSettingType {
 	BOOLEAN,

@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.listeners;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;

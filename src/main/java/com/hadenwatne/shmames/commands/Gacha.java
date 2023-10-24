@@ -13,6 +13,7 @@ import com.hadenwatne.shmames.models.data.GachaCharacter;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;

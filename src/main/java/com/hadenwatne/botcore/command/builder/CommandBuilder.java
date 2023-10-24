@@ -2,6 +2,7 @@ package com.hadenwatne.botcore.command.builder;
 
 import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.command.builder.types.ParameterType;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 
@@ -20,8 +21,7 @@ public class CommandBuilder {
 
         data.setGuildOnly(command.requiresGuild());
         data.setNSFW(command.isNSFW());
-
-        // TODO: data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
+        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.getEnabledUserPermissions()));
 
         // If there are subcommands, add these instead.
         if (structure.getSubCommands().size() > 0 || structure.getSubcommandGroups().size() > 0) {

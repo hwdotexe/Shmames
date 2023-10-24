@@ -1,10 +1,9 @@
 package com.hadenwatne.shmames.models.data;
 
-import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.models.game.HangmanGame;
+import com.hadenwatne.shmames.services.settings.BotSetting;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 
 import java.util.ArrayList;
@@ -12,11 +11,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+// TODO clean this up
 public class Brain {
 	private final String guildID;
 	private final HashMap<String, Integer> tallies;
 	private final HashMap<String, Integer> emoteStats;
-	private final HashMap<String, TriggerType> triggers;
 	private List<RoleMessage> roleMessages;
 	private List<UserCustomList> userLists;
 	private final List<Response> triggerResponses;
@@ -31,21 +30,18 @@ public class Brain {
 	private List<GachaUser> gachaUsers;
 	private List<String> talliedMessages;
 	private Date gachaUserCreditDate;
-
-	@Deprecated
-	private List<String> gachaBanner;
-
 	private GachaBanner banner;
 	private boolean isReportCooldown;
 	private boolean sentWelcome;
+	private StorytimeStories stories;
+	private HangmanDictionaries dictionaries;
 	private HangmanGame hangmanGame;
-	
+
 	public Brain(String gid) {
 		guildID = gid;
 		tallies = new HashMap<>();
 		roleMessages = new ArrayList<>();
 		emoteStats = new HashMap<>();
-		triggers = new HashMap<>();
 		userLists = new ArrayList<>();
 		triggerResponses = new ArrayList<>();
 		settings = new ArrayList<>();
@@ -62,9 +58,6 @@ public class Brain {
 		sentWelcome = false;
 		hangmanGame = null;
 		gachaUserCreditDate = new Date();
-		gachaBanner = new ArrayList<>();
-		
-		loadFirstRunDefaults();
 	}
 	
 	/*
@@ -97,6 +90,14 @@ public class Brain {
 	/*
 	 * Permanent / Semi-permanent items
 	 */
+
+	public StorytimeStories getStories() {
+		return stories;
+	}
+
+	public HangmanDictionaries getHangmanDictionaries() {
+		return dictionaries;
+	}
 
 	public List<Playlist> getPlaylists() {
 		return playlists;
@@ -136,27 +137,12 @@ public class Brain {
 		return null;
 	}
 	
-	public List<Response> getResponsesFor(TriggerType type){
-		List<Response> t = new ArrayList<Response>();
-
-		for(Response tr : getTriggerResponses()) {
-			if(tr.getTriggerType() == type)
-				t.add(tr);
-		}
-		
-		return t;
-	}
-	
 	public HashMap<String, Integer> getTallies(){
 		return tallies;
 	}
 	
 	public HashMap<String, Integer> getEmoteStats(){
 		return emoteStats;
-	}
-	
-	public HashMap<String, TriggerType> getTriggers(){
-		return triggers;
 	}
 
 	public List<RoleMessage> getRoleMessages() {
@@ -243,14 +229,5 @@ public class Brain {
 
 	public void updateGachaUserCreditDate() {
 		this.gachaUserCreditDate = new Date();
-	}
-
-	/**
-	 * Loads default setting values into the object. This method will only
-	 * run when this object is first created.
-	 */
-	public void loadFirstRunDefaults() {
-		triggers.put(App.Shmames.getBotName(), TriggerType.COMMAND);
-		settings.addAll(App.Shmames.getStorageService().getDefaultSettings());
 	}
 }

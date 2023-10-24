@@ -12,12 +12,17 @@ import net.dv8tion.jda.api.Permission;
 
 public class ExampleCommand extends Command {
 	public ExampleCommand() {
-		super(false);
+		super(false, false, true, false);
 	}
 
 	@Override
 	protected Permission[] configureRequiredBotPermissions() {
 		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
+	protected Permission[] configureEnabledUserPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND};
 	}
 
 	@Override
@@ -31,7 +36,7 @@ public class ExampleCommand extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (Execution execution) {
+	public EmbedBuilder run(Execution execution) {
 		String answer = execution.getLanguageProvider().getMessageFromKey("test");
 		String question = execution.getArguments().get("item").getAsString();
 

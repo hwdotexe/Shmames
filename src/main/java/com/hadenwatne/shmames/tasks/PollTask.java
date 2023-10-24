@@ -1,7 +1,7 @@
 package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.factories.EmbedFactory;

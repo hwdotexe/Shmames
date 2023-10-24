@@ -41,35 +41,24 @@ public class CommandListener extends ListenerAdapter {
                             boolean parametersMatch = matchParameterRegex(execution);
 
                             if (parametersMatch) {
-                                // TODO tally the command usage [Core Handled]
-
                                 return command.run(execution);
                             } else {
-                                execution.setStatus(ExecutionStatus.FAILED);
                                 execution.setFailureReason(ExecutionFailReason.COMMAND_USAGE_INCORRECT);
-                                execution.setEphemeral(true);
-
-                                return null;
-                                // TODO reply with a no-permission message
-                                // TODO should we have an injectable service for error handling?
-                                // TODO error event dispatched, listened to in a listener?
                             }
                         } else {
-                            execution.setStatus(ExecutionStatus.FAILED);
                             execution.setFailureReason(ExecutionFailReason.BOT_MISSING_PERMISSION);
-                            execution.setEphemeral(true);
-
-                            return null;
-                            // TODO reply with a no-permission message
-                            // TODO should we have an injectable service for error handling?
-                            // TODO error event dispatched, listened to in a listener?
                         }
+
+                        execution.setStatus(ExecutionStatus.FAILED);
+                        _bot.onCommandFailure(execution);
+
+                        return null;
                     }).thenAccept(result -> {
                         if (result != null) {
+                            // TODO this assumes an embedbuilder - but we want to reply with modals and such too.
                             execution.reply(result);
+                            execution.setStatus(ExecutionStatus.COMPLETE);
                         }
-
-                        execution.setStatus(ExecutionStatus.COMPLETE);
                     })
                     .exceptionally(exception -> {
                         execution.setStatus(ExecutionStatus.FAILED);
@@ -96,11 +85,6 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean matchParameterRegex(Execution execution) {
-        // TODO We do have to scan parameter regex :/ so:
-        // Figure out which command/sub command is running
-        // Get its parameters (required or not)
-        // Compare parameters to options in execution
-
         // TODO: this code is terrible please fix
         // TODO does it only need to apply to strings?
 

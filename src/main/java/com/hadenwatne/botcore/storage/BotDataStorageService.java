@@ -10,14 +10,14 @@ import com.hadenwatne.botcore.service.types.LogType;
 import java.io.File;
 import java.util.Scanner;
 
-public class BotConfigService {
+public class BotDataStorageService {
     private final String LOCAL_STORAGE_FOLDER = "data";
     private final String LOCAL_STORAGE_FILE = "config.json";
     private final Gson _gson;
     private final DatabaseService _databaseService;
     private BotConfiguration _botConfiguration;
 
-    public BotConfigService() {
+    public BotDataStorageService() {
         App.getLogger().Log(LogType.SYSTEM, "Initializing storage...");
         _gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

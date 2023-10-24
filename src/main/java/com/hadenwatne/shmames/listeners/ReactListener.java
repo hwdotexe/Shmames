@@ -3,7 +3,7 @@ package com.hadenwatne.shmames.listeners;
 import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
-import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;

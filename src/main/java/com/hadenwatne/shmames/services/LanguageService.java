@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.JSONFileFilter;
-import com.hadenwatne.shmames.enums.BotSettingName;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LanguageKeys;
 import com.hadenwatne.botcore.service.types.LogType;

@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames.enums;
+package com.hadenwatne.shmames.services.settings.types;
 
 public enum BotSettingName {
 	ALLOW_MODIFY("Sets the role (other than Administrator) allowed to use the Modify command."),

@@ -14,6 +14,7 @@ import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.music.GuildOcarina;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;

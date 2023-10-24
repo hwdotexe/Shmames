@@ -8,16 +8,19 @@ import com.hadenwatne.shmames.listeners.ReactListener;
 import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.RandomService;
+import com.hadenwatne.shmames.services.settings.SettingsService;
 
 public class Shmames extends Bot {
 	private MusicManager musicManager;
 	private BrainController brainController;
+	private SettingsService settingsService;
 
 	@Override
 	protected void afterInit() {
 		RandomService.Init();
 		CacheService.Init();
 
+		settingsService = new SettingsService(this);
 		brainController = new BrainController(this);
 
 		this.registerListener(new ChatListener(this));
@@ -70,5 +73,9 @@ public class Shmames extends Bot {
 
 	public BrainController getBrainController() {
 		return brainController;
+	}
+
+	public SettingsService getSettingsService() {
+		return settingsService;
 	}
 }

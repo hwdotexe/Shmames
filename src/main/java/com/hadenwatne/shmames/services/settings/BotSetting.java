@@ -1,9 +1,10 @@
-package com.hadenwatne.shmames.models.data;
+package com.hadenwatne.shmames.services.settings;
 
-import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingName;
-import com.hadenwatne.shmames.enums.BotSettingType;
+import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
+import com.hadenwatne.shmames.services.settings.types.BotSettingType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -72,7 +73,7 @@ public class BotSetting {
 		return null;
 	}
 	
-	public boolean setValue(String v, Brain b) {
+	public boolean setValue(Shmames bot, String v, Brain b) {
 		switch(type) {
 		case BOOLEAN:
 			if(DataService.IsBoolean(v)) {
@@ -96,7 +97,7 @@ public class BotSetting {
 				return true;
 			} else {
 				if(DataService.IsLong(v)) {
-					Role role = App.Shmames.getJDA().getGuildById(b.getGuildID()).getRoleById(v);
+					Role role = bot.getJDA().getGuildById(b.getGuildID()).getRoleById(v);
 
 					if (role != null) {
 						value = v;
@@ -108,7 +109,7 @@ public class BotSetting {
 			}
 		case CHANNEL:
 			if(DataService.IsLong(v)) {
-				TextChannel channel = App.Shmames.getJDA().getGuildById(b.getGuildID()).getTextChannelById(v);
+				TextChannel channel = bot.getJDA().getGuildById(b.getGuildID()).getTextChannelById(v);
 
 				if (channel != null) {
 					value = v;
@@ -119,7 +120,7 @@ public class BotSetting {
 			return false;
 		case EMOTE:
 			if(DataService.IsLong(v)) {
-				RichCustomEmoji emote = App.Shmames.getJDA().getGuildById(b.getGuildID()).getEmojiById(v);
+				RichCustomEmoji emote = bot.getJDA().getGuildById(b.getGuildID()).getEmojiById(v);
 
 				if (emote != null) {
 					value = v;

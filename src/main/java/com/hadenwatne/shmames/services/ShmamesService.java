@@ -1,9 +1,9 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.BotSettingType;
+import com.hadenwatne.shmames.services.settings.types.BotSettingType;
 import com.hadenwatne.shmames.models.Family;
-import com.hadenwatne.shmames.models.data.BotSetting;
+import com.hadenwatne.shmames.services.settings.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;

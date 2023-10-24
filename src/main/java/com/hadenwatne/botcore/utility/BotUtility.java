@@ -45,14 +45,10 @@ public class BotUtility {
             return;
         }
 
-        if(bot.getStorageService().getBotConfiguration().updateGlobalSlashCommands) {
+        if(bot.getBotDataStorageService().getBotConfiguration().updateGlobalSlashCommands) {
             // Delete guild commands.
             for(Guild g : bot.getJDA().getGuilds()) {
-                g.retrieveCommands().queue(success -> {
-                    for(net.dv8tion.jda.api.interactions.commands.Command c : success) {
-                        g.deleteCommandById(c.getId()).queue();
-                    }
-                });
+                g.retrieveCommands().queue(result -> result.forEach(cmd -> g.deleteCommandById(cmd.getId()).queue()));
             }
 
             // Update global commands.
@@ -60,8 +56,10 @@ public class BotUtility {
 
             issueSlashCommandUpdate(cUpdate, bot.getCommands());
 
-            bot.getStorageService().getBotConfiguration().updateGlobalSlashCommands = false;
-            bot.getStorageService().writeBotConfiguration();
+            // TODO issue an update for each server that has a command activated that isn't available by default
+
+            bot.getBotDataStorageService().getBotConfiguration().updateGlobalSlashCommands = false;
+            bot.getBotDataStorageService().writeBotConfiguration();
         }
     }
 

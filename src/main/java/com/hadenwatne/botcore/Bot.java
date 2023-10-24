@@ -1,9 +1,10 @@
 package com.hadenwatne.botcore;
 
+import com.hadenwatne.botcore.command.Execution;
 import com.hadenwatne.botcore.listener.CommandListener;
 import com.hadenwatne.botcore.service.DefaultLanguageProvider;
 import com.hadenwatne.botcore.service.ILanguageProvider;
-import com.hadenwatne.botcore.storage.BotConfigService;
+import com.hadenwatne.botcore.storage.BotDataStorageService;
 import com.hadenwatne.botcore.utility.BotUtility;
 import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.service.types.LogType;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public abstract class Bot {
     private final JDA _jda;
-    private final BotConfigService _botConfigService;
+    private final BotDataStorageService _botDataStorageService;
     private ILanguageProvider _languageProvider;
     private final List<Command> _commands;
     private String _botName;
@@ -28,11 +29,11 @@ public abstract class Bot {
         _commands = new ArrayList<>();
 
         // Services
-        _botConfigService = new BotConfigService();
+        _botDataStorageService = new BotDataStorageService();
         _languageProvider = new DefaultLanguageProvider();
 
         // Start JDA
-        _jda = BotUtility.authenticate(_botConfigService.getBotConfiguration().botApiToken);
+        _jda = BotUtility.authenticate(_botDataStorageService.getBotConfiguration().botApiToken);
         startJDA();
         populateBotInfo();
 
@@ -67,8 +68,8 @@ public abstract class Bot {
         return _commands;
     }
 
-    public final BotConfigService getBotConfigService() {
-        return _botConfigService;
+    public final BotDataStorageService getBotDataStorageService() {
+        return _botDataStorageService;
     }
 
     public ILanguageProvider getLanguageProvider() {
@@ -87,9 +88,11 @@ public abstract class Bot {
         this._languageProvider = languageProvider;
     }
 
+    protected abstract void registerCommands();
+
     protected abstract void afterInit();
 
-    protected abstract void registerCommands();
+    public abstract void onCommandFailure(Execution execution);
 
     private void startJDA() {
         try {
