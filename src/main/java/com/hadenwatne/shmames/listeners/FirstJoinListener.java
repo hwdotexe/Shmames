@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.data.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;

@@ -11,11 +11,14 @@ import com.hadenwatne.shmames.services.RandomService;
 
 public class Shmames extends Bot {
 	private MusicManager musicManager;
+	private BrainController brainController;
 
 	@Override
 	protected void afterInit() {
 		RandomService.Init();
 		CacheService.Init();
+
+		brainController = new BrainController(this);
 
 		this.registerListener(new ChatListener(this));
 		this.registerListener(new FirstJoinListener(this));
@@ -63,5 +66,9 @@ public class Shmames extends Bot {
 
 	public MusicManager getMusicManager() {
 		return this.musicManager;
+	}
+
+	public BrainController getBrainController() {
+		return brainController;
 	}
 }

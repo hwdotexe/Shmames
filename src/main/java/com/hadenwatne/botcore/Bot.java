@@ -3,10 +3,10 @@ package com.hadenwatne.botcore;
 import com.hadenwatne.botcore.listener.CommandListener;
 import com.hadenwatne.botcore.service.DefaultLanguageProvider;
 import com.hadenwatne.botcore.service.ILanguageProvider;
-import com.hadenwatne.botcore.storage.StorageService;
+import com.hadenwatne.botcore.storage.BotConfigService;
 import com.hadenwatne.botcore.utility.BotUtility;
 import com.hadenwatne.botcore.command.Command;
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.EventListener;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class Bot {
     private final JDA _jda;
-    private final StorageService _storageService;
+    private final BotConfigService _botConfigService;
     private ILanguageProvider _languageProvider;
     private final List<Command> _commands;
     private String _botName;
@@ -28,11 +28,11 @@ public abstract class Bot {
         _commands = new ArrayList<>();
 
         // Services
-        _storageService = new StorageService();
+        _botConfigService = new BotConfigService();
         _languageProvider = new DefaultLanguageProvider();
 
         // Start JDA
-        _jda = BotUtility.authenticate(_storageService.getBotConfiguration().botApiToken);
+        _jda = BotUtility.authenticate(_botConfigService.getBotConfiguration().botApiToken);
         startJDA();
         populateBotInfo();
 
@@ -67,8 +67,8 @@ public abstract class Bot {
         return _commands;
     }
 
-    public final StorageService getStorageService() {
-        return _storageService;
+    public final BotConfigService getBotConfigService() {
+        return _botConfigService;
     }
 
     public ILanguageProvider getLanguageProvider() {

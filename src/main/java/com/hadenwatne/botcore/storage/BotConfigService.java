@@ -5,19 +5,19 @@ import com.google.gson.GsonBuilder;
 import com.hadenwatne.botcore.App;
 import com.hadenwatne.botcore.storage.models.BotConfiguration;
 import com.hadenwatne.botcore.utility.FileUtility;
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 
 import java.io.File;
 import java.util.Scanner;
 
-public class StorageService {
+public class BotConfigService {
     private final String LOCAL_STORAGE_FOLDER = "data";
     private final String LOCAL_STORAGE_FILE = "config.json";
     private final Gson _gson;
     private final DatabaseService _databaseService;
     private BotConfiguration _botConfiguration;
 
-    public StorageService() {
+    public BotConfigService() {
         App.getLogger().Log(LogType.SYSTEM, "Initializing storage...");
         _gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

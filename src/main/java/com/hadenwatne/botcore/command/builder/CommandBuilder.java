@@ -1,6 +1,7 @@
 package com.hadenwatne.botcore.command.builder;
 
 import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.botcore.command.builder.types.ParameterType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 

@@ -1,5 +1,6 @@
 package com.hadenwatne.botcore.command.builder;
 
+import com.hadenwatne.botcore.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.RegexPatterns;
 
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class CommandParameter implements Cloneable {
             return;
         }
 
+        // TODO do we need regex validation for this if Discord does it for us? (no)
         switch (this.type) {
             case SELECTION:
                 StringBuilder sb = new StringBuilder();
@@ -108,6 +110,7 @@ public class CommandParameter implements Cloneable {
 
                 this.matchPattern = Pattern.compile("(?<" + this.name + ">" + sb + ")");
                 break;
+                // TODO can this be a selection?
             case BOOLEAN:
                 this.matchPattern = Pattern.compile("(?<" + this.name + ">((true)|(false)))");
                 break;

@@ -1,6 +1,6 @@
 package com.hadenwatne.botcore.service;
 
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 
 import java.io.*;
 import java.util.ArrayList;

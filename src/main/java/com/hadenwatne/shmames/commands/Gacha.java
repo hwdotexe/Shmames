@@ -2,6 +2,7 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.command.builder.*;
+import com.hadenwatne.botcore.command.builder.types.ParameterType;
 import com.hadenwatne.botcore.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.*;

@@ -7,8 +7,8 @@ import com.hadenwatne.botcore.command.Execution;
 import com.hadenwatne.botcore.command.builder.CommandParameter;
 import com.hadenwatne.botcore.command.builder.CommandStructure;
 import com.hadenwatne.botcore.command.builder.SubCommandGroup;
-import com.hadenwatne.botcore.type.ExecutionFailReason;
-import com.hadenwatne.botcore.type.ExecutionStatus;
+import com.hadenwatne.botcore.command.types.ExecutionFailReason;
+import com.hadenwatne.botcore.command.types.ExecutionStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -30,8 +30,6 @@ public class CommandListener extends ListenerAdapter {
         Command command = matchCommandObject(event.getName());
 
         if (command != null) {
-            // Gets the server language [Bot Handled]
-
             Execution execution = new Execution(_bot, command, event);
 
             CompletableFuture.supplyAsync(() -> {
@@ -104,6 +102,7 @@ public class CommandListener extends ListenerAdapter {
         // Compare parameters to options in execution
 
         // TODO: this code is terrible please fix
+        // TODO does it only need to apply to strings?
 
         CommandStructure structure = execution.getCommand().getCommandStructure();
 

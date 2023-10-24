@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.models.command;
 
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.botcore.service.LoggingService;

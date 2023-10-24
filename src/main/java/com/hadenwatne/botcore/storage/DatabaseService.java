@@ -1,7 +1,7 @@
 package com.hadenwatne.botcore.storage;
 
 import com.hadenwatne.botcore.App;
-import com.hadenwatne.botcore.type.LogType;
+import com.hadenwatne.botcore.service.types.LogType;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -15,7 +15,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class DatabaseService {
     private MongoDatabase _mongoDatabase;
 
-    public DatabaseService(String connectionString, String databaseName) {
+    DatabaseService(String connectionString, String databaseName) {
         App.getLogger().Log(LogType.SYSTEM, "Initializing database...");
 
         try (MongoClient client = MongoClients.create(connectionString)) {

@@ -1,4 +1,4 @@
-package com.hadenwatne.botcore.command.builder;
+package com.hadenwatne.botcore.command.builder.types;
 
 public enum ParameterType {
     STRING,

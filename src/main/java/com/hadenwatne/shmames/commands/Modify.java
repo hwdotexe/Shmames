@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.botcore.command.builder.CommandBuilder;
 import com.hadenwatne.botcore.command.builder.CommandParameter;
 import com.hadenwatne.botcore.command.builder.CommandStructure;
-import com.hadenwatne.botcore.command.builder.ParameterType;
+import com.hadenwatne.botcore.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.enums.ErrorKeys;

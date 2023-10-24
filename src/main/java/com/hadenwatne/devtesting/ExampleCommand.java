@@ -5,7 +5,7 @@ import com.hadenwatne.botcore.command.Execution;
 import com.hadenwatne.botcore.command.builder.CommandBuilder;
 import com.hadenwatne.botcore.command.builder.CommandParameter;
 import com.hadenwatne.botcore.command.builder.CommandStructure;
-import com.hadenwatne.botcore.command.builder.ParameterType;
+import com.hadenwatne.botcore.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -33,7 +33,7 @@ public class ExampleCommand extends Command {
 	@Override
 	public EmbedBuilder run (Execution execution) {
 		String answer = execution.getLanguageProvider().getMessageFromKey("test");
-		String question = execution.getArguments().getFirst().getAsString();
+		String question = execution.getArguments().get("item").getAsString();
 
 		return response(EmbedType.INFO)
 				.addField(question, answer, false);
