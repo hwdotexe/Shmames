@@ -1,7 +1,6 @@
 package com.hadenwatne.botcore.service.audio;
 
 import com.hadenwatne.botcore.App;
-import com.hadenwatne.shmames.music.JDAAudioSendHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -10,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
-import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.util.ArrayList;
@@ -18,14 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class ServerPlayer extends AudioEventAdapter {
-    private AudioService audioService;
-    private AudioPlayerManager serverAudioPlayerManager;
-    private AudioManager serverAudioManager;
-    private AudioPlayer audioPlayer;
-    private ServerPlayerResultHandler resultHandler;
-    private GuildMessageChannelUnion activatedChannel;
-    private List<AudioTrack> queue;
-    private List<AudioTrack> history;
+    private final AudioService audioService;
+    private final AudioPlayerManager serverAudioPlayerManager;
+    private final AudioManager serverAudioManager;
+    private final AudioPlayer audioPlayer;
+    private final ServerPlayerResultHandler resultHandler;
+    private final List<AudioTrack> queue;
+    private final List<AudioTrack> history;
     private IAudioListener customListener;
     private boolean loopTrack;
     private boolean loopQueue;
@@ -110,8 +107,7 @@ public class ServerPlayer extends AudioEventAdapter {
         this.audioPlayer.setVolume(volume);
     }
 
-    public void connect(AudioChannel vc, GuildMessageChannelUnion ch) {
-        activatedChannel = ch;
+    public void connect(AudioChannel vc) {
         serverAudioManager.openAudioConnection(vc);
         serverAudioManager.setSelfDeafened(true);
     }
