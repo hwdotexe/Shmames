@@ -209,6 +209,7 @@ public class GuildOcarina extends AudioEventAdapter {
 				}
 
 				if(isLoop) {
+					track.
 					player.startTrack(track.makeClone(), false);
 //					loadTrack(track.getInfo().uri, false);
 				} else {

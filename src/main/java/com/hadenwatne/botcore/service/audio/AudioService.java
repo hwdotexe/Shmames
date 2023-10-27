@@ -28,7 +28,7 @@ public class AudioService {
     }
 
     public ServerPlayer createServerPlayer(Guild guild) {
-        ServerPlayer player = new ServerPlayer(this.manager, guild.getAudioManager());
+        ServerPlayer player = new ServerPlayer(this, this.manager, guild.getAudioManager());
 
         this.players.put(guild, player);
 

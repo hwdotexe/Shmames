@@ -14,21 +14,21 @@ public class ServerPlayerResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-
+        serverPlayer.trackLoaded(track);
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-
+        serverPlayer.playlistLoaded(playlist);
     }
 
     @Override
     public void noMatches() {
-
+        serverPlayer.noMatches();
     }
 
     @Override
     public void loadFailed(FriendlyException exception) {
-
+        serverPlayer.loadFailed(exception);
     }
 }

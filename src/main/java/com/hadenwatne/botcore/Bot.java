@@ -4,6 +4,7 @@ import com.hadenwatne.botcore.command.Command;
 import com.hadenwatne.botcore.listener.CommandListener;
 import com.hadenwatne.botcore.service.DefaultLanguageProvider;
 import com.hadenwatne.botcore.service.ILanguageProvider;
+import com.hadenwatne.botcore.service.audio.AudioService;
 import com.hadenwatne.botcore.service.types.LogType;
 import com.hadenwatne.botcore.storage.BotDataStorageService;
 import com.hadenwatne.botcore.utility.BotUtility;
@@ -16,6 +17,7 @@ import java.util.List;
 public abstract class Bot {
     private final JDA _jda;
     private final BotDataStorageService _botDataStorageService;
+    private final AudioService _audioService;
     private ILanguageProvider _languageProvider;
     private final List<Command> _commands;
     private String _botName;
@@ -35,6 +37,9 @@ public abstract class Bot {
         _jda = BotUtility.authenticate(_botDataStorageService.getBotConfiguration().botApiToken);
         startJDA();
         populateBotInfo();
+
+        // Start audio service
+        _audioService = new AudioService();
 
         // Commands
         registerCommands();
@@ -69,6 +74,10 @@ public abstract class Bot {
 
     public final BotDataStorageService getBotDataStorageService() {
         return _botDataStorageService;
+    }
+
+    public AudioService getAudioService() {
+        return _audioService;
     }
 
     public ILanguageProvider getLanguageProvider() {
