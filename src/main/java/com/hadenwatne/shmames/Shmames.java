@@ -1,18 +1,15 @@
 package com.hadenwatne.shmames;
 
 import com.hadenwatne.botcore.Bot;
-import com.hadenwatne.botcore.command.Execution;
 import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
-import com.hadenwatne.shmames.music.MusicManager;
 import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.settings.SettingsService;
 
 public class Shmames extends Bot {
-	private MusicManager musicManager;
 	private BrainController brainController;
 	private SettingsService settingsService;
 
@@ -66,10 +63,6 @@ public class Shmames extends Bot {
 		registerCommand(new WhatShouldIDo());
 		registerCommand(new When());
 		registerCommand(new Wiki());
-	}
-
-	public MusicManager getMusicManager() {
-		return this.musicManager;
 	}
 
 	public BrainController getBrainController() {

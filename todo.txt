@@ -15,5 +15,8 @@ slash command update with varying payloads)
 
 Dev steps:
 - Shmames commands, services, utilities
-- Music manager
 - Clean up, comment core code
+- Display / Rendering / Updating of Embed extension?
+    - Instead of a core bot feature, add a set of tools to draw up and refresh messages.
+    - This can also feature a modal builder.
+    - Still need to pass back language to implementing class. Need to standardize message keys?
