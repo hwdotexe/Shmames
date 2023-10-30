@@ -3,9 +3,6 @@ package com.hadenwatne.fornax.command;
 import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.service.types.LogType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.factories.EmbedFactory;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -97,15 +94,6 @@ public abstract class Command {
     protected abstract Permission[] configureEnabledUserPermissions();
     public abstract void onCommandFailure(Execution execution);
     public abstract void run(Execution execution);
-
-    // TODO I don't like this anymore
-    protected EmbedBuilder response(EmbedType type) {
-        return EmbedFactory.GetEmbed(type, this.commandStructure.getName());
-    }
-
-    protected EmbedBuilder response(EmbedType type, String subLevel) {
-        return EmbedFactory.GetEmbed(type, this.commandStructure.getName(), subLevel);
-    }
 
     private void configureCommand() {
         // Build our command's Help fields.

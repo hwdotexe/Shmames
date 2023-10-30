@@ -22,11 +22,11 @@ Dev steps:
     - Still need to pass back language to implementing class. Need to standardize message keys?
 
 Corvus features:
-- Upload images/files to a reply
-- Thumbnails
+x- Upload images/files to a reply
+x- Thumbnails
 - Modals
 - Paginated replies (use an internal response ID to perform accurate caching)
 - Buttons & callbacks
-- Maybe a static method to call that accepts an Execution object to process the reply?
-- Eliminate Command base class response method
+x- Maybe a static method to call that accepts an Execution object to process the reply?
+x- Eliminate Command base class response method
 - Ability to add a thread/task/Timer that updates the response

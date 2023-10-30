@@ -4,7 +4,9 @@ import com.hadenwatne.corvus.types.MessageType;
 import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.Bot;
 import com.hadenwatne.fornax.command.Execution;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.IOException;
@@ -55,16 +57,21 @@ public class Corvus {
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue();
+                        .queue(builder::setMessage);
             } else {
                 hook.sendMessageEmbeds(builder.preBuild().build())
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue();
+                        .queue(builder::setMessage);
             }
         } catch (IOException exception) {
             App.getLogger().LogException(exception);
         }
+    }
+
+    public static RestAction<Message> update(CorvusBuilder builder) {
+        return builder.getMessage().editMessageEmbeds(builder.preBuild().build())
+                .setComponents(builder.getLayoutComponents());
     }
 }
