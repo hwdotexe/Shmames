@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.models;
 
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.service.LoggingService;
 
 import java.util.Calendar;
 import java.util.Date;

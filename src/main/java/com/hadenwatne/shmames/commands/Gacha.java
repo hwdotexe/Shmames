@@ -1,9 +1,9 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.botcore.command.Command;
-import com.hadenwatne.botcore.command.builder.*;
-import com.hadenwatne.botcore.command.builder.types.ParameterType;
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.builder.*;
+import com.hadenwatne.fornax.command.builder.types.ParameterType;
+import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;

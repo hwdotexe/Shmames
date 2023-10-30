@@ -2,13 +2,13 @@ package com.hadenwatne.shmames.services;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.JSONFileFilter;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.LanguageKeys;
-import com.hadenwatne.botcore.service.types.LogType;
+import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.models.data.LanguageError;

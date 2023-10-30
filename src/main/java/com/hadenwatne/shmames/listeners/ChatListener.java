@@ -1,37 +1,26 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.botcore.App;
-import com.hadenwatne.botcore.service.LoggingService;
-import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.commands.ForumWeapon;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
 import com.hadenwatne.shmames.enums.TriggerType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.ForumWeaponObj;
 import com.hadenwatne.shmames.models.Response;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.GachaUser;
-import com.hadenwatne.shmames.models.data.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatListener extends ListenerAdapter {
 	private Shmames shmames;

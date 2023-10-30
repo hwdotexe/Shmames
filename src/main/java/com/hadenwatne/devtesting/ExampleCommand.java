@@ -1,11 +1,11 @@
 package com.hadenwatne.devtesting;
 
-import com.hadenwatne.botcore.command.Command;
-import com.hadenwatne.botcore.command.Execution;
-import com.hadenwatne.botcore.command.builder.CommandBuilder;
-import com.hadenwatne.botcore.command.builder.CommandParameter;
-import com.hadenwatne.botcore.command.builder.CommandStructure;
-import com.hadenwatne.botcore.command.builder.types.ParameterType;
+import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.builder.CommandBuilder;
+import com.hadenwatne.fornax.command.builder.CommandParameter;
+import com.hadenwatne.fornax.command.builder.CommandStructure;
+import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import net.dv8tion.jda.api.Permission;
 

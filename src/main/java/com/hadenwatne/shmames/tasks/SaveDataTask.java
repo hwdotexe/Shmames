@@ -2,11 +2,11 @@ package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.HTTPVerb;
-import com.hadenwatne.botcore.service.types.LogType;
+import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.HTTPService;
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;

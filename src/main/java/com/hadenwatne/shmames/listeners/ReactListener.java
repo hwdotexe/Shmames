@@ -1,6 +1,6 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;

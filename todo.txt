@@ -20,3 +20,13 @@ Dev steps:
     - Instead of a core bot feature, add a set of tools to draw up and refresh messages.
     - This can also feature a modal builder.
     - Still need to pass back language to implementing class. Need to standardize message keys?
+
+Corvus features:
+- Upload images/files to a reply
+- Thumbnails
+- Modals
+- Paginated replies (use an internal response ID to perform accurate caching)
+- Buttons & callbacks
+- Maybe a static method to call that accepts an Execution object to process the reply?
+- Eliminate Command base class response method
+- Ability to add a thread/task/Timer that updates the response

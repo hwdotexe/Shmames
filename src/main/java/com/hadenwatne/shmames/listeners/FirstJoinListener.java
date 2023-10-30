@@ -1,11 +1,11 @@
 package com.hadenwatne.shmames.listeners;
 
-import com.hadenwatne.botcore.App;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.botcore.service.types.LogType;
+import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.services.settings.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;

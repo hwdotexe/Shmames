@@ -1,17 +1,17 @@
 package com.hadenwatne.shmames.commands;
 
-import com.hadenwatne.botcore.command.Command;
+import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.botcore.command.builder.CommandBuilder;
-import com.hadenwatne.botcore.command.builder.CommandParameter;
-import com.hadenwatne.botcore.command.builder.CommandStructure;
-import com.hadenwatne.botcore.command.builder.types.ParameterType;
+import com.hadenwatne.fornax.command.builder.CommandBuilder;
+import com.hadenwatne.fornax.command.builder.CommandParameter;
+import com.hadenwatne.fornax.command.builder.CommandStructure;
+import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.services.DataService;
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.service.LoggingService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;

@@ -1,8 +1,8 @@
 package com.hadenwatne.devtesting;
 
-import com.hadenwatne.botcore.App;
-import com.hadenwatne.botcore.Bot;
-import com.hadenwatne.botcore.service.types.LogType;
+import com.hadenwatne.fornax.App;
+import com.hadenwatne.fornax.Bot;
+import com.hadenwatne.fornax.service.types.LogType;
 
 public class ExampleBot extends Bot {
     @Override

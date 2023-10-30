@@ -68,7 +68,7 @@
                 <version>1.4.0</version>
                 <configuration>
                     <services>
-                        <param>com.hadenwatne.botcore.Bot</param>
+                        <param>com.hadenwatne.fornax.Bot</param>
                         <param>com.hadenwatne.devtesting.ExampleBot</param>
                     </services>
                 </configuration>

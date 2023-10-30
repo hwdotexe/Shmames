@@ -1,11 +1,11 @@
 package com.hadenwatne.shmames.tasks;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.botcore.service.types.LogType;
+import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.GachaUser;
 import com.hadenwatne.shmames.services.GachaService;
-import com.hadenwatne.botcore.service.LoggingService;
+import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 
 import java.util.Calendar;

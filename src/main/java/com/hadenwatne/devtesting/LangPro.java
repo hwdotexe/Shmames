@@ -1,6 +1,6 @@
 package com.hadenwatne.devtesting;
 
-import com.hadenwatne.botcore.service.ILanguageProvider;
+import com.hadenwatne.fornax.service.ILanguageProvider;
 
 public class LangPro implements ILanguageProvider {
     @Override
