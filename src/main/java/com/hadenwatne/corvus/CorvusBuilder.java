@@ -25,7 +25,7 @@ public class CorvusBuilder {
     private final List<LayoutComponent> layoutComponents;
     private Message message;
     private boolean useBreadcrumbs;
-    private boolean useBreadcrumbAuthor;
+    private boolean useCustomAuthor;
     private boolean ephemeral;
     private boolean mentionAuthor;
     private boolean isPrebuilt;
@@ -38,7 +38,7 @@ public class CorvusBuilder {
         this.attachments = new ArrayList<>();
         this.layoutComponents = new ArrayList<>();
         this.useBreadcrumbs = false;
-        this.useBreadcrumbAuthor = false;
+        this.useCustomAuthor = false;
         this.ephemeral = false;
         this.mentionAuthor = false;
         this.isPrebuilt = false;
@@ -85,9 +85,22 @@ public class CorvusBuilder {
         return this;
     }
 
-    public CorvusBuilder showAuthorInBreadcrumbs() {
-        this.useBreadcrumbAuthor = true;
-        this.useBreadcrumbs = true;
+    public CorvusBuilder setCustomAuthor(String authorName, String imageUrl, CorvusFileExtension extension) {
+        this.useCustomAuthor = true;
+
+        return setAuthor(authorName, imageUrl, extension);
+    }
+
+    CorvusBuilder setAuthor(String authorName, String imageUrl, CorvusFileExtension extension) {
+        try {
+            URL file = URI.create(imageUrl).toURL();
+            String fileName = "_CORVUS_PROFILE_IMAGE_" + extension.getExtension();
+
+            this.attachments.add(new CorvusAttachment(file, fileName));
+            this.embedBuilder.setAuthor(authorName, null, "attachment://" + fileName);
+        } catch (MalformedURLException exception) {
+            App.getLogger().LogException(exception);
+        }
 
         return this;
     }
@@ -120,6 +133,12 @@ public class CorvusBuilder {
         } catch (MalformedURLException exception) {
             App.getLogger().LogException(exception);
         }
+
+        return this;
+    }
+
+    public CorvusBuilder setImage(String url) {
+        this.embedBuilder.setImage(url);
 
         return this;
     }
@@ -164,24 +183,25 @@ public class CorvusBuilder {
 
     EmbedBuilder preBuild() {
         if(!this.isPrebuilt) {
-            if (this.useBreadcrumbs) {
-                StringBuilder breadcrumbText = new StringBuilder();
+            if (!useCustomAuthor) {
+                if (this.useBreadcrumbs) {
+                    StringBuilder breadcrumbText = new StringBuilder();
 
-                for (String crumb : this.breadcrumbs) {
-                    if (!breadcrumbText.isEmpty()) {
-                        breadcrumbText.append(NAVIGATION_INDICATOR);
-                        breadcrumbText.append(crumb);
+                    breadcrumbText.append(this.bot.getBotName());
+
+                    for (String crumb : this.breadcrumbs) {
+                        if (!breadcrumbText.isEmpty()) {
+                            breadcrumbText.append(NAVIGATION_INDICATOR);
+                            breadcrumbText.append(crumb);
+                        }
                     }
-                }
 
-                String authorText = breadcrumbText.toString();
-                authorText = authorText.substring(0, Math.min(authorText.length(), MessageEmbed.AUTHOR_MAX_LENGTH) - 1);
+                    String authorText = breadcrumbText.toString();
+                    authorText = authorText.substring(0, Math.min(authorText.length(), MessageEmbed.AUTHOR_MAX_LENGTH) - 1);
 
-                if (useBreadcrumbAuthor) {
-                    breadcrumbText.insert(0, this.bot.getBotName());
-                    this.embedBuilder.setAuthor(authorText, null, this.bot.getBotAvatarUrl());
+                    this.setAuthor(authorText, this.bot.getBotAvatarUrl(), CorvusFileExtension.PNG);
                 } else {
-                    this.embedBuilder.setAuthor(authorText);
+                    this.setAuthor(this.bot.getBotName(), this.bot.getBotAvatarUrl(), CorvusFileExtension.PNG);
                 }
             }
 
