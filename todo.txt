@@ -24,9 +24,10 @@ Dev steps:
 Corvus features:
 x- Upload images/files to a reply
 x- Thumbnails
-- Modals
+x- Modals
 - Paginated replies (use an internal response ID to perform accurate caching)
 x- Buttons & callbacks
 x- Maybe a static method to call that accepts an Execution object to process the reply?
 x- Eliminate Command base class response method
-- Ability to add a thread/task/Timer that updates the response
+*- Ability to add a thread/task/Timer that updates the response
+    > Can be implemented by the base

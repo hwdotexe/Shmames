@@ -4,6 +4,7 @@ import com.hadenwatne.corvus.Corvus;
 import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.IInteractable;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
@@ -11,9 +12,14 @@ import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectInteraction;
+import net.dv8tion.jda.api.interactions.modals.ModalInteraction;
 
-public class ExampleCommand extends Command {
+public class ExampleCommand extends Command implements IInteractable {
+	private final String[] interactionIDs = new String[]{"test"};
+
 	public ExampleCommand() {
 		super(false, false, true, false);
 	}
@@ -54,24 +60,40 @@ public class ExampleCommand extends Command {
 		String answer = execution.getLanguageProvider().getMessageFromKey("test");
 		String question = execution.getArguments().get("item").getAsString();
 
-		Button button = Button.primary(this.createButtonID("test"), "Primary");
+		Button button = Button.primary("test", "Primary");
 		CorvusBuilder builder = Corvus.info(execution.getBot());
 
 		builder.addBreadcrumbs("example")
-						.addField(question, answer, false)
-						.addLayoutComponent(ActionRow.of(button));
+				.addField(question, answer, false)
+				.addLayoutComponent(ActionRow.of(button));
 
 		Corvus.reply(execution, builder);
 	}
 
 	@Override
-	public void onInteraction(String elementID, EntitySelectInteraction interaction) {
-		switch(elementID) {
-			case "test":
-				interaction.reply("Nice").queue();
-				break;
-			default:
-				interaction.reply("Nah").queue();
+	public String[] getInteractionIDs() {
+		return interactionIDs;
+	}
+
+	@Override
+	public void onButtonClick(ButtonInteraction buttonInteraction) {
+		if (buttonInteraction.getComponentId().equalsIgnoreCase("test")) {
+			buttonInteraction.reply("Hah what a dork").queue();
 		}
+	}
+
+	@Override
+	public void onStringClick(StringSelectInteraction stringSelectInteraction) {
+
+	}
+
+	@Override
+	public void onEntityClick(EntitySelectInteraction entitySelectInteraction) {
+
+	}
+
+	@Override
+	public void onModalSubmit(ModalInteraction modalInteraction) {
+		
 	}
 }
