@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -89,6 +90,14 @@ public class Execution {
         return this._event.getUser();
     }
 
+    public InteractionHook getHook() {
+        return _hook;
+    }
+
+    public Bot getBot() {
+        return _bot;
+    }
+
     public Member getMember() {
         if (this._event.isFromGuild()) {
             return this._event.getMember();
@@ -117,8 +126,6 @@ public class Execution {
         this._hook.setEphemeral(ephemeral);
     }
 
-    // TODO: Reply with modal and callback? Call method in Command that gets overridden?
-
     public void reply(String reply) {
         ResponseService.Reply(this._hook, reply, false);
     }
@@ -130,6 +137,12 @@ public class Execution {
     public void reply(EmbedBuilder reply, boolean mentionUser, Consumer<? super Message> onSuccess) {
         ResponseService.Reply(this._hook, reply, mentionUser, onSuccess);
     }
+
+    public void reply(EmbedBuilder reply, InputStream fileStream, String fileName) {
+        ResponseService.Reply(this._hook, reply, fileStream, fileName, false);
+    }
+
+    // TODO reply modals
 
     private HashMap<String, OptionMapping> buildArgumentList(List<OptionMapping> options) {
         HashMap<String, OptionMapping> mappings = new HashMap<>();
