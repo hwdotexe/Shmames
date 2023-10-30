@@ -5,10 +5,12 @@ import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.service.types.LogType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.selections.EntitySelectInteraction;
 
 import java.util.ArrayList;
 import java.util.List;
 public abstract class Command {
+    private final String INTERACTION_PREFIX;
     private final CommandStructure commandStructure;
     private final Permission[] botPermissions;
     private final Permission[] enabledUserPermissions;
@@ -17,6 +19,7 @@ public abstract class Command {
     private final boolean availableByDefault;
     private final boolean isPro;
     private final List<MessageEmbed.Field> helpFields;
+    private final List<String> interactionButtonIDs;
 
     public Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
@@ -27,6 +30,9 @@ public abstract class Command {
         this.availableByDefault = true;
         this.isPro = false;
         this.helpFields = new ArrayList<>();
+
+        this.INTERACTION_PREFIX = this.commandStructure.getName() + "_";
+        this.interactionButtonIDs = new ArrayList<>();
 
         configureCommand();
     }
@@ -41,6 +47,9 @@ public abstract class Command {
         this.isPro = false;
         this.helpFields = new ArrayList<>();
 
+        this.INTERACTION_PREFIX = this.commandStructure.getName() + "_";
+        this.interactionButtonIDs = new ArrayList<>();
+
         configureCommand();
     }
 
@@ -53,6 +62,9 @@ public abstract class Command {
         this.availableByDefault = availableByDefault;
         this.isPro = isPro;
         this.helpFields = new ArrayList<>();
+
+        this.INTERACTION_PREFIX = this.commandStructure.getName() + "_";
+        this.interactionButtonIDs = new ArrayList<>();
 
         configureCommand();
     }
@@ -89,11 +101,28 @@ public abstract class Command {
         return isPro;
     }
 
+    public List<String> getInteractionButtonIDs() {
+        return interactionButtonIDs;
+    }
+
+    public String getInteractionPrefix() {
+        return INTERACTION_PREFIX;
+    }
+
+    protected String createButtonID(String id) {
+        String newID = this.INTERACTION_PREFIX + id;
+
+        this.interactionButtonIDs.add(newID);
+
+        return newID;
+    }
+
     protected abstract CommandStructure buildCommandStructure();
     protected abstract Permission[] configureRequiredBotPermissions();
     protected abstract Permission[] configureEnabledUserPermissions();
     public abstract void onCommandFailure(Execution execution);
     public abstract void run(Execution execution);
+    public abstract void onInteraction(String elementID, EntitySelectInteraction interaction);
 
     private void configureCommand() {
         // Build our command's Help fields.

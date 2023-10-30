@@ -2,6 +2,7 @@ package com.hadenwatne.fornax;
 
 import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.listener.CommandListener;
+import com.hadenwatne.fornax.listener.InteractionListener;
 import com.hadenwatne.fornax.service.DefaultLanguageProvider;
 import com.hadenwatne.fornax.service.ILanguageProvider;
 import com.hadenwatne.fornax.service.audio.AudioService;
@@ -45,6 +46,7 @@ public abstract class Bot {
         registerCommands();
         BotUtility.updateSlashCommands(isDebugMode(), this);
         _jda.addEventListener(new CommandListener(this));
+        _jda.addEventListener(new InteractionListener(this));
 
         // Call optional provided initialize method
         afterInit();
