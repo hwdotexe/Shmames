@@ -2,6 +2,7 @@ package com.hadenwatne.shmames;
 
 import com.hadenwatne.fornax.Bot;
 import com.hadenwatne.shmames.commands.*;
+import com.hadenwatne.shmames.language.LanguageProvider;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
@@ -16,6 +17,7 @@ public class Shmames extends Bot {
 	@Override
 	protected void afterInit() {
 		RandomService.Init();
+		this.registerLanguageProvider(new LanguageProvider(this));
 
 		settingsService = new SettingsService(this);
 		brainController = new BrainController(this);

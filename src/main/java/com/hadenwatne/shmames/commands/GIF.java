@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.HTTPService;
 import com.hadenwatne.fornax.service.LoggingService;
@@ -71,8 +71,8 @@ public class GIF extends Command {
 		} catch (IOException e) {
 			LoggingService.LogException(e);
 
-			return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())
-					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR));
+			return response(EmbedType.ERROR, ErrorKey.BOT_ERROR.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKey.BOT_ERROR));
 		}
 	}
 }

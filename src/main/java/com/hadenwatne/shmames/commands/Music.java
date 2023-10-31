@@ -5,12 +5,14 @@ import com.hadenwatne.fornax.command.builder.*;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.*;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.Playlist;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.music.GuildOcarina;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
@@ -187,15 +189,15 @@ public class Music extends Command {
 				if (canUse(server, brain, member)) {
 					return cmdPlaylist(brain, language, executingCommand);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "queue":
 				if (canUse(server, brain, member)) {
 					return cmdQueue(brain, language, ocarina, server, executingCommand);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 		}
 
@@ -204,19 +206,19 @@ public class Music extends Command {
 				if (canUse(server, brain, member)) {
 					return cmdPlay(language, brain, ocarina, executingCommand);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "pause":
 				ocarina.togglePause(true);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+						.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 			case "resume":
 				ocarina.togglePause(false);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+						.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 			case "skip":
 				if (ocarina.getNowPlaying() != null) {
 					if (canUse(server, brain, member)) {
@@ -225,14 +227,14 @@ public class Music extends Command {
 						cmdSkip(ocarina, times);
 
 						return response(EmbedType.SUCCESS)
-								.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+								.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 					} else {
-						return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-								.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+						return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+								.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 					}
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.TRACK_NOT_PLAYING.name())
-							.setDescription(language.getError(ErrorKeys.TRACK_NOT_PLAYING));
+					return response(EmbedType.ERROR, ErrorKey.TRACK_NOT_PLAYING.name())
+							.setDescription(language.getError(ErrorKey.TRACK_NOT_PLAYING));
 				}
 			case "stop":
 				if (ocarina.isInVoiceChannel()) {
@@ -240,28 +242,28 @@ public class Music extends Command {
 						ocarina.stop();
 
 						return response(EmbedType.SUCCESS)
-								.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+								.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 					} else {
-						return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-								.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+						return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+								.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 					}
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.TRACK_NOT_PLAYING.name())
-							.setDescription(language.getError(ErrorKeys.TRACK_NOT_PLAYING));
+					return response(EmbedType.ERROR, ErrorKey.TRACK_NOT_PLAYING.name())
+							.setDescription(language.getError(ErrorKey.TRACK_NOT_PLAYING));
 				}
 			case "loop":
 				if (canUse(server, brain, member)) {
 					return cmdLoop(language, ocarina);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "loopqueue":
 				if (canUse(server, brain, member)) {
 					return cmdLoopQueue(language, ocarina);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "playing":
 				AudioTrack track = ocarina.getNowPlaying();
@@ -269,15 +271,15 @@ public class Music extends Command {
 				if (track != null) {
 					return showTrackData(track, ocarina);
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.TRACK_NOT_PLAYING.name())
-							.setDescription(language.getError(ErrorKeys.TRACK_NOT_PLAYING));
+					return response(EmbedType.ERROR, ErrorKey.TRACK_NOT_PLAYING.name())
+							.setDescription(language.getError(ErrorKey.TRACK_NOT_PLAYING));
 				}
 			case "convert":
 				if (canUse(server, brain, member)) {
 					return cmdConvert(brain, language, ocarina, executingCommand.getCommandArguments());
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 		}
 
@@ -298,12 +300,12 @@ public class Music extends Command {
 					if(executingCommand.getServer().getSelfMember().hasPermission(channel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK)) {
 						ocarina.connect(channel, executingCommand.getChannel());
 					}else {
-						return response(EmbedType.ERROR, ErrorKeys.PERMISSION_MISSING.name())
-								.setDescription(language.getError(ErrorKeys.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), Permission.VOICE_SPEAK.getName() + System.lineSeparator() + Permission.VOICE_CONNECT.getName()}));
+						return response(EmbedType.ERROR, ErrorKey.PERMISSION_MISSING.name())
+								.setDescription(language.getError(ErrorKey.PERMISSION_MISSING, new String[]{App.Shmames.getBotName(), Permission.VOICE_SPEAK.getName() + System.lineSeparator() + Permission.VOICE_CONNECT.getName()}));
 					}
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.MUSIC_NOT_IN_CHANNEL.name())
-							.setDescription(language.getError(ErrorKeys.MUSIC_NOT_IN_CHANNEL));
+					return response(EmbedType.ERROR, ErrorKey.MUSIC_NOT_IN_CHANNEL.name())
+							.setDescription(language.getError(ErrorKey.MUSIC_NOT_IN_CHANNEL));
 				}
 			}
 
@@ -311,7 +313,7 @@ public class Music extends Command {
 				ocarina.loadTrack(url, false);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYING));
+						.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYING));
 			} else {
 				Playlist pl = findPlaylistFamily(playlist, brain, executingCommand.getServer());
 
@@ -319,10 +321,10 @@ public class Music extends Command {
 					ocarina.loadCustomPlaylist(pl.getTracks(), false);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYING_PLAYLIST, new String[]{pl.getName()}));
+							.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYING_PLAYLIST, new String[]{pl.getName()}));
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.ITEMS_NOT_FOUND.name())
-							.setDescription(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
+					return response(EmbedType.ERROR, ErrorKey.ITEMS_NOT_FOUND.name())
+							.setDescription(language.getError(ErrorKey.ITEMS_NOT_FOUND));
 				}
 			}
 		} else {
@@ -331,10 +333,10 @@ public class Music extends Command {
 				ocarina.togglePause(false);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+						.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.MUSIC_WRONG_INPUT.name())
-						.setDescription(language.getError(ErrorKeys.MUSIC_WRONG_INPUT));
+				return response(EmbedType.ERROR, ErrorKey.MUSIC_WRONG_INPUT.name())
+						.setDescription(language.getError(ErrorKey.MUSIC_WRONG_INPUT));
 			}
 		}
 	}
@@ -351,14 +353,14 @@ public class Music extends Command {
 		boolean isLoop = ocarina.toggleLoop();
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(language.getMsg(LanguageKeys.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"}));
+				.setDescription(language.getMsg(LanguageKey.MUSIC_LOOPING_TOGGLED, new String[]{isLoop ? "ON" : "OFF"}));
 	}
 
 	private EmbedBuilder cmdLoopQueue(Language language, GuildOcarina ocarina) {
 		boolean isLoopQueue = ocarina.toggleLoopQueue();
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(language.getMsg(LanguageKeys.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{isLoopQueue ? "ON" : "OFF"}));
+				.setDescription(language.getMsg(LanguageKey.MUSIC_LOOPING_QUEUE_TOGGLED, new String[]{isLoopQueue ? "ON" : "OFF"}));
 	}
 
 	private EmbedBuilder cmdConvert(Brain brain, Language language, GuildOcarina ocarina, ExecutingCommandArguments args) {
@@ -379,14 +381,14 @@ public class Music extends Command {
 				brain.getPlaylists().add(p);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYLIST_CONVERTED, new String[]{newPlaylistName, Integer.toString(p.getTracks().size())}));
+						.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYLIST_CONVERTED, new String[]{newPlaylistName, Integer.toString(p.getTracks().size())}));
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.MUSIC_PLAYLIST_ALREADY_EXISTS.name())
-						.setDescription(language.getError(ErrorKeys.MUSIC_PLAYLIST_ALREADY_EXISTS));
+				return response(EmbedType.ERROR, ErrorKey.MUSIC_PLAYLIST_ALREADY_EXISTS.name())
+						.setDescription(language.getError(ErrorKey.MUSIC_PLAYLIST_ALREADY_EXISTS));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.TRACK_NOT_PLAYING.name())
-					.setDescription(language.getError(ErrorKeys.TRACK_NOT_PLAYING));
+			return response(EmbedType.ERROR, ErrorKey.TRACK_NOT_PLAYING.name())
+					.setDescription(language.getError(ErrorKey.TRACK_NOT_PLAYING));
 		}
 	}
 
@@ -405,25 +407,25 @@ public class Music extends Command {
 					ocarina.reverseQueue();
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.MUSIC_QUEUE_REVERSED));
+							.setDescription(language.getMsg(LanguageKey.MUSIC_QUEUE_REVERSED));
 				case "shuffle":
 					ocarina.shuffleQueue();
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.MUSIC_QUEUE_SHUFFLED));
+							.setDescription(language.getMsg(LanguageKey.MUSIC_QUEUE_SHUFFLED));
 				case "clear":
 					ocarina.getQueue().clear();
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.MUSIC_QUEUE_CLEARED));
+							.setDescription(language.getMsg(LanguageKey.MUSIC_QUEUE_CLEARED));
 				case "view":
 					int queuePage = args.getAsInteger("page");
 
 					return showQueue(language, ocarina.getQueue(), Math.max(queuePage, 1));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.MUSIC_NOT_IN_CHANNEL.name())
-					.setDescription(language.getError(ErrorKeys.MUSIC_NOT_IN_CHANNEL));
+			return response(EmbedType.ERROR, ErrorKey.MUSIC_NOT_IN_CHANNEL.name())
+					.setDescription(language.getError(ErrorKey.MUSIC_NOT_IN_CHANNEL));
 		}
 
 		return null;
@@ -434,7 +436,7 @@ public class Music extends Command {
 			ocarina.loadTrack(appendURL, true);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.MUSIC_ADDED_TO_QUEUE));
+					.setDescription(language.getMsg(LanguageKey.MUSIC_ADDED_TO_QUEUE));
 		} else if (appendPlaylist != null) {
 			Playlist pl = findPlaylistFamily(appendPlaylist, brain, server);
 
@@ -442,14 +444,14 @@ public class Music extends Command {
 				ocarina.loadCustomPlaylist(pl.getTracks(), true);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.MUSIC_QUEUED_PLAYLIST, new String[]{pl.getName()}));
+						.setDescription(language.getMsg(LanguageKey.MUSIC_QUEUED_PLAYLIST, new String[]{pl.getName()}));
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.ITEMS_NOT_FOUND.name())
-						.setDescription(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.ITEMS_NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKey.ITEMS_NOT_FOUND));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.MUSIC_WRONG_INPUT.name())
-					.setDescription(language.getError(ErrorKeys.MUSIC_WRONG_INPUT));
+			return response(EmbedType.ERROR, ErrorKey.MUSIC_WRONG_INPUT.name())
+					.setDescription(language.getError(ErrorKey.MUSIC_WRONG_INPUT));
 		}
 	}
 
@@ -494,10 +496,10 @@ public class Music extends Command {
 			brain.getPlaylists().add(newList);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYLIST_CREATED, new String[]{listName}));
+					.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYLIST_CREATED, new String[]{listName}));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.MUSIC_PLAYLIST_ALREADY_EXISTS.name())
-					.setDescription(language.getError(ErrorKeys.MUSIC_PLAYLIST_ALREADY_EXISTS));
+			return response(EmbedType.ERROR, ErrorKey.MUSIC_PLAYLIST_ALREADY_EXISTS.name())
+					.setDescription(language.getError(ErrorKey.MUSIC_PLAYLIST_ALREADY_EXISTS));
 		}
 	}
 
@@ -509,14 +511,14 @@ public class Music extends Command {
 				p.addTrack(url, memo);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYLIST_TRACK_ADDED));
+						.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYLIST_TRACK_ADDED));
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED.name())
-						.setDescription(language.getError(ErrorKeys.MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED));
+				return response(EmbedType.ERROR, ErrorKey.MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED.name())
+						.setDescription(language.getError(ErrorKey.MUSIC_PLAYLIST_TRACK_MAXIMUM_REACHED));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -529,8 +531,8 @@ public class Music extends Command {
 
 				return showList(language, pList, viewPage);
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKey.NOT_FOUND));
 			}
 		}
 
@@ -549,14 +551,14 @@ public class Music extends Command {
 		if (pRemove != null) {
 			if (pRemove.removeTrack(position - 1)) {
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYLIST_TRACK_REMOVED));
+						.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYLIST_TRACK_REMOVED));
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKey.NOT_FOUND));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.MUSIC_PLAYLIST_DOESNT_EXIST.name())
-					.setDescription(language.getError(ErrorKeys.MUSIC_PLAYLIST_DOESNT_EXIST));
+			return response(EmbedType.ERROR, ErrorKey.MUSIC_PLAYLIST_DOESNT_EXIST.name())
+					.setDescription(language.getError(ErrorKey.MUSIC_PLAYLIST_DOESNT_EXIST));
 		}
 	}
 
@@ -567,10 +569,10 @@ public class Music extends Command {
 			brain.getPlaylists().remove(pDelete);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.MUSIC_PLAYLIST_DELETED));
+					.setDescription(language.getMsg(LanguageKey.MUSIC_PLAYLIST_DELETED));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.MUSIC_PLAYLIST_DOESNT_EXIST.name())
-					.setDescription(language.getError(ErrorKeys.MUSIC_PLAYLIST_DOESNT_EXIST));
+			return response(EmbedType.ERROR, ErrorKey.MUSIC_PLAYLIST_DOESNT_EXIST.name())
+					.setDescription(language.getError(ErrorKey.MUSIC_PLAYLIST_DOESNT_EXIST));
 		}
 	}
 
@@ -702,7 +704,7 @@ public class Music extends Command {
 		}
 
 		if (sb.length() == 0) {
-			sb.append(language.getError(ErrorKeys.MUSIC_PLAYLIST_LIST_EMPTY));
+			sb.append(language.getError(ErrorKey.MUSIC_PLAYLIST_LIST_EMPTY));
 		}
 
 		return sb.toString();

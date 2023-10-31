@@ -4,7 +4,7 @@ import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -28,8 +28,8 @@ public class WhatShouldIDo extends Command {
 
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String randomIntro = executingCommand.getLanguage().getMsg(LanguageKeys.WHATSHOULDIDO);
-		String randomAnswer = executingCommand.getLanguage().getMsg(LanguageKeys.WHATSHOULDIDO_OPTIONS);
+		String randomIntro = executingCommand.getLanguage().getMsg(LanguageKey.WHATSHOULDIDO);
+		String randomAnswer = executingCommand.getLanguage().getMsg(LanguageKey.WHATSHOULDIDO_OPTIONS);
 
 		return response(EmbedType.INFO)
 				.setDescription(randomIntro + " " + randomAnswer + "!");

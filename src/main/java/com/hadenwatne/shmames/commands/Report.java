@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.tasks.ReportCooldownTask;
@@ -51,10 +51,10 @@ public class Report extends Command {
 			new ReportCooldownTask(brain);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.FEEDBACK_SENT));
+					.setDescription(executingCommand.getLanguage().getMsg(LanguageKey.FEEDBACK_SENT));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.FEEDBACK_COOLDOWN));
+					.setDescription(executingCommand.getLanguage().getMsg(LanguageKey.FEEDBACK_COOLDOWN));
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
@@ -77,7 +77,7 @@ public class PaginationService {
         eBuilder.setFooter(paginatedList.getItemCount() + " items");
 
         if(pageToDisplay > listData.size() || pageToDisplay == 0) {
-            eBuilder.addField("Error", language.getError(ErrorKeys.PAGE_NOT_FOUND), false);
+            eBuilder.addField("Error", language.getError(ErrorKey.PAGE_NOT_FOUND), false);
         } else {
             eBuilder.addField(prefix + " (Page " + pageToDisplay + " of " + listData.size() + ")", listData.get(pageIndex), false);
         }

@@ -7,8 +7,8 @@ import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.services.MessageService;
@@ -85,30 +85,30 @@ public class Pin extends Command {
 					MessageService.SendMessage(channelToSendPin, file, "profile.png", response);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.GENERIC_SUCCESS));
+							.setDescription(executingCommand.getLanguage().getMsg(LanguageKey.GENERIC_SUCCESS));
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.CHANNEL_NOT_FOUND.name())
-							.setDescription(executingCommand.getLanguage().getError(ErrorKeys.CHANNEL_NOT_FOUND));
+					return response(EmbedType.ERROR, ErrorKey.CHANNEL_NOT_FOUND.name())
+							.setDescription(executingCommand.getLanguage().getError(ErrorKey.CHANNEL_NOT_FOUND));
 				}
 			} catch (NumberFormatException e) {
 				LoggingService.LogException(e);
 
-				return response(EmbedType.ERROR, ErrorKeys.CHANNEL_NOT_FOUND.name())
-						.setDescription(executingCommand.getLanguage().getError(ErrorKeys.CHANNEL_NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.CHANNEL_NOT_FOUND.name())
+						.setDescription(executingCommand.getLanguage().getError(ErrorKey.CHANNEL_NOT_FOUND));
 			} catch (InsufficientPermissionException e) {
 				LoggingService.LogException(e);
 
-				return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_BOT.name())
-						.setDescription(executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_BOT));
+				return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_BOT.name())
+						.setDescription(executingCommand.getLanguage().getError(ErrorKey.NO_PERMISSION_BOT));
 			} catch (Exception e) {
 				LoggingService.LogException(e);
 
-				return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())
-						.setDescription(executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR));
+				return response(EmbedType.ERROR, ErrorKey.BOT_ERROR.name())
+						.setDescription(executingCommand.getLanguage().getError(ErrorKey.BOT_ERROR));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 }

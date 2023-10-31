@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -39,6 +39,6 @@ public class WhatAreTheOdds extends Command {
 		int result = RandomService.GetRandom(100) + 1;
 
 		return response(EmbedType.INFO)
-				.addField(query, executingCommand.getLanguage().getMsg(LanguageKeys.WHAT_ARE_THE_ODDS, new String[]{Integer.toString(result)+"%"}), false);
+				.addField(query, executingCommand.getLanguage().getMsg(LanguageKey.WHAT_ARE_THE_ODDS, new String[]{Integer.toString(result)+"%"}), false);
 	}
 }

@@ -2,7 +2,7 @@ package com.hadenwatne.shmames.services.settings;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.services.LanguageService;
+import com.hadenwatne.shmames.language.LanguageService;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.services.settings.types.BotSettingType;
 import net.dv8tion.jda.api.entities.Role;

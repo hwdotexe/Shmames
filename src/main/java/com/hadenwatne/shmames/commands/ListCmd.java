@@ -6,8 +6,8 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.enums.UserListType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.PaginatedList;
@@ -15,7 +15,7 @@ import com.hadenwatne.shmames.models.UserCustomList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.fornax.service.caching.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
@@ -145,10 +145,10 @@ public class ListCmd extends Command {
 			brain.getUserLists().add((newList));
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.LIST_CREATED));
+					.setDescription(language.getMsg(LanguageKey.LIST_CREATED));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.ALREADY_EXISTS));
+					.setDescription(language.getError(ErrorKey.ALREADY_EXISTS));
 		}
 	}
 
@@ -164,10 +164,10 @@ public class ListCmd extends Command {
 			CacheService.RemoveItem(cacheKey);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+					.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -185,14 +185,14 @@ public class ListCmd extends Command {
 				CacheService.RemoveItem(cacheKey);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{removed}));
+						.setDescription(language.getMsg(LanguageKey.ITEM_REMOVED, new String[]{removed}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+						.setDescription(language.getError(ErrorKey.NOT_FOUND));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -205,14 +205,14 @@ public class ListCmd extends Command {
 				brain.getUserLists().remove((existingList));
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.LIST_DELETED, new String[]{existingList.getName()}));
+						.setDescription(language.getMsg(LanguageKey.LIST_DELETED, new String[]{existingList.getName()}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+						.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -229,14 +229,14 @@ public class ListCmd extends Command {
 				}
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.LIST_PRIVACY_TOGGLED, new String[]{existingList.getName(), existingList.getType().toString()}));
+						.setDescription(language.getMsg(LanguageKey.LIST_PRIVACY_TOGGLED, new String[]{existingList.getName(), existingList.getType().toString()}));
 			} else {
 				return response(EmbedType.ERROR)
-						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+						.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 			}
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -260,7 +260,7 @@ public class ListCmd extends Command {
 			return response;
 		} else {
 			return response(EmbedType.ERROR)
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -312,14 +312,14 @@ public class ListCmd extends Command {
 				List<String> listItems = list.getValues();
 
 				if (listItems.size() == 0) {
-					return response(EmbedType.ERROR, ErrorKeys.ITEMS_NOT_FOUND.name())
-							.setDescription(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
+					return response(EmbedType.ERROR, ErrorKey.ITEMS_NOT_FOUND.name())
+							.setDescription(language.getError(ErrorKey.ITEMS_NOT_FOUND));
 				}
 
 				paginatedList = PaginationService.GetPaginatedList(listItems, 10, -1, true);
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKey.NOT_FOUND));
 			}
 
 			// Cache the list in case the user continues to call this command for other pages

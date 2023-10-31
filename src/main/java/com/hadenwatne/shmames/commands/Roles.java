@@ -8,10 +8,12 @@ import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
@@ -107,15 +109,15 @@ public class Roles extends Command {
 
 			return null;
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 
 	public EmbedBuilder cmdNew(Brain brain, Language language, ExecutingCommand executingCommand) {
 		String message = executingCommand.getCommandArguments().getAsString("message");
 		EmbedBuilder response = response(EmbedType.SUCCESS)
-				.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+				.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 
 		executingCommand.reply(response, false, onSuccess -> {
 			String roleMessageID = RandomService.CreateID();
@@ -151,10 +153,10 @@ public class Roles extends Command {
 			});
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+					.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 
@@ -210,12 +212,12 @@ public class Roles extends Command {
 				updateEmbed(roleMessage, executingCommand);
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+						.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 			}
 		}
 
-		return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-				.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+		return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+				.setDescription(language.getError(ErrorKey.NOT_FOUND));
 	}
 
 	public EmbedBuilder cmdRemove(Brain brain, Language language, ExecutingCommand executingCommand) {
@@ -248,12 +250,12 @@ public class Roles extends Command {
 				});
 
 				return response(EmbedType.SUCCESS)
-						.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{roleToRemove.getAsMention()}));
+						.setDescription(language.getMsg(LanguageKey.ITEM_REMOVED, new String[]{roleToRemove.getAsMention()}));
 			}
 		}
 
-		return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-				.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+		return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+				.setDescription(language.getError(ErrorKey.NOT_FOUND));
 	}
 
 	public EmbedBuilder cmdDelete(Brain brain, Language language, ExecutingCommand executingCommand) {
@@ -268,10 +270,10 @@ public class Roles extends Command {
 			brain.getRoleMessages().remove(roleMessage);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED));
+					.setDescription(language.getMsg(LanguageKey.ITEM_REMOVED));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		}
 	}
 

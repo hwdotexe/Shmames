@@ -4,7 +4,7 @@ import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PaginationService;
@@ -39,7 +39,7 @@ public class ListEmoteStats extends Command {
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		Guild server = executingCommand.getServer();
-		final String headerMessage = executingCommand.getLanguage().getMsg(LanguageKeys.EMOTE_STATS_TITLE);
+		final String headerMessage = executingCommand.getLanguage().getMsg(LanguageKey.EMOTE_STATS_TITLE);
 		StringBuilder statMsg = new StringBuilder();
 		HashMap<String, Integer> emStats = new HashMap<String, Integer>(executingCommand.getBrain().getEmoteStats());
 

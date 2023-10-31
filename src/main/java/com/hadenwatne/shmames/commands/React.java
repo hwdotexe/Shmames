@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.TextFormatService;
@@ -52,7 +52,7 @@ public class React extends Command {
 		reactToMessageWithEmoji(toReact, word.toLowerCase());
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.GENERIC_SUCCESS));
+				.setDescription(executingCommand.getLanguage().getMsg(LanguageKey.GENERIC_SUCCESS));
 	}
 
 	private void reactToMessageWithEmoji(Message toReact, String word) {

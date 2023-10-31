@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -38,6 +38,6 @@ public class Thoughts extends Command {
 		String item = executingCommand.getCommandArguments().getAsString("item");
 
 		return response(EmbedType.INFO)
-				.addField(item, executingCommand.getLanguage().getMsg(LanguageKeys.THOUGHTS_OPTIONS), false);
+				.addField(item, executingCommand.getLanguage().getMsg(LanguageKey.THOUGHTS_OPTIONS), false);
 	}
 }

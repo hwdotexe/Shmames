@@ -7,7 +7,7 @@ import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.models.RoleMessage;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;

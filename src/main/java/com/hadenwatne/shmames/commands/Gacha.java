@@ -6,12 +6,14 @@ import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.*;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.GachaCharacter;
 import com.hadenwatne.shmames.models.data.GachaUser;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.*;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -228,8 +230,8 @@ public class Gacha extends Command {
 
 			return response;
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.GACHA_NO_COINS.name())
-					.setDescription(language.getError(ErrorKeys.GACHA_NO_COINS));
+			return response(EmbedType.ERROR, ErrorKey.GACHA_NO_COINS.name())
+					.setDescription(language.getError(ErrorKey.GACHA_NO_COINS));
 		}
 	}
 
@@ -256,7 +258,7 @@ public class Gacha extends Command {
 		}
 
 		if (sb.length() == 0) {
-			sb.append(language.getError(ErrorKeys.ITEMS_NOT_FOUND));
+			sb.append(language.getError(ErrorKey.ITEMS_NOT_FOUND));
 		}
 
 		try {
@@ -282,8 +284,8 @@ public class Gacha extends Command {
 		} catch (IOException e) {
 			LoggingService.LogException(e);
 
-			return response(EmbedType.ERROR, ErrorKeys.BOT_ERROR.name())
-					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.BOT_ERROR));
+			return response(EmbedType.ERROR, ErrorKey.BOT_ERROR.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKey.BOT_ERROR));
 		}
 	}
 
@@ -344,10 +346,10 @@ public class Gacha extends Command {
 			Collections.reverse(brain.getGachaCharacters());
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+					.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 
@@ -369,15 +371,15 @@ public class Gacha extends Command {
 					brain.getGachaCharacters().remove(gc);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.ITEM_REMOVED, new String[]{gc.getGachaCharacterName()}));
+							.setDescription(language.getMsg(LanguageKey.ITEM_REMOVED, new String[]{gc.getGachaCharacterName()}));
 				}
 			}
 
-			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 
@@ -418,8 +420,8 @@ public class Gacha extends Command {
 
 					return response;
 				} else {
-					return response(EmbedType.INFO, ErrorKeys.GACHA_NO_BANNER.name())
-							.setDescription(language.getError(ErrorKeys.GACHA_NO_BANNER));
+					return response(EmbedType.INFO, ErrorKey.GACHA_NO_BANNER.name())
+							.setDescription(language.getError(ErrorKey.GACHA_NO_BANNER));
 				}
 			case "add":
 				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
@@ -430,15 +432,15 @@ public class Gacha extends Command {
 							brain.getGachaBanner().addCharacter(id);
 
 							return response(EmbedType.SUCCESS)
-									.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+									.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 						}
 					}
 
-					return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-							.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+					return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+							.setDescription(language.getError(ErrorKey.NOT_FOUND));
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "image":
 				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
@@ -447,20 +449,20 @@ public class Gacha extends Command {
 					brain.getGachaBanner().setURL(url);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.ITEM_ADDED));
+							.setDescription(language.getMsg(LanguageKey.ITEM_ADDED));
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 			case "clear":
 				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
 					brain.setGachaBanner(null);
 
 					return response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+							.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+					return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 				}
 		}
 

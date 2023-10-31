@@ -7,12 +7,12 @@ import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -69,7 +69,7 @@ public class Poll extends Command {
 
 				if (optionsList.size() > 1 && optionsList.size() <= 26) {
 					EmbedBuilder embedBuilder = response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+							.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 
 					executingCommand.reply(embedBuilder, false, onSuccess -> {
 						PollModel poll = new PollModel(executingCommand.getChannel().getId(), executingCommand.getAuthorUser().getId(), onSuccess.getId(), question, optionsList, seconds);
@@ -80,16 +80,16 @@ public class Poll extends Command {
 
 					return null;
 				} else {
-					return response(EmbedType.ERROR, ErrorKeys.INCORRECT_ITEM_COUNT.name())
-							.setDescription(language.getError(ErrorKeys.INCORRECT_ITEM_COUNT));
+					return response(EmbedType.ERROR, ErrorKey.INCORRECT_ITEM_COUNT.name())
+							.setDescription(language.getError(ErrorKey.INCORRECT_ITEM_COUNT));
 				}
 			} else {
-				return response(EmbedType.ERROR, ErrorKeys.TIME_VALUE_INCORRECT.name())
-						.setDescription(language.getError(ErrorKeys.TIME_VALUE_INCORRECT));
+				return response(EmbedType.ERROR, ErrorKey.TIME_VALUE_INCORRECT.name())
+						.setDescription(language.getError(ErrorKey.TIME_VALUE_INCORRECT));
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 }

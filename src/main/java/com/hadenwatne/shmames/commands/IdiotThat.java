@@ -11,7 +11,7 @@ import com.hadenwatne.shmames.services.MessageService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
-import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 public class IdiotThat extends Command {
@@ -48,7 +48,7 @@ public class IdiotThat extends Command {
 			ex.printStackTrace();
 
 			return response(EmbedType.ERROR)
-					.addField(ErrorKeys.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_BOT), false);
+					.addField(ErrorKey.NO_PERMISSION_BOT.name(), executingCommand.getLanguage().getError(ErrorKey.NO_PERMISSION_BOT), false);
 		}
 	}
 

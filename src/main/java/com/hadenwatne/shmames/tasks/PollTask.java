@@ -3,11 +3,11 @@ package com.hadenwatne.shmames.tasks;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.MessageService;
 import com.hadenwatne.shmames.services.TextFormatService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,8 +46,8 @@ public class PollTask extends TimerTask {
 						}
 					});
 				} catch (InsufficientPermissionException exception) {
-					EmbedBuilder response = EmbedFactory.GetEmbed(EmbedType.ERROR, "Startup", ErrorKeys.NO_PERMISSION_BOT.name())
-							.setDescription(language.getError(ErrorKeys.NO_PERMISSION_BOT))
+					EmbedBuilder response = EmbedFactory.GetEmbed(EmbedType.ERROR, "Startup", ErrorKey.NO_PERMISSION_BOT.name())
+							.setDescription(language.getError(ErrorKey.NO_PERMISSION_BOT))
 							.addField("Permissions Review Required", App.Shmames.getBotName() + " requires the permission " + exception.getPermission().getName() + ". Please enable this permission in Discord role settings.", false);
 
 					try {

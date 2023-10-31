@@ -8,13 +8,13 @@ import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.settings.BotSetting;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.ShmamesService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -82,8 +82,8 @@ public class Modify extends Command {
 
 		// Disallow users if they don't have permission.
 		if(!ShmamesService.CheckUserPermission(server, canModify, member)) {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(executingCommand.getLanguage().getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(executingCommand.getLanguage().getError(ErrorKey.NO_PERMISSION_USER));
 		}
 
 		switch (subCommand) {
@@ -99,7 +99,7 @@ public class Modify extends Command {
 	}
 
 	private EmbedBuilder cmdView(Language language, Brain brain, Guild server) {
-		EmbedBuilder embedBuilder = response(EmbedType.INFO, language.getMsg(LanguageKeys.SETTING_LIST_TITLE));
+		EmbedBuilder embedBuilder = response(EmbedType.INFO, language.getMsg(LanguageKey.SETTING_LIST_TITLE));
 
 		for(BotSetting botSetting : brain.getSettings()) {
 			embedBuilder.addField(getFormattedSettingField(botSetting, server));
@@ -133,8 +133,8 @@ public class Modify extends Command {
 			Member member = executingCommand.getAuthorMember();
 
 			if (!member.hasPermission(Permission.ADMINISTRATOR) && !App.IsDebug) {
-				return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-						.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+				return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+						.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 			}
 		}
 
@@ -143,15 +143,15 @@ public class Modify extends Command {
 			boolean found = false;
 
 			for(Language l : App.Shmames.getLanguageService().getAllLangs()) {
-				if (l.getLangName().equalsIgnoreCase(settingValue)) {
+				if (l.getLanguageName().equalsIgnoreCase(settingValue)) {
 					found = true;
 					break;
 				}
 			}
 
 			if(!found) {
-				return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-						.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+				return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+						.setDescription(language.getError(ErrorKey.NOT_FOUND));
 			}
 		}
 
@@ -192,12 +192,12 @@ public class Modify extends Command {
 		// Set the value and return a success message if complete.
 		if (botSetting.setValue(settingValue, brain)) {
 			return response(EmbedType.SUCCESS, botSettingName.name())
-					.setDescription(language.getMsg(LanguageKeys.SETTING_UPDATED_SUCCESS))
+					.setDescription(language.getMsg(LanguageKey.SETTING_UPDATED_SUCCESS))
 					.addField(getFormattedSettingField(botSetting, server));
 		} else {
 			// Not successful
-			return response(EmbedType.ERROR, ErrorKeys.SETTING_VALUE_INVALID.name())
-					.setDescription(language.getError(ErrorKeys.SETTING_VALUE_INVALID));
+			return response(EmbedType.ERROR, ErrorKey.SETTING_VALUE_INVALID.name())
+					.setDescription(language.getError(ErrorKey.SETTING_VALUE_INVALID));
 		}
 	}
 
@@ -207,7 +207,7 @@ public class Modify extends Command {
 			List<String> langs = new ArrayList<>();
 
 			for(Language l : App.Shmames.getLanguageService().getAllLangs()) {
-				langs.add(l.getLangName());
+				langs.add(l.getLanguageName());
 			}
 
 			sb.append(PaginationService.GenerateList(langs, -1, false, false));

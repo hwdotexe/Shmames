@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -35,7 +35,7 @@ public class Enhance extends Command {
 	@Override
 	public EmbedBuilder run (ExecutingCommand executingCommand) {
 		String item = executingCommand.getCommandArguments().getAsString("thing");
-		String answer = executingCommand.getLanguage().getMsg(LanguageKeys.ENHANCE_OPTIONS, new String[]{item});
+		String answer = executingCommand.getLanguage().getMsg(LanguageKey.ENHANCE_OPTIONS, new String[]{item});
 
 		return response(EmbedType.SUCCESS)
 				.addField(item, answer, false);

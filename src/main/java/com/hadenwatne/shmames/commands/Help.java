@@ -7,7 +7,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
@@ -52,7 +52,7 @@ public class Help extends Command {
 
 			if(embedBuilder == null) {
 				return response(EmbedType.ERROR)
-						.addField(ErrorKeys.COMMAND_NOT_FOUND.name(), executingCommand.getLanguage().getError(ErrorKeys.COMMAND_NOT_FOUND), false);
+						.addField(ErrorKey.COMMAND_NOT_FOUND.name(), executingCommand.getLanguage().getError(ErrorKey.COMMAND_NOT_FOUND), false);
 			}
 		} else {
 			List<String> cmds = new ArrayList<>();

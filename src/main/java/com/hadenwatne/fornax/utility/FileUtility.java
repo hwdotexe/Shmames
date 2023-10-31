@@ -3,10 +3,21 @@ package com.hadenwatne.fornax.utility;
 import com.hadenwatne.fornax.App;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class FileUtility {
+    public static File[] ListFilesInDirectory(String directoryPath, FileFilter filter) {
+        File directory = new File(directoryPath);
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        return directory.listFiles(filter);
+    }
+
     public static String LoadFileAsString(File f) {
         try {
             int data;

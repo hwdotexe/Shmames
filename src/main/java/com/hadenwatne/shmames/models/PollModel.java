@@ -2,10 +2,10 @@ package com.hadenwatne.shmames.models;
 
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.factories.EmbedFactory;
 import com.hadenwatne.shmames.listeners.PollListener;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.TextFormatService;
 import com.hadenwatne.shmames.tasks.PollTask;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -94,7 +94,7 @@ public class PollModel {
 		if(!this.isActive || this.cachedEmbedBuilder == null) {
 			EmbedBuilder eBuilder = EmbedFactory.GetEmbed(this.isActive ? EmbedType.INFO : EmbedType.EXPIRED, "Poll");
 
-			eBuilder.setTitle(this.isActive ? language.getMsg(LanguageKeys.POLL_TITLE) : language.getMsg(LanguageKeys.POLL_TITLE_RESULTS));
+			eBuilder.setTitle(this.isActive ? language.getMsg(LanguageKey.POLL_TITLE) : language.getMsg(LanguageKey.POLL_TITLE_RESULTS));
 			eBuilder.addField("Topic", this.question, false);
 			eBuilder.setFooter("#" + channelName + " - Expire" + (this.isActive ? "s on " + TextFormatService.GetFriendlyDateTime(this.expires) : "d"), null);
 

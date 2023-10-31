@@ -8,13 +8,13 @@ import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.fornax.service.caching.CacheService;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -119,7 +119,7 @@ public class Tally extends Command {
 		brain.getTallies().put(tally, newTally);
 
 		return response(EmbedType.SUCCESS)
-				.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+				.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
 	}
 
 	private EmbedBuilder cmdDrop(Language language, Brain brain, ExecutingCommandArguments args) {
@@ -130,20 +130,20 @@ public class Tally extends Command {
 		if (newTally == -1) {
 			// Never existed
 
-			return response(EmbedType.ERROR, ErrorKeys.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKeys.NOT_FOUND));
+			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
+					.setDescription(language.getError(ErrorKey.NOT_FOUND));
 		} else if (newTally == 0) {
 			// Existed and removed
 			brain.getTallies().remove(tally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.TALLY_REMOVED, new String[]{tally}));
+					.setDescription(language.getMsg(LanguageKey.TALLY_REMOVED, new String[]{tally}));
 		} else {
 			// Exists and lowers by 1
 			brain.getTallies().put(tally, newTally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+					.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
 		}
 	}
 
@@ -156,12 +156,12 @@ public class Tally extends Command {
 			brain.getTallies().put(tally, count);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(count)}));
+					.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(count)}));
 		} else {
 			brain.getTallies().remove(tally);
 
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.TALLY_REMOVED, new String[]{tally}));
+					.setDescription(language.getMsg(LanguageKey.TALLY_REMOVED, new String[]{tally}));
 		}
 	}
 
@@ -185,7 +185,7 @@ public class Tally extends Command {
 			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKeys.TALLY_LIST), Color.ORANGE, language);
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKey.TALLY_LIST), Color.ORANGE, language);
 	}
 
 	private EmbedBuilder cmdSearch(Language language, Brain brain, ExecutingCommandArguments args) {
@@ -202,7 +202,7 @@ public class Tally extends Command {
 
 		EmbedBuilder eBuilder = response(EmbedType.INFO, "Search");
 
-		eBuilder.addField(language.getMsg(LanguageKeys.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
+		eBuilder.addField(language.getMsg(LanguageKey.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
 
 		return eBuilder;
 	}
@@ -215,15 +215,15 @@ public class Tally extends Command {
 			File file = buildTalliesList(server.getName(), tallies);
 
 			EmbedBuilder response = response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.TALLIES_CLEARED, new String[]{Integer.toString(tallies.size())}));
+					.setDescription(language.getMsg(LanguageKey.TALLIES_CLEARED, new String[]{Integer.toString(tallies.size())}));
 			executingCommand.replyFile(file, response);
 
 			tallies.clear();
 
 			return null;
 		} else {
-			return response(EmbedType.ERROR, ErrorKeys.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKeys.NO_PERMISSION_USER));
+			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
+					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
 		}
 	}
 

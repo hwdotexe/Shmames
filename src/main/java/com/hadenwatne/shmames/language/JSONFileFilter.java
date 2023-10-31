@@ -1,4 +1,4 @@
-package com.hadenwatne.shmames;
+package com.hadenwatne.shmames.language;
 
 import java.io.File;
 import java.io.FileFilter;

@@ -5,7 +5,7 @@ import com.hadenwatne.shmames.App;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.Story;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.PaginationService;
@@ -38,7 +38,7 @@ public class Storytime extends Command {
 		Story randomStory = stories.get(RandomService.GetRandom(stories.size()));
 		List<String> storyText = PaginationService.SplitString(randomStory.getText(), MessageEmbed.VALUE_MAX_LENGTH);
 		EmbedBuilder embed = response(EmbedType.INFO)
-				.setDescription(executingCommand.getLanguage().getMsg(LanguageKeys.STORY_INTRO));
+				.setDescription(executingCommand.getLanguage().getMsg(LanguageKey.STORY_INTRO));
 
 		embed.addField(randomStory.getTitle(), "_by "+randomStory.getAuthor()+"_", false);
 

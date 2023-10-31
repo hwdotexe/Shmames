@@ -7,11 +7,11 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.ErrorKeys;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.models.game.HangmanDictionary;
 import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.services.RandomService;
@@ -92,7 +92,7 @@ public class Hangman extends Command {
 		}
 
 		return response(EmbedType.INFO)
-				.setDescription(language.getMsg(LanguageKeys.HANGMAN_DICTIONARIES, new String[] {sb.toString()}));
+				.setDescription(language.getMsg(LanguageKey.HANGMAN_DICTIONARIES, new String[] {sb.toString()}));
 	}
 
 	private EmbedBuilder cmdStart(Brain brain, Language language, Guild server, ExecutingCommand executingCommand) {
@@ -100,8 +100,8 @@ public class Hangman extends Command {
 			TextChannel tc = server.getTextChannelById(brain.getHangmanGame().getChannelID());
 
 			if(tc != null) {
-				return response(EmbedType.ERROR, ErrorKeys.HANGMAN_ALREADY_STARTED.name())
-						.setDescription(language.getError(ErrorKeys.HANGMAN_ALREADY_STARTED, new String[]{tc.getAsMention()}));
+				return response(EmbedType.ERROR, ErrorKey.HANGMAN_ALREADY_STARTED.name())
+						.setDescription(language.getError(ErrorKey.HANGMAN_ALREADY_STARTED, new String[]{tc.getAsMention()}));
 			} else {
 				brain.setHangmanGame(null);
 			}
@@ -136,16 +136,16 @@ public class Hangman extends Command {
 		HangmanGame game = brain.getHangmanGame();
 
 		if (game == null) {
-			return response(EmbedType.ERROR, ErrorKeys.HANGMAN_NOT_STARTED.name())
-					.setDescription(language.getError(ErrorKeys.HANGMAN_NOT_STARTED));
+			return response(EmbedType.ERROR, ErrorKey.HANGMAN_NOT_STARTED.name())
+					.setDescription(language.getError(ErrorKey.HANGMAN_NOT_STARTED));
 		}
 
 		// Process the guess.
 		if(guess.length() == 1){
 			// Avoid re-guesses.
 			if(game.getCorrectGuesses().contains(guess.charAt(0)) || game.getIncorrectGuesses().contains(guess.charAt(0))){
-				return response(EmbedType.ERROR, ErrorKeys.HANGMAN_ALREADY_GUESSED.name())
-						.setDescription(language.getError(ErrorKeys.HANGMAN_ALREADY_GUESSED));
+				return response(EmbedType.ERROR, ErrorKey.HANGMAN_ALREADY_GUESSED.name())
+						.setDescription(language.getError(ErrorKey.HANGMAN_ALREADY_GUESSED));
 			}
 
 			// Process their letter guess.
@@ -185,7 +185,7 @@ public class Hangman extends Command {
 
 		if(executingCommand.hasInteractionHook()) {
 			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
+					.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
 		}
 
 		return null;
@@ -220,17 +220,17 @@ public class Hangman extends Command {
 	}
 
 	private EmbedBuilder buildHangmanEmbed(Language language, HangmanGame g){
-		EmbedBuilder eBuilder = response(EmbedType.INFO, language.getMsg(LanguageKeys.HANGMAN_TITLE));
+		EmbedBuilder eBuilder = response(EmbedType.INFO, language.getMsg(LanguageKey.HANGMAN_TITLE));
 
 		if(g.isFinished()) {
 			if (g.didWin()) {
-				eBuilder.setDescription(language.getMsg(LanguageKeys.HANGMAN_WIN));
+				eBuilder.setDescription(language.getMsg(LanguageKey.HANGMAN_WIN));
 			} else {
-				eBuilder.setDescription(language.getMsg(LanguageKeys.HANGMAN_LOSE, new String[]{g.getWord()}));
+				eBuilder.setDescription(language.getMsg(LanguageKey.HANGMAN_LOSE, new String[]{g.getWord()}));
 			}
 		}
 
-		eBuilder.setFooter(language.getMsg(LanguageKeys.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
+		eBuilder.setFooter(language.getMsg(LanguageKey.HANGMAN_FOOTER_GUESSED)+" "+g.getIncorrectGuesses());
 
 		eBuilder.addField(g.getDictionary()+" » "+g.getHint(), getHangmanASCII(g.getLivesRemaining())+"\n"+getWordProgressEmotes(g), false);
 

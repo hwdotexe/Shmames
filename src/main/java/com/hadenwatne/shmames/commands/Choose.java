@@ -6,7 +6,7 @@ import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
 import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.enums.LanguageKeys;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.services.RandomService;
@@ -59,7 +59,7 @@ public class Choose extends Command {
 			response = m.group(2 + RandomService.GetRandom(2));
 		}
 
-		String choice = executingCommand.getLanguage().getMsg(LanguageKeys.CHOOSE, new String[]{response});
+		String choice = executingCommand.getLanguage().getMsg(LanguageKey.CHOOSE, new String[]{response});
 
 		return response(EmbedType.INFO)
 				.addField(thisOrThat, choice, false);
