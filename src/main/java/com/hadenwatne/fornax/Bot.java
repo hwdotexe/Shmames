@@ -8,8 +8,8 @@ import com.hadenwatne.fornax.service.ILanguageProvider;
 import com.hadenwatne.fornax.service.audio.AudioService;
 import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.fornax.storage.BotDataStorageService;
-import com.hadenwatne.fornax.utility.BotUtility;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.hooks.EventListener;
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public abstract class Bot {
     private final JDA _jda;
     private final BotDataStorageService _botDataStorageService;
     private final AudioService _audioService;
+    private final BotInternalService _botInternalService;
     private ILanguageProvider _languageProvider;
     private final List<Command> _commands;
     private String _botName;
@@ -32,10 +33,11 @@ public abstract class Bot {
 
         // Services
         _botDataStorageService = new BotDataStorageService();
+        _botInternalService = new BotInternalService(this);
         _languageProvider = new DefaultLanguageProvider();
 
         // Start JDA
-        _jda = BotUtility.authenticate(_botDataStorageService.getBotConfiguration().botApiToken);
+        _jda = _botInternalService.authenticate(_botDataStorageService.getBotConfiguration().botApiToken);
         startJDA();
         populateBotInfo();
 
@@ -44,7 +46,7 @@ public abstract class Bot {
 
         // Commands
         registerCommands();
-        BotUtility.updateSlashCommands(isDebugMode(), this);
+        _botInternalService.checkRefreshGlobalCommands(isDebugMode());
         _jda.addEventListener(new CommandListener(this));
         _jda.addEventListener(new InteractionListener(this));
 
@@ -76,6 +78,10 @@ public abstract class Bot {
 
     public final BotDataStorageService getBotDataStorageService() {
         return _botDataStorageService;
+    }
+
+    public void activateCommandOnGuild(Guild guild, Command command) {
+        this._botInternalService.activateCommandOnGuild(guild, command);
     }
 
     public AudioService getAudioService() {
