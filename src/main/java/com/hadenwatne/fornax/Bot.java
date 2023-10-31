@@ -6,6 +6,7 @@ import com.hadenwatne.fornax.listener.InteractionListener;
 import com.hadenwatne.fornax.service.DefaultLanguageProvider;
 import com.hadenwatne.fornax.service.ILanguageProvider;
 import com.hadenwatne.fornax.service.audio.AudioService;
+import com.hadenwatne.fornax.service.caching.CacheService;
 import com.hadenwatne.fornax.service.types.LogType;
 import com.hadenwatne.fornax.storage.BotDataStorageService;
 import net.dv8tion.jda.api.JDA;
@@ -20,6 +21,7 @@ public abstract class Bot {
     private final BotDataStorageService _botDataStorageService;
     private final AudioService _audioService;
     private final BotInternalService _botInternalService;
+    private final CacheService _cacheService;
     private ILanguageProvider _languageProvider;
     private final List<Command> _commands;
     private String _botName;
@@ -34,6 +36,7 @@ public abstract class Bot {
         // Services
         _botDataStorageService = new BotDataStorageService();
         _botInternalService = new BotInternalService(this);
+        _cacheService = new CacheService();
         _languageProvider = new DefaultLanguageProvider();
 
         // Start JDA
@@ -86,6 +89,10 @@ public abstract class Bot {
 
     public AudioService getAudioService() {
         return _audioService;
+    }
+
+    public CacheService getCacheService() {
+        return _cacheService;
     }
 
     public ILanguageProvider getLanguageProvider() {

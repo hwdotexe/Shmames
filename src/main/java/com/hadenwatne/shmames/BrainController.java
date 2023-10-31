@@ -2,6 +2,7 @@ package com.hadenwatne.shmames;
 
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
+import com.hadenwatne.shmames.models.data.MotherBrain;
 import com.hadenwatne.shmames.tasks.AlarmTask;
 import com.mongodb.client.MongoCursor;
 
@@ -11,7 +12,9 @@ import java.util.List;
 public class BrainController {
 	private final Shmames shmames;
 	private final List<Brain> brains;
+	private MotherBrain motherBrain;
 	private final String BRAIN_TABLE = "brains";
+	private final String MOTHER_BRAIN_TABLE = "motherbrain";
 
 	public BrainController(Shmames shmames) {
 		this.shmames = shmames;
@@ -30,6 +33,15 @@ public class BrainController {
 				}
 
 				// TODO if null, we aren't a member - should we delete it?
+			}
+		}
+
+		try (MongoCursor<MotherBrain> cursor = shmames.getBotDataStorageService().getDatabaseService().readTable(MotherBrain.class, MOTHER_BRAIN_TABLE)) {
+			if(cursor.hasNext()) {
+				motherBrain = cursor.next();
+			} else {
+				motherBrain = new MotherBrain(shmames.getBotName());
+				motherBrain.loadDefaults();
 			}
 		}
 
@@ -75,7 +87,15 @@ public class BrainController {
 		return b;
 	}
 
+	public MotherBrain getMotherBrain() {
+		return motherBrain;
+	}
+
 	public void saveBrain(Brain brain) {
 		shmames.getBotDataStorageService().getDatabaseService().updateRecord(Brain.class, BRAIN_TABLE, "guildID", brain.getGuildID(), brain);
+	}
+
+	public void saveMotherBrain() {
+		shmames.getBotDataStorageService().getDatabaseService().updateRecord(MotherBrain.class, MOTHER_BRAIN_TABLE, "botName", shmames.getBotName(), motherBrain);
 	}
 }

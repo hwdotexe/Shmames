@@ -1,6 +1,6 @@
-package com.hadenwatne.shmames.models;
+package com.hadenwatne.fornax.service.caching;
 
-import com.hadenwatne.fornax.service.LoggingService;
+import com.hadenwatne.fornax.App;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +9,7 @@ public class CacheItem {
     private final Object cachedObject;
     private final Date expires;
 
-    public CacheItem(Object cachedObject) {
+    CacheItem(Object cachedObject) {
         this.cachedObject = cachedObject;
 
         Calendar calendar = Calendar.getInstance();
@@ -21,17 +21,17 @@ public class CacheItem {
         this.expires = calendar.getTime();
     }
 
-    public <T> T getCachedObject(Class<T> type) {
+    <T> T getCachedObject(Class<T> type) {
         try {
             return type.cast(this.cachedObject);
         } catch (Exception e) {
-            LoggingService.LogException(e);
+            App.getLogger().LogException(e);
 
             return null;
         }
     }
 
-    public Date getExpires() {
+    Date getExpires() {
         return this.expires;
     }
 }

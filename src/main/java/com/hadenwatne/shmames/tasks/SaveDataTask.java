@@ -1,12 +1,12 @@
 package com.hadenwatne.shmames.tasks;
 
-import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.HTTPVerb;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.service.types.LogType;
+import com.hadenwatne.fornax.utility.HTTPUtility;
+import com.hadenwatne.fornax.utility.models.HTTPResponse;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
-import com.hadenwatne.shmames.services.HTTPService;
-import com.hadenwatne.fornax.service.LoggingService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
@@ -16,12 +16,12 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Saves data objects to disk at a regular interval, and changes the bot's status for fun.
- */
 public class SaveDataTask extends TimerTask {
-	
-	public SaveDataTask() {
+	private Shmames shmames;
+
+	public SaveDataTask(Shmames shmames) {
+		this.shmames = shmames;
+
 		Calendar c = Calendar.getInstance();
 		Timer t = new Timer();
 		
@@ -32,28 +32,29 @@ public class SaveDataTask extends TimerTask {
 	}
 	
 	public void run() {
-		MotherBrain mb = App.Shmames.getStorageService().getMotherBrain();
+		MotherBrain mb = shmames.getBrainController().getMotherBrain();
 		String action = RandomService.GetRandomFromSet(mb.getStatuses().keySet());
 		ActivityType t = mb.getStatuses().get(action);
 
 		updateRandomSeed();
-		App.Shmames.getJDA().getPresence().setActivity(Activity.of(t, action));
+		shmames.getJDA().getPresence().setActivity(Activity.of(t, action));
 		
 		// Save all brains
-		for(Brain b : App.Shmames.getStorageService().getBrainController().getBrains()) {
-			App.Shmames.getStorageService().getBrainController().saveBrain(b);
+		for(Brain b : shmames.getBrainController().getBrains()) {
+			shmames.getBrainController().saveBrain(b);
 		}
 
-		App.Shmames.getStorageService().getBrainController().saveMotherBrain();
+		shmames.getBrainController().saveMotherBrain();
 
-		LoggingService.Log(LogType.SYSTEM, "Autosave Task Ran");
-		LoggingService.Write();
+		App.getLogger().Log(LogType.SYSTEM, "Autosave Task Ran");
+		App.getLogger().Write();
 	}
 
 	private void updateRandomSeed() {
-		String resp = HTTPService.SendHTTPReq(HTTPVerb.GET, "https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new", null);
+		HTTPResponse response = HTTPUtility.get("https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new");
 
-		if(resp != null) {
+		if(response.responseCode() == 200) {
+			String resp = response.responseObject().toString();
 			resp = resp.trim();
 			resp = resp.replaceAll("\n", "");
 			long seed;
@@ -62,7 +63,7 @@ public class SaveDataTask extends TimerTask {
 				seed = Long.parseLong(resp);
 			} catch (Exception e) {
 				seed = System.currentTimeMillis();
-				LoggingService.LogException(e);
+				App.getLogger().LogException(e);
 			}
 
 			RandomService.GetRandomObj().setSeed(seed);

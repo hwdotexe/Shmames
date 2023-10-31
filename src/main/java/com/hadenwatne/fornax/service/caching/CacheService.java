@@ -1,21 +1,16 @@
-package com.hadenwatne.shmames.services;
-
-import com.hadenwatne.shmames.models.CacheItem;
-import com.hadenwatne.shmames.tasks.CachePruneTask;
+package com.hadenwatne.fornax.service.caching;
 
 import java.util.Date;
 import java.util.HashMap;
 
 public class CacheService {
-    private static HashMap<String, CacheItem> cache;
+    private final HashMap<String, CacheItem> cache;
 
-    public static void Init() {
+    public CacheService() {
         cache = new HashMap<>();
-
-        new CachePruneTask();
     }
 
-    public static <T> T RetrieveItem(String cacheKey, Class<T> type) {
+    public <T> T RetrieveItem(String cacheKey, Class<T> type) {
         for(String key : cache.keySet()) {
             if(key.equals(cacheKey)) {
                 CacheItem item = cache.get(cacheKey);
@@ -32,17 +27,15 @@ public class CacheService {
         return null;
     }
 
-    public static void StoreItem(String cacheKey, Object object) {
+    public void StoreItem(String cacheKey, Object object) {
         cache.put(cacheKey, new CacheItem(object));
     }
 
-    public static void RemoveItem(String cacheKey) {
-        if(cache.containsKey(cacheKey)) {
-            cache.remove(cacheKey);
-        }
+    public void RemoveItem(String cacheKey) {
+        cache.remove(cacheKey);
     }
 
-    public static String GenerateCacheKey(long serverID, long channelID, long userID, String ...criteria) {
+    public String GenerateCacheKey(long serverID, long channelID, long userID, String... criteria) {
         StringBuilder key = new StringBuilder();
 
         key.append(serverID);
@@ -59,14 +52,13 @@ public class CacheService {
         return key.toString();
     }
 
-    /**
-     * Remove any expired cache items from the store.
-     */
-    public static void PruneCache() {
+    public void PruneCache() {
+        Date now = new Date();
+
         for(String cacheKey : new HashMap<>(cache).keySet()) {
             CacheItem cacheItem = cache.get(cacheKey);
 
-            if(cacheItem.getExpires().before(new Date())) {
+            if(cacheItem.getExpires().before(now)) {
                 cache.remove(cacheKey);
             }
         }

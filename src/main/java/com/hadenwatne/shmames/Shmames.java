@@ -5,9 +5,9 @@ import com.hadenwatne.shmames.commands.*;
 import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
-import com.hadenwatne.shmames.services.CacheService;
 import com.hadenwatne.shmames.services.RandomService;
 import com.hadenwatne.shmames.services.settings.SettingsService;
+import com.hadenwatne.shmames.tasks.SaveDataTask;
 
 public class Shmames extends Bot {
 	private BrainController brainController;
@@ -16,7 +16,6 @@ public class Shmames extends Bot {
 	@Override
 	protected void afterInit() {
 		RandomService.Init();
-		CacheService.Init();
 
 		settingsService = new SettingsService(this);
 		brainController = new BrainController(this);
@@ -24,6 +23,8 @@ public class Shmames extends Bot {
 		this.registerListener(new ChatListener(this));
 		this.registerListener(new FirstJoinListener(this));
 		this.registerListener(new ReactListener(this));
+
+		new SaveDataTask(this);
 	}
 
 	@Override

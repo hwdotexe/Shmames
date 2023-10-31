@@ -16,7 +16,7 @@ import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.Language;
-import com.hadenwatne.shmames.services.CacheService;
+import com.hadenwatne.fornax.service.caching.CacheService;
 import com.hadenwatne.shmames.services.PaginationService;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;

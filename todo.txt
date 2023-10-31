@@ -21,6 +21,10 @@ Dev steps:
     - This can also feature a modal builder.
     - Still need to pass back language to implementing class. Need to standardize message keys?
 
+Ideas:
+- /roll no parameters embed with buttons that append rolls to the embed per user
+
+
 Corvus features:
 x- Upload images/files to a reply
 x- Thumbnails
@@ -31,3 +35,11 @@ x- Maybe a static method to call that accepts an Execution object to process the
 x- Eliminate Command base class response method
 *- Ability to add a thread/task/Timer that updates the response
     > Can be implemented by the base
+
+
+Pagination:
+- If using Buttons, the embed needs to persist a reference to the entire message and which page is currently being viewed.
+    > This is not possible within Discord itself. This bot will need to remember each message, which isn't feasible at scale.
+    > We can temporarily cache this data in memory, and then remove the buttons when cache expires?
+        - Potential issues during an unexpected shutdown, with no way to recover.
+- Old fashioned way works fine, just a bit redundant

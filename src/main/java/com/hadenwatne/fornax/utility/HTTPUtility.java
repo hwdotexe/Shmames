@@ -22,7 +22,7 @@ public class HTTPUtility {
             return getResponse(conn);
         } catch (IOException e) {
             App.getLogger().LogException(e);
-            return null;
+            return new HTTPResponse(0, null);
         }
     }
 
@@ -80,7 +80,7 @@ public class HTTPUtility {
 
             return new HTTPResponse(connection.getResponseCode(), responseObject);
         } catch (IOException e) {
-            return null;
+            return new HTTPResponse(0, null);
         }
     }
 }
