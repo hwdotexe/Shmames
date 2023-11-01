@@ -1,22 +1,17 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
-import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.models.game.MiniCactpotGame;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class Cactpot extends Command {
 	public Cactpot() {
 		super(false);
-	}
-
-	@Override
-	protected Permission[] configureRequiredBotPermissions() {
-		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
 	}
 
 	@Override
@@ -26,8 +21,27 @@ public class Cactpot extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		return response(EmbedType.INFO)
-				.setDescription(MiniCactpotGame.BuildNewGame());
+	protected Permission[] configureRequiredBotPermissions() {
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
+	}
+
+	@Override
+	public void onCommandFailure(Execution execution) {
+
+	}
+
+	@Override
+	public void run(Execution execution) {
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+						.setDescription(MiniCactpotGame.BuildNewGame());
+
+		Corvus.reply(execution, builder);
 	}
 }

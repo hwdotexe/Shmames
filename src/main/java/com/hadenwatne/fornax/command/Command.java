@@ -21,7 +21,7 @@ public abstract class Command {
     public Command(boolean requiresGuild) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
-        this.enabledUserPermissions = this.configureEnabledUserPermissions();
+        this.enabledUserPermissions = this.configureRequiredUserPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = false;
         this.availableByDefault = true;
@@ -34,7 +34,7 @@ public abstract class Command {
     public Command(boolean requiresGuild, boolean isNSFW) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
-        this.enabledUserPermissions = this.configureEnabledUserPermissions();
+        this.enabledUserPermissions = this.configureRequiredUserPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.availableByDefault = true;
@@ -47,7 +47,7 @@ public abstract class Command {
     public Command(boolean requiresGuild, boolean isNSFW, boolean availableByDefault, boolean isPro) {
         this.commandStructure = this.buildCommandStructure();
         this.botPermissions = this.configureRequiredBotPermissions();
-        this.enabledUserPermissions = this.configureEnabledUserPermissions();
+        this.enabledUserPermissions = this.configureRequiredUserPermissions();
         this.requiresGuild = requiresGuild;
         this.isNSFW = isNSFW;
         this.availableByDefault = availableByDefault;
@@ -91,7 +91,7 @@ public abstract class Command {
 
     protected abstract CommandStructure buildCommandStructure();
     protected abstract Permission[] configureRequiredBotPermissions();
-    protected abstract Permission[] configureEnabledUserPermissions();
+    protected abstract Permission[] configureRequiredUserPermissions();
     public abstract void onCommandFailure(Execution execution);
     public abstract void run(Execution execution);
 

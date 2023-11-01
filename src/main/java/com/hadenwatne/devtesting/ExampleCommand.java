@@ -30,7 +30,7 @@ public class ExampleCommand extends Command implements IInteractable {
 	}
 
 	@Override
-	protected Permission[] configureEnabledUserPermissions() {
+	protected Permission[] configureRequiredUserPermissions() {
 		return new Permission[]{Permission.MESSAGE_SEND};
 	}
 

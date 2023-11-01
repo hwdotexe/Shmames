@@ -2,6 +2,7 @@ package com.hadenwatne.fornax.command.builder;
 
 import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
@@ -21,7 +22,14 @@ public class CommandBuilder {
 
         data.setGuildOnly(command.requiresGuild());
         data.setNSFW(command.isNSFW());
-        data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.getEnabledUserPermissions()));
+
+        Permission[] enabledUserPermissions = command.getEnabledUserPermissions();
+
+        if (enabledUserPermissions != null && enabledUserPermissions.length > 0) {
+            data.setDefaultPermissions(DefaultMemberPermissions.enabledFor(enabledUserPermissions));
+        } else {
+            data.setDefaultPermissions(DefaultMemberPermissions.ENABLED);
+        }
 
         // If there are subcommands, add these instead.
         if (!structure.getSubCommands().isEmpty() || !structure.getSubcommandGroups().isEmpty()) {
@@ -41,7 +49,7 @@ public class CommandBuilder {
             }
 
             // Add SubCommand groups.
-            for(SubCommandGroup subCommandGroup : structure.getSubcommandGroups()) {
+            for (SubCommandGroup subCommandGroup : structure.getSubcommandGroups()) {
                 SubcommandGroupData group = new SubcommandGroupData(subCommandGroup.getName(), subCommandGroup.getDescription());
 
                 for (CommandStructure subCommand : subCommandGroup.getSubCommands()) {

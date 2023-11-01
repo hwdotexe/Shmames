@@ -22,8 +22,8 @@ public class Blame extends Command {
 	}
 
 	@Override
-	protected Permission[] configureEnabledUserPermissions() {
-		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS};
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
 	}
 
 	@Override
