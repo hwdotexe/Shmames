@@ -1,38 +1,52 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.command.Command;
-import com.hadenwatne.shmames.App;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
-import com.hadenwatne.shmames.services.DataService;
-import com.hadenwatne.fornax.service.LoggingService;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.LinkedHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-/**
- * This command is not exposed to users by default, and is here only for the benefit of the bot developer.
- * The goal is to provide easy-access commands in the event of bot maintenance, or to gauge which bot features
- * are used most.
- */
 public class Dev extends Command {
-	public Dev() {
-		super(false);
+	private Shmames shmames;
+
+	public Dev(Shmames shmames) {
+		super(false, false, false, false);
+		this.shmames = shmames;
+	}
+
+	@Override
+	protected CommandStructure buildCommandStructure() {
+		return CommandBuilder.Create("dev", "")
+				.addSubCommands(CommandBuilder.Create("addStatus", "Add a new Discord status.")
+								.addParameters(new CommandParameter("activity", "The activity type", ParameterType.SELECTION)
+										.addSelectionOptions(ActivityType.PLAYING.name())
+										.addSelectionOptions(ActivityType.WATCHING.name())
+										.addSelectionOptions(ActivityType.LISTENING.name())
+										.addSelectionOptions(ActivityType.CUSTOM_STATUS.name()))
+								.addParameters(new CommandParameter("text", "The text to display", ParameterType.STRING))
+								.build(),
+						CommandBuilder.Create("getGuilds", "List the guilds this bot has joined.")
+								.build(),
+						CommandBuilder.Create("leaveGuild", "Force the bot to leave a guild.")
+								.addParameters(new CommandParameter("serverid", "The server ID to leave", ParameterType.STRING))
+								.build(),
+						CommandBuilder.Create("saveBrains", "Saves brain data to disk.")
+								.build()
+//						CommandBuilder.Create("getReports", "Get bug report data.")
+//								.build()
+				)
+				.build();
 	}
 
 	@Override
@@ -41,146 +55,116 @@ public class Dev extends Command {
 	}
 
 	@Override
-	protected CommandStructure buildCommandStructure() {
-		return CommandBuilder.Create("dev", "")
-				.addAlias("developer")
-				.addParameters(
-						new CommandParameter("subCommand", "The subcommand to run", ParameterType.SELECTION)
-								.addSelectionOptions("addstatus")
-								.addSelectionOptions("getguilds")
-								.addSelectionOptions("getcommandstats")
-								.addSelectionOptions("clearcommandstats")
-								.addSelectionOptions("leave")
-								.addSelectionOptions("getreports")
-								.addSelectionOptions("savebrains")
-								.setExample("addstatus"),
-						new CommandParameter("data", "The optional data to send to the subcommand", ParameterType.STRING, false)
-								.setExample("stuff")
-				)
-				.build();
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[]{Permission.ADMINISTRATOR};
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		if (executingCommand.getChannel() instanceof PrivateChannel) {
-			if (executingCommand.getAuthorUser().getId().equals(App.Shmames.getStorageService().getMotherBrain().getBotAdminID())) {
-				String subCommand = executingCommand.getCommandArguments().getAsString("subCommand");
-				String commandData = executingCommand.getCommandArguments().getAsString("data");
+	public void onCommandFailure(Execution execution) {
 
-				switch (subCommand.toLowerCase()) {
-					case "addstatus":
-						return addStatus(commandData);
-					case "getguilds":
-						return getGuilds();
-					case "getcommandstats":
-						return getCommandStats();
-					case "clearcommandstats":
-						clearCommandStats();
-
-						return response(EmbedType.SUCCESS)
-								.setDescription("Command statistics cleared!");
-					case "leave":
-						leave(commandData);
-
-						return response(EmbedType.SUCCESS)
-								.setDescription(App.Shmames.getBotName()+" is queued to leave the server!");
-					case "getreports":
-						return getReports(executingCommand);
-					case "savebrains":
-						saveBrains();
-
-						return response(EmbedType.SUCCESS)
-								.setDescription("All brains were saved!");
-					default:
-						return response(EmbedType.ERROR)
-								.setDescription("That command wasn't recognized!");
-				}
-			} else {
-				return response(EmbedType.ERROR)
-						.setDescription("You cannot use the Developer command! This is used for bot maintenance tasks, and is restricted " +
-								"to the bot developer.");
-			}
-		}
-
-		return null;
 	}
 
-	private EmbedBuilder addStatus(String args) {
-		Matcher m = Pattern.compile("^([a-z]+)\\s(.+)$", Pattern.CASE_INSENSITIVE).matcher(args);
+	@Override
+	public void run(Execution execution) {
+		if (execution.getUser().getId().equals(execution.getBot().getBotDataStorageService().getBotConfiguration().adminDiscordID)) {
+			String subCommand = execution.getSubCommand();
 
-		if (m.find()) {
-			try {
-				MotherBrain b = App.Shmames.getStorageService().getMotherBrain();
-				ActivityType type = ActivityType.valueOf(m.group(1).toUpperCase());
-				String msg = m.group(2);
-
-				b.getStatuses().put(msg, type);
-				App.Shmames.getJDA().getPresence().setActivity(Activity.of(type, msg));
-				App.Shmames.getStorageService().getBrainController().saveMotherBrain();
-
-				return response(EmbedType.INFO)
-						.setDescription("New status added!");
-			} catch (Exception e) {
-				LoggingService.LogException(e);
+			switch (subCommand.toLowerCase()) {
+				case "addstatus":
+					addStatus(execution);
+					break;
+				case "getguilds":
+					getGuilds(execution);
+					break;
+				case "leaveguild":
+					leave(execution);
+					break;
+//				case "getreports":
+//					return getReports(executingCommand);
+				case "savebrains":
+					saveBrains(execution);
+					break;
 			}
-		}
+		} else {
+			CorvusBuilder builder = Corvus.error(execution.getBot());
 
-		return response(EmbedType.ERROR)
-				.setDescription("There was a problem adding your new status.");
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription("Sorry! This command is reserved for the bot developer only.");
+
+			Corvus.reply(execution, builder);
+		}
 	}
 
-	private EmbedBuilder getGuilds() {
+	private void addStatus(Execution execution) {
+		try {
+			MotherBrain b = shmames.getBrainController().getMotherBrain();
+			ActivityType type = ActivityType.valueOf(execution.getArguments().get("activity").getAsString());
+			String msg = execution.getArguments().get("text").getAsString();
+
+			b.getStatuses().put(msg, type);
+			execution.getBot().getJDA().getPresence().setActivity(Activity.of(type, msg));
+			shmames.getBrainController().saveMotherBrain();
+
+			CorvusBuilder builder = Corvus.success(execution.getBot());
+
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription("New activity added!");
+
+			Corvus.reply(execution, builder);
+		} catch (Exception e) {
+			App.getLogger().LogException(e);
+		}
+	}
+
+	private void getGuilds(Execution execution) {
 		StringBuilder sb = new StringBuilder();
 
-		for (Guild g : App.Shmames.getJDA().getGuilds()) {
-			if (sb.length() > 0)
+		for (Guild g : execution.getBot().getJDA().getGuilds()) {
+			if (!sb.isEmpty())
 				sb.append("\n");
 
 			sb.append("> ");
 			sb.append(g.getName());
 			sb.append(" (");
 			sb.append(g.getId());
-			sb.append(" )");
+			sb.append(")");
 		}
 
-		sb.insert(0, "**Guilds the bot runs on**\n");
+		CorvusBuilder builder = Corvus.privileged(execution.getBot());
 
-		return response(EmbedType.INFO)
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
 				.addField("Guilds the bot runs on", sb.toString(), false);
+
+		Corvus.reply(execution, builder);
 	}
 
-	private EmbedBuilder getCommandStats() {
-		StringBuilder answer = new StringBuilder();
+	private void leave(Execution execution) {
+		String gid = execution.getArguments().get("serverid").getAsString();
 
-		// Sort
-		LinkedHashMap<String, Integer> cmdStats = DataService.SortHashMap(App.Shmames.getStorageService().getMotherBrain().getCommandStats());
-
-		for (String c : cmdStats.keySet()) {
-			if(answer.length() > 0) {
-				answer.append("\n");
-			}
-
-			answer.append("`").append(c).append("`: ").append(cmdStats.get(c));
-		}
-
-		return response(EmbedType.INFO)
-				.setDescription(answer.toString());
-	}
-
-	private void clearCommandStats() {
-		App.Shmames.getStorageService().getMotherBrain().getCommandStats().clear();
-	}
-
-	private void leave(String gid) {
-		for (Guild g : App.Shmames.getJDA().getGuilds()) {
+		for (Guild g : execution.getBot().getJDA().getGuilds()) {
 			if (g.getId().equals(gid)) {
 				g.leave().queue();
+
+				CorvusBuilder builder = Corvus.success(execution.getBot());
+
+				builder.addBreadcrumbs(this.getCommandStructure().getName())
+						.setDescription("Bot has left " + g.getName());
+
+				Corvus.reply(execution, builder);
 
 				break;
 			}
 		}
+
+		CorvusBuilder builder = Corvus.error(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription("Could not find that guild!");
+
+		Corvus.reply(execution, builder);
 	}
 
+	/*
 	private EmbedBuilder getReports(ExecutingCommand executingCommand) {
 		StringBuilder reports = new StringBuilder("== User Reports ==");
 
@@ -229,14 +213,22 @@ public class Dev extends Command {
 
 		return null;
 	}
+	 */
 
-	private void saveBrains() {
-		for (Brain b : App.Shmames.getStorageService().getBrainController().getBrains()) {
-			App.Shmames.getStorageService().getBrainController().saveBrain(b);
+	private void saveBrains(Execution execution) {
+		for (Brain b : shmames.getBrainController().getBrains()) {
+			shmames.getBrainController().saveBrain(b);
 		}
 
-		App.Shmames.getStorageService().getBrainController().saveMotherBrain();
+		shmames.getBrainController().saveMotherBrain();
 
-		LoggingService.Write();
+		App.getLogger().Write();
+
+		CorvusBuilder builder = Corvus.success(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription("Brains and logs saved!");
+
+		Corvus.reply(execution, builder);
 	}
 }

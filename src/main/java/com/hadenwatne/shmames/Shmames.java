@@ -34,8 +34,7 @@ public class Shmames extends Bot {
 		registerCommand(new Blame());
 		registerCommand(new Cactpot());
 		registerCommand(new Choose());
-		registerCommand(new CringeThat());
-		registerCommand(new Dev());
+		registerCommand(new Dev(this));
 		registerCommand(new EightBall());
 		registerCommand(new Enhance());
 		registerCommand(new FamilyCmd());
