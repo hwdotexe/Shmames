@@ -81,7 +81,7 @@ public class BotInternalService {
         List<String> activatedCommands = this.cloudData.activatedCommands.getOrDefault(guild.getIdLong(), new ArrayList<>());
 
         activatedCommands.add(command.getCommandStructure().getName());
-        this.cloudData.activatedCommands.put(guild.getIdLong(), activatedCommands);
+        this.cloudData.activatedCommands.put(guild.getId(), activatedCommands);
 
         bot.getBotDataStorageService().getDatabaseService().updateRecord(BotCloudData.class, CLOUD_DATA_TABLE, "botName", bot.getBotName(), this.cloudData);
 
@@ -94,7 +94,7 @@ public class BotInternalService {
     }
 
     private void reactivateGuildCommands() {
-        for (long id : this.cloudData.activatedCommands.keySet()) {
+        for (String id : this.cloudData.activatedCommands.keySet()) {
             Guild guild = bot.getJDA().getGuildById(id);
             List<Command> commandsToActivate = new ArrayList<>();
 

@@ -37,6 +37,8 @@ public class Brain {
 	private HangmanDictionaries dictionaries;
 	private HangmanGame hangmanGame;
 
+	public Brain() {};
+
 	public Brain(String gid) {
 		guildID = gid;
 		tallies = new HashMap<>();

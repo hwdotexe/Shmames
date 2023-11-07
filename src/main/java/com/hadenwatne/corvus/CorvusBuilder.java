@@ -197,7 +197,7 @@ public class CorvusBuilder {
                     }
 
                     String authorText = breadcrumbText.toString();
-                    authorText = authorText.substring(0, Math.min(authorText.length(), MessageEmbed.AUTHOR_MAX_LENGTH) - 1);
+                    authorText = authorText.substring(0, Math.min(authorText.length(), MessageEmbed.AUTHOR_MAX_LENGTH));
 
                     this.setAuthor(authorText, this.bot.getBotAvatarUrl(), CorvusFileExtension.PNG);
                 } else {

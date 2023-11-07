@@ -54,7 +54,7 @@ public class SaveDataTask extends TimerTask {
 		HTTPResponse response = HTTPUtility.get("https://www.random.org/integers/?num=2&min=9999999&max=99999999&col=1&base=10&format=plain&rnd=new");
 
 		if(response.responseCode() == 200) {
-			String resp = response.responseObject().toString();
+			String resp = response.response();
 			resp = resp.trim();
 			resp = resp.replaceAll("\n", "");
 			long seed;

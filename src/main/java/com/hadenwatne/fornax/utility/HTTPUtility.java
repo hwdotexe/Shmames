@@ -76,9 +76,7 @@ public class HTTPUtility {
             rd.close();
             connection.disconnect();
 
-            JSONObject responseObject = new JSONObject(result.toString());
-
-            return new HTTPResponse(connection.getResponseCode(), responseObject);
+            return new HTTPResponse(connection.getResponseCode(), result.toString());
         } catch (IOException e) {
             return new HTTPResponse(0, null);
         }

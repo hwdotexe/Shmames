@@ -5,3 +5,4 @@ brains/servers
 .DS_Store
 target
 logs
+data/config.json

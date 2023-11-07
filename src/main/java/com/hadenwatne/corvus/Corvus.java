@@ -4,8 +4,9 @@ import com.hadenwatne.corvus.types.MessageType;
 import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.Bot;
 import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.types.ExecutionFailReason;
+import com.hadenwatne.fornax.command.types.ExecutionStatus;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
@@ -41,8 +42,6 @@ public class Corvus {
 
     public static void reply(Execution execution, CorvusBuilder builder) {
         try {
-            InteractionHook hook = execution.getHook();
-
             if (builder.hasAttachments()) {
                 List<FileUpload> uploads = new ArrayList<>();
 
@@ -52,18 +51,26 @@ public class Corvus {
                     uploads.add(FileUpload.fromData(fileInputStream, attachment.getFileName()));
                 }
 
-                hook.sendFiles(uploads)
+                execution.getEvent().replyFiles(uploads)
                         .setEmbeds(builder.preBuild().build())
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue(builder::setMessage);
+                        .queue(result -> result.retrieveOriginal().queue(builder::setMessage), error -> {
+                            execution.setStatus(ExecutionStatus.FAILED);
+                            execution.setFailureReason(ExecutionFailReason.MISSING_INTERACTION_HOOK);
+                            App.getLogger().LogException(error);
+                        });
             } else {
-                hook.sendMessageEmbeds(builder.preBuild().build())
+                execution.getEvent().replyEmbeds(builder.preBuild().build())
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue(builder::setMessage);
+                        .queue(result -> result.retrieveOriginal().queue(builder::setMessage), error -> {
+                            execution.setStatus(ExecutionStatus.FAILED);
+                            execution.setFailureReason(ExecutionFailReason.MISSING_INTERACTION_HOOK);
+                            App.getLogger().LogException(error);
+                        });
             }
         } catch (IOException exception) {
             App.getLogger().LogException(exception);

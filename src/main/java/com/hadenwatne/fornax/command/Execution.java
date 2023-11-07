@@ -94,6 +94,10 @@ public class Execution {
         return _hook;
     }
 
+    public SlashCommandInteractionEvent getEvent() {
+        return _event;
+    }
+
     public Bot getBot() {
         return _bot;
     }

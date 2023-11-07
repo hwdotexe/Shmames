@@ -69,7 +69,7 @@
                 <configuration>
                     <services>
                         <param>com.hadenwatne.fornax.Bot</param>
-                        <param>com.hadenwatne.devtesting.ExampleBot</param>
+                        <param>com.hadenwatne.shmames.Shmames</param>
                     </services>
                 </configuration>
                 <executions>

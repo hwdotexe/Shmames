@@ -13,11 +13,14 @@ import com.hadenwatne.shmames.tasks.SaveDataTask;
 public class Shmames extends Bot {
 	private BrainController brainController;
 	private SettingsService settingsService;
+	private LanguageProvider languageProvider;
 
 	@Override
 	protected void afterInit() {
 		RandomService.Init();
-		this.registerLanguageProvider(new LanguageProvider(this));
+
+		this.languageProvider = new LanguageProvider(this);
+		this.registerLanguageProvider(this.languageProvider);
 
 		settingsService = new SettingsService(this);
 		brainController = new BrainController(this);
@@ -73,5 +76,9 @@ public class Shmames extends Bot {
 
 	public SettingsService getSettingsService() {
 		return settingsService;
+	}
+
+	public LanguageProvider getLanguageProvider() {
+		return this.languageProvider;
 	}
 }

@@ -18,7 +18,8 @@ public class DatabaseService {
     DatabaseService(String connectionString, String databaseName) {
         App.getLogger().Log(LogType.SYSTEM, "Initializing database...");
 
-        try (MongoClient client = MongoClients.create(connectionString)) {
+        try {
+            MongoClient client = MongoClients.create(connectionString);
             CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
             CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                     pojoCodecRegistry);

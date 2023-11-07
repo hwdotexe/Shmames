@@ -24,7 +24,7 @@ public class Choose extends Command {
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("choose", "Let me make a decision for you.")
 				.addParameters(
-						new CommandParameter("thisOrThat", "Two options, separated by 'or'.", ParameterType.STRING)
+						new CommandParameter("thisorthat", "Two options, separated by 'or'.", ParameterType.STRING)
 								.setPattern("(.{1,}) or (.{1,})")
 								.setExample("Go outside or One more level")
 				)
@@ -43,13 +43,19 @@ public class Choose extends Command {
 
 	@Override
 	public void onCommandFailure(Execution execution) {
+		CorvusBuilder builder = Corvus.error(execution.getBot());
 
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription("That was wrong!") // TODO use a proper error message
+				.setEphemeral();
+
+		Corvus.reply(execution, builder);
 	}
 
 	@Override
 	public void run(Execution execution) {
 		Pattern p = getCommandStructure().getParameters().get(0).getPattern();
-		String thisOrThat = execution.getArguments().get("thisOrThat").getAsString();
+		String thisOrThat = execution.getArguments().get("thisorthat").getAsString();
 		Matcher m = p.matcher(thisOrThat);
 
 		// The command is already validated. Call m.find() to prepare a new matcher and separate out the arguments.

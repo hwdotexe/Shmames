@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CommandBuilder {
     public static CommandStructure Create(String name, String description) {
-        return new CommandStructure(name, description);
+        return new CommandStructure(name.toLowerCase(), description);
     }
 
     public static SlashCommandData BuildSlashCommandData(Command command) {

@@ -84,11 +84,17 @@ public class BrainController {
 		b.getSettings().addAll(shmames.getSettingsService().getDefaultSettings());
 		brains.add(b);
 
+		insertBrain(b);
+
 		return b;
 	}
 
 	public MotherBrain getMotherBrain() {
 		return motherBrain;
+	}
+
+	public void insertBrain(Brain brain) {
+		shmames.getBotDataStorageService().getDatabaseService().insertRecord(Brain.class, BRAIN_TABLE, brain);
 	}
 
 	public void saveBrain(Brain brain) {

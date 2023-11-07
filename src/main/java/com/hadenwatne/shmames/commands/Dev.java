@@ -27,8 +27,8 @@ public class Dev extends Command {
 
 	@Override
 	protected CommandStructure buildCommandStructure() {
-		return CommandBuilder.Create("dev", "")
-				.addSubCommands(CommandBuilder.Create("addStatus", "Add a new Discord status.")
+		return CommandBuilder.Create("dev", "A utility command for the developer.")
+				.addSubCommands(CommandBuilder.Create("addstatus", "Add a new Discord status.")
 								.addParameters(new CommandParameter("activity", "The activity type", ParameterType.SELECTION)
 										.addSelectionOptions(ActivityType.PLAYING.name())
 										.addSelectionOptions(ActivityType.WATCHING.name())
@@ -36,12 +36,12 @@ public class Dev extends Command {
 										.addSelectionOptions(ActivityType.CUSTOM_STATUS.name()))
 								.addParameters(new CommandParameter("text", "The text to display", ParameterType.STRING))
 								.build(),
-						CommandBuilder.Create("getGuilds", "List the guilds this bot has joined.")
+						CommandBuilder.Create("getguilds", "List the guilds this bot has joined.")
 								.build(),
-						CommandBuilder.Create("leaveGuild", "Force the bot to leave a guild.")
+						CommandBuilder.Create("leaveguild", "Force the bot to leave a guild.")
 								.addParameters(new CommandParameter("serverid", "The server ID to leave", ParameterType.STRING))
 								.build(),
-						CommandBuilder.Create("saveBrains", "Saves brain data to disk.")
+						CommandBuilder.Create("savebrains", "Saves brain data to disk.")
 								.build()
 //						CommandBuilder.Create("getReports", "Get bug report data.")
 //								.build()
@@ -69,7 +69,7 @@ public class Dev extends Command {
 		if (execution.getUser().getId().equals(execution.getBot().getBotDataStorageService().getBotConfiguration().adminDiscordID)) {
 			String subCommand = execution.getSubCommand();
 
-			switch (subCommand.toLowerCase()) {
+			switch (subCommand) {
 				case "addstatus":
 					addStatus(execution);
 					break;

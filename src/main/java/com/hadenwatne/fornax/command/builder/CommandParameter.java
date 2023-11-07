@@ -19,7 +19,7 @@ public class CommandParameter implements Cloneable {
     private final List<String> selectionOptions;
 
     public CommandParameter(String name, String description, ParameterType type) {
-        this.name = name;
+        this.name = name.toLowerCase();
         this.description = description;
         this.isRequired = true;
         this.type = type;

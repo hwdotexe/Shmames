@@ -2,7 +2,6 @@ package com.hadenwatne.shmames.services.settings;
 
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.language.LanguageService;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import com.hadenwatne.shmames.services.settings.types.BotSettingType;
 import net.dv8tion.jda.api.entities.Role;
@@ -83,7 +82,7 @@ public class SettingsService {
         settings.add(new BotSetting(BotSettingName.REMOVAL_THRESHOLD, BotSettingType.NUMBER, "3"));
         settings.add(new BotSetting(BotSettingName.RESET_EMOTE_STATS, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.ROLES_CONFIGURE, BotSettingType.ROLE, "administrator"));
-        settings.add(new BotSetting(BotSettingName.SERVER_LANG, BotSettingType.TEXT, LanguageService.DEFAULT_LANGUAGE));
+        settings.add(new BotSetting(BotSettingName.SERVER_LANG, BotSettingType.TEXT, shmames.getLanguageProvider().getDefaultLanguage().getLanguageName()));
         settings.add(new BotSetting(BotSettingName.TALLY_REACTIONS, BotSettingType.BOOLEAN, "true"));
 
         return settings;

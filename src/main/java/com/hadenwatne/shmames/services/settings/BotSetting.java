@@ -14,7 +14,9 @@ public class BotSetting {
 	private BotSettingName name;
 	private BotSettingType type;
 	private String value;
-	
+
+	public BotSetting() {}
+
 	public BotSetting(BotSettingName n, BotSettingType t, String v) {
 		name=n;
 		type=t;
