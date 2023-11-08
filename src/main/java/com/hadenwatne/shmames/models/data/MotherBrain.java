@@ -15,13 +15,17 @@ public class MotherBrain {
     private String tenorAPIKey;
     private String wolframAPIKey;
 
+    public MotherBrain(){}
+
     public MotherBrain(String botName) {
         this.botName = botName;
-        this.statuses = new HashMap<String, ActivityType>();
-        this.commandStats = new HashMap<String, Integer>();
-        this.serverFamilies = new ArrayList<Family>();
+        this.statuses = new HashMap<>();
+        this.commandStats = new HashMap<>();
+        this.serverFamilies = new ArrayList<>();
         this.tenorAPIKey = "API_KEY_HERE";
         this.wolframAPIKey = "API_KEY_HERE";
+
+        loadDefaults();
     }
 
     public HashMap<String, ActivityType> getStatuses(){
@@ -36,9 +40,6 @@ public class MotherBrain {
     }
 
     public List<Family> getServerFamilies(){
-        if(this.serverFamilies == null)
-            this.serverFamilies = new ArrayList<Family>();
-
         return this.serverFamilies;
     }
 
@@ -53,23 +54,14 @@ public class MotherBrain {
     }
 
     public String getTenorAPIKey() {
-        if(tenorAPIKey == null)
-            tenorAPIKey = "API_KEY_HERE";
-
         return tenorAPIKey;
     }
 
     public String getWolframAPIKey() {
-        if(wolframAPIKey == null)
-            wolframAPIKey = "API_KEY_HERE";
-
         return wolframAPIKey;
     }
 
-    /**
-     * Loads default settings into the system.
-     */
-    public void loadDefaults() {
+    private void loadDefaults() {
         statuses.put("Bagpipes", ActivityType.PLAYING);
         statuses.put("Netflix", ActivityType.WATCHING);
         statuses.put("Game Soundtracks", ActivityType.LISTENING);

@@ -126,7 +126,7 @@ public class CorvusBuilder {
     public CorvusBuilder setImage(String url, CorvusFileExtension extension) {
         try {
             URL file = URI.create(url).toURL();
-            String fileName = "_CORVUS_IMAGE_" + extension.getExtension();
+            String fileName = "_CORVUS_IMAGE_." + extension.getExtension();
 
             this.attachments.add(new CorvusAttachment(file, fileName));
             this.embedBuilder.setImage("attachment://" + fileName);

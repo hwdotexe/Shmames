@@ -77,7 +77,8 @@ public class Language {
     }
 
     private void populateDefaultValues() {
-        //errors.add(new LanguageError(ErrorKey.ALREADY_EXISTS, new String[]{"That item already exists!"}));
+        errors.add(new LanguageError(ErrorKey.GENERIC_ERROR.name(), new String[]{"Something went wrong! Please try again later."}));
+        errors.add(new LanguageError(ErrorKey.WRONG_USAGE.name(), new String[]{"Whoops! Incorrect usage - please try again."}));
 
         messages.add(new LanguageMessage(LanguageKey.BLAME.name(), new String[]{"I blame " + wildcard}));
         messages.add(new LanguageMessage(LanguageKey.BLAME_OPTIONS.name(), new String[]{"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom", "the economy", "Big Pharma", "India", "Nigeria", "Mexico", "Chemtrails", "GMOs", "vaccines", "#VapeLife", "weebs", "essential oils", "Karen", "Epic Games", "video games", "hip hop", "Fortnite", "Source Filmmaker", "Discord", "Coronavirus", "Apple", "Google", "Starbucks", "NASA", "Keanu Reeves", "Oscar the Grouch", "Ohio"}));

@@ -36,13 +36,13 @@ public class BrainController {
 			}
 		}
 
-		try (MongoCursor<MotherBrain> cursor = shmames.getBotDataStorageService().getDatabaseService().readTable(MotherBrain.class, MOTHER_BRAIN_TABLE)) {
-			if(cursor.hasNext()) {
-				motherBrain = cursor.next();
-			} else {
-				motherBrain = new MotherBrain(shmames.getBotName());
-				motherBrain.loadDefaults();
-			}
+		motherBrain = shmames.getBotDataStorageService().getDatabaseService().readOne(MotherBrain.class, MOTHER_BRAIN_TABLE, "botName", shmames.getBotName());
+
+		// TODO this isn't loading properly from DB?
+		if(motherBrain == null) {
+			motherBrain = new MotherBrain(shmames.getBotName());
+
+			insertMotherBrain();
 		}
 
 		for(Brain brain : brains) {
@@ -99,6 +99,10 @@ public class BrainController {
 
 	public void saveBrain(Brain brain) {
 		shmames.getBotDataStorageService().getDatabaseService().updateRecord(Brain.class, BRAIN_TABLE, "guildID", brain.getGuildID(), brain);
+	}
+
+	public void insertMotherBrain() {
+		shmames.getBotDataStorageService().getDatabaseService().insertRecord(MotherBrain.class, MOTHER_BRAIN_TABLE, motherBrain);
 	}
 
 	public void saveMotherBrain() {

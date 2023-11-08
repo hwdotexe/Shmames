@@ -8,6 +8,8 @@ import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
+import com.hadenwatne.fornax.command.types.ExecutionFailReason;
+import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.Permission;
@@ -44,9 +46,14 @@ public class Choose extends Command {
 	@Override
 	public void onCommandFailure(Execution execution) {
 		CorvusBuilder builder = Corvus.error(execution.getBot());
+		String errorMessage = "";
+
+		if(execution.getFailureReason() == ExecutionFailReason.COMMAND_USAGE_INCORRECT) {
+			errorMessage = execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.WRONG_USAGE.name());
+		}
 
 		builder.addBreadcrumbs(this.getCommandStructure().getName())
-				.setDescription("That was wrong!") // TODO use a proper error message
+				.setDescription(errorMessage)
 				.setEphemeral();
 
 		Corvus.reply(execution, builder);

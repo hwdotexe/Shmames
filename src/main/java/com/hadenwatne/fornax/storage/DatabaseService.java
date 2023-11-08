@@ -50,6 +50,13 @@ public class DatabaseService {
         return collection.find(filter).cursor();
     }
 
+    public <T> T readOne(Class<T> type, String table, String field, String value) {
+        MongoCollection<T> collection = this._mongoDatabase.getCollection(table, type);
+        Bson filter = eq(field, value);
+
+        return collection.find(filter).first();
+    }
+
     public <T> MongoCursor<T> readTable(Class<T> type, String table) {
         MongoCollection<T> collection = this._mongoDatabase.getCollection(table, type);
 

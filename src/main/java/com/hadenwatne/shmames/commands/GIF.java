@@ -1,28 +1,34 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.corvus.types.CorvusFileExtension;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.fornax.service.types.LogType;
+import com.hadenwatne.fornax.utility.HTTPUtility;
+import com.hadenwatne.fornax.utility.models.HTTPResponse;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.ErrorKey;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.services.HTTPService;
-import com.hadenwatne.fornax.service.LoggingService;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GIF extends Command {
-	public GIF() {
+	private Shmames shmames;
+	public GIF(Shmames shmames) {
 		super(false);
+
+		this.shmames = shmames;
 	}
 
 	@Override
@@ -31,10 +37,13 @@ public class GIF extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[0];
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("gif", "Send an awesome, randomly-selected GIF based on a search term.")
-				.addAlias("who is")
-				.addAlias("what is")
 				.addParameters(
 						new CommandParameter("search", "What to find a GIF for.", ParameterType.STRING)
 								.setExample("bob ross")
@@ -43,36 +52,82 @@ public class GIF extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String search = executingCommand.getCommandArguments().getAsString("search");
+	public void onCommandFailure(Execution execution) {
+		CorvusBuilder builder = Corvus.error(execution.getBot());
+		String errorMessage = execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.GENERIC_ERROR.name());
 
-		// Obey the channel content settings, if applicable.
-		MessageChannel channel = executingCommand.getChannel();
-		String gif = "";
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription(errorMessage)
+				.setEphemeral();
 
-		if(channel.getType() == ChannelType.TEXT){
-			if(((TextChannel)channel).isNSFW()){
-				gif = HTTPService.GetGIF(search, "low");
+		Corvus.reply(execution, builder);
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String search = execution.getArguments().get("search").getAsString();
+		String filter = "high";
+
+		if(execution.getChannel().asTextChannel().isNSFW()) {
+			filter = "low";
+		}
+
+		String gifUrl = getGIF(search, filter);
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName(), search)
+						.setImage(gifUrl, CorvusFileExtension.GIF);
+
+		Corvus.reply(execution, builder);
+	}
+
+	private String getGIF(String search, String filter) {
+		App.getLogger().Log(LogType.NETWORK, "[GIF Search: " + search + " @ " + filter + "]");
+
+		// TODO use apache StringEscapeUtils to escape for HTML
+		search = search.trim();
+		String apiKey = shmames.getBrainController().getMotherBrain().getTenorAPIKey();
+		HTTPResponse result = HTTPUtility.get("https://g.tenor.com/v1/search?q=" + search + "&key=" + apiKey + "&contentfilter=" + filter + "&limit=25");
+
+		if(result.responseCode() == 200) {
+			JSONArray resultSet = new JSONObject(result.response()).getJSONArray("results");
+			List<JSONArray> gifMedia = new ArrayList<>();
+
+			// Add the media array of each result.
+			for (int i = 0; i < resultSet.length(); i++) {
+				gifMedia.add(resultSet.getJSONObject(i).getJSONArray("media"));
 			}
-		}
 
-		if(gif.length() == 0) {
-			gif = HTTPService.GetGIF(search, "high");
-		}
+			List<String> gifURLs = new ArrayList<>();
 
-		try {
-			EmbedBuilder response = response(EmbedType.INFO);
-			InputStream file = new URL(gif).openStream();
-			response.setImage("attachment://result.gif");
-			response.setDescription(search);
-			executingCommand.replyFile(file, "result.gif", response);
+			// For each media array, add the gif value.
+            for (JSONArray media : gifMedia) {
+                for (int o = 0; o < media.length(); o++) {
+                    JSONObject resultObject = media.getJSONObject(o);
+                    JSONObject gif = resultObject.getJSONObject("gif");
+                    JSONObject mediumgif = resultObject.getJSONObject("mediumgif");
+                    JSONObject tinygif = resultObject.getJSONObject("tinygif");
+                    String url;
 
-			return null;
-		} catch (IOException e) {
-			LoggingService.LogException(e);
+                    if (gif.getInt("size") <= 8000000) {
+                        url = gif.getString("url");
+                    } else if (mediumgif.getInt("size") <= 8000000) {
+                        url = mediumgif.getString("url");
+                    } else {
+                        url = tinygif.getString("url");
+                    }
 
-			return response(EmbedType.ERROR, ErrorKey.BOT_ERROR.name())
-					.setDescription(executingCommand.getLanguage().getError(ErrorKey.BOT_ERROR));
+                    gifURLs.add(url);
+                }
+            }
+
+			if (!gifURLs.isEmpty()) {
+				return RandomService.GetRandomObjectFromList(gifURLs);
+			} else {
+				return getGIF("404", "high");
+			}
+		} else {
+			return "https://media.tenor.com/qsthhHhdjsQAAAAC/error-windows.gif";
 		}
 	}
 }

@@ -1,14 +1,14 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.language.LanguageKey;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class EightBall extends Command {
@@ -22,6 +22,11 @@ public class EightBall extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[0];
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("8ball", "Shake a Magic 8 Ball and let me see your future.")
 				.addParameters(
@@ -32,11 +37,19 @@ public class EightBall extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String question = executingCommand.getCommandArguments().getAsString("question");
-		String answer = executingCommand.getLanguage().getMsg(LanguageKey.EIGHT_BALL_OPTIONS);
+	public void onCommandFailure(Execution execution) {
 
-		return response(EmbedType.INFO)
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String question = execution.getArguments().get("question").getAsString();
+		String answer = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.EIGHT_BALL_OPTIONS.name());
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
 				.addField(question, answer, false);
+
+		Corvus.reply(execution, builder);
 	}
 }
