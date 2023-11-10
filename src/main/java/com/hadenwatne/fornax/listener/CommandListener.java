@@ -77,6 +77,7 @@ public class CommandListener extends ListenerAdapter {
 
             for (Permission p : execution.getCommand().getRequiredPermissions()) {
                 if (!server.getSelfMember().hasPermission(channel, p)) {
+                    execution.setFailureReasonDetails(p.getName());
                     return false;
                 }
             }

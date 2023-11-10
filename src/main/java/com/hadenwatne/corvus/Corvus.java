@@ -6,6 +6,7 @@ import com.hadenwatne.fornax.Bot;
 import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.types.ExecutionFailReason;
 import com.hadenwatne.fornax.command.types.ExecutionStatus;
+import com.hadenwatne.fornax.service.types.LogType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -46,10 +47,15 @@ public class Corvus {
                 List<FileUpload> uploads = new ArrayList<>();
 
                 for (CorvusAttachment attachment : builder.getAttachments()) {
+                    App.getLogger().Log(LogType.DEBUG, attachment.getFileUrl().toString());
+                    App.getLogger().Log(LogType.DEBUG, attachment.getFileName());
+
                     InputStream fileInputStream = attachment.getFileUrl().openStream();
 
                     uploads.add(FileUpload.fromData(fileInputStream, attachment.getFileName()));
                 }
+
+                App.getLogger().Log(LogType.DEBUG, builder.toString());
 
                 execution.getEvent().replyFiles(uploads)
                         .setEmbeds(builder.preBuild().build())

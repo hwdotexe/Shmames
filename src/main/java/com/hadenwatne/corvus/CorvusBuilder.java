@@ -4,12 +4,12 @@ import com.hadenwatne.corvus.types.CorvusFileExtension;
 import com.hadenwatne.corvus.types.MessageType;
 import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.Bot;
+import com.hadenwatne.fornax.service.types.LogType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -92,15 +92,24 @@ public class CorvusBuilder {
     }
 
     CorvusBuilder setAuthor(String authorName, String imageUrl, CorvusFileExtension extension) {
+        App.getLogger().Log(LogType.DEBUG, authorName);
+        App.getLogger().Log(LogType.DEBUG, imageUrl);
+
         try {
             URL file = URI.create(imageUrl).toURL();
-            String fileName = "_CORVUS_PROFILE_IMAGE_" + extension.getExtension();
+            String fileName = "CORVUSPROFILEIMAGE." + extension.getExtension();
 
             this.attachments.add(new CorvusAttachment(file, fileName));
             this.embedBuilder.setAuthor(authorName, null, "attachment://" + fileName);
-        } catch (MalformedURLException exception) {
+        } catch (Exception exception) {
             App.getLogger().LogException(exception);
         }
+
+        return this;
+    }
+
+    CorvusBuilder setAuthor(String authorName, String imageUrl) {
+        this.embedBuilder.setAuthor(authorName, null, imageUrl);
 
         return this;
     }
@@ -126,11 +135,11 @@ public class CorvusBuilder {
     public CorvusBuilder setImage(String url, CorvusFileExtension extension) {
         try {
             URL file = URI.create(url).toURL();
-            String fileName = "_CORVUS_IMAGE_." + extension.getExtension();
+            String fileName = "CORVUSIMAGE." + extension.getExtension();
 
             this.attachments.add(new CorvusAttachment(file, fileName));
             this.embedBuilder.setImage("attachment://" + fileName);
-        } catch (MalformedURLException exception) {
+        } catch (Exception exception) {
             App.getLogger().LogException(exception);
         }
 
@@ -146,11 +155,11 @@ public class CorvusBuilder {
     public CorvusBuilder setThumbnail(String url, CorvusFileExtension extension) {
         try {
             URL file = URI.create(url).toURL();
-            String fileName = "_CORVUS_THUMBNAIL_" + extension.getExtension();
+            String fileName = "CORVUSTHUMBNAIL." + extension.getExtension();
 
             this.attachments.add(new CorvusAttachment(file, fileName));
             this.embedBuilder.setThumbnail("attachment://" + fileName);
-        } catch (MalformedURLException exception) {
+        } catch (Exception exception) {
             App.getLogger().LogException(exception);
         }
 
@@ -199,9 +208,9 @@ public class CorvusBuilder {
                     String authorText = breadcrumbText.toString();
                     authorText = authorText.substring(0, Math.min(authorText.length(), MessageEmbed.AUTHOR_MAX_LENGTH));
 
-                    this.setAuthor(authorText, this.bot.getBotAvatarUrl(), CorvusFileExtension.PNG);
+                    this.setAuthor(authorText, this.bot.getBotAvatarUrl());
                 } else {
-                    this.setAuthor(this.bot.getBotName(), this.bot.getBotAvatarUrl(), CorvusFileExtension.PNG);
+                    this.setAuthor(this.bot.getBotName(), this.bot.getBotAvatarUrl());
                 }
             }
 

@@ -78,10 +78,13 @@ public class Language {
 
     private void populateDefaultValues() {
         errors.add(new LanguageError(ErrorKey.GENERIC_ERROR.name(), new String[]{"Something went wrong! Please try again later."}));
+        errors.add(new LanguageError(ErrorKey.MISSING_BOT_PERMISSION.name(), new String[]{"Please adjust my bot permissions to include:"+linebreak+wildcard}));
         errors.add(new LanguageError(ErrorKey.WRONG_USAGE.name(), new String[]{"Whoops! Incorrect usage - please try again."}));
 
         messages.add(new LanguageMessage(LanguageKey.BLAME.name(), new String[]{"I blame " + wildcard}));
         messages.add(new LanguageMessage(LanguageKey.BLAME_OPTIONS.name(), new String[]{"Obama", "Trump", "Blizzard", "China", "EA", "4Chan", "your mom", "the economy", "Big Pharma", "India", "Nigeria", "Mexico", "Chemtrails", "GMOs", "vaccines", "#VapeLife", "weebs", "essential oils", "Karen", "Epic Games", "video games", "hip hop", "Fortnite", "Source Filmmaker", "Discord", "Coronavirus", "Apple", "Google", "Starbucks", "NASA", "Keanu Reeves", "Oscar the Grouch", "Ohio"}));
         messages.add(new LanguageMessage(LanguageKey.CHOOSE.name(), new String[]{"I choose: " + wildcard + "!"}));
+        messages.add(new LanguageMessage(LanguageKey.EIGHT_BALL_OPTIONS.name(), new String[]{"Definitely.", "Without a doubt.", "Yes - of course.", "You can bet on it.", "Most likely.", "It's looking good!", "Duh.", "Signs point to yes.", "Why don't you ask me later?", "Don't count on it.", "My reply is no.", "My sources say no.", "It's not looking good.", "I highly doubt it.", "Nope.", "No way.", "That's a negative."}));
+        messages.add(new LanguageMessage(LanguageKey.GENERIC_SUCCESS.name(), new String[]{"Success!"}));
     }
 }

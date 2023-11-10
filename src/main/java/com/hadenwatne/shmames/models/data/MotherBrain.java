@@ -9,11 +9,11 @@ import java.util.List;
 
 public class MotherBrain {
     public String botName;
-    private HashMap<String, ActivityType> statuses;
-    private HashMap<String, Integer> commandStats;
-    private List<Family> serverFamilies;
-    private String tenorAPIKey;
-    private String wolframAPIKey;
+    public HashMap<String, ActivityType> statuses;
+    public HashMap<String, Integer> commandStats;
+    public List<Family> serverFamilies;
+    public String tenorAPIKey;
+    public String wolframAPIKey;
 
     public MotherBrain(){}
 

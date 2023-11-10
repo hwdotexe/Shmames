@@ -1,23 +1,17 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
-import com.hadenwatne.shmames.App;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.services.MessageService;
-import com.hadenwatne.shmames.services.ShmamesService;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.hadenwatne.fornax.command.types.ExecutionFailReason;
+import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
-import net.dv8tion.jda.api.exceptions.PermissionException;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Say extends Command {
 	public Say() {
@@ -30,11 +24,14 @@ public class Say extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
+	}
+
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("say", "I'll repeat after you! Send messages, links, or server emotes!")
-				.addAlias("echo")
-				.addAlias("repeat")
-				.addAlias("simonsays")
 				.addParameters(
 						new CommandParameter("message", "The message you want me to repeat.", ParameterType.STRING)
 								.setExample("Am I kawaii??")
@@ -43,50 +40,35 @@ public class Say extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String message = executingCommand.getCommandArguments().getAsString("message");
-		boolean sendSimple = false;
+	public void onCommandFailure(Execution execution) {
+		CorvusBuilder builder = Corvus.error(execution.getBot());
+		String errorMessage;
 
-		// if is message, delete message and send simple message back.
-		// if is hook, build an embed.
-
-		if(executingCommand.hasMessage()) {
-			// Delete the message that ran this command, if possible.
-			try {
-				executingCommand.getMessage().delete().queue();
-			} catch (PermissionException ignored) {}
-
-			sendSimple = true;
-		}
-
-		if(executingCommand.getServer() != null) {
-			Matcher m = Pattern.compile("(?!<):([\\w\\d_]+):(?!\\d+>)", Pattern.CASE_INSENSITIVE).matcher(message);
-			Brain brain = executingCommand.getBrain();
-
-			while (m.find()) {
-				String eName = m.group(1);
-				RichCustomEmoji emote = ShmamesService.GetFamilyEmote(eName, brain, executingCommand.getServer());
-
-				if(emote != null) {
-					// Replace the emote name with the emote mention.
-					message = message.replaceFirst(m.group(), emote.getAsMention());
-
-					// Tally the emote
-					Brain emoteBrain = App.Shmames.getStorageService().getBrain(emote.getGuild().getId());
-					String eID = Long.toString(emote.getIdLong());
-
-					ShmamesService.IncrementEmoteTally(emoteBrain, eID);
-				}
-			}
-		}
-
-		if(sendSimple) {
-			MessageService.SendSimpleMessage(executingCommand.getChannel(), message);
-
-			return null;
+		if(execution.getFailureReason() == ExecutionFailReason.BOT_MISSING_PERMISSION) {
+			errorMessage = execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.MISSING_BOT_PERMISSION.name(), execution.getFailureReasonDetails());
 		} else {
-			return response(EmbedType.INFO)
-					.setDescription(message);
+			errorMessage = execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.GENERIC_ERROR.name());
 		}
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription(errorMessage)
+				.setEphemeral();
+
+		Corvus.reply(execution, builder);
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String message = execution.getArguments().get("message").getAsString();
+		String success = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.GENERIC_SUCCESS.name());
+
+		CorvusBuilder builder = Corvus.success(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription(success)
+				.setEphemeral();
+
+		Corvus.reply(execution, builder);
+		execution.getChannel().sendMessage(message).queue();
 	}
 }

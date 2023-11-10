@@ -17,6 +17,7 @@ import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.Permission;
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ public class GIF extends Command {
 
 	@Override
 	protected Permission[] configureRequiredUserPermissions() {
-		return new Permission[0];
+		return null;
 	}
 
 	@Override
@@ -84,8 +85,7 @@ public class GIF extends Command {
 	private String getGIF(String search, String filter) {
 		App.getLogger().Log(LogType.NETWORK, "[GIF Search: " + search + " @ " + filter + "]");
 
-		// TODO use apache StringEscapeUtils to escape for HTML
-		search = search.trim();
+		search = StringEscapeUtils.ESCAPE_HTML4.translate(search.trim());
 		String apiKey = shmames.getBrainController().getMotherBrain().getTenorAPIKey();
 		HTTPResponse result = HTTPUtility.get("https://g.tenor.com/v1/search?q=" + search + "&key=" + apiKey + "&contentfilter=" + filter + "&limit=25");
 

@@ -69,6 +69,7 @@ public class Shmames extends Bot {
 		registerCommand(new When());
 		registerCommand(new Wiki());
 		registerCommand(new GIF(this));
+		registerCommand(new Say());
 	}
 
 	public BrainController getBrainController() {

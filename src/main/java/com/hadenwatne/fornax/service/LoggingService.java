@@ -13,10 +13,12 @@ public class LoggingService {
 
     private List<String> _tempLog;
     private Calendar _cal;
+    private boolean enableDebugLogs;
 
-    public LoggingService() {
+    public LoggingService(boolean enableDebugLogs) {
         _tempLog = new ArrayList<>();
         _cal = Calendar.getInstance();
+        this.enableDebugLogs = enableDebugLogs;
 
         File logDir = new File(LOGS_FOLDER);
 
@@ -26,6 +28,10 @@ public class LoggingService {
     }
 
     public void Log(LogType type, String log) {
+        if(type == LogType.DEBUG && !enableDebugLogs) {
+            return;
+        }
+
         log = "[" + getDateTime() + "] [" + type.name() + "] " + log;
 
         System.out.println(log);

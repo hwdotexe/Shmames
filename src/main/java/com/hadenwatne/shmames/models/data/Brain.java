@@ -4,7 +4,6 @@ import com.hadenwatne.shmames.models.*;
 import com.hadenwatne.shmames.models.game.HangmanGame;
 import com.hadenwatne.shmames.services.settings.BotSetting;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
-import com.hadenwatne.shmames.tasks.AlarmTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,29 +12,26 @@ import java.util.List;
 
 // TODO clean this up
 public class Brain {
-	private final String guildID;
-	private final HashMap<String, Integer> tallies;
-	private final HashMap<String, Integer> emoteStats;
-	private List<RoleMessage> roleMessages;
-	private List<UserCustomList> userLists;
-	private final List<Response> triggerResponses;
-	private final List<BotSetting> settings;
-	private final List<String> feedback;
-	private final List<PollModel> activePolls;
-	private final List<String> families;
-	private final List<ForumWeaponObj> forumWeapons;
-	private final List<AlarmTask> timers;
-	private final List<Playlist> playlists;
-	private List<GachaCharacter> gachaCharacters;
-	private List<GachaUser> gachaUsers;
-	private List<String> talliedMessages;
-	private Date gachaUserCreditDate;
-	private GachaBanner banner;
-	private boolean isReportCooldown;
-	private boolean sentWelcome;
-	private StorytimeStories stories;
-	private HangmanDictionaries dictionaries;
-	private HangmanGame hangmanGame;
+	public String guildID;
+	public HashMap<String, Integer> tallies;
+	public HashMap<String, Integer> emoteStats;
+	public List<RoleMessage> roleMessages;
+	public List<UserCustomList> userLists;
+	public List<BotSetting> settings;
+	public List<String> feedback;
+	public List<String> families;
+	public List<ForumWeaponObj> forumWeapons;
+	public List<Playlist> playlists;
+	public List<GachaCharacter> gachaCharacters;
+	public List<GachaUser> gachaUsers;
+	public List<String> talliedMessages;
+	public Date gachaUserCreditDate;
+	public GachaBanner banner;
+	public boolean isReportCooldown;
+	public boolean sentWelcome;
+	public StorytimeStories stories;
+	public HangmanDictionaries dictionaries;
+	public HangmanGame hangmanGame;
 
 	public Brain() {};
 
@@ -45,13 +41,10 @@ public class Brain {
 		roleMessages = new ArrayList<>();
 		emoteStats = new HashMap<>();
 		userLists = new ArrayList<>();
-		triggerResponses = new ArrayList<>();
 		settings = new ArrayList<>();
 		feedback = new ArrayList<>();
-		activePolls = new ArrayList<>();
 		families = new ArrayList<>();
 		forumWeapons = new ArrayList<>();
-		timers = new ArrayList<>();
 		playlists = new ArrayList<>();
 		gachaCharacters = new ArrayList<>();
 		gachaUsers = new ArrayList<>();
@@ -72,10 +65,6 @@ public class Brain {
 	public void setReportCooldown(boolean cd) {
 		isReportCooldown = cd;
 	}
-	
-	public List<PollModel> getActivePolls(){
-		return activePolls;
-	}
 
 	public HangmanGame getHangmanGame(){
 		return hangmanGame;
@@ -83,10 +72,6 @@ public class Brain {
 
 	public void setHangmanGame(HangmanGame g){
 		this.hangmanGame = g;
-	}
-
-	public List<AlarmTask> getTimers(){
-		return timers;
 	}
 	
 	/*
@@ -115,14 +100,6 @@ public class Brain {
 	
 	public String getGuildID() {
 		return guildID;
-	}
-	
-	public List<Response> getTriggerResponses(){
-		return triggerResponses;
-	}
-	
-	public void removeTriggerResponse(Response r) {
-		triggerResponses.remove(r);
 	}
 	
 	public List<BotSetting> getSettings(){

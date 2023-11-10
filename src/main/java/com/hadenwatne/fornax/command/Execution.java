@@ -21,13 +21,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Execution {
-    // Status [RUNNING, COMPLETED, FAILED]
-    // Fail reason
-    // Event
-    // Command
-    // Server
-    // User
-
     private Bot _bot;
     private Command _command;
     private String _subCommandGroup;
@@ -37,6 +30,7 @@ public class Execution {
     private InteractionHook _hook;
     private ExecutionStatus _status;
     private ExecutionFailReason _failureReason;
+    private String _failureReasonDetails;
 
     public Execution(Bot bot, Command command, SlashCommandInteractionEvent event) {
         _bot = bot;
@@ -45,6 +39,7 @@ public class Execution {
         _hook = event.getHook();
         _status = ExecutionStatus.STARTED;
         _failureReason = ExecutionFailReason.NONE;
+        _failureReasonDetails = "";
         _arguments = buildArgumentList(event.getOptions());
         _subCommand = event.getSubcommandName();
         _subCommandGroup = event.getSubcommandGroup();
@@ -77,9 +72,16 @@ public class Execution {
     public void setFailureReason(ExecutionFailReason failureReason) {
         this._failureReason = failureReason;
     }
+    public void setFailureReasonDetails(String details) {
+        this._failureReasonDetails = details;
+    }
 
     public ExecutionFailReason getFailureReason() {
         return _failureReason;
+    }
+
+    public String getFailureReasonDetails() {
+        return _failureReasonDetails;
     }
 
     public Command getCommand() {

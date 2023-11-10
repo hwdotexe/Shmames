@@ -11,11 +11,12 @@ public class App {
     private static LoggingService _loggingService;
 
     public static void main(String[] args) {
-        _loggingService = new LoggingService();
-
         if (args.length > 0 && args[0].equalsIgnoreCase("-debug")) {
             _debugMode = true;
+            _loggingService = new LoggingService(true);
             _loggingService.Log(LogType.SYSTEM, "Launching in Debug Mode");
+        } else {
+            _loggingService = new LoggingService(false);
         }
 
         detectImplementingBot();

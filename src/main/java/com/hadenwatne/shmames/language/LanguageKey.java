@@ -4,5 +4,6 @@ public enum LanguageKey {
     BLAME,
     BLAME_OPTIONS,
     CHOOSE,
-    EIGHT_BALL_OPTIONS
+    EIGHT_BALL_OPTIONS,
+    GENERIC_SUCCESS
 }
