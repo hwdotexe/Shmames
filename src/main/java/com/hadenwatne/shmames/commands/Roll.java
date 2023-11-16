@@ -114,6 +114,12 @@ public class Roll extends Command implements IInteractable {
 			default -> processRoll(dicePattern, Collections.singletonList("1d20"));
 		};
 
+		if (buttonInteraction.getMessage().getEmbeds().isEmpty()) {
+			buttonInteraction.editComponents().queue();
+
+			return;
+		}
+
 		MessageEmbed embed = buttonInteraction.getMessage().getEmbeds().get(0);
 		EmbedBuilder builder = EmbedBuilder.fromData(embed.toData());
 
