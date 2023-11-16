@@ -1,15 +1,25 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.IInteractable;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.EntitySelectInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectInteraction;
+import net.dv8tion.jda.api.interactions.modals.ModalInteraction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +28,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Roll extends Command {
+public class Roll extends Command implements IInteractable {
 	private final Pattern dicePattern = Pattern.compile("([+\\-*/])?\\s?((\\d{1,3})?d)?(\\d{1,3})(\\^[kt]([hl])(\\d)?)?", Pattern.CASE_INSENSITIVE);
 
 	public Roll() {
@@ -31,6 +41,11 @@ public class Roll extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[0];
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("roll", "Roll some dice with optional modifiers.")
 				.addParameters(
@@ -38,15 +53,22 @@ public class Roll extends Command {
 								.setPattern("([+\\-*/\\d\\s()d\\^tkhl]+)")
 								.setExample("2d20^kh+1d4"),
 						new CommandParameter("memo", "A short description of the roll.", ParameterType.STRING, false)
-								.setExample("I roll for initiative!")
+								.setExample("I roll for initiative!"),
+						new CommandParameter("sticky", "Make this roll sticky.", ParameterType.BOOLEAN, false)
 				)
 				.build();
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String diceArg = executingCommand.getCommandArguments().getAsString("dice");
-		String memo = executingCommand.getCommandArguments().getAsString("memo");
+	public void onCommandFailure(Execution execution) {
+
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String diceArg = execution.getArguments().get("dice").getAsString();
+		OptionMapping memoMapping = execution.getArguments().get("memo");
+		OptionMapping stickyMapping = execution.getArguments().get("sticky");
 		Matcher dice = dicePattern.matcher(diceArg);
 		List<String> diceOps = new ArrayList<String>();
 
@@ -55,15 +77,69 @@ public class Roll extends Command {
 		}
 
 		String rollResult = processRoll(dicePattern, diceOps);
+		CorvusBuilder builder = Corvus.info(execution.getBot());
 
-		EmbedBuilder response = response(EmbedType.INFO, executingCommand.getAuthorUser().getAsTag())
-				.setDescription(rollResult);
+		builder.addBreadcrumbs(this.getCommandStructure().getName(), execution.getUser().getName())
+					.setDescription(rollResult);
 
-		if(memo != null) {
-			response.addField("Memo", memo, false);
+		if(memoMapping != null) {
+			builder.addField("Memo", memoMapping.getAsString(), false);
 		}
 
-		return response;
+		if(stickyMapping != null) {
+			if(stickyMapping.getAsBoolean()) {
+				Button d4 = Button.secondary("d4", "1d4");
+				Button d6 = Button.secondary("d6", "1d6");
+				Button d8 = Button.secondary("d8", "1d8");
+				Button d20 = Button.secondary("d20", "1d20");
+
+				builder.addLayoutComponent(ActionRow.of(d4, d6, d8, d20));
+			}
+		}
+
+		Corvus.reply(execution, builder);
+	}
+
+	@Override
+	public String[] getInteractionIDs() {
+		return new String[]{"d4", "d6", "d8", "d20"};
+	}
+
+	@Override
+	public void onButtonClick(ButtonInteraction buttonInteraction) {
+		String roll = switch (buttonInteraction.getComponentId()) {
+			case "d4" -> processRoll(dicePattern, Collections.singletonList("1d4"));
+			case "d6" -> processRoll(dicePattern, Collections.singletonList("1d6"));
+			case "d8" -> processRoll(dicePattern, Collections.singletonList("1d8"));
+			default -> processRoll(dicePattern, Collections.singletonList("1d20"));
+		};
+
+		MessageEmbed embed = buttonInteraction.getMessage().getEmbeds().get(0);
+		EmbedBuilder builder = EmbedBuilder.fromData(embed.toData());
+
+		if ((builder.getDescriptionBuilder().length() + roll.length() + System.lineSeparator().length()) <= MessageEmbed.DESCRIPTION_MAX_LENGTH) {
+			builder.appendDescription(System.lineSeparator());
+			builder.appendDescription(roll);
+		} else {
+			builder.setDescription(roll);
+		}
+
+		buttonInteraction.editMessageEmbeds(builder.build()).queue();
+	}
+
+	@Override
+	public void onStringClick(StringSelectInteraction stringSelectInteraction) {
+
+	}
+
+	@Override
+	public void onEntityClick(EntitySelectInteraction entitySelectInteraction) {
+
+	}
+
+	@Override
+	public void onModalSubmit(ModalInteraction modalInteraction) {
+
 	}
 
 	private String processRoll(Pattern p, List<String> diceRolls) {
