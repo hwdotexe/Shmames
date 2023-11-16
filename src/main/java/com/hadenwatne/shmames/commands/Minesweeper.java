@@ -1,14 +1,14 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.game.MinesweepGame;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class Minesweeper extends Command {
@@ -22,25 +22,40 @@ public class Minesweeper extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[0];
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("minesweeper", "Play a game of Minesweeper, using a grid size of 6 through 11.")
 				.addParameters(
-						new CommandParameter("size", "The size of the minefield, 6-11", ParameterType.INTEGER)
-								.setExample("7")
+						new CommandParameter("difficulty", "How hard the puzzle should be", ParameterType.SELECTION)
+								.setExample("NORMAL")
+								.addSelectionOptions("EASY, NORMAL, HARD")
 				)
 				.build();
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		int size = executingCommand.getCommandArguments().getAsInteger("size");
+	public void onCommandFailure(Execution execution) {
 
-		if (size >= 6 && size <= 11) {
-			return response(EmbedType.INFO)
-					.setDescription(MinesweepGame.BuildNewGame(size));
-		} else {
-			return response(EmbedType.ERROR)
-					.setDescription("Valid range is 6-11");
-		}
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String difficulty = execution.getArguments().get("difficulty").getAsString();
+		String game = switch (difficulty.toUpperCase()) {
+			case "EASY" -> MinesweepGame.BuildNewGame(6);
+			case "HARD" -> MinesweepGame.BuildNewGame(11);
+			default -> MinesweepGame.BuildNewGame(8);
+		};
+
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName(), difficulty.toLowerCase())
+				.setDescription(game);
+
+		Corvus.reply(execution, builder);
 	}
 }

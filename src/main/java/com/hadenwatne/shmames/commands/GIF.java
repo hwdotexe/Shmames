@@ -17,10 +17,11 @@ import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.services.RandomService;
 import net.dv8tion.jda.api.Permission;
-import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class GIF extends Command {
 	private String getGIF(String search, String filter) {
 		App.getLogger().Log(LogType.NETWORK, "[GIF Search: " + search + " @ " + filter + "]");
 
-		search = StringEscapeUtils.ESCAPE_HTML4.translate(search.trim());
+		search = URLEncoder.encode(search.trim(), StandardCharsets.UTF_8);
 		String apiKey = shmames.getBrainController().getMotherBrain().getTenorAPIKey();
 		HTTPResponse result = HTTPUtility.get("https://g.tenor.com/v1/search?q=" + search + "&key=" + apiKey + "&contentfilter=" + filter + "&limit=25");
 

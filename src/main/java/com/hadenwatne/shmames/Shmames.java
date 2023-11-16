@@ -39,37 +39,30 @@ public class Shmames extends Bot {
 		registerCommand(new Choose());
 		registerCommand(new Dev(this));
 		registerCommand(new EightBall());
-		registerCommand(new Enhance());
 		registerCommand(new FamilyCmd());
 		registerCommand(new ForumWeapon());
 		registerCommand(new Gacha());
-		registerCommand(new GIF());
 		registerCommand(new Hangman());
 		registerCommand(new Help());
-		registerCommand(new IdiotThat());
 		registerCommand(new ListCmd());
-		registerCommand(new ListEmoteStats());
-		registerCommand(new Minesweeper());
 		registerCommand(new Modify());
 		registerCommand(new Music());
 		registerCommand(new Pin());
 		registerCommand(new Poll());
 		registerCommand(new React());
 		registerCommand(new Report());
-		registerCommand(new ResetEmoteStats());
 		registerCommand(new Roles());
 		registerCommand(new Roll());
-		registerCommand(new Say());
 		registerCommand(new Storytime());
 		registerCommand(new Tally());
-		registerCommand(new Thoughts());
 		registerCommand(new Timer());
-		registerCommand(new WhatAreTheOdds());
 		registerCommand(new WhatShouldIDo());
 		registerCommand(new When());
-		registerCommand(new Wiki());
 		registerCommand(new GIF(this));
+		registerCommand(new Minesweeper());
+		registerCommand(new Odds());
 		registerCommand(new Say());
+		registerCommand(new Wiki(this));
 	}
 
 	public BrainController getBrainController() {

@@ -1,19 +1,19 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.language.LanguageKey;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
-public class WhatAreTheOdds extends Command {
-	public WhatAreTheOdds() {
+public class Odds extends Command {
+	public Odds() {
 		super(false);
 	}
 
@@ -23,9 +23,13 @@ public class WhatAreTheOdds extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return new Permission[0];
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
-		return CommandBuilder.Create("whataretheodds", "Get the odds out of 100 of something happening.")
-				.addAlias("what are the odds")
+		return CommandBuilder.Create("odds", "Get the odds out of 100 of something happening.")
 				.addParameters(
 						new CommandParameter("query", "The event to determine the odds of.", ParameterType.STRING)
 								.setExample("I become famous")
@@ -34,11 +38,21 @@ public class WhatAreTheOdds extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String query = executingCommand.getCommandArguments().getAsString("query");
-		int result = RandomService.GetRandom(100) + 1;
+	public void onCommandFailure(Execution execution) {
 
-		return response(EmbedType.INFO)
-				.addField(query, executingCommand.getLanguage().getMsg(LanguageKey.WHAT_ARE_THE_ODDS, new String[]{Integer.toString(result)+"%"}), false);
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String query = execution.getArguments().get("query").getAsString();
+		int result = RandomService.GetRandom(100) + 1;
+		String reply = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.ODDS.name(), Integer.toString(result));
+
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.addField(query, reply, false);
+
+		Corvus.reply(execution, builder);
 	}
 }
