@@ -95,7 +95,11 @@ public class DataService {
      * @return True if and only if the String is a Long.
      */
     public static boolean IsBoolean(String test) {
-        return test.equalsIgnoreCase("true") || test.equalsIgnoreCase("false");
+        if(test != null) {
+            return test.equalsIgnoreCase("true") || test.equalsIgnoreCase("false");
+        }
+
+        return false;
     }
 
     /**

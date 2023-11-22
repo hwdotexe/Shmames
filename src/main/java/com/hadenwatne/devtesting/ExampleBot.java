@@ -1,9 +1,6 @@
 package com.hadenwatne.devtesting;
 
-import com.hadenwatne.fornax.App;
-import com.hadenwatne.fornax.Bot;
-import com.hadenwatne.fornax.service.types.LogType;
-
+/*
 public class ExampleBot extends Bot {
     @Override
     protected void afterInit() {
@@ -18,3 +15,4 @@ public class ExampleBot extends Bot {
         this.registerCommand(new ExampleCommand());
     }
 }
+*/
