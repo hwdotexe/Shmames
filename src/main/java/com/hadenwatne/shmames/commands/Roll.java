@@ -107,6 +107,12 @@ public class Roll extends Command implements IInteractable {
 
 	@Override
 	public void onButtonClick(ButtonInteraction buttonInteraction) {
+		if (buttonInteraction.getMessage().getEmbeds().isEmpty()) {
+			buttonInteraction.editComponents().queue();
+
+			return;
+		}
+
 		String roll = switch (buttonInteraction.getComponentId()) {
 			case "d4" -> processRoll(dicePattern, Collections.singletonList("1d4"));
 			case "d6" -> processRoll(dicePattern, Collections.singletonList("1d6"));
@@ -114,17 +120,13 @@ public class Roll extends Command implements IInteractable {
 			default -> processRoll(dicePattern, Collections.singletonList("1d20"));
 		};
 
-		if (buttonInteraction.getMessage().getEmbeds().isEmpty()) {
-			buttonInteraction.editComponents().queue();
-
-			return;
-		}
-
 		MessageEmbed embed = buttonInteraction.getMessage().getEmbeds().get(0);
 		EmbedBuilder builder = EmbedBuilder.fromData(embed.toData());
+		String timeCode = "<t:" + (System.currentTimeMillis() / 1000L) + ":t> » ";
 
-		if ((builder.getDescriptionBuilder().length() + roll.length() + System.lineSeparator().length()) <= MessageEmbed.DESCRIPTION_MAX_LENGTH) {
+		if ((builder.getDescriptionBuilder().length() + roll.length() + System.lineSeparator().length() + timeCode.length()) <= MessageEmbed.DESCRIPTION_MAX_LENGTH) {
 			builder.appendDescription(System.lineSeparator());
+			builder.appendDescription(timeCode);
 			builder.appendDescription(roll);
 		} else {
 			builder.setDescription(roll);
