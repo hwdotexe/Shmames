@@ -1,12 +1,13 @@
 package com.hadenwatne.shmames.services;
 
-import com.hadenwatne.shmames.App;
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.fornax.Bot;
+import com.hadenwatne.fornax.service.ILanguageProvider;
 import com.hadenwatne.shmames.language.ErrorKey;
+import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.language.Language;
-import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,31 +59,23 @@ public class PaginationService {
         return listObject;
     }
 
-    /**
-     * Generates an embedded message using a pre-paginated List.
-     * @param paginatedList The pre-paginated list to draw.
-     * @param pageToDisplay The page of the list to display.
-     * @param prefix The prefix to use in the header before the page indicator.
-     * @param color The color to make for this embed.
-     * @param language The Lang file being used.
-     * @return An EmbedBuilder displaying the data.
-     */
-    public static EmbedBuilder DrawEmbedPage(PaginatedList paginatedList, int pageToDisplay, String prefix, Color color, Language language) {
-        EmbedBuilder eBuilder = new EmbedBuilder();
+    public static CorvusBuilder DrawEmbedPage(PaginatedList paginatedList, int pageToDisplay, Bot bot, ILanguageProvider languageProvider) {
         List<String> listData = paginatedList.getPaginatedList();
         int pageIndex = pageToDisplay - 1;
 
-        eBuilder.setColor(color);
-        eBuilder.setAuthor(App.Shmames.getBotName(), null, App.Shmames.getJDA().getSelfUser().getAvatarUrl());
-        eBuilder.setFooter(paginatedList.getItemCount() + " items");
+        CorvusBuilder builder;
+        if (pageToDisplay > listData.size() || pageToDisplay == 0) {
+            builder = Corvus.error(bot);
 
-        if(pageToDisplay > listData.size() || pageToDisplay == 0) {
-            eBuilder.addField("Error", language.getError(ErrorKey.PAGE_NOT_FOUND), false);
+            builder.setDescription(languageProvider.getErrorFromKey(ErrorKey.GENERIC_ERROR.name()));
         } else {
-            eBuilder.addField(prefix + " (Page " + pageToDisplay + " of " + listData.size() + ")", listData.get(pageIndex), false);
+            builder = Corvus.info(bot);
+
+            builder.addField(languageProvider.getMessageFromKey(LanguageKey.TALLY_LIST.name()) + " (Page " + pageToDisplay + " of " + listData.size() + ")", listData.get(pageIndex), false);
+            builder.setFooter(paginatedList.getItemCount() + " items");
         }
 
-        return eBuilder;
+        return builder;
     }
 
     /**

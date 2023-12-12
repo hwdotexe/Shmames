@@ -7,8 +7,14 @@ import com.hadenwatne.shmames.listeners.ChatListener;
 import com.hadenwatne.shmames.listeners.FirstJoinListener;
 import com.hadenwatne.shmames.listeners.ReactListener;
 import com.hadenwatne.shmames.services.RandomService;
+import com.hadenwatne.shmames.services.settings.BotSetting;
 import com.hadenwatne.shmames.services.settings.SettingsService;
+import com.hadenwatne.shmames.services.settings.types.BotSettingType;
 import com.hadenwatne.shmames.tasks.SaveDataTask;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 
 public class Shmames extends Bot {
 	private BrainController brainController;
@@ -53,7 +59,6 @@ public class Shmames extends Bot {
 		registerCommand(new Report());
 		registerCommand(new Roles());
 		registerCommand(new Storytime());
-		registerCommand(new Tally());
 		registerCommand(new Timer());
 		registerCommand(new WhatShouldIDo());
 		registerCommand(new When());
@@ -62,6 +67,7 @@ public class Shmames extends Bot {
 		registerCommand(new Odds());
 		registerCommand(new Roll());
 		registerCommand(new Say());
+		registerCommand(new Tally(this));
 		registerCommand(new Wiki(this));
 	}
 
@@ -75,5 +81,39 @@ public class Shmames extends Bot {
 
 	public LanguageProvider getLanguageProvider() {
 		return this.languageProvider;
+	}
+
+	public boolean checkPermission(Guild server, BotSetting setting, Member member) {
+		if(server != null) {
+			if (setting.getType() == BotSettingType.ROLE) {
+				if (isDebugMode())
+					return true;
+
+				if (member != null) {
+					// Always return true for administrators regardless of setting.
+					if(member.hasPermission(Permission.ADMINISTRATOR)) {
+						return true;
+					}
+
+					String roleString = setting.getAsString();
+
+					// If the role requires administrator, make sure they are admin.
+					if (roleString.equals("administrator")) {
+						return member.hasPermission(Permission.ADMINISTRATOR);
+					}
+
+					Role role = setting.getAsRole(server);
+
+					// Check if the user has the given role.
+					if(server.getPublicRole().getIdLong() == role.getIdLong()) {
+						return true;
+					}
+
+					return member.getRoles().contains(role);
+				}
+			}
+		}
+
+		return false;
 	}
 }

@@ -6,5 +6,9 @@ public enum LanguageKey {
     CHOOSE,
     EIGHT_BALL_OPTIONS,
     GENERIC_SUCCESS,
-    ODDS
+    ODDS,
+    TALLIES_CLEARED,
+    TALLY_CURRENT_VALUE,
+    TALLY_LIST,
+    TALLY_REMOVED
 }

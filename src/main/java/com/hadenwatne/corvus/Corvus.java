@@ -7,6 +7,7 @@ import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.types.ExecutionFailReason;
 import com.hadenwatne.fornax.command.types.ExecutionStatus;
 import com.hadenwatne.fornax.service.types.LogType;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -86,5 +87,9 @@ public class Corvus {
     public static RestAction<Message> update(CorvusBuilder builder) {
         return builder.getMessage().editMessageEmbeds(builder.preBuild().build())
                 .setComponents(builder.getLayoutComponents());
+    }
+
+    public static EmbedBuilder convert(CorvusBuilder corvusBuilder) {
+        return corvusBuilder.preBuild();
     }
 }

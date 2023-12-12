@@ -1,35 +1,46 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.IInteractable;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.fornax.service.caching.CacheService;
-import com.hadenwatne.shmames.services.settings.types.BotSettingName;
-import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.fornax.utility.FileUtility;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.ErrorKey;
 import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PaginatedList;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.language.Language;
-import com.hadenwatne.shmames.services.*;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.hadenwatne.shmames.services.DataService;
+import com.hadenwatne.shmames.services.PaginationService;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.EntitySelectInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectInteraction;
+import net.dv8tion.jda.api.interactions.modals.ModalInteraction;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class Tally extends Command {
-	public Tally() {
+public class Tally extends Command implements IInteractable {
+	private Shmames shmames;
+
+	public Tally(Shmames shmames) {
 		super(true);
+
+		this.shmames = shmames;
 	}
 
 	@Override
@@ -38,192 +49,206 @@ public class Tally extends Command {
 	}
 
 	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
+	}
+
+	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("tally", "Manage server tallies.")
-			.addSubCommands(
-					CommandBuilder.Create("add", "Increment a tally or create a new one.")
-							.addAlias("a")
-							.addParameters(
-									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-											.setPattern("[\\w\\d\\s]{3,}")
-											.setExample("myTally")
-							)
-							.build(),
-					CommandBuilder.Create("drop", "Decrement a tally or delete it if 0.")
-							.addAlias("d")
-							.addParameters(
-									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-											.setPattern("[\\w\\d\\s]{3,}")
-											.setExample("myTally")
-							)
-							.build(),
-					CommandBuilder.Create("set", "Overwrite the value of a tally.")
-							.addAlias("s")
-							.addParameters(
-									new CommandParameter("tallyName", "The tally to adjust.", ParameterType.STRING)
-											.setPattern("[\\w\\d\\s]{3,}")
-											.setExample("myTally"),
-									new CommandParameter("count", "The new count for this tally.", ParameterType.INTEGER)
-											.setExample("3")
-							)
-							.build(),
-					CommandBuilder.Create("list", "Display all of the current tallies.")
-							.addAlias("l")
-							.addParameters(
-									new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
-											.setExample("2")
-							)
-							.build(),
-					CommandBuilder.Create("search", "Find a tally based on a partial match.")
-							.addParameters(
-									new CommandParameter("tallyName", "The tally to search for.", ParameterType.STRING)
-											.setPattern("[\\w\\d\\s]{3,}")
-											.setExample("tally")
-							)
-							.build(),
-					CommandBuilder.Create("reset", "Export current tallies and clear them out.")
-							.build()
+				.addSubCommands(
+						CommandBuilder.Create("add", "Increment a tally or create a new one.")
+								.addParameters(
+										new CommandParameter("tallyname", "The tally to adjust.", ParameterType.STRING)
+												.setPattern("[\\w\\d\\s]{3,}")
+												.setExample("myTally")
+								)
+								.build(),
+						CommandBuilder.Create("drop", "Decrement a tally or delete it if 0.")
+								.addParameters(
+										new CommandParameter("tallyname", "The tally to adjust.", ParameterType.STRING)
+												.setPattern("[\\w\\d\\s]{3,}")
+												.setExample("myTally")
+								)
+								.build(),
+						CommandBuilder.Create("set", "Overwrite the value of a tally.")
+								.addParameters(
+										new CommandParameter("tallyname", "The tally to adjust.", ParameterType.STRING)
+												.setPattern("[\\w\\d\\s]{3,}")
+												.setExample("myTally"),
+										new CommandParameter("count", "The new count for this tally.", ParameterType.INTEGER)
+												.setExample("3")
+								)
+								.build(),
+						CommandBuilder.Create("list", "Display all of the current tallies.")
+								.build(),
+						CommandBuilder.Create("reset", "Export current tallies and clear them out.")
+								.build()
 				)
 				.build();
 	}
 
 	@Override
-	public EmbedBuilder run(ExecutingCommand executingCommand) {
-		String subCommand = executingCommand.getSubCommand();
-		Language language = executingCommand.getLanguage();
-		Brain brain = executingCommand.getBrain();
+	public void onCommandFailure(Execution execution) {
+
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String subCommand = execution.getSubCommand();
+		Brain brain = shmames.getBrainController().getBrain(execution.getServer().getId());
 
 		switch (subCommand) {
 			case "add":
-				return cmdAdd(language, brain, executingCommand.getCommandArguments());
+				cmdAdd(execution, brain);
+				break;
 			case "drop":
-				return cmdDrop(language, brain, executingCommand.getCommandArguments());
+				cmdDrop(execution, brain);
+				break;
 			case "set":
-				return cmdSet(language, brain, executingCommand.getCommandArguments());
+				cmdSet(execution, brain);
+				break;
 			case "list":
-				return cmdList(language, brain, executingCommand);
-			case "search":
-				return cmdSearch(language, brain, executingCommand.getCommandArguments());
+				cmdList(execution, brain);
+				break;
 			case "reset":
-				return cmdReset(language, brain, executingCommand);
+				cmdReset(execution, brain);
+				break;
 		}
-
-		return null;
 	}
 
-	private EmbedBuilder cmdAdd(Language language, Brain brain, ExecutingCommandArguments args) {
-		String rawTally = args.getAsString("tallyName");
+	private void cmdAdd(Execution execution, Brain brain) {
+		String rawTally = execution.getArguments().get("tallyname").getAsString();
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) + 1;
 
 		brain.getTallies().put(tally, newTally);
 
-		return response(EmbedType.SUCCESS)
-				.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+		String response = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLY_CURRENT_VALUE.name(), tally, Integer.toString(newTally));
+
+		CorvusBuilder builder = Corvus.success(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+				.setDescription(response);
+
+		Corvus.reply(execution, builder);
 	}
 
-	private EmbedBuilder cmdDrop(Language language, Brain brain, ExecutingCommandArguments args) {
-		String rawTally = args.getAsString("tallyName");
+	private void cmdDrop(Execution execution, Brain brain) {
+		String rawTally = execution.getArguments().get("tallyname").getAsString();
 		String tally = formatTally(rawTally);
 		int newTally = brain.getTallies().getOrDefault(tally, 0) - 1;
 
 		if (newTally == -1) {
-			// Never existed
+			String response = execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.TALLY_NOT_FOUND.name());
+			CorvusBuilder builder = Corvus.error(execution.getBot());
 
-			return response(EmbedType.ERROR, ErrorKey.NOT_FOUND.name())
-					.setDescription(language.getError(ErrorKey.NOT_FOUND));
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(response);
+
+			Corvus.reply(execution, builder);
 		} else if (newTally == 0) {
-			// Existed and removed
 			brain.getTallies().remove(tally);
 
-			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKey.TALLY_REMOVED, new String[]{tally}));
+			String response = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLY_REMOVED.name(), tally);
+			CorvusBuilder builder = Corvus.success(execution.getBot());
+
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(response);
+
+			Corvus.reply(execution, builder);
 		} else {
-			// Exists and lowers by 1
 			brain.getTallies().put(tally, newTally);
 
-			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(newTally)}));
+			String response = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLY_CURRENT_VALUE.name(), tally, Integer.toString(newTally));
+
+			CorvusBuilder builder = Corvus.info(execution.getBot());
+
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(response);
+
+			Corvus.reply(execution, builder);
 		}
 	}
 
-	private EmbedBuilder cmdSet(Language language, Brain brain, ExecutingCommandArguments args) {
-		String rawTally = args.getAsString("tallyName");
-		int count = args.getAsInteger("count");
+	private void cmdSet(Execution execution, Brain brain) {
+		String rawTally = execution.getArguments().get("tallyname").getAsString();
+		int count = execution.getArguments().get("count").getAsInt();
 		String tally = formatTally(rawTally);
 
 		if (count > 0) {
 			brain.getTallies().put(tally, count);
 
-			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKey.TALLY_CURRENT_VALUE, new String[]{tally, Integer.toString(count)}));
+			String response = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLY_CURRENT_VALUE.name(), tally, Integer.toString(count));
+
+			CorvusBuilder builder = Corvus.info(execution.getBot());
+
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(response);
+
+			Corvus.reply(execution, builder);
 		} else {
 			brain.getTallies().remove(tally);
 
-			return response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKey.TALLY_REMOVED, new String[]{tally}));
+			String response = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLY_REMOVED.name(), tally);
+			CorvusBuilder builder = Corvus.success(execution.getBot());
+
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(response);
+
+			Corvus.reply(execution, builder);
 		}
 	}
 
-	private EmbedBuilder cmdList(Language language, Brain brain, ExecutingCommand executingCommand) {
-		int page = executingCommand.getCommandArguments().getAsInteger("page");
-		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "tally-list");
-		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
+	private void cmdList(Execution execution, Brain brain) {
+		final String cacheKey = shmames.getCacheService().GenerateCacheKey(execution.getServer().getIdLong(), execution.getChannel().getIdLong(), execution.getUser().getIdLong(), "tally-list");
+		//final PaginatedList cachedList = shmames.getCacheService().RetrieveItem(cacheKey, PaginatedList.class);
 
-		PaginatedList paginatedList;
-
-		// If this list has been cached, retrieve it instead of building another one.
-		if (cachedList != null) {
-			paginatedList = cachedList;
-		} else {
-			LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
-			List<String> talliesFormatted = formatTalliesToStringList(tSorted);
-
-			paginatedList = PaginationService.GetPaginatedList(talliesFormatted, 15, -1, false);
-
-			// Cache the list in case the user continues to call this command for other pages
-			CacheService.StoreItem(cacheKey, paginatedList);
-		}
-
-		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), language.getMsg(LanguageKey.TALLY_LIST), Color.ORANGE, language);
-	}
-
-	private EmbedBuilder cmdSearch(Language language, Brain brain, ExecutingCommandArguments args) {
-		String rawTally = args.getAsString("tallyName");
-		String tally = formatTally(rawTally);
-		List<String> searchResults = new ArrayList<>();
 		LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
+		List<String> talliesFormatted = formatTalliesToStringList(tSorted);
 
-		for(String tallyKey : tSorted.keySet()) {
-			if(tallyKey.contains(tally)) {
-				searchResults.add(tallyKey + ": **" + tSorted.get(tallyKey) + "**");
-			}
+		PaginatedList paginatedList = PaginationService.GetPaginatedList(talliesFormatted, 15, -1, false);
+
+		shmames.getCacheService().StoreItem(cacheKey, paginatedList);
+
+		CorvusBuilder builder = PaginationService.DrawEmbedPage(paginatedList, 1, shmames, execution.getLanguageProvider());
+
+		if (paginatedList.getPaginatedList().size() > 1) {
+			Button next = Button.secondary("nextpage", "Next Page");
+			Button prev = Button.secondary("prevpage", "Previous Page").asDisabled();
+
+			builder.addLayoutComponent(ActionRow.of(prev, next));
 		}
 
-		EmbedBuilder eBuilder = response(EmbedType.INFO, "Search");
-
-		eBuilder.addField(language.getMsg(LanguageKey.SEARCH_RESULTS), PaginationService.CompileListToString(searchResults),false);
-
-		return eBuilder;
+		Corvus.reply(execution, builder);
 	}
 
-	private EmbedBuilder cmdReset(Language language, Brain brain, ExecutingCommand executingCommand) {
-		Guild server = executingCommand.getServer();
+	private void cmdReset(Execution execution, Brain brain) {
+		Guild server = execution.getServer();
 
-		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.RESET_TALLIES), executingCommand.getAuthorMember())) {
+		if (shmames.checkPermission(server, brain.getSettingFor(BotSettingName.RESET_TALLIES), execution.getMember())) {
 			HashMap<String, Integer> tallies = brain.getTallies();
 			File file = buildTalliesList(server.getName(), tallies);
+			CorvusBuilder builder = Corvus.success(execution.getBot());
 
-			EmbedBuilder response = response(EmbedType.SUCCESS)
-					.setDescription(language.getMsg(LanguageKey.TALLIES_CLEARED, new String[]{Integer.toString(tallies.size())}));
-			executingCommand.replyFile(file, response);
+			builder.addBreadcrumbs(this.getCommandStructure().getName())
+					.setDescription(execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.TALLIES_CLEARED.name(), Integer.toString(tallies.size())));
+
+			try {
+				builder.attach(file.toURI().toURL(), "tallies");
+			} catch (Exception e){
+				App.getLogger().LogException(e);
+			}
+
+			Corvus.reply(execution, builder);
 
 			tallies.clear();
-
-			return null;
 		} else {
-			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
+			CorvusBuilder builder = Corvus.error(execution.getBot());
+
+			builder.setDescription(execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.MISSING_USER_PERMISSION.name()));
+
+			Corvus.reply(execution, builder);
 		}
 	}
 
@@ -257,6 +282,94 @@ public class Tally extends Command {
 		}
 
 		// Save to file.
-		return FileService.SaveBytesToFile("reports", guildName+".txt", pruned.toString().getBytes());
+		return FileUtility.WriteBytesToFile("reports", guildName+".txt", pruned.toString().getBytes());
+	}
+
+	@Override
+	public String[] getInteractionIDs() {
+		return new String[]{"nextpage", "prevpage"};
+	}
+
+	@Override
+	public void onButtonClick(ButtonInteraction buttonInteraction) {
+		final String cacheKey = shmames.getCacheService().GenerateCacheKey(buttonInteraction.getGuild().getIdLong(), buttonInteraction.getChannel().getIdLong(), buttonInteraction.getUser().getIdLong(), "tally-list");
+		final PaginatedList cachedList = shmames.getCacheService().RetrieveItem(cacheKey, PaginatedList.class);
+
+		if (cachedList != null) {
+			int page = 0;
+
+			if (buttonInteraction.getComponentId().equalsIgnoreCase("nextpage")) {
+				page = cachedList.getNextPage();
+			} else if (buttonInteraction.getComponentId().equalsIgnoreCase("prevpage")) {
+				page = cachedList.getLastPage();
+			}
+
+			CorvusBuilder builder = PaginationService.DrawEmbedPage(cachedList, page, shmames, shmames.getLanguageProvider());
+
+			Button next = Button.secondary("nextpage", "Next Page");
+			Button prev = Button.secondary("prevpage", "Previous Page");
+
+			if (page > 1) {
+				prev = prev.asEnabled();
+			} else if (page == 1) {
+				prev = prev.asDisabled();
+			}
+
+			if (page == cachedList.getPaginatedList().size()) {
+				next = next.asDisabled();
+			} else {
+				next = next.asEnabled();
+			}
+
+			builder.addLayoutComponent(ActionRow.of(prev, next));
+			shmames.getCacheService().StoreItem(cacheKey, cachedList);
+
+			buttonInteraction.editMessageEmbeds(Corvus.convert(builder).build())
+					.setComponents(builder.getLayoutComponents()).queue();
+		} else {
+			Brain brain = shmames.getBrainController().getBrain(buttonInteraction.getGuild().getId());
+			LinkedHashMap<String, Integer> tSorted = DataService.SortHashMap(brain.getTallies());
+			List<String> talliesFormatted = formatTalliesToStringList(tSorted);
+
+			if (!talliesFormatted.isEmpty()) {
+				PaginatedList paginatedList = PaginationService.GetPaginatedList(talliesFormatted, 15, -1, false);
+
+				shmames.getCacheService().StoreItem(cacheKey, paginatedList);
+
+				CorvusBuilder builder = PaginationService.DrawEmbedPage(paginatedList, 1, shmames, shmames.getLanguageProvider());
+
+				if (paginatedList.getPaginatedList().size() > 1) {
+					Button next = Button.secondary("nextpage", "Next Page");
+					Button prev = Button.secondary("prevpage", "Previous Page").asDisabled();
+
+					builder.addLayoutComponent(ActionRow.of(prev, next));
+				}
+
+				buttonInteraction.editMessageEmbeds(Corvus.convert(builder).build())
+						.setComponents(builder.getLayoutComponents()).queue();
+			} else {
+				CorvusBuilder builder = Corvus.error(shmames);
+
+				builder.setDescription(shmames.getLanguageProvider().getErrorFromKey(ErrorKey.GENERIC_ERROR.name()));
+
+				buttonInteraction.editMessageEmbeds(Corvus.convert(builder).build())
+						.setComponents(builder.getLayoutComponents()).queue();
+			}
+		}
+	}
+
+	@Override
+	public void onStringClick(StringSelectInteraction stringSelectInteraction) {
+
+	}
+
+	@Override
+	public void onEntityClick(EntitySelectInteraction entitySelectInteraction) {
+
+	}
+
+	@Override
+	public void onModalSubmit(ModalInteraction modalInteraction) {
+
 	}
 }

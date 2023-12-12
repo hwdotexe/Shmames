@@ -54,7 +54,7 @@ public class CorvusBuilder {
         return attachments;
     }
 
-    List<LayoutComponent> getLayoutComponents() {
+    public List<LayoutComponent> getLayoutComponents() {
         return layoutComponents;
     }
 
@@ -186,6 +186,12 @@ public class CorvusBuilder {
 
     public CorvusBuilder setDescription(String description) {
         this.embedBuilder.setDescription(description);
+
+        return this;
+    }
+
+    public CorvusBuilder setFooter(String footerText) {
+        this.embedBuilder.setFooter(footerText);
 
         return this;
     }
