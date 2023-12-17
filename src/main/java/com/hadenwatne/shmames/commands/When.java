@@ -1,19 +1,16 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.language.LanguageKey;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.services.RandomService;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class When extends Command {
 	public When() {
@@ -23,6 +20,11 @@ public class When extends Command {
 	@Override
 	protected Permission[] configureRequiredBotPermissions() {
 		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
 	}
 
 	@Override
@@ -36,16 +38,20 @@ public class When extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String msg = executingCommand.getLanguage().getMsg(LanguageKey.WHEN_OPTIONS);
-		Matcher m = Pattern.compile(executingCommand.getLanguage().wildcard).matcher(msg);
-		String question = executingCommand.getCommandArguments().getAsString("event");
+	public void onCommandFailure(Execution execution) {
 
-		while (m.find()) {
-			msg = msg.replaceFirst(m.group(), Integer.toString(RandomService.GetRandom(150) + 1));
-		}
+	}
 
-		return response(EmbedType.INFO)
-				.addField("When " + question, msg, false);
+	@Override
+	public void run(Execution execution) {
+		String msg = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.WHEN_OPTIONS.name(), Integer.toString(RandomService.GetRandom(150) + 1));
+		String question = execution.getArguments().get("event").getAsString();
+
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+						.addField(question, msg, false);
+
+		Corvus.reply(execution, builder);
 	}
 }

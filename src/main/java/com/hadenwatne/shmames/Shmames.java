@@ -60,8 +60,6 @@ public class Shmames extends Bot {
 		registerCommand(new Roles());
 		registerCommand(new Storytime());
 		registerCommand(new Timer());
-		registerCommand(new WhatShouldIDo());
-		registerCommand(new When());
 		registerCommand(new GIF(this));
 		registerCommand(new Minesweeper());
 		registerCommand(new Odds());
@@ -69,6 +67,8 @@ public class Shmames extends Bot {
 		registerCommand(new Say());
 		registerCommand(new Tally(this));
 		registerCommand(new Wiki(this));
+		registerCommand(new WhatShouldIDo());
+		registerCommand(new When());
 	}
 
 	public BrainController getBrainController() {

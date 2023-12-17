@@ -1,12 +1,12 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
-import com.hadenwatne.shmames.enums.EmbedType;
 import com.hadenwatne.shmames.language.LanguageKey;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 public class WhatShouldIDo extends Command {
@@ -22,16 +22,29 @@ public class WhatShouldIDo extends Command {
 	@Override
 	protected CommandStructure buildCommandStructure() {
 		return CommandBuilder.Create("whatshouldido", "Get a randomized, possibly sarcastic suggestion to cure your boredom.")
-				.addAlias("what should i do")
 				.build();
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		String randomIntro = executingCommand.getLanguage().getMsg(LanguageKey.WHATSHOULDIDO);
-		String randomAnswer = executingCommand.getLanguage().getMsg(LanguageKey.WHATSHOULDIDO_OPTIONS);
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
+	}
 
-		return response(EmbedType.INFO)
-				.setDescription(randomIntro + " " + randomAnswer + "!");
+	@Override
+	public void onCommandFailure(Execution execution) {
+
+	}
+
+	@Override
+	public void run(Execution execution) {
+		String randomIntro = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.WHATSHOULDIDO.name());
+		String randomAnswer = execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.WHATSHOULDIDO_OPTIONS.name());
+
+		CorvusBuilder builder = Corvus.info(execution.getBot());
+
+		builder.addBreadcrumbs(this.getCommandStructure().getName())
+						.setDescription(randomIntro + " " + randomAnswer + "!");
+
+		Corvus.reply(execution, builder);
 	}
 }
