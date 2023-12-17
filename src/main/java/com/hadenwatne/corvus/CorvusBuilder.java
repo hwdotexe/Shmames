@@ -8,12 +8,14 @@ import com.hadenwatne.fornax.service.types.LogType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CorvusBuilder {
     private final String NAVIGATION_INDICATOR = " » ";
@@ -29,6 +31,7 @@ public class CorvusBuilder {
     private boolean ephemeral;
     private boolean mentionAuthor;
     private boolean isPrebuilt;
+    private Consumer<? super InteractionHook> successCallback;
 
     CorvusBuilder(Bot bot, MessageType type) {
         this.bot = bot;
@@ -76,6 +79,14 @@ public class CorvusBuilder {
 
     void setMessage(Message message) {
         this.message = message;
+    }
+
+    public void setSuccessCallback(Consumer<? super InteractionHook> successCallback) {
+        this.successCallback = successCallback;
+    }
+
+    Consumer<? super InteractionHook> getSuccessCallback() {
+        return successCallback;
     }
 
     public CorvusBuilder addBreadcrumbs(String... breadcrumb) {
@@ -186,6 +197,12 @@ public class CorvusBuilder {
 
     public CorvusBuilder setDescription(String description) {
         this.embedBuilder.setDescription(description);
+
+        return this;
+    }
+
+    public CorvusBuilder setTitle(String title) {
+        this.embedBuilder.setTitle(title);
 
         return this;
     }

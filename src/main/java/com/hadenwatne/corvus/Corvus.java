@@ -63,7 +63,13 @@ public class Corvus {
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue(result -> result.retrieveOriginal().queue(builder::setMessage), error -> {
+                        .queue(result -> {
+                            result.retrieveOriginal().queue(builder::setMessage);
+
+                            if (builder.getSuccessCallback() != null) {
+                                builder.getSuccessCallback().accept(result);
+                            }
+                        }, error -> {
                             execution.setStatus(ExecutionStatus.FAILED);
                             execution.setFailureReason(ExecutionFailReason.MISSING_INTERACTION_HOOK);
                             App.getLogger().LogException(error);
@@ -73,7 +79,13 @@ public class Corvus {
                         .mentionRepliedUser(builder.isMentionAuthor())
                         .setEphemeral(builder.isEphemeral())
                         .setComponents(builder.getLayoutComponents())
-                        .queue(result -> result.retrieveOriginal().queue(builder::setMessage), error -> {
+                        .queue(result -> {
+                            result.retrieveOriginal().queue(builder::setMessage);
+
+                            if (builder.getSuccessCallback() != null) {
+                                builder.getSuccessCallback().accept(result);
+                            }
+                        }, error -> {
                             execution.setStatus(ExecutionStatus.FAILED);
                             execution.setFailureReason(ExecutionFailReason.MISSING_INTERACTION_HOOK);
                             App.getLogger().LogException(error);

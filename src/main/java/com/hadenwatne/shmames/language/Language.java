@@ -80,7 +80,9 @@ public class Language {
         errors.add(new LanguageError(ErrorKey.ANSWER_NOT_FOUND.name(), new String[]{"Sorry! I couldn't find anything on that."}));
         errors.add(new LanguageError(ErrorKey.GENERIC_ERROR.name(), new String[]{"Something went wrong! Please try again later."}));
         errors.add(new LanguageError(ErrorKey.MISSING_BOT_PERMISSION.name(), new String[]{"Please adjust my bot permissions to include:" + linebreak + wildcard}));
+        errors.add(new LanguageError(ErrorKey.POLL_ITEM_COUNT_INCORRECT.name(), new String[]{"Please include at least 2 poll options, separated by `;`."}));
         errors.add(new LanguageError(ErrorKey.TALLY_NOT_FOUND.name(), new String[]{"That tally name couldn't be found!"}));
+        errors.add(new LanguageError(ErrorKey.TIME_VALUE_INCORRECT.name(), new String[]{"The amount of time provided is invalid!"}));
         errors.add(new LanguageError(ErrorKey.WRONG_USAGE.name(), new String[]{"Whoops! Incorrect usage - please try again."}));
 
         messages.add(new LanguageMessage(LanguageKey.BLAME.name(), new String[]{"I blame " + wildcard}));

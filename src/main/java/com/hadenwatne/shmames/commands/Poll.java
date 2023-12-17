@@ -1,35 +1,50 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
 import com.hadenwatne.fornax.command.Command;
+import com.hadenwatne.fornax.command.Execution;
+import com.hadenwatne.fornax.command.IInteractable;
 import com.hadenwatne.fornax.command.builder.CommandBuilder;
 import com.hadenwatne.fornax.command.builder.CommandParameter;
 import com.hadenwatne.fornax.command.builder.CommandStructure;
 import com.hadenwatne.fornax.command.builder.types.ParameterType;
-import com.hadenwatne.shmames.services.settings.types.BotSettingName;
-import com.hadenwatne.shmames.enums.EmbedType;
+import com.hadenwatne.fornax.service.ILanguageProvider;
+import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.ErrorKey;
-import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PollModel;
-import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.language.Language;
 import com.hadenwatne.shmames.services.DataService;
-import com.hadenwatne.shmames.services.ShmamesService;
-import net.dv8tion.jda.api.EmbedBuilder;
+import com.hadenwatne.shmames.services.PollService;
+import com.hadenwatne.shmames.services.settings.types.BotSettingName;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.EntitySelectInteraction;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectInteraction;
+import net.dv8tion.jda.api.interactions.modals.ModalInteraction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Poll extends Command {
-	public Poll() {
+public class Poll extends Command implements IInteractable {
+	private Shmames shmames;
+
+	public Poll(Shmames shmames) {
 		super(true);
+
+		this.shmames = shmames;
 	}
 
 	@Override
 	protected Permission[] configureRequiredBotPermissions() {
-		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ADD_REACTION};
+		return new Permission[]{Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS};
+	}
+
+	@Override
+	protected Permission[] configureRequiredUserPermissions() {
+		return null;
 	}
 
 	@Override
@@ -38,8 +53,7 @@ public class Poll extends Command {
 				.addParameters(
 						new CommandParameter("time", "The amount of time the poll should last.", ParameterType.TIMECODE)
 								.setExample("24h"),
-						new CommandParameter("question", "The question to ask", ParameterType.STRING)
-								.setPattern(".+\\?")
+						new CommandParameter("question", "The question or topic of the poll.", ParameterType.STRING)
 								.setExample("Thoughts?"),
 						new CommandParameter("options", "The poll's options, separated by ';'", ParameterType.STRING)
 								.setPattern("(.+;)+(.+);?")
@@ -49,15 +63,20 @@ public class Poll extends Command {
 	}
 
 	@Override
-	public EmbedBuilder run (ExecutingCommand executingCommand) {
-		Guild server = executingCommand.getServer();
-		Brain brain = executingCommand.getBrain();
-		Language language = executingCommand.getLanguage();
+	public void onCommandFailure(Execution execution) {
 
-		if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), executingCommand.getAuthorMember())) {
-			String time = executingCommand.getCommandArguments().getAsString("time");
-			String question = executingCommand.getCommandArguments().getAsString("question");
-			String options = executingCommand.getCommandArguments().getAsString("options");
+	}
+
+	@Override
+	public void run(Execution execution) {
+		Guild server = execution.getServer();
+		Brain brain = shmames.getBrainController().getBrain(server.getId());
+		ILanguageProvider language = execution.getLanguageProvider();
+
+		if (shmames.checkPermission(server, brain.getSettingFor(BotSettingName.POLL_CREATE), execution.getMember())) {
+			String time = execution.getArguments().get("time").getAsString();
+			String question = execution.getArguments().get("question").getAsString();
+			String options = execution.getArguments().get("options").getAsString();
 			int seconds = DataService.ConvertTimeStringToSeconds(time);
 
 			if (seconds > 0) {
@@ -67,29 +86,69 @@ public class Poll extends Command {
 					optionsList.add(s.trim());
 				}
 
-				if (optionsList.size() > 1 && optionsList.size() <= 26) {
-					EmbedBuilder embedBuilder = response(EmbedType.SUCCESS)
-							.setDescription(language.getMsg(LanguageKey.GENERIC_SUCCESS));
+				if (optionsList.size() > 1 && optionsList.size() <= 25) {
+					PollModel poll = new PollModel(execution.getUser().getId(), question, optionsList, seconds);
+					CorvusBuilder builder = PollService.BuildPoll(shmames, execution, poll);
 
-					executingCommand.reply(embedBuilder, false, onSuccess -> {
-						PollModel poll = new PollModel(executingCommand.getChannel().getId(), executingCommand.getAuthorUser().getId(), onSuccess.getId(), question, optionsList, seconds);
-						brain.getActivePolls().add(poll);
+					// TODO begin a task to close the poll
+					// TODO be able to retrieve/update poll message even after restart
+					// ^ The corvus builder will know its message id, so let's use that
 
-						poll.startPollInstrumentation();
-					});
+					poll.setChannelID(execution.getChannel().getId());
+					builder.setSuccessCallback(success -> poll.setMessageID(success.getId()));
+					brain.getActivePolls().add(poll);
 
-					return null;
+					Corvus.reply(execution, builder);
 				} else {
-					return response(EmbedType.ERROR, ErrorKey.INCORRECT_ITEM_COUNT.name())
-							.setDescription(language.getError(ErrorKey.INCORRECT_ITEM_COUNT));
+					CorvusBuilder builder = Corvus.error(execution.getBot());
+
+					builder.setDescription(execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.POLL_ITEM_COUNT_INCORRECT.name()));
+					builder.setEphemeral();
+
+					Corvus.reply(execution, builder);
 				}
 			} else {
-				return response(EmbedType.ERROR, ErrorKey.TIME_VALUE_INCORRECT.name())
-						.setDescription(language.getError(ErrorKey.TIME_VALUE_INCORRECT));
+				CorvusBuilder builder = Corvus.error(execution.getBot());
+
+				builder.setDescription(execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.TIME_VALUE_INCORRECT.name()));
+				builder.setEphemeral();
+
+				Corvus.reply(execution, builder);
 			}
 		} else {
-			return response(EmbedType.ERROR, ErrorKey.NO_PERMISSION_USER.name())
-					.setDescription(language.getError(ErrorKey.NO_PERMISSION_USER));
+			CorvusBuilder builder = Corvus.error(execution.getBot());
+
+			builder.setDescription(execution.getLanguageProvider().getErrorFromKey(execution, ErrorKey.MISSING_USER_PERMISSION.name()));
+			builder.setEphemeral();
+
+			Corvus.reply(execution, builder);
 		}
+	}
+
+	@Override
+	public String[] getInteractionIDs() {
+		return new String[]{"pollDropdown"};
+	}
+
+	@Override
+	public void onButtonClick(ButtonInteraction buttonInteraction) {
+
+	}
+
+	@Override
+	public void onStringClick(StringSelectInteraction stringSelectInteraction) {
+		if(stringSelectInteraction.getComponentId().equalsIgnoreCase("pollDropdown")) {
+			List<SelectOption> options = stringSelectInteraction.getSelectedOptions();
+		}
+	}
+
+	@Override
+	public void onEntityClick(EntitySelectInteraction entitySelectInteraction) {
+
+	}
+
+	@Override
+	public void onModalSubmit(ModalInteraction modalInteraction) {
+
 	}
 }

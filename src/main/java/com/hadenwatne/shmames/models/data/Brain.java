@@ -25,6 +25,7 @@ public class Brain {
 	public List<GachaCharacter> gachaCharacters;
 	public List<GachaUser> gachaUsers;
 	public List<String> talliedMessages;
+	public List<PollModel> activePolls;
 	public Date gachaUserCreditDate;
 	public GachaBanner banner;
 	public boolean isReportCooldown;
@@ -49,6 +50,7 @@ public class Brain {
 		gachaCharacters = new ArrayList<>();
 		gachaUsers = new ArrayList<>();
 		talliedMessages = new ArrayList<>();
+		activePolls = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
 		hangmanGame = null;
@@ -73,7 +75,11 @@ public class Brain {
 	public void setHangmanGame(HangmanGame g){
 		this.hangmanGame = g;
 	}
-	
+
+	public List<PollModel> getActivePolls() {
+		return activePolls;
+	}
+
 	/*
 	 * Permanent / Semi-permanent items
 	 */

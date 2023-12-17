@@ -54,7 +54,6 @@ public class Shmames extends Bot {
 		registerCommand(new Modify());
 		registerCommand(new Music());
 		registerCommand(new Pin());
-		registerCommand(new Poll());
 		registerCommand(new React());
 		registerCommand(new Report());
 		registerCommand(new Roles());
@@ -63,6 +62,7 @@ public class Shmames extends Bot {
 		registerCommand(new GIF(this));
 		registerCommand(new Minesweeper());
 		registerCommand(new Odds());
+		registerCommand(new Poll(this));
 		registerCommand(new Roll());
 		registerCommand(new Say());
 		registerCommand(new Tally(this));
