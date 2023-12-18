@@ -75,7 +75,6 @@ public class SettingsService {
         settings.add(new BotSetting(BotSettingName.PIN_CHANNEL, BotSettingType.CHANNEL, "general"));
         settings.add(new BotSetting(BotSettingName.POLL_CLOSE, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.POLL_CREATE, BotSettingType.ROLE, "everyone"));
-        settings.add(new BotSetting(BotSettingName.POLL_PIN, BotSettingType.BOOLEAN, "false"));
         settings.add(new BotSetting(BotSettingName.PRUNE_FW, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.RESET_TALLIES, BotSettingType.ROLE, "administrator"));
         settings.add(new BotSetting(BotSettingName.REMOVAL_EMOTE, BotSettingType.EMOTE, "notset"));

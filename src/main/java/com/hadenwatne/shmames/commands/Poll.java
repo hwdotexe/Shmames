@@ -18,6 +18,7 @@ import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.services.DataService;
 import com.hadenwatne.shmames.services.PollService;
 import com.hadenwatne.shmames.services.settings.types.BotSettingName;
+import com.hadenwatne.shmames.tasks.PollTask;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
@@ -27,10 +28,12 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectIntera
 import net.dv8tion.jda.api.interactions.modals.ModalInteraction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 public class Poll extends Command implements IInteractable {
-	private Shmames shmames;
+	private final Shmames shmames;
 
 	public Poll(Shmames shmames) {
 		super(true);
@@ -94,9 +97,9 @@ public class Poll extends Command implements IInteractable {
 					PollModel poll = new PollModel(execution.getUser().getId(), question, optionsList, seconds, multiple);
 					CorvusBuilder builder = PollService.BuildPoll(shmames, poll);
 
-					// TODO begin a task to close the poll
-					// TODO be able to retrieve/update poll message even after restart
-					// ^ The corvus builder will know its message id, so let's use that
+					// Automatically close this poll when it finishes
+					Timer t = new Timer();
+					t.schedule(new PollTask(poll, brain, shmames), poll.getExpires());
 
 					poll.setChannelID(execution.getChannel().getId());
 					builder.setSuccessCallback(success -> success.retrieveOriginal().queue(message -> poll.setMessageID(message.getId())));
@@ -131,12 +134,29 @@ public class Poll extends Command implements IInteractable {
 
 	@Override
 	public String[] getInteractionIDs() {
-		return new String[]{"pollDropdown"};
+		return new String[]{"pollDropdown", "endEarly"};
 	}
 
 	@Override
 	public void onButtonClick(ButtonInteraction buttonInteraction) {
+		if (buttonInteraction.getComponentId().equalsIgnoreCase("endEarly")) {
+			Brain brain = shmames.getBrainController().getBrain(buttonInteraction.getGuild().getId());
 
+			for (PollModel model : brain.getActivePolls()) {
+				if (model.getChannelID().equalsIgnoreCase(buttonInteraction.getChannelId()) && model.getMessageID().equalsIgnoreCase(buttonInteraction.getMessageId())) {
+					if(buttonInteraction.getUser().getId().equalsIgnoreCase(model.authorID) || shmames.checkPermission(buttonInteraction.getGuild(), brain.getSettingFor(BotSettingName.POLL_CLOSE), buttonInteraction.getMember())) {
+						Timer t = new Timer();
+						t.schedule(new PollTask(model, brain, shmames), new Date());
+					} else {
+						String response = shmames.getLanguageProvider().getErrorFromKey(ErrorKey.MISSING_USER_PERMISSION.name());
+
+						buttonInteraction.reply(response).setEphemeral(true).queue();
+					}
+
+					break;
+				}
+			}
+		}
 	}
 
 	@Override

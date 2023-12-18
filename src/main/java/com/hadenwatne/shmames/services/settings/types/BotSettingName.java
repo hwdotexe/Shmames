@@ -1,6 +1,10 @@
 package com.hadenwatne.shmames.services.settings.types;
 
 public enum BotSettingName {
+	/*
+	To remove: tag with @BsonIgnore and overwrite db. Can remove from code in a following operation.
+	 */
+
 	ALLOW_MODIFY("Sets the role (other than Administrator) allowed to use the Modify command."),
 	ALLOW_PIN("Sets the role (other than Administrator) allowed to use the Pin command."),
 	APPROVAL_EMOTE("The Emote to use as a \"Like\" button."),

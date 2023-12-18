@@ -7,6 +7,7 @@ import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PollModel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class PollService {
         StringBuilder voteReadout = new StringBuilder();
         int totalVotes = countTotalVotes(model);
 
-        for(int i=0; i<model.getOptions().size(); i++) {
+        for (int i = 0; i < model.getOptions().size(); i++) {
             int votesForThisItem = countVotesForOption(model, i);
             double percentageOfTotal = (double) votesForThisItem / (double) totalVotes;
             String percentage = Math.round(percentageOfTotal * 100) + "%";
@@ -46,17 +47,22 @@ public class PollService {
 
         builder.addField("Options", voteReadout.toString(), false);
 
-        StringSelectMenu.Builder menu = StringSelectMenu.create("pollDropdown")
-                .setPlaceholder("Cast your vote")
-                .setRequiredRange(1, model.isMultiple()
-                        ? model.getOptions().size()
-                        : 1);
+        if (model.isActive()) {
+            StringSelectMenu.Builder menu = StringSelectMenu.create("pollDropdown")
+                    .setPlaceholder("Cast your vote")
+                    .setRequiredRange(1, model.isMultiple()
+                            ? model.getOptions().size()
+                            : 1);
 
-        for(String option : model.getOptions()) {
-            menu = menu.addOption(option, Integer.toString(model.getOptions().indexOf(option)));
+            for (String option : model.getOptions()) {
+                menu = menu.addOption(option, Integer.toString(model.getOptions().indexOf(option)));
+            }
+
+            Button close = Button.secondary("endEarly", "End Poll");
+
+            builder.addLayoutComponent(ActionRow.of(menu.build()));
+            builder.addLayoutComponent(ActionRow.of(close));
         }
-
-        builder.addLayoutComponent(ActionRow.of(menu.build()));
 
         return builder;
     }

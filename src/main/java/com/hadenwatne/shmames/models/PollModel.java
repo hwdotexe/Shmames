@@ -14,7 +14,6 @@ public class PollModel {
 	public List<String> options;
 	public HashMap<String, List<Integer>> votes;
 	public boolean isActive;
-	public boolean hasStarted;
 	public boolean multiple;
 
 	public PollModel(){}
@@ -24,7 +23,6 @@ public class PollModel {
 		this.options = o;
 		this.authorID = authorID;
 		this.isActive = true;
-		this.hasStarted = false;
 		this.votes = new HashMap<>();
 		this.multiple = multiple;
 		
@@ -45,14 +43,6 @@ public class PollModel {
 
 	public void setActive(boolean active) {
 		isActive = active;
-	}
-
-	public boolean hasStarted() {
-		return this.hasStarted;
-	}
-
-	public void setHasStarted(boolean hasStarted) {
-		this.hasStarted = hasStarted;
 	}
 
 	public String getAuthorID() {

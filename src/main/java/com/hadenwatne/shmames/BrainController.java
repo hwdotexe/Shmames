@@ -3,11 +3,12 @@ package com.hadenwatne.shmames;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
-import com.hadenwatne.shmames.tasks.AlarmTask;
+import com.hadenwatne.shmames.tasks.PollTask;
 import com.mongodb.client.MongoCursor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class BrainController {
 	private final Shmames shmames;
@@ -47,16 +48,9 @@ public class BrainController {
 
 		for(Brain brain : brains) {
 			// Activate any threads that this brain may have had.
-			if(!brain.getActivePolls().isEmpty()) {
-				for(PollModel pollModel : brain.getActivePolls()) {
-					pollModel.startPollInstrumentation();
-				}
-			}
-
-			if(!brain.getTimers().isEmpty()){
-				for(AlarmTask alarmTask : brain.getTimers()){
-					alarmTask.rescheduleTimer();
-				}
+			for(PollModel poll : brain.getActivePolls()) {
+				Timer t = new Timer();
+				t.schedule(new PollTask(poll, brain, shmames), poll.getExpires());
 			}
 
 			// Manually reset any cooldowns that don't have a task set up.
