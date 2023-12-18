@@ -66,13 +66,13 @@ public class PollService {
         // any votes sent this way will override that user's previous votes.
         // This will prevent duplicate voting and allow the user to change their
         // selection if desired.
-        model.getVotes().put(user.getIdLong(), votes);
+        model.getVotes().put(user.getId(), votes);
     }
 
     private static int countTotalVotes(PollModel model) {
         int totalVotes = 0;
 
-        for(long user : model.getVotes().keySet()) {
+        for(String user : model.getVotes().keySet()) {
             totalVotes += model.getVotes().get(user).size();
         }
 
@@ -82,7 +82,7 @@ public class PollService {
     private static int countVotesForOption(PollModel model, int option) {
         int optionVotes = 0;
 
-        for(long user : model.getVotes().keySet()) {
+        for(String user : model.getVotes().keySet()) {
             for(int vote : model.getVotes().get(user)) {
                 if(vote == option) {
                     optionVotes += 1;

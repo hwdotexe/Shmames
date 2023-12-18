@@ -1,25 +1,23 @@
 package com.hadenwatne.shmames.models;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class PollModel {
-	private final String question;
-	private String channelID;
-	private String messageID;
-	private final String authorID;
-	private final Calendar expires;
-	private final List<String> options;
-	private final HashMap<Long, List<Integer>> votes;
-	private boolean isActive;
-	private boolean hasStarted;
-	private final boolean multiple;
+	public String question;
+	public String channelID;
+	public String messageID;
+	public String authorID;
+	public Date expires;
+	public List<String> options;
+	public HashMap<String, List<Integer>> votes;
+	public boolean isActive;
+	public boolean hasStarted;
+	public boolean multiple;
 
-	private transient EmbedBuilder cachedEmbedBuilder;
+	public PollModel(){}
 	
 	public PollModel(String authorID, String q, List<String> o, int seconds, boolean multiple) {
 		this.question = q;
@@ -34,7 +32,7 @@ public class PollModel {
     	calendar.setTime(new Date());
     	calendar.add(Calendar.SECOND, seconds);
 		
-    	this.expires = calendar;
+    	this.expires = calendar.getTime();
 	}
 
 	public boolean isActive() {
@@ -85,11 +83,11 @@ public class PollModel {
 		return options;
 	}
 
-	public Calendar getExpires() {
+	public Date getExpires() {
 		return expires;
 	}
 
-	public HashMap<Long, List<Integer>> getVotes() {
+	public HashMap<String, List<Integer>> getVotes() {
 		return votes;
 	}
 }

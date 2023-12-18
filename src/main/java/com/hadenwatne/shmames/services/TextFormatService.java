@@ -1,6 +1,7 @@
 package com.hadenwatne.shmames.services;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TextFormatService {
     public static final String EMOJI_RED_X = "\u274c";
@@ -47,13 +48,10 @@ public class TextFormatService {
     public static final String EMOJI_SYMBOL_DOLLAR = "\uD83D\uDCB2";
     public static final String EMOJI_SYMBOL_MIDDLE_FINGER = "\uD83D\uDD95";
 
+    public static String GetFriendlyDateTime(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
 
-    /**
-     * Creates a friendly time readout from a given Calendar object.
-     * @param c The Calendar to use.
-     * @return A string representing this calendar.
-     */
-    public static String GetFriendlyDateTime(Calendar c) {
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
 
