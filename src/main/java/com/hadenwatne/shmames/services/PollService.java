@@ -2,21 +2,23 @@ package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.corvus.Corvus;
 import com.hadenwatne.corvus.CorvusBuilder;
-import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.shmames.Shmames;
 import com.hadenwatne.shmames.language.LanguageKey;
 import com.hadenwatne.shmames.models.PollModel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
+import java.util.List;
+
 public class PollService {
-    public static CorvusBuilder BuildPoll(Shmames shmames, Execution execution, PollModel model) {
+    public static CorvusBuilder BuildPoll(Shmames shmames,PollModel model) {
         CorvusBuilder builder = Corvus.info(shmames);
 
         builder.addBreadcrumbs("poll")
                 .setTitle(model.isActive()
-                        ? execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.POLL_TITLE.name())
-                        : execution.getLanguageProvider().getMessageFromKey(execution, LanguageKey.POLL_TITLE_RESULTS.name()))
+                        ? shmames.getLanguageProvider().getMessageFromKey(LanguageKey.POLL_TITLE.name())
+                        : shmames.getLanguageProvider().getMessageFromKey(LanguageKey.POLL_TITLE_RESULTS.name()))
                 .setFooter("Expire" + (model.isActive()
                         ? "s on " + TextFormatService.GetFriendlyDateTime(model.getExpires())
                         : "d"))
@@ -46,7 +48,9 @@ public class PollService {
 
         StringSelectMenu.Builder menu = StringSelectMenu.create("pollDropdown")
                 .setPlaceholder("Cast your vote")
-                .setRequiredRange(1, model.getOptions().size());
+                .setRequiredRange(1, model.isMultiple()
+                        ? model.getOptions().size()
+                        : 1);
 
         for(String option : model.getOptions()) {
             menu = menu.addOption(option, Integer.toString(model.getOptions().indexOf(option)));
@@ -55,6 +59,14 @@ public class PollService {
         builder.addLayoutComponent(ActionRow.of(menu.build()));
 
         return builder;
+    }
+
+    public static void AddVote(PollModel model, User user, List<Integer> votes) {
+        // Because Discord can reload the message, or a user can clear their cache,
+        // any votes sent this way will override that user's previous votes.
+        // This will prevent duplicate voting and allow the user to change their
+        // selection if desired.
+        model.getVotes().put(user.getIdLong(), votes);
     }
 
     private static int countTotalVotes(PollModel model) {

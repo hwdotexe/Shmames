@@ -17,16 +17,18 @@ public class PollModel {
 	private final HashMap<Long, List<Integer>> votes;
 	private boolean isActive;
 	private boolean hasStarted;
+	private final boolean multiple;
 
 	private transient EmbedBuilder cachedEmbedBuilder;
 	
-	public PollModel(String authorID, String q, List<String> o, int seconds) {
+	public PollModel(String authorID, String q, List<String> o, int seconds, boolean multiple) {
 		this.question = q;
 		this.options = o;
 		this.authorID = authorID;
 		this.isActive = true;
 		this.hasStarted = false;
 		this.votes = new HashMap<>();
+		this.multiple = multiple;
 		
 		Calendar calendar = Calendar.getInstance();
     	calendar.setTime(new Date());
@@ -38,7 +40,11 @@ public class PollModel {
 	public boolean isActive() {
 		return isActive;
 	}
-	
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
 	public void setActive(boolean active) {
 		isActive = active;
 	}

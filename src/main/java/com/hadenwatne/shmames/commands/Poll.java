@@ -2,6 +2,7 @@ package com.hadenwatne.shmames.commands;
 
 import com.hadenwatne.corvus.Corvus;
 import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.fornax.App;
 import com.hadenwatne.fornax.command.Command;
 import com.hadenwatne.fornax.command.Execution;
 import com.hadenwatne.fornax.command.IInteractable;
@@ -57,7 +58,9 @@ public class Poll extends Command implements IInteractable {
 								.setExample("Thoughts?"),
 						new CommandParameter("options", "The poll's options, separated by ';'", ParameterType.STRING)
 								.setPattern("(.+;)+(.+);?")
-								.setExample("Yes; No; Maybe")
+								.setExample("Yes; No; Maybe"),
+						new CommandParameter("multiple", "Allow voters to select more than 1?", ParameterType.BOOLEAN)
+								.setExample("True")
 				)
 				.build();
 	}
@@ -77,6 +80,7 @@ public class Poll extends Command implements IInteractable {
 			String time = execution.getArguments().get("time").getAsString();
 			String question = execution.getArguments().get("question").getAsString();
 			String options = execution.getArguments().get("options").getAsString();
+			boolean multiple = execution.getArguments().get("multiple").getAsBoolean();
 			int seconds = DataService.ConvertTimeStringToSeconds(time);
 
 			if (seconds > 0) {
@@ -87,15 +91,15 @@ public class Poll extends Command implements IInteractable {
 				}
 
 				if (optionsList.size() > 1 && optionsList.size() <= 25) {
-					PollModel poll = new PollModel(execution.getUser().getId(), question, optionsList, seconds);
-					CorvusBuilder builder = PollService.BuildPoll(shmames, execution, poll);
+					PollModel poll = new PollModel(execution.getUser().getId(), question, optionsList, seconds, multiple);
+					CorvusBuilder builder = PollService.BuildPoll(shmames, poll);
 
 					// TODO begin a task to close the poll
 					// TODO be able to retrieve/update poll message even after restart
 					// ^ The corvus builder will know its message id, so let's use that
 
 					poll.setChannelID(execution.getChannel().getId());
-					builder.setSuccessCallback(success -> poll.setMessageID(success.getId()));
+					builder.setSuccessCallback(success -> success.retrieveOriginal().queue(message -> poll.setMessageID(message.getId())));
 					brain.getActivePolls().add(poll);
 
 					Corvus.reply(execution, builder);
@@ -137,8 +141,35 @@ public class Poll extends Command implements IInteractable {
 
 	@Override
 	public void onStringClick(StringSelectInteraction stringSelectInteraction) {
-		if(stringSelectInteraction.getComponentId().equalsIgnoreCase("pollDropdown")) {
-			List<SelectOption> options = stringSelectInteraction.getSelectedOptions();
+		if (stringSelectInteraction.getComponentId().equalsIgnoreCase("pollDropdown")) {
+			Brain brain = shmames.getBrainController().getBrain(stringSelectInteraction.getGuild().getId());
+
+			for (PollModel model : brain.getActivePolls()) {
+				if (model.getChannelID().equalsIgnoreCase(stringSelectInteraction.getChannelId()) && model.getMessageID().equalsIgnoreCase(stringSelectInteraction.getMessageId())) {
+					if (model.isActive()) {
+						List<SelectOption> options = stringSelectInteraction.getSelectedOptions();
+						List<Integer> optionMap = new ArrayList<>();
+
+						for (SelectOption option : options) {
+							try {
+								int optionIndex = Integer.parseInt(option.getValue());
+
+								optionMap.add(optionIndex);
+							} catch (Exception e) {
+								App.getLogger().LogException(e);
+							}
+						}
+
+						PollService.AddVote(model, stringSelectInteraction.getUser(), optionMap);
+
+						CorvusBuilder builder = PollService.BuildPoll(shmames, model);
+
+						stringSelectInteraction.editMessageEmbeds(Corvus.convert(builder).build()).queue();
+					}
+
+					break;
+				}
+			}
 		}
 	}
 
