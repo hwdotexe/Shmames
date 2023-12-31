@@ -1,8 +1,10 @@
 package com.hadenwatne.shmames;
 
+import com.hadenwatne.shmames.models.AlarmModel;
 import com.hadenwatne.shmames.models.PollModel;
 import com.hadenwatne.shmames.models.data.Brain;
 import com.hadenwatne.shmames.models.data.MotherBrain;
+import com.hadenwatne.shmames.tasks.AlarmTask;
 import com.hadenwatne.shmames.tasks.PollTask;
 import com.mongodb.client.MongoCursor;
 
@@ -51,6 +53,11 @@ public class BrainController {
 			for(PollModel poll : brain.getActivePolls()) {
 				Timer t = new Timer();
 				t.schedule(new PollTask(poll, brain, shmames), poll.getExpires());
+			}
+
+			for(AlarmModel alarm : brain.getTimers()) {
+				Timer t = new Timer();
+				t.schedule(new AlarmTask(alarm, brain, shmames), alarm.getExecTime());
 			}
 
 			// Manually reset any cooldowns that don't have a task set up.

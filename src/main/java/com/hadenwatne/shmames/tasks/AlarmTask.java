@@ -1,106 +1,52 @@
 package com.hadenwatne.shmames.tasks;
 
-import com.hadenwatne.shmames.App;
-import com.hadenwatne.shmames.enums.EmbedType;
-import com.hadenwatne.shmames.factories.EmbedFactory;
+import com.hadenwatne.corvus.Corvus;
+import com.hadenwatne.corvus.CorvusBuilder;
+import com.hadenwatne.shmames.Shmames;
+import com.hadenwatne.shmames.language.Language;
+import com.hadenwatne.shmames.language.LanguageKey;
+import com.hadenwatne.shmames.models.AlarmModel;
 import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.fornax.service.LoggingService;
-import com.hadenwatne.shmames.services.MessageService;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
+import java.util.TimerTask;
 
-public class AlarmTask {
-	private long channelID;
-	private final String messageID;
-	private final String userMessage;
-	private final String timerUpMessage;
-	private Date execTime;
-	
-	public AlarmTask(long channelID, String messageID, int seconds, String userMessage, String timerUpMesage) {
-		Calendar c = Calendar.getInstance();
-		Timer t = new Timer();
+public class AlarmTask extends TimerTask {
+	public final AlarmModel model;
+	private final Shmames shmames;
+	private final Brain brain;
 
-		c.setTime(new Date());
-		c.add(Calendar.SECOND, seconds);
-
-		this.channelID = channelID;
-		this.userMessage = userMessage != null ? userMessage : "";
-    	this.messageID = messageID;
-		this.execTime = c.getTime();
-		this.timerUpMessage = timerUpMesage;
-
-		t.schedule(new java.util.TimerTask() {
-			@Override
-			public void run() {
-				runTimer();
-			}
-		}, execTime);
+	public AlarmTask(AlarmModel model, Brain brain, Shmames shmames) {
+		this.model = model;
+		this.brain = brain;
+		this.shmames = shmames;
 	}
 
-	public void rescheduleTimer(){
-		Timer t = new Timer();
+	public void run() {
+		Guild server = shmames.getJDA().getGuildById(brain.getGuildID());
+		TextChannel channel = server.getTextChannelById(model.getChannelID());
+		CorvusBuilder response = getAlarmMessage(server);
 
-		// Time was in the past; give the bot time to load, and then finish this timer.
-		if(execTime.getTime() <= new Date().getTime()){
-			Calendar c = Calendar.getInstance();
-			c.setTime(new Date());
+		channel.retrieveMessageById(model.getMessageID()).queue(message -> {
+			message.replyEmbeds(Corvus.convert(response).build()).queue();
+		});
 
-			c.add(Calendar.SECOND, 10);
-
-			execTime = c.getTime();
-		}
-
-		t.schedule(new java.util.TimerTask() {
-			@Override
-			public void run() {
-				runTimer();
-			}
-		}, execTime);
+		brain.getTimers().remove(model);
 	}
 
-	public void runTimer() {
-		try {
-			EmbedBuilder response = EmbedFactory.GetEmbed(EmbedType.INFO, "timer");
-			TextChannel channel = App.Shmames.getJDA().getTextChannelById(channelID);
+	private CorvusBuilder getAlarmMessage(Guild server) {
+		CorvusBuilder builder = Corvus.info(shmames);
+		Language language = shmames.getLanguageProvider().getLanguageForBrain(brain);
+		Member member = server.retrieveMemberById(model.authorID).complete();
 
-			response.setDescription(this.timerUpMessage);
+		builder.setDescription(shmames.getLanguageProvider().getMessageFromKey(language, LanguageKey.TIMER_ALERT.name(), member.getAsMention()));
 
-			if(userMessage != null && userMessage.length() > 0) {
-				response.addField("Memo", userMessage, false);
-			}
-
-			if (channel != null) {
-				Message originMessage = null;
-
-				if(this.messageID != null) {
-					try {
-						originMessage = channel.retrieveMessageById(this.messageID).complete();
-					} catch (Exception ignored) {}
-				}
-
-				try {
-					if (originMessage != null) {
-						MessageService.ReplyToMessage(originMessage, response, true);
-					} else {
-						MessageService.SendMessage(channel, response, true);
-					}
-				}catch (InsufficientPermissionException exception) {
-					MessageService.SendSimpleMessage(channel, App.Shmames.getBotName() + " requires the permission " + exception.getPermission().getName() + ". Please enable this permission in Discord role settings.");
-				}
-
-				String serverID = channel.getGuild().getId();
-				Brain brain = App.Shmames.getStorageService().getBrain(serverID);
-
-				brain.getTimers().remove(this);
-			}
-		}catch (Exception e){
-			LoggingService.LogException(e);
+		if (!model.getUserMessage().isEmpty()) {
+			builder.addField("Memo", model.getUserMessage(), false);
 		}
+
+		return builder;
 	}
 }

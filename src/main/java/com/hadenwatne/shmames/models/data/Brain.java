@@ -26,6 +26,7 @@ public class Brain {
 	public List<GachaUser> gachaUsers;
 	public List<String> talliedMessages;
 	public List<PollModel> activePolls;
+	public List<AlarmModel> timers;
 	public Date gachaUserCreditDate;
 	public GachaBanner banner;
 	public boolean isReportCooldown;
@@ -51,6 +52,7 @@ public class Brain {
 		gachaUsers = new ArrayList<>();
 		talliedMessages = new ArrayList<>();
 		activePolls = new ArrayList<>();
+		timers = new ArrayList<>();
 		isReportCooldown = false;
 		sentWelcome = false;
 		hangmanGame = null;
@@ -78,6 +80,10 @@ public class Brain {
 
 	public List<PollModel> getActivePolls() {
 		return activePolls;
+	}
+
+	public List<AlarmModel> getTimers() {
+		return timers;
 	}
 
 	/*

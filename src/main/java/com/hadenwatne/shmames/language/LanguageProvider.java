@@ -52,6 +52,10 @@ public class LanguageProvider implements ILanguageProvider {
         }
     }
 
+    public String getMessageFromKey(Language language, String messageKey, String... replacements) {
+        return language.getMessage(messageKey, replacements);
+    }
+
     @Override
     public String getErrorFromKey(String errorKey, String... replacements) {
         return defaultLanguage.getError(errorKey, replacements);
@@ -66,6 +70,10 @@ public class LanguageProvider implements ILanguageProvider {
         }else{
             return getErrorFromKey(messageKey, replacements);
         }
+    }
+
+    public String getErrorFromKey(Language language, String messageKey, String... replacements) {
+        return language.getError(messageKey, replacements);
     }
 
     public Language getDefaultLanguage() {
