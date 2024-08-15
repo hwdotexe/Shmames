@@ -32,7 +32,7 @@ public class BrainController {
 	private final String HANGMAN_FILE = "hangman.json";
 
 	public BrainController() {
-		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		gson = new GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").disableHtmlEscaping().create();
 		brains = new ArrayList<>();
 
 		loadStories();
