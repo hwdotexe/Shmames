@@ -1,6 +1,7 @@
 package com.hadenwatne.shmames.services;
 
 import com.hadenwatne.shmames.enums.LogType;
+import net.dv8tion.jda.internal.utils.JDALogger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class LoggingService {
     private static Calendar cal;
 
     public static void Init() {
+        JDALogger.setFallbackLoggerEnabled(false);
         tempLog = new ArrayList<>();
         cal = Calendar.getInstance();
 

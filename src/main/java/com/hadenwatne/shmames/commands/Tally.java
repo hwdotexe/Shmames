@@ -1,5 +1,6 @@
 package com.hadenwatne.shmames.commands;
 
+import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.CommandBuilder;
 import com.hadenwatne.shmames.commandbuilder.CommandParameter;
 import com.hadenwatne.shmames.commandbuilder.CommandStructure;
@@ -255,6 +256,6 @@ public class Tally extends Command {
 		}
 
 		// Save to file.
-		return FileService.SaveBytesToFile("reports", guildName+".txt", pruned.toString().getBytes());
+		return FileService.SaveBytesToFile("reports", guildName+".txt", App.gson, pruned.toString(), String.class);
 	}
 }

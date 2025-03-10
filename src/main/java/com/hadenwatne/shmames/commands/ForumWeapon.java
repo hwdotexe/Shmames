@@ -463,6 +463,6 @@ public class ForumWeapon extends Command {
 		}
 
 		// Save to file.
-		return FileService.SaveBytesToFile("reports", guildName+".txt", pruned.toString().getBytes());
+		return FileService.SaveBytesToFile("reports", guildName+".txt", App.gson, pruned.toString(), String.class);
 	}
 }

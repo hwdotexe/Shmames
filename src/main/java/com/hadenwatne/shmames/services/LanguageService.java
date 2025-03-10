@@ -1,7 +1,5 @@
 package com.hadenwatne.shmames.services;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.JSONFileFilter;
 import com.hadenwatne.shmames.enums.BotSettingName;
@@ -23,15 +21,12 @@ import java.util.List;
 public class LanguageService {
 	public static final String DEFAULT_LANGUAGE = "en_default";
 
-	private final Gson gson;
 	private final List<Language> languages;
 	private final String LANG_DIRECTORY = "langs";
 	private final Language defaultLanguage = new Language(DEFAULT_LANGUAGE);
 
 	public LanguageService() {
 		LoggingService.Log(LogType.SYSTEM, "Loading Language packs...");
-
-		gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		languages = new ArrayList<>();
 
 		// Load language files.
@@ -43,7 +38,7 @@ public class LanguageService {
 
 		// Update lang files on disk with changes.
 		for(Language language : languages) {
-			FileService.SaveBytesToFile(LANG_DIRECTORY, language.getFileName(), gson.toJson(language).getBytes());
+			FileService.SaveBytesToFile(LANG_DIRECTORY, language.getFileName(), App.gson, language, Language.class);
 		}
 
 		LoggingService.Log(LogType.SYSTEM, "Language loading complete!");
@@ -114,7 +109,7 @@ public class LanguageService {
 		File[] langFiles = FileService.ListFilesInDirectory(LANG_DIRECTORY, new JSONFileFilter());
 
 		for(File l : langFiles) {
-			Language language = this.gson.fromJson(FileService.LoadFileAsString(l), Language.class);
+			Language language = FileService.LoadFileAsType(l, Language.class);
 
 			language.setFileName(l.getName());
 

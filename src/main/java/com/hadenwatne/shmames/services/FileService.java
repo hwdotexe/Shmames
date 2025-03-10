@@ -1,9 +1,13 @@
 package com.hadenwatne.shmames.services;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.hadenwatne.shmames.App;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 public class FileService {
     /**
@@ -22,38 +26,24 @@ public class FileService {
         return directory.listFiles(filter);
     }
 
-    /**
-     * Attempts to load a given File as a String, and returns the result.
-     * @param f The File to load.
-     * @return The File's content as a String, or "" by default.
-     */
-    public static String LoadFileAsString(File f) {
+    public static <T> T LoadFileAsType(File f, Type type) {
         try {
-            int data;
-            FileInputStream is = new FileInputStream(f);
-            StringBuilder jsonData = new StringBuilder();
+            Reader reader = new FileReader(f, StandardCharsets.UTF_8);
+            JsonReader jsonReader = App.gson.newJsonReader(reader);
 
-            while ((data = is.read()) != -1) {
-                jsonData.append((char) data);
-            }
+            T obj = App.gson.fromJson(jsonReader, type);
 
-            is.close();
+            jsonReader.close();
 
-            return jsonData.toString();
+            return obj;
         } catch (Exception e) {
             LoggingService.LogException(e);
         }
 
-        return "";
+        return null;
     }
 
-    /**
-     * Writes a byte array to a file specified. Overwrites existing file contents.
-     * @param directory The parent directory to contain the file.
-     * @param fileName The name of the file to write, including extension.
-     * @param bytesToWrite The byte array to write to file.
-     */
-    public static File SaveBytesToFile(String directory, String fileName, byte[] bytesToWrite) {
+    public static File SaveBytesToFile(String directory, String fileName, Gson gson, Object dataToWrite, Type objectType) {
         try {
             File file = new File(directory + File.separator + fileName);
             File parentDirectory = new File(directory);
@@ -66,11 +56,12 @@ public class FileService {
                 file.createNewFile();
             }
 
-            FileOutputStream os = new FileOutputStream(file);
+            Writer writer = new FileWriter(file, StandardCharsets.UTF_8);
+            JsonWriter jsonWriter = gson.newJsonWriter(writer);
 
-            os.write(bytesToWrite);
-            os.flush();
-            os.close();
+            gson.toJson(dataToWrite, objectType, jsonWriter);
+
+            jsonWriter.close();
 
             return file;
         } catch (Exception e) {

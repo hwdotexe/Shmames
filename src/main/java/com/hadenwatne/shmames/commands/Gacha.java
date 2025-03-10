@@ -3,6 +3,7 @@ package com.hadenwatne.shmames.commands;
 import com.hadenwatne.shmames.App;
 import com.hadenwatne.shmames.commandbuilder.*;
 import com.hadenwatne.shmames.enums.*;
+import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
 import com.hadenwatne.shmames.models.data.Brain;
@@ -15,10 +16,12 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 public class Gacha extends Command {
 	public Gacha() {
@@ -52,6 +55,10 @@ public class Gacha extends Command {
 								.build(),
 						CommandBuilder.Create("list", "Browse a list of all possible prizes.")
 								.addAlias("v")
+								.addParameters(
+										new CommandParameter("page", "The page to navigate to.", ParameterType.INTEGER, false)
+										.setExample("2")
+								)
 								.build(),
 						CommandBuilder.Create("create", "Create a new Gacha prize for others to collect.")
 								.addAlias("c")
@@ -284,45 +291,45 @@ public class Gacha extends Command {
 	}
 
 	private EmbedBuilder cmdList(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
-		boolean showID = ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember());
-		StringBuilder sb = new StringBuilder();
+		int page = executingCommand.getCommandArguments().getAsInteger("page");
+		final String cacheKey = CacheService.GenerateCacheKey(executingCommand.getServer().getIdLong(), executingCommand.getChannel().getIdLong(), executingCommand.getAuthorUser().getIdLong(), "gacha-list");
+		final PaginatedList cachedList = CacheService.RetrieveItem(cacheKey, PaginatedList.class);
 
-		for (GachaCharacter gc : brain.getGachaCharacters()) {
-			if (sb.length() > 0) {
-				sb.append(System.lineSeparator());
+		PaginatedList paginatedList;
+
+		if (cachedList != null) {
+			paginatedList = cachedList;
+		} else {
+			boolean showID = ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember());
+			StringBuilder sb = new StringBuilder();
+
+			for (GachaCharacter gc : brain.getGachaCharacters()) {
+				if (sb.length() > 0) {
+					sb.append(System.lineSeparator());
+				}
+
+				String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+
+				sb.append(rarityEmote);
+				sb.append(" **");
+				sb.append(gc.getGachaCharacterName());
+				sb.append("**");
+
+				if (showID) {
+					sb.append(" [_");
+					sb.append(gc.getGachaCharacterID());
+					sb.append("_]");
+				}
 			}
 
-			String rarityEmote = GachaService.GetRarityEmoji(gc.getGachaCharacterRarity());
+			List<String> gachaList = Arrays.stream(sb.toString().split(System.lineSeparator())).toList();
 
-			sb.append(rarityEmote);
-			sb.append(" **");
-			sb.append(gc.getGachaCharacterName());
-			sb.append("**");
+			paginatedList = PaginationService.GetPaginatedList(gachaList, 10, -1, false);
 
-			if (showID) {
-				sb.append(" [_");
-				sb.append(gc.getGachaCharacterID());
-				sb.append("_]");
-			}
+			CacheService.StoreItem(cacheKey, paginatedList);
 		}
 
-		List<String> gachaList = PaginationService.SplitString(sb.toString(), MessageEmbed.VALUE_MAX_LENGTH);
-
-		EmbedBuilder response = response(EmbedType.INFO);
-
-		if (showID) {
-			response.setFooter("Admin Mode: IDs are displayed");
-		}
-
-		for (String field : gachaList) {
-			if (response.getFields().size() == 0) {
-				response.addField("Possible Prizes", field, false);
-			} else {
-				response.addField("", field, false);
-			}
-		}
-
-		return response;
+		return PaginationService.DrawEmbedPage(paginatedList, Math.max(1, page), "Possible prizes", Color.YELLOW, language);
 	}
 
 	private EmbedBuilder cmdCreate(Guild server, Language language, Brain brain, ExecutingCommand executingCommand) {
