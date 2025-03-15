@@ -153,28 +153,7 @@ public class Gacha extends Command {
 			EmbedBuilder response = response(EmbedType.SUCCESS);
 
 			for (int i = 0; i < rollTimes; i++) {
-				double roll = RandomService.GetRandom();
-
-				// Increase the roll if triggering pity system.
-				if (user.getPityCounter() > GachaService.PITY_THRESHOLD) {
-					roll += (user.getPityCounter() - GachaService.PITY_THRESHOLD) * 0.05;
-				}
-
-				GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
-				List<GachaCharacter> possibleCharacters = new ArrayList<>();
-
-				for (GachaCharacter gc : brain.getGachaCharacters()) {
-					if (gc.getGachaCharacterRarity().getRarityValue() == rolledRarity.getRarityValue()) {
-						possibleCharacters.add(gc);
-
-						// Add this character again if they are on the banner.
-						if (brain.getGachaBanner().getCharacters().contains(gc.getGachaCharacterID())) {
-							possibleCharacters.add(gc);
-						}
-					}
-				}
-
-				GachaCharacter rolledCharacter = RandomService.GetRandomObjectFromList(possibleCharacters);
+				GachaCharacter rolledCharacter = rollCharacter(user, brain);
 
 				boolean isNew = !user.hasCharacter(rolledCharacter);
 				user.addCharacterToInventory(rolledCharacter);
@@ -459,6 +438,10 @@ public class Gacha extends Command {
 				if (ShmamesService.CheckUserPermission(server, brain.getSettingFor(BotSettingName.MANAGE_GACHA), executingCommand.getAuthorMember())) {
 					brain.setGachaBanner(null);
 
+					for(GachaUser user : brain.getGachaUsers()) {
+						user.resetBannerPityCounter();
+					}
+
 					return response(EmbedType.SUCCESS)
 							.setDescription(language.getMsg(LanguageKeys.GENERIC_SUCCESS));
 				} else {
@@ -468,5 +451,41 @@ public class Gacha extends Command {
 		}
 
 		return null;
+	}
+
+	private GachaCharacter rollCharacter(GachaUser user, Brain brain) {
+		List<GachaCharacter> bannerCharacters = brain.getGachaCharacters().stream().filter(gc -> brain.getGachaBanner().getCharacters().contains(gc.getGachaCharacterID())).toList();
+
+		if(!brain.getGachaBanner().getCharacters().isEmpty() && user.getBannerPityCounter() >= GachaService.HARD_PITY) {
+			user.resetPityCounter();
+
+			// Award highest rarity on banner
+			List<GachaRarity> rarities = Arrays.asList(GachaRarity.values());
+			Collections.reverse(rarities);
+
+			for(GachaRarity rarity : rarities) {
+				if(bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rarity)) {
+					return bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rarity).findFirst().get();
+				}
+			}
+
+			// Fallback
+			return RandomService.GetRandomObjectFromList(bannerCharacters);
+		}else{
+			double roll = RandomService.GetRandom();
+
+			if (user.getGlobalPityCounter() > GachaService.SOFT_PITY_THRESHOLD) {
+				roll += (user.getGlobalPityCounter() - GachaService.SOFT_PITY_THRESHOLD) * 0.05;
+			}
+
+			GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
+
+			if(RandomService.GetRandom() >= GachaService.BANNER_ODDS_BUFF && bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rolledRarity)) {
+				// They get the on-banner character
+				return RandomService.GetRandomObjectFromList(bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
+			} else {
+				return RandomService.GetRandomObjectFromList(brain.getGachaCharacters().stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
+			}
+		}
 	}
 }

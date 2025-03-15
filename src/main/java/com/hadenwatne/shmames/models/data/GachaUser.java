@@ -5,13 +5,15 @@ import java.util.HashMap;
 public class GachaUser {
     private long userID;
     private int userPoints;
-    private int pityCounter;
+    private int globalPityCounter;
+    private int bannerPityCounter;
     private HashMap<String, Integer> userGachaInventory;
 
     public GachaUser(long userID) {
         this.userID = userID;
         this.userPoints = 0;
-        this.pityCounter = 0;
+        this.globalPityCounter = 0;
+        this.bannerPityCounter = 0;
         this.userGachaInventory = new HashMap<>();
     }
 
@@ -19,16 +21,26 @@ public class GachaUser {
         return userID;
     }
 
-    public int getPityCounter() {
-        return pityCounter;
+    public int getGlobalPityCounter() {
+        return globalPityCounter;
+    }
+
+    public int getBannerPityCounter() {
+        return bannerPityCounter;
     }
 
     public void incrementPityCounter() {
-        this.pityCounter++;
+        this.globalPityCounter++;
+        this.bannerPityCounter++;
     }
 
     public void resetPityCounter() {
-        this.pityCounter = 0;
+        this.globalPityCounter = 0;
+        this.bannerPityCounter = 0;
+    }
+
+    public void resetBannerPityCounter() {
+        this.bannerPityCounter = 0;
     }
 
     public int getUserPoints() {
