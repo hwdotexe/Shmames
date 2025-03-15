@@ -10,7 +10,7 @@ public class GachaService {
     public static final int HARD_PITY = 250;
     public static final int ROLL_COST = 5;
     public static final int AUTOMATIC_MAXIMUM = 100;
-    public static final double BANNER_ODDS_BUFF = 1d - 0.6d; // 60%, 0.4
+    public static final double BANNER_ODDS_BUFF = 1d - 0.2d; // 20%, 0.8
 
     public static GachaUser GetGachaUser(Brain brain, User user) {
         for(GachaUser gu : brain.getGachaUsers()) {

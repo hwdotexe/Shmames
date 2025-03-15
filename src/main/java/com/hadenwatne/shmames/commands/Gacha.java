@@ -163,7 +163,7 @@ public class Gacha extends Command {
 					user.addUserPoints(GachaService.GetRarityDuplicateRefund(rolledCharacter.getGachaCharacterRarity()));
 				}
 
-				if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.RARE.getRarityValue()) {
+				if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.LEGENDARY.getRarityValue()) {
 					user.incrementPityCounter();
 				} else {
 					user.resetPityCounter();
@@ -458,6 +458,7 @@ public class Gacha extends Command {
 
 		if(!brain.getGachaBanner().getCharacters().isEmpty() && user.getBannerPityCounter() >= GachaService.HARD_PITY) {
 			user.resetPityCounter();
+			user.resetBannerPityCounter();
 
 			// Award highest rarity on banner
 			List<GachaRarity> rarities = Arrays.asList(GachaRarity.values());
@@ -481,6 +482,10 @@ public class Gacha extends Command {
 			GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
 
 			if(RandomService.GetRandom() >= GachaService.BANNER_ODDS_BUFF && bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rolledRarity)) {
+				if(rolledRarity == GachaRarity.LEGENDARY) {
+					user.resetBannerPityCounter();
+				}
+
 				// They get the on-banner character
 				return RandomService.GetRandomObjectFromList(bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
 			} else {

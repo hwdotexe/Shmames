@@ -36,7 +36,6 @@ public class GachaUser {
 
     public void resetPityCounter() {
         this.globalPityCounter = 0;
-        this.bannerPityCounter = 0;
     }
 
     public void resetBannerPityCounter() {
