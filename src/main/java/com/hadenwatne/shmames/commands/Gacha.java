@@ -6,10 +6,7 @@ import com.hadenwatne.shmames.enums.*;
 import com.hadenwatne.shmames.models.PaginatedList;
 import com.hadenwatne.shmames.models.command.ExecutingCommand;
 import com.hadenwatne.shmames.models.command.ExecutingCommandArguments;
-import com.hadenwatne.shmames.models.data.Brain;
-import com.hadenwatne.shmames.models.data.GachaCharacter;
-import com.hadenwatne.shmames.models.data.GachaUser;
-import com.hadenwatne.shmames.models.data.Language;
+import com.hadenwatne.shmames.models.data.*;
 import com.hadenwatne.shmames.services.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -154,19 +151,15 @@ public class Gacha extends Command {
 
 			for (int i = 0; i < rollTimes; i++) {
 				GachaCharacter rolledCharacter = rollCharacter(user, brain);
-
 				boolean isNew = !user.hasCharacter(rolledCharacter);
+
 				user.addCharacterToInventory(rolledCharacter);
+
+				processRollPity(user, rolledCharacter, brain.getGachaBanner());
 
 				// Refund a little if this is not a new character.
 				if (!isNew) {
 					user.addUserPoints(GachaService.GetRarityDuplicateRefund(rolledCharacter.getGachaCharacterRarity()));
-				}
-
-				if (rolledCharacter.getGachaCharacterRarity().getRarityValue() <= GachaRarity.LEGENDARY.getRarityValue()) {
-					user.incrementPityCounter();
-				} else {
-					user.resetPityCounter();
 				}
 
 				String rarityEmote = GachaService.GetRarityEmoji(rolledCharacter.getGachaCharacterRarity());
@@ -456,41 +449,48 @@ public class Gacha extends Command {
 	private GachaCharacter rollCharacter(GachaUser user, Brain brain) {
 		List<GachaCharacter> bannerCharacters = brain.getGachaCharacters().stream().filter(gc -> brain.getGachaBanner().getCharacters().contains(gc.getGachaCharacterID())).toList();
 
-		if(!brain.getGachaBanner().getCharacters().isEmpty() && user.getBannerPityCounter() >= GachaService.HARD_PITY) {
-			user.resetPityCounter();
-			user.resetBannerPityCounter();
+		double roll = RandomService.GetRandom();
 
-			// Award highest rarity on banner
-			List<GachaRarity> rarities = Arrays.asList(GachaRarity.values());
-			Collections.reverse(rarities);
+		if (user.getGlobalPityCounter() > GachaService.SOFT_PITY_THRESHOLD) {
+			roll += (user.getGlobalPityCounter() - GachaService.SOFT_PITY_THRESHOLD) * 0.02;
+		}
 
-			for(GachaRarity rarity : rarities) {
-				if(bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rarity)) {
-					return bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rarity).findFirst().get();
-				}
-			}
+		GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
 
-			// Fallback
-			return RandomService.GetRandomObjectFromList(bannerCharacters);
-		}else{
-			double roll = RandomService.GetRandom();
+		// If they rolled a legendary AND the banner has a legendary AND they are past hard pity,
+		// award them the on-banner legendary.
+		if(rolledRarity == GachaRarity.LEGENDARY && bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY) && user.getBannerPityCounter() >= GachaService.HARD_PITY) {
+			return bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == GachaRarity.LEGENDARY).findFirst().get();
+		}
 
-			if (user.getGlobalPityCounter() > GachaService.SOFT_PITY_THRESHOLD) {
-				roll += (user.getGlobalPityCounter() - GachaService.SOFT_PITY_THRESHOLD) * 0.05;
-			}
+		// The player has a chance to roll an on-banner character for the determined rarity.
+		if(RandomService.GetRandom() >= GachaService.BANNER_ODDS_BUFF && bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rolledRarity)) {
+			return RandomService.GetRandomObjectFromList(bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
+		} else {
+			return RandomService.GetRandomObjectFromList(brain.getGachaCharacters().stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
+		}
+	}
 
-			GachaRarity rolledRarity = GachaRarity.matchRarity(roll);
+	private void processRollPity(GachaUser user, GachaCharacter rolledCharacter, GachaBanner banner) {
+		boolean hasBanner = !banner.getCharacters().isEmpty();
 
-			if(RandomService.GetRandom() >= GachaService.BANNER_ODDS_BUFF && bannerCharacters.stream().anyMatch(gc -> gc.getGachaCharacterRarity() == rolledRarity)) {
-				if(rolledRarity == GachaRarity.LEGENDARY) {
+		if(rolledCharacter.getGachaCharacterRarity() == GachaRarity.LEGENDARY) {
+			// If the legendary was on the banner, reset banner pity.
+			if(hasBanner) {
+				if(banner.getCharacters().contains(rolledCharacter.getGachaCharacterID())) {
 					user.resetBannerPityCounter();
 				}
-
-				// They get the on-banner character
-				return RandomService.GetRandomObjectFromList(bannerCharacters.stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
-			} else {
-				return RandomService.GetRandomObjectFromList(brain.getGachaCharacters().stream().filter(gc -> gc.getGachaCharacterRarity() == rolledRarity).toList());
 			}
+
+			// All legendary rolls reset global pity.
+			user.resetPityCounter();
+		}else{
+			// Did not roll a Legendary, so increment pity.
+			if(hasBanner) {
+				user.incrementBannerPityCounter();
+			}
+
+			user.incrementGlobalPityCounter();
 		}
 	}
 }

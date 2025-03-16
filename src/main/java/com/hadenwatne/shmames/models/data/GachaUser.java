@@ -29,8 +29,11 @@ public class GachaUser {
         return bannerPityCounter;
     }
 
-    public void incrementPityCounter() {
+    public void incrementGlobalPityCounter() {
         this.globalPityCounter++;
+    }
+
+    public void incrementBannerPityCounter() {
         this.bannerPityCounter++;
     }
 
